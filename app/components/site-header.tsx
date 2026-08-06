@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { siteStatus } from "../data/site-status";
 
 const links = [
   ["Events", "/#events"],
@@ -16,9 +17,9 @@ export function SiteHeader() {
         <span className="brand-mark"><span>Team<br />Simple</span><b>▲</b></span>
         <span>Event Basecamp <small>2026</small></span>
       </Link>
-      <time className="updated-stamp" dateTime="2026-08-06" aria-label="Last updated August 6, 2026">
+      <time className="updated-stamp" dateTime={siteStatus.contentUpdatedAt} aria-label={`Last updated ${siteStatus.contentUpdatedLabel}`}>
         <span>Last updated</span>
-        <strong>Aug 06 · 2026</strong>
+        <strong>{siteStatus.contentUpdatedLabel}</strong>
       </time>
       <nav aria-label="Primary navigation">
         {links.map(([label, href]) => (
