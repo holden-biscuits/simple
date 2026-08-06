@@ -37,9 +37,9 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
   }, [events, query, status]);
 
   const groups: { phase: EventPhase; label: string; kicker: string }[] = [
-    { phase: "now", label: "Happening now", kicker: "Live fieldwork" },
-    { phase: "upcoming", label: "Upcoming", kicker: "Plan, prepare, perform" },
-    { phase: "past", label: "Past", kicker: "Outcomes and history" },
+    { phase: "now", label: "Happening now", kicker: "Current stop" },
+    { phase: "upcoming", label: "Upcoming", kicker: "Ahead on the route" },
+    { phase: "past", label: "Past", kicker: "Trail log" },
   ];
 
   return (

@@ -12,8 +12,8 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <Link href="/" className="brand" aria-label="Events Hub home">
-        <span className="brand-mark">E/26</span>
-        <span>Events fieldbook</span>
+        <span className="brand-mark"><span>TS</span><b>▲</b></span>
+        <span>Event Basecamp <small>2026</small></span>
       </Link>
       <nav aria-label="Primary navigation">
         {links.map(([label, href]) => (

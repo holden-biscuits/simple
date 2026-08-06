@@ -9,10 +9,10 @@ export function RolePage({ code, title, intro, sections, handoff }: { code: stri
     <main>
       <SiteHeader />
       <section className="role-hero">
-        <p className="eyebrow">Role field guide · {code}</p>
+        <p className="eyebrow">Crew guide · {code}</p>
         <h1>{title}</h1>
         <p className="lede">{intro}</p>
-        <Link className="button" href="/">View the event directory <span>↗</span></Link>
+        <Link className="button" href="/">Check the event map <span>↗</span></Link>
       </section>
       <section className="role-grid shell">
         {sections.map((section, index) => (
@@ -27,7 +27,7 @@ export function RolePage({ code, title, intro, sections, handoff }: { code: stri
         ))}
       </section>
       <section className="handoff shell">
-        <p className="eyebrow">Clean handoff</p>
+        <p className="eyebrow">Before you pack up</p>
         <h2>{handoff}</h2>
       </section>
       <Footer />

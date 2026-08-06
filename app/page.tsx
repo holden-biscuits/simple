@@ -6,8 +6,8 @@ import { Footer } from "./components/footer";
 import { events } from "./data/events";
 
 export const metadata: Metadata = {
-  title: "Events Fieldbook · 2026",
-  description: "The central operating hub for the 2026 event program.",
+  title: "Event Basecamp · 2026",
+  description: "Dates, owners, plans, and follow-up for the 2026 event program.",
 };
 
 export default function Home() {
@@ -17,28 +17,32 @@ export default function Home() {
     <main>
       <SiteHeader />
       <section className="home-hero">
-        <div>
-          <p className="eyebrow">2026 events operating system</p>
-          <h1>Arrive ready.<br />Leave with pipeline.</h1>
+        <div className="hero-copy">
+          <p className="eyebrow">TeamSimple · 2026 event plan</p>
+          <h1>Know the route before you hit the floor.</h1>
+          <p className="hero-note">Dates, staffing, meeting targets, event plans, and follow-up live here.</p>
         </div>
-        <div className="hero-aside">
-          <p>One source for where we’re going, what we’re doing, who owns it, and what happens next.</p>
-          <Link className="button" href="/guides">Start with the rules <span>↗</span></Link>
+        <div className="route-board" aria-label="Basecamp quick guide">
+          <div className="route-board-head"><span>Basecamp notes</span><span>2026</span></div>
+          <div className="route-line"><span>01</span><p>Check the event page before booking or shipping anything.</p></div>
+          <div className="route-line"><span>02</span><p>Know your accounts, your owner, and the next-step ask.</p></div>
+          <div className="route-line"><span>03</span><p>Log the conversation before the day ends.</p></div>
+          <Link className="button" href="/guides">Open the prep guide <span>↗</span></Link>
         </div>
       </section>
 
       <section className="stats shell" aria-label="Program summary">
-        <div><strong>{events.length}</strong><span>events tracked</span></div>
+        <div><strong>{events.length}</strong><span>events on the map</span></div>
         <div><strong>{confirmedUpcoming}</strong><span>confirmed ahead</span></div>
-        <div><strong>{meetings}</strong><span>with guaranteed meetings</span></div>
-        <div><strong>09</strong><span>standard workstreams</span></div>
+        <div><strong>{meetings}</strong><span>include guaranteed meetings</span></div>
+        <div><strong>09</strong><span>planning workstreams</span></div>
       </section>
 
       <section className="directory shell">
         <div className="section-intro">
-          <p className="eyebrow">The field calendar</p>
-          <h2>Every event, one operating pattern.</h2>
-          <p>The sheet controls the event list. Active Notion projects add execution detail. Empty workstreams stay visibly empty.</p>
+          <p className="eyebrow">2026 route</p>
+          <h2>Pick an event. See the whole plan.</h2>
+          <p>The conference tracker supplies the event list. Active Notion projects add the working details. If nothing is planned for a workstream, the page says “None.”</p>
         </div>
         <EventDirectory events={events} />
       </section>

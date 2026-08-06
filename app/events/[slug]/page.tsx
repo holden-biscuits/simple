@@ -10,7 +10,7 @@ export function generateStaticParams() { return events.map((event) => ({ slug: e
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const event = eventBySlug(slug);
-  return { title: event ? `${event.name} · Events Fieldbook` : "Event not found" };
+  return { title: event ? `${event.name} · Event Basecamp` : "Event not found" };
 }
 
 export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -39,7 +39,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         <div className="event-back"><Link href="/">← All events</Link><span>{event.phase === "past" ? "Past event" : event.phase === "now" ? "Happening now" : "Upcoming"}</span></div>
         <div className="event-title-row">
           <div><p className="eyebrow">{event.dates}</p><h1>{event.name}</h1><p className="event-city">{event.location}</p></div>
-          <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}>Organizer<br />site ↗</a>
+          <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>
         </div>
         <p className="event-summary">{event.notes}</p>
       </section>
@@ -48,8 +48,8 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
 
       <section className="shell event-body">
         <aside>
-          <p className="eyebrow">People</p>
-          <h2>Field team</h2>
+          <p className="eyebrow">Crew</p>
+          <h2>Who’s going</h2>
           <dl>
             <div><dt>Attending</dt><dd>{event.team.length ? event.team.join(", ") : "None confirmed"}</dd></div>
             <div><dt>Available</dt><dd>{event.available.length ? event.available.join(", ") : "None listed"}</dd></div>
@@ -61,7 +61,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </div>
         </aside>
         <div className="workstreams">
-          <div className="section-intro"><p className="eyebrow">Execution plan</p><h2>Nine workstreams. No hidden blanks.</h2></div>
+          <div className="section-intro"><p className="eyebrow">Event pack list</p><h2>What needs to happen.</h2></div>
           {(Object.keys(workstreamLabels) as WorkstreamKey[]).map((key, index) => {
             const items = workstreams[key];
             const isNone = items.length === 1 && items[0] === "None";
@@ -74,7 +74,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       </section>
 
       <section className="shell outcomes">
-        <div className="section-intro"><p className="eyebrow">Recorded outcomes</p><h2>What made it back to the tracker.</h2></div>
+        <div className="section-intro"><p className="eyebrow">Trail log</p><h2>Results recorded in the tracker.</h2></div>
         <div className="outcome-grid">{resultGroups.map(([label, items]) => <article key={label}><span>{label}</span>{items.length ? <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p>None</p>}</article>)}</div>
       </section>
       <Footer />

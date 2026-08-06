@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,15 +13,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Events Fieldbook",
-  description: "The central operating hub for events.",
-  openGraph: {
-    title: "Events Fieldbook · 2026",
-    description: "Arrive ready. Leave with pipeline.",
-    images: ["/og.png"],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const incoming = await headers();
+  const host = incoming.get("x-forwarded-host") ?? incoming.get("host") ?? "teamsimple-events-fieldbook.holden165736.chatgpt.site";
+  const protocol = incoming.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
+  const image = new URL("/og.png", `${protocol}://${host}`).toString();
+  return {
+    title: "TeamSimple Event Basecamp",
+    description: "Dates, owners, plans, and follow-up for TeamSimple events.",
+    openGraph: {
+      title: "TeamSimple Event Basecamp · 2026",
+      description: "Know the route before you hit the floor.",
+      images: [image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "TeamSimple Event Basecamp · 2026",
+      description: "Know the route before you hit the floor.",
+      images: [image],
+    },
+  };
+}
 
 export default function RootLayout({
   children,
