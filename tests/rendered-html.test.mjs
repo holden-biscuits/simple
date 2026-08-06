@@ -37,6 +37,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Approval queue/);
   assert.match(html, /CCW Exchange Chicago/);
   assert.match(html, /tracker names Taylor and marks Josh available/);
+  assert.match(html, /IQPC CX Travel &amp; Hospitality/);
+  assert.match(html, /calendar record lists Zach \+ Taylor/);
   assert.match(html, /Latest applied checks/);
   assert.match(html, /29 of 29 matching records reviewed/);
   assert.match(html, /Google Sheets/);
@@ -45,6 +47,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /booking the send still needs approval/);
   assert.match(html, /CCW Exchange Chicago focused scan/);
   assert.match(html, /28 researched accounts/);
+  assert.match(html, /IQPC CX Travel &amp; Hospitality focused scan/);
+  assert.match(html, /invitation-only format/);
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
@@ -143,4 +147,12 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(shoptalkFallHtml, /Sep 29–30, 2026/);
   assert.match(shoptalkFallHtml, /Not attending/);
   assert.doesNotMatch(shoptalkFallHtml, /4 planned/);
+
+  const travel = await render("/events/iqpc-cx-travel-hospitality");
+  const travelHtml = await travel.text();
+  assert.match(travelHtml, /Source check needed/);
+  assert.match(travelHtml, /Hilton London Syon Park/);
+  assert.match(travelHtml, /invitation-only Exchange/);
+  assert.match(travelHtml, /connected guest journeys/);
+  assert.match(travelHtml, /calendar record lists Zach \+ Taylor/);
 });

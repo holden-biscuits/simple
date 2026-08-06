@@ -12,6 +12,12 @@ export const siteStatus = {
     lastSuccessfulScan: null as null | string,
     latestChecks: [
       {
+        system: "Google Sheets · Notion · Gmail · organizer site",
+        checkedAt: "Aug 06 · 2026",
+        scope: "IQPC CX Travel & Hospitality focused scan",
+        result: "The tracker confirms Taylor and marks Carter available; a calendar record lists Zach + Taylor, while Notion says all three travelers still need confirmation. The tracker value remains and the conflict is in the approval queue. The official organizer page confirms Sep 8–9 at Hilton London Syon Park and an invitation-only format centered on pre-qualified one-to-one meetings and small-group discussion.",
+      },
+      {
         system: "Google Sheets · Notion · Slack · Gmail · HubSpot",
         checkedAt: "Aug 06 · 2026",
         scope: "CCW Exchange Chicago focused scan",
