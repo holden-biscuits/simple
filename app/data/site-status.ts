@@ -12,6 +12,12 @@ export const siteStatus = {
     lastSuccessfulScan: null as null | string,
     latestChecks: [
       {
+        system: "Google Sheets · Notion · Slack · Gmail · HubSpot",
+        checkedAt: "Aug 06 · 2026",
+        scope: "CCW Exchange Chicago focused scan",
+        result: "The tracker keeps Taylor confirmed and Josh available; Notion and the calendar record list Taylor + Josh. The tracker value remains on the site and the conflict is in the approval queue. A separate internal ICP sheet contains 28 researched accounts but is not the organizer’s meeting schedule. HubSpot returned no explicitly Chicago-attributed deal record, so no CRM outcome is published.",
+      },
+      {
         system: "Notion · Slack · Gmail",
         checkedAt: "Aug 06 · 2026",
         scope: "Genesys Xperience focused scan",

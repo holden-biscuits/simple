@@ -358,7 +358,7 @@ export const events: EventRecord[] = [
     attendeeCount: 2,
     team: ["Taylor"],
     available: ["Carter", "Josh"],
-    notes: "Exchange format: guaranteed 1:1 meetings and no expo booth. While the event is live, focus on matched-account context, Taylor’s 10-minute quickfire, and complete notes for same-week follow-up.",
+    notes: "Source conflict: The conference tracker names Taylor and marks Josh available, while the Notion project and calendar record list Taylor + Josh. Keep Taylor as the only confirmed attendee until the tracker is reconciled.",
     rating: "None",
     meetingsBooked: [],
     demosBooked: [],
@@ -366,7 +366,7 @@ export const events: EventRecord[] = [
     organizerUrl: "https://www.ccwexchangeaugust.com/",
     notionUrl: "https://www.notion.so/3aa6fee642fe81668e92e48b51819e13",
     priorityActions: [
-      "Get the organizer’s current meeting schedule and matched-account list; add one useful talking point to every meeting brief.",
+      "Get the organizer’s current meeting schedule and matched-account list. Pair it with the internal 28-account ICP sheet and add one useful talking point to every meeting brief.",
       "Confirm Taylor’s quickfire run-of-show and AV handoff before the session.",
       "Capture the decision context and next step from every meeting, then log meetings and demos in Monaco.",
       "Send same-week follow-up with one clear CTA and update the conference tracker after the team debrief.",
@@ -374,7 +374,7 @@ export const events: EventRecord[] = [
     workstreams: {
       speaking: ["10-minute quickfire with Taylor", "Confirm the run-of-show and AV handoff; keep the talk to one argument, one proof point, and one CTA"],
       sponsorship: ["No expo booth", "Confirm whether the package includes a seat drop or materials distribution before placing anything"],
-      meetings: ["Guaranteed 1:1 meetings", "Use the organizer’s matched-account schedule to prepare one useful talking point per meeting", "Record decision context and the next step in Monaco"],
+      meetings: ["Guaranteed 1:1 meetings", "The internal ICP sheet has 28 researched accounts: 9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked", "Use the organizer’s matched-account schedule—not the ICP sheet—to confirm actual meetings", "Prepare one useful talking point per confirmed meeting", "Record decision context and the next step in Monaco"],
       swag: ["Only organizer-approved one-pagers or leave-behinds"],
       secondary: ["If a dinner is not already set, use Aug 6 only when there is a clear prospect or customer list"],
       travel: ["Taylor is the confirmed attendee; one additional attendee is not yet named in the tracker", "Carter and Josh are marked available", "Verify return travel and registration only if unresolved"],

@@ -35,13 +35,16 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
   assert.match(html, /Approval queue/);
-  assert.match(html, /No unresolved source conflicts are recorded\./);
+  assert.match(html, /CCW Exchange Chicago/);
+  assert.match(html, /tracker names Taylor and marks Josh available/);
   assert.match(html, /Latest applied checks/);
   assert.match(html, /29 of 29 matching records reviewed/);
   assert.match(html, /Google Sheets/);
   assert.match(html, /27 event rows reviewed/);
   assert.match(html, /Genesys Xperience focused scan/);
   assert.match(html, /booking the send still needs approval/);
+  assert.match(html, /CCW Exchange Chicago focused scan/);
+  assert.match(html, /28 researched accounts/);
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
@@ -131,6 +134,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const chicagoHtml = await chicago.text();
   assert.match(chicagoHtml, /Taylor is the confirmed attendee/);
   assert.match(chicagoHtml, /Carter and Josh are marked available/);
+  assert.match(chicagoHtml, /Source check needed/);
+  assert.match(chicagoHtml, /internal 28-account ICP sheet/);
+  assert.match(chicagoHtml, /9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked/);
 
   const shoptalkFall = await render("/events/shoptalk-fall");
   const shoptalkFallHtml = await shoptalkFall.text();
