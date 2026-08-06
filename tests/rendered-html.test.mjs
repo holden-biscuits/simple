@@ -40,6 +40,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /29 of 29 matching records reviewed/);
   assert.match(html, /Google Sheets/);
   assert.match(html, /27 event rows reviewed/);
+  assert.match(html, /Genesys Xperience focused scan/);
+  assert.match(html, /booking the send still needs approval/);
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
@@ -76,6 +78,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
   assert.match(genesysHtml, /Available<\/dt><dd>None listed/);
   assert.doesNotMatch(genesysHtml, /Final roster still needs to be reconciled/);
+  assert.match(genesysHtml, /Contracted pre-event email add-on/);
+  assert.match(genesysHtml, /sponsor portal by Aug 13/);
+  assert.match(genesysHtml, /flights, hotel blocks, and passes are marked complete in Notion/);
 
   const contact = await render("/events/contact-io");
   assert.equal(contact.status, 200);

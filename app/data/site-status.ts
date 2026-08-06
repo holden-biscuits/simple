@@ -12,6 +12,12 @@ export const siteStatus = {
     lastSuccessfulScan: null as null | string,
     latestChecks: [
       {
+        system: "Notion · Slack · Gmail",
+        checkedAt: "Aug 06 · 2026",
+        scope: "Genesys Xperience focused scan",
+        result: "Notion confirms the roster, travel blocks and passes are complete. Gmail confirms the pre-event email add-on is contracted and the sponsor offered an Aug 13 copy deadline. Slack shows that booking the send still needs approval. The Wish Line remains pending because its detailed plan still records an open decision and unresolved IO terms.",
+      },
+      {
         system: "Direct decision",
         checkedAt: "Aug 06 · 2026",
         scope: "Genesys Xperience staffing",
