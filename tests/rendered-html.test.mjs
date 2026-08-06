@@ -38,6 +38,15 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /No unresolved source conflicts are recorded\./);
 });
 
+test("server-renders searchable event outcomes and filter counts", async () => {
+  const response = await render("/search");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Find the detail, not the page\./);
+  assert.match(html, /16 meetings · 7 demos recorded/);
+  assert.match(html, /<span>All<\/span><b>\d+<\/b>/);
+});
+
 test("server-renders dynamic event facts without empty filler notes", async () => {
   const genesys = await render("/events/genesys-xperience");
   assert.equal(genesys.status, 200);

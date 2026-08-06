@@ -74,6 +74,9 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
         ...(event.priorityActions ?? []),
         ...(event.relatedLinks ?? []).map((link) => link.label),
         ...(event.outcomeNotes ?? []),
+        ...event.meetingsBooked,
+        ...event.demosBooked,
+        ...event.closed,
         ...Object.values(event.workstreams ?? {}).flat(),
       ].join(" ").toLowerCase();
       return (!q || searchable.includes(q)) && matchesAttendance(event, attendance);
@@ -84,6 +87,7 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
     filter.value,
     events.filter((event) => matchesAttendance(event, filter.value)).length,
   ])) as Record<AttendanceFilter, number>, [events]);
+  const filtersActive = query.trim().length > 0 || attendance !== "all";
 
   const groups: { phase: EventPhase; label: string; kicker: string }[] = [
     { phase: "now", label: "Happening now", kicker: "Current stop" },
@@ -113,6 +117,10 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
             ))}
           </div>
         </fieldset>
+      </div>
+      <div className="directory-result-summary" aria-live="polite">
+        <span>Showing <strong>{filtered.length}</strong> of {events.length} events</span>
+        {filtersActive ? <button type="button" onClick={() => { setQuery(""); setAttendance("all"); }}>Clear filters</button> : null}
       </div>
 
       {groups.map((group) => {

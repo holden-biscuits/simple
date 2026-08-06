@@ -19,6 +19,11 @@ const referenceRecords: SearchRecord[] = [
 ];
 
 const eventRecords: SearchRecord[] = events.map((event) => {
+  const outcomeCounts = [
+    event.meetingsBooked.length ? `${event.meetingsBooked.length} meeting${event.meetingsBooked.length === 1 ? "" : "s"}` : "",
+    event.demosBooked.length ? `${event.demosBooked.length} demo${event.demosBooked.length === 1 ? "" : "s"}` : "",
+    event.closed.length ? `${event.closed.length} closed` : "",
+  ].filter(Boolean).join(" · ");
   const details = [
     event.venue ? `Venue · ${event.venue}` : "",
     event.team.length ? `Team · ${event.team.join(", ")}` : "",
@@ -41,7 +46,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     type: "Event",
     title: event.name,
     href: `/events/${event.slug}`,
-    description: `${event.dates} · ${event.location}${event.venue ? ` · ${event.venue}` : ""} · ${event.status === "No" ? "Not attending" : event.status}`,
+    description: `${event.dates} · ${event.location}${event.venue ? ` · ${event.venue}` : ""} · ${event.status === "No" ? "Not attending" : event.status}${outcomeCounts ? ` · ${outcomeCounts} recorded` : ""}`,
     keywords: details.join(" "),
     details,
   };
