@@ -49,6 +49,21 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(html, /Find the detail, not the page\./);
   assert.match(html, /16 meetings · 7 demos recorded/);
   assert.match(html, /<span>All<\/span><b>\d+<\/b>/);
+  assert.match(html, /Holden/);
+});
+
+test("server-renders a searchable marketing support board", async () => {
+  const response = await render("/marketing");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /See the work and the gaps in one place\./);
+  assert.match(html, /Find an event or task/);
+  assert.match(html, /Support listed/);
+  assert.match(html, /No support listed/);
+  assert.match(html, /Team unassigned/);
+  assert.match(html, /Most urgent open item/);
+  assert.match(html, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
+  assert.doesNotMatch(html, /Confirm the next owner and deadline/);
 });
 
 test("server-renders dynamic event facts without empty filler notes", async () => {
@@ -58,6 +73,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /No guaranteed meetings/);
   assert.match(genesysHtml, /Do these next/);
   assert.match(genesysHtml, /Wish Line/);
+  assert.match(genesysHtml, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
+  assert.match(genesysHtml, /Available<\/dt><dd>None listed/);
+  assert.doesNotMatch(genesysHtml, /Final roster still needs to be reconciled/);
 
   const contact = await render("/events/contact-io");
   assert.equal(contact.status, 200);

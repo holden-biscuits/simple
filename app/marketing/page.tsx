@@ -1,39 +1,11 @@
 import Link from "next/link";
 import { BackToTop, PageContents } from "../components/page-contents";
 import { Footer } from "../components/footer";
+import { MarketingSupportBoard } from "../components/marketing-support-board";
 import { SiteHeader } from "../components/site-header";
-import { events, getWorkstreams } from "../data/events";
+import { events } from "../data/events";
 
 const activeEvents = events.filter((event) => event.phase !== "past" && event.status !== "No");
-
-function programSummary(event: (typeof events)[number]) {
-  const hasSponsorship = !event.sponsorship.toLowerCase().startsWith("none");
-  const programs = [
-    hasSponsorship ? "Sponsor / booth" : null,
-    event.speaking.toLowerCase() !== "none" && !event.speaking.toLowerCase().includes("no slot confirmed") ? "Speaking" : null,
-    event.guaranteedMeetings.startsWith("Yes") ? "Meeting package" : null,
-  ].filter(Boolean);
-  return programs.join(" · ") || "Attendance only";
-}
-
-function ownerSummary(event: (typeof events)[number]) {
-  if (event.team.length) return event.team.join(", ");
-  if (event.available.length) return `Unassigned · ${event.available.join(", ")} available`;
-  return "Unassigned";
-}
-
-function marketingSummary(event: (typeof events)[number]) {
-  const activity = getWorkstreams(event).marketing.filter((item) => item !== "None");
-  return activity.length ? activity.join(" · ") : "None planned";
-}
-
-function openDecision(event: (typeof events)[number]) {
-  if (event.priorityActions?.length) return event.priorityActions[0];
-  if (event.status === "TBD" || event.status === "Tentative") return "Go / no-go";
-  if (!event.team.length) return "Assign final team";
-  if (getWorkstreams(event).marketing.every((item) => item === "None")) return "Confirm whether support is needed";
-  return "Confirm the next owner and deadline";
-}
 
 const operatingLessons = [
   ["One roster", "The tracker and Notion can drift. Name the final team in one place before registration, travel, and booth shifts are locked."],
@@ -108,19 +80,8 @@ export default function MarketingPage() {
 
       <section className="marketing-matrix-section" id="support-matrix">
         <div className="shell">
-          <div className="section-intro"><p className="eyebrow">Active event support</p><h2>What Marketing is supporting—and what is still open.</h2><p>This table is generated from the same event records as the directory. Update the event plan once; the row changes with it.</p></div>
-          <div className="marketing-table-wrap">
-            <table className="marketing-table">
-              <thead><tr><th>Event</th><th>Program</th><th>Marketing activity</th><th>Team / owner</th><th>Next decision</th></tr></thead>
-              <tbody>{activeEvents.map((event) => <tr key={event.slug}>
-                <th><Link href={`/events/${event.slug}`}>{event.name}</Link><span>{event.dates}</span></th>
-                <td>{programSummary(event)}</td>
-                <td>{marketingSummary(event)}</td>
-                <td>{ownerSummary(event)}</td>
-                <td><span className={`matrix-decision matrix-${event.status.toLowerCase()}`}>{openDecision(event)}</span></td>
-              </tr>)}</tbody>
-            </table>
-          </div>
+          <div className="section-intro"><p className="eyebrow">Active event support</p><h2>See the work and the gaps in one place.</h2><p>The board uses the same event records as the directory. It does not treat the event team as the marketing owner, and it does not invent a deadline when none is recorded.</p></div>
+          <MarketingSupportBoard events={activeEvents} />
           <BackToTop />
         </div>
       </section>

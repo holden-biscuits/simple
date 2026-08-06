@@ -150,7 +150,10 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             const items = workstreams[key];
             return <article className="workstream" id={`workstream-${key}`} key={key}>
               <span>{String(index + 1).padStart(2, "0")}</span>
-              <div><h3>{workstreamLabels[key]}</h3><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop /></div>
+              <div>
+                <div className="workstream-title-row"><h3>{workstreamLabels[key]}</h3>{key === "marketing" ? <Link href="/marketing#support-matrix">Marketing support board →</Link> : null}</div>
+                <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop />
+              </div>
             </article>;
           })}
           {inactiveWorkstreamKeys.length ? <details className="not-in-plan"><summary>Not in this event plan <span>{inactiveWorkstreamKeys.length}</span></summary><p>{inactiveWorkstreamKeys.map((key) => workstreamLabels[key]).join(" · ")} — None.</p></details> : null}

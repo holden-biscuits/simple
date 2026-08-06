@@ -12,6 +12,12 @@ export const siteStatus = {
     lastSuccessfulScan: null as null | string,
     latestChecks: [
       {
+        system: "Direct decision",
+        checkedAt: "Aug 06 · 2026",
+        scope: "Genesys Xperience staffing",
+        result: "The nine-person roster is confirmed: Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars. This direct decision replaces the shorter tracker list; Carter is no longer marked only as available.",
+      },
+      {
         system: "HubSpot",
         checkedAt: "Aug 06 · 2026",
         scope: "Deals with Deal Source = Event / Conference and Deal Source Detail = CCW Vegas follow-up",
