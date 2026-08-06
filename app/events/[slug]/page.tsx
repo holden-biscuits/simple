@@ -64,7 +64,6 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           <div><p className="eyebrow">{event.dates}</p><h1>{event.name}</h1><p className="event-city">{event.location}</p></div>
           <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>
         </div>
-        <p className="event-summary">{event.notes}</p>
       </section>
       <PageContents items={[
         { id: "event-tldr", label: "TL;DR" },
