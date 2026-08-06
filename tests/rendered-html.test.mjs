@@ -49,6 +49,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /28 researched accounts/);
   assert.match(html, /IQPC CX Travel &amp; Hospitality focused scan/);
   assert.match(html, /invitation-only format/);
+  assert.match(html, /Customer Connect Expo focused scan/);
+  assert.match(html, /25%-complete company profile/);
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
@@ -104,6 +106,10 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const customerConnectHtml = await customerConnect.text();
   assert.match(customerConnectHtml, /Confirmed/);
   assert.match(customerConnectHtml, /Four attendees and a 10×10 booth are planned/);
+  assert.match(customerConnectHtml, /executed exhibition-space contract/);
+  assert.match(customerConnectHtml, /Aug 10 at 9:00 AM PT/);
+  assert.match(customerConnectHtml, /25% complete on Aug 6/);
+  assert.match(customerConnectHtml, /Exhibitor portal/);
 
   const icmi = await render("/events/icmi-contact-center-expo");
   assert.equal(icmi.status, 200);

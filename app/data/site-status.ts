@@ -12,6 +12,12 @@ export const siteStatus = {
     lastSuccessfulScan: null as null | string,
     latestChecks: [
       {
+        system: "Notion · Slack · Gmail",
+        checkedAt: "Aug 06 · 2026",
+        scope: "Customer Connect Expo focused scan",
+        result: "The participation decision remains confirmed. Gmail shows an executed exhibition-space contract, an active exhibitor portal, a 25%-complete company profile and an Aug 10 organizer onboarding call. The invoice was forwarded to AP, but payment status is not confirmed. Notion still lists four unnamed SDR attendees, and the booth number remains open.",
+      },
+      {
         system: "Google Sheets · Notion · Gmail · organizer site",
         checkedAt: "Aug 06 · 2026",
         scope: "IQPC CX Travel & Hospitality focused scan",
