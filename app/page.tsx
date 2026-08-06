@@ -32,7 +32,12 @@ export default function Home() {
             <Link className="button" href="/guides">Open the prep guide <span>↗</span></Link>
           </div>
           <div className="ranger-card">
-            <Image src="/ranger-raccoon.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with an orange S badge" priority />
+            <div className="ranger-figure">
+              <Image src="/ranger-raccoon.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with the Simple logo" priority />
+              <span className="ranger-hat-logo" aria-hidden="true">
+                <Image src="/simple-mark.svg" width={19} height={24} alt="" />
+              </span>
+            </div>
             <p><strong>Scout’s rule:</strong> check the event page before you pack.</p>
           </div>
         </div>

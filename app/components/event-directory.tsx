@@ -6,8 +6,10 @@ import type { EventPhase, EventRecord } from "../data/events";
 
 function EventCard({ event }: { event: EventRecord }) {
   const signal = event.status === "No" ? "Not attending" : event.status;
+  const inactive = event.status === "No";
   return (
-    <Link href={`/events/${event.slug}`} className="event-card">
+    <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
+      {inactive ? <span className="event-card-x" aria-hidden="true" /> : null}
       <div className="event-card-top">
         <span className={`status status-${event.status.toLowerCase()}`}>{signal}</span>
         <span className="arrow" aria-hidden="true">↗</span>
