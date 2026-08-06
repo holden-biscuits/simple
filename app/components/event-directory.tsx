@@ -4,11 +4,32 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { EventPhase, EventRecord } from "../data/events";
 
+type AttendanceFilter = "all" | "going" | "deciding" | "not-going";
+
+const attendanceFilters: { value: AttendanceFilter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "going", label: "Going" },
+  { value: "deciding", label: "Deciding" },
+  { value: "not-going", label: "Not attending" },
+];
+
+function matchesAttendance(event: EventRecord, filter: AttendanceFilter) {
+  if (filter === "going") return event.status === "Confirmed";
+  if (filter === "deciding") return event.status === "TBD" || event.status === "Tentative";
+  if (filter === "not-going") return event.status === "No";
+  return true;
+}
+
+function guaranteedMeetingSignal(event: EventRecord) {
+  if (!event.guaranteedMeetings.startsWith("Yes")) return "0 Guaranteed Meetings";
+  const range = event.guaranteedMeetings.match(/\d+[–-]\d+/)?.[0];
+  return range ? `${range} Guaranteed Meetings` : "Guaranteed Meetings Included";
+}
+
 function EventCard({ event }: { event: EventRecord }) {
   const signal = event.status === "No" ? "Not attending" : event.status;
   const inactive = event.status === "No";
   const speakingOpps = event.speaking === "None" ? 0 : 1;
-  const guaranteedMeetings = event.guaranteedMeetings.startsWith("Yes") ? 1 : 0;
   const attending = event.attendeeCount ?? 0;
   return (
     <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
@@ -22,7 +43,7 @@ function EventCard({ event }: { event: EventRecord }) {
       <p className="event-location">{event.location}</p>
       <div className="event-signals">
         <span>{speakingOpps} Speaking Opp</span>
-        <span>{guaranteedMeetings} Guaranteed {guaranteedMeetings === 1 ? "Meeting" : "Meetings"}</span>
+        <span>{guaranteedMeetingSignal(event)}</span>
         <span>{attending} Attending</span>
       </div>
     </Link>
@@ -31,15 +52,33 @@ function EventCard({ event }: { event: EventRecord }) {
 
 export function EventDirectory({ events }: { events: EventRecord[] }) {
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState("All");
+  const [attendance, setAttendance] = useState<AttendanceFilter>("all");
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     return events.filter((event) => {
-      const matchesQuery = !q || [event.name, event.location, event.dates, event.team.join(" ")].join(" ").toLowerCase().includes(q);
-      const matchesStatus = status === "All" || event.status === status;
-      return matchesQuery && matchesStatus;
+      const searchable = [
+        event.name,
+        event.location,
+        event.dates,
+        event.status,
+        event.team.join(" "),
+        event.available.join(" "),
+        event.speaking,
+        event.sponsorship,
+        event.guaranteedMeetings,
+        event.notes,
+        event.credentials ?? "",
+        ...(event.specialConsiderations ?? []),
+        ...Object.values(event.workstreams ?? {}).flat(),
+      ].join(" ").toLowerCase();
+      return (!q || searchable.includes(q)) && matchesAttendance(event, attendance);
     });
-  }, [events, query, status]);
+  }, [events, query, attendance]);
+
+  const counts = useMemo(() => Object.fromEntries(attendanceFilters.map((filter) => [
+    filter.value,
+    events.filter((event) => matchesAttendance(event, filter.value)).length,
+  ])) as Record<AttendanceFilter, number>, [events]);
 
   const groups: { phase: EventPhase; label: string; kicker: string }[] = [
     { phase: "now", label: "Happening now", kicker: "Current stop" },
@@ -52,14 +91,23 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
       <div className="directory-tools">
         <label>
           <span>Find an event</span>
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search event, city or teammate" />
+          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search event, city, teammate, program or detail" />
         </label>
-        <label>
-          <span>Participation</span>
-          <select value={status} onChange={(e) => setStatus(e.target.value)}>
-            {['All', 'Confirmed', 'TBD', 'Tentative', 'No'].map((item) => <option key={item}>{item}</option>)}
-          </select>
-        </label>
+        <fieldset className="attendance-filters">
+          <legend>TeamSimple attendance</legend>
+          <div>
+            {attendanceFilters.map((filter) => (
+              <button
+                type="button"
+                key={filter.value}
+                aria-pressed={attendance === filter.value}
+                onClick={() => setAttendance(filter.value)}
+              >
+                <span>{filter.label}</span><b>{counts[filter.value]}</b>
+              </button>
+            ))}
+          </div>
+        </fieldset>
       </div>
 
       {groups.map((group) => {

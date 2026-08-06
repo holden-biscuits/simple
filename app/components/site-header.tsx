@@ -6,6 +6,7 @@ const links = [
   ["AEs", "/ae"],
   ["SDRs", "/sdr"],
   ["Marketing", "/marketing"],
+  ["Search", "/search"],
 ];
 
 export function SiteHeader() {
@@ -21,7 +22,7 @@ export function SiteHeader() {
       </time>
       <nav aria-label="Primary navigation">
         {links.map(([label, href]) => (
-          <Link key={href} href={href} className={label === "Events" ? "events-nav-link" : undefined}>{label}</Link>
+          <Link key={href} href={href} className={label === "Events" ? "events-nav-link" : label === "Search" ? "search-nav-link" : undefined}>{label}</Link>
         ))}
       </nav>
     </header>

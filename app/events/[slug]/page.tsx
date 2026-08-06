@@ -19,20 +19,41 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const event = eventBySlug(slug);
   if (!event) notFound();
   const workstreams = getWorkstreams(event);
+  const hasGuaranteedMeetings = event.guaranteedMeetings.startsWith("Yes");
+  const bookedMeetingCount = event.meetingsBooked.length;
   const facts = [
     ["Status", event.status === "No" ? "Not attending" : event.status],
     ["Where", event.location],
     ["Planned headcount", event.attendeeCount?.toString() ?? "None"],
-    ["Guaranteed meetings", event.guaranteedMeetings],
+    ["Guaranteed package", hasGuaranteedMeetings ? event.guaranteedMeetings : "No"],
+    ["Meetings booked", bookedMeetingCount.toString()],
     ["Speaking", event.speaking],
     ["Sponsorship", event.sponsorship],
-  ];
+    ...(event.credentials ? [["Credentials", event.credentials]] : []),
+  ] as string[][];
   const resultGroups = [
     ["Meetings booked", event.meetingsBooked],
     ["Demos booked", event.demosBooked],
     ["Closed", event.closed],
   ] as const;
   const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
+  const activeWorkstreamKeys = workstreamKeys.filter((key) => !(workstreams[key].length === 1 && workstreams[key][0] === "None"));
+  const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
+  const programMix = [
+    !event.sponsorship.toLowerCase().startsWith("none") ? "Sponsorship" : null,
+    event.speaking !== "None" ? "Speaking" : null,
+    workstreams.swag.length === 1 && workstreams.swag[0] === "None" ? null : "Swag / materials",
+  ].filter(Boolean).join(" · ") || "Attendance only";
+  const meetingSummary = hasGuaranteedMeetings
+    ? `${event.guaranteedMeetings.replace(/^Yes\s*·?\s*/, "Included")} · ${bookedMeetingCount} booked`
+    : `No guaranteed meetings · ${bookedMeetingCount} booked`;
+  const tldr = [
+    ["Participation", event.status === "No" ? "Not attending" : event.status],
+    ["Program mix", programMix],
+    ["Meetings", meetingSummary],
+    ["Team", event.attendeeCount ? `${event.attendeeCount} planned` : event.team.length ? `${event.team.length} named` : "Not assigned"],
+  ];
+  const showResults = event.phase === "past" || resultGroups.some(([, items]) => items.length > 0);
 
   return (
     <main id="page-top">
@@ -46,13 +67,29 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         <p className="event-summary">{event.notes}</p>
       </section>
       <PageContents items={[
+        { id: "event-tldr", label: "TL;DR" },
         { id: "event-facts", label: "At a glance" },
         { id: "event-crew", label: "Crew" },
-        ...workstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] })),
-        { id: "event-results", label: "Results" },
+        ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
+        ...activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] })),
+        ...(showResults ? [{ id: "event-results", label: "Results" }] : []),
       ]} />
 
+      <section className="event-tldr shell" id="event-tldr">
+        <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>Know this before you go.</h2></div>
+        <div className="tldr-grid">{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
+        <p className="tldr-note">{event.notes}</p>
+      </section>
+
       <section className="fact-strip shell" id="event-facts">{facts.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</section>
+
+      {event.specialConsiderations?.length ? (
+        <section className="event-considerations shell" id="event-considerations">
+          <div><p className="eyebrow">Rules of engagement</p><h2>What is different about this event.</h2></div>
+          <ol>{event.specialConsiderations.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
+          <BackToTop />
+        </section>
+      ) : null}
 
       <section className="shell event-body">
         <aside id="event-crew">
@@ -71,22 +108,22 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         </aside>
         <div className="workstreams">
           <div className="section-intro"><p className="eyebrow">Event checklist</p><h2>What needs to happen.</h2></div>
-          {workstreamKeys.map((key, index) => {
+          {activeWorkstreamKeys.map((key, index) => {
             const items = workstreams[key];
-            const isNone = items.length === 1 && items[0] === "None";
-            return <article className={`workstream ${isNone ? "workstream-none" : ""}`} id={`workstream-${key}`} key={key}>
+            return <article className="workstream" id={`workstream-${key}`} key={key}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div><h3>{workstreamLabels[key]}</h3><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop /></div>
             </article>;
           })}
+          {inactiveWorkstreamKeys.length ? <details className="not-in-plan"><summary>Not in this event plan <span>{inactiveWorkstreamKeys.length}</span></summary><p>{inactiveWorkstreamKeys.map((key) => workstreamLabels[key]).join(" · ")} — None.</p></details> : null}
         </div>
       </section>
 
-      <section className="shell outcomes" id="event-results">
+      {showResults ? <section className="shell outcomes" id="event-results">
         <div className="section-intro"><p className="eyebrow">Event results</p><h2>Results recorded in the tracker.</h2></div>
         <div className="outcome-grid">{resultGroups.map(([label, items]) => <article key={label}><span>{label}</span>{items.length ? <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p>None</p>}</article>)}</div>
         <BackToTop />
-      </section>
+      </section> : null}
       <Footer />
     </main>
   );

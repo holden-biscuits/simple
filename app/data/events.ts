@@ -32,6 +32,8 @@ export type EventRecord = {
   closed: string[];
   organizerUrl: string;
   notionUrl?: string;
+  credentials?: string;
+  specialConsiderations?: string[];
   workstreams?: Partial<Record<WorkstreamKey, string[]>>;
 };
 
@@ -378,17 +380,24 @@ export const events: EventRecord[] = [
     attendeeCount: 9,
     team: ["Cat", "Matt", "Taylor", "Josh"],
     available: ["Carter"],
-    notes: "Notion plans all SDRs and AEs except Ivan, plus Cat and Holden; reconcile final roster with the sheet.",
+    notes: "Booth, speaking slot, and a nine-person team make this one of the fall’s largest activations. Final roster still needs to be reconciled between Notion and the tracker.",
     rating: "None",
     meetingsBooked: [],
     demosBooked: [],
     closed: [],
     organizerUrl: "https://www.genesys.com/xperience",
-    notionUrl: sourceLinks.notion,
+    notionUrl: "https://www.notion.so/3aa6fee642fe81c88a89de617863507c",
+    credentials: "9 booth passes",
+    specialConsiderations: [
+      "Simple is a Genesys partner. Position the partnership positively; do not frame Genesys as the problem or knock the platform.",
+      "Simple is the only voice AI partner at the show. Lead with how we extend the Genesys ecosystem and use that distinction to focus target-account outreach.",
+      "There are no guaranteed meetings. Build the target list early, use the event app, and pre-book directly.",
+      "Nine booth passes require named shifts, clear handoffs, and enough floor coverage during the speaking session.",
+    ],
     workstreams: {
-      speaking: ["20-minute solution talk on Sep 3 at 1:10 PM", "Finalize narrative, speaker and rehearsal"],
+      speaking: ["20-minute solution talk on Sep 3 at 1:10 PM", "Finalize title, abstract, speaker, deck, rehearsal, and AV plan"],
       sponsorship: ["Booth execution", "Evaluate Wish Line out-of-home activation"],
-      meetings: ["No guaranteed meetings", "Create target list and pre-book directly"],
+      meetings: ["No guaranteed meetings", "Create a target-account list and pre-book directly", "Track meetings as they are scheduled so the page shows booked progress separately from package status"],
       swag: ["Confirm booth swag and materials"],
       secondary: ["None"],
       travel: ["Wynn Las Vegas", "Reconcile Notion roster against the source sheet"],
