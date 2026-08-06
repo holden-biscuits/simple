@@ -7,6 +7,9 @@ import type { EventPhase, EventRecord } from "../data/events";
 function EventCard({ event }: { event: EventRecord }) {
   const signal = event.status === "No" ? "Not attending" : event.status;
   const inactive = event.status === "No";
+  const speakingOpps = event.speaking === "None" ? 0 : 1;
+  const guaranteedMeetings = event.guaranteedMeetings.startsWith("Yes") ? 1 : 0;
+  const attending = event.attendeeCount ?? 0;
   return (
     <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
       {inactive ? <span className="event-card-x" aria-hidden="true" /> : null}
@@ -18,9 +21,9 @@ function EventCard({ event }: { event: EventRecord }) {
       <p className="event-date">{event.dates}</p>
       <p className="event-location">{event.location}</p>
       <div className="event-signals">
-        <span>{event.speaking === "None" ? "No speaking" : "Speaking"}</span>
-        <span>{event.guaranteedMeetings.startsWith("Yes") ? "Guaranteed meetings" : "No guaranteed meetings"}</span>
-        {event.attendeeCount ? <span>{event.attendeeCount} planned</span> : null}
+        <span>{speakingOpps} Speaking Opp</span>
+        <span>{guaranteedMeetings} Guaranteed {guaranteedMeetings === 1 ? "Meeting" : "Meetings"}</span>
+        <span>{attending} Attending</span>
       </div>
     </Link>
   );
