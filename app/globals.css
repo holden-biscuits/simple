@@ -99,7 +99,9 @@ button, input, select { font: inherit; }
 .event-card-x::after { transform: translate(-50%, -50%) rotate(-43deg); }
 .event-card-top { display: flex; justify-content: space-between; align-items: start; }
 .arrow { font-size: 20px; }
-.status { font: 700 11px var(--font-geist-mono), monospace; text-transform: uppercase; padding: 8px 11px; border: 1px solid currentColor; background: var(--paper); }
+.status { position: relative; isolation: isolate; display: inline-flex; align-items: center; padding: 9px 18px 9px 12px; border: 0; background: currentColor; clip-path: polygon(0 0, 93% 0, 100% 50%, 93% 100%, 0 100%); font: 700 11px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.status::before { content: ''; position: absolute; inset: 1px; z-index: -1; background: var(--paper); clip-path: polygon(0 0, 93% 0, 100% 50%, 93% 100%, 0 100%); }
+.status > span { position: relative; z-index: 1; }
 .status-confirmed { color: var(--green); }
 .status-no { color: var(--muted); }
 .status-tbd, .status-tentative { color: #8a4d00; }

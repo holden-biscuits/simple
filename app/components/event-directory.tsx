@@ -11,7 +11,7 @@ function EventCard({ event }: { event: EventRecord }) {
     <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
       {inactive ? <span className="event-card-x" aria-hidden="true" /> : null}
       <div className="event-card-top">
-        <span className={`status status-${event.status.toLowerCase()}`}>{signal}</span>
+        <span className={`status status-${event.status.toLowerCase()}`}><span>{signal}</span></span>
         <span className="arrow" aria-hidden="true">↗</span>
       </div>
       <h3>{event.name}</h3>
