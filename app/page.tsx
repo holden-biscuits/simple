@@ -4,6 +4,7 @@ import Link from "next/link";
 import { EventDirectory } from "./components/event-directory";
 import { SiteHeader } from "./components/site-header";
 import { Footer } from "./components/footer";
+import { BackToTop, PageContents } from "./components/page-contents";
 import { events } from "./data/events";
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export default function Home() {
   const confirmedUpcoming = events.filter((e) => e.phase !== "past" && e.status === "Confirmed").length;
   const meetings = events.filter((e) => e.guaranteedMeetings.startsWith("Yes")).length;
   return (
-    <main>
+    <main id="page-top">
       <SiteHeader />
       <section className="home-hero">
         <div className="hero-copy">
@@ -42,13 +43,18 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <PageContents items={[
+        { id: "program-summary", label: "Program summary" },
+        { id: "events", label: "Event directory" },
+      ]} />
 
-      <section className="stats shell" aria-label="Program summary">
+      <section className="stats shell" id="program-summary" aria-label="Program summary">
         <div><strong>{events.length}</strong><span>events on the map</span></div>
         <div><strong>{confirmedUpcoming}</strong><span>confirmed ahead</span></div>
         <div><strong>{meetings}</strong><span>include guaranteed meetings</span></div>
         <div><strong>09</strong><span>planning workstreams</span></div>
       </section>
+      <div className="shell section-return"><BackToTop /></div>
 
       <section className="directory shell" id="events">
         <div className="section-intro">
@@ -57,6 +63,7 @@ export default function Home() {
           <p>The conference tracker supplies the event list. Active Notion projects add the working details. If nothing is planned for a workstream, the page says “None.”</p>
         </div>
         <EventDirectory events={events} />
+        <BackToTop />
       </section>
       <Footer />
     </main>

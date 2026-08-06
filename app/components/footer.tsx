@@ -8,6 +8,8 @@ export function Footer() {
         <p>Use the checklist. Confirm the plan. Record what happened.</p>
       </div>
       <div className="source-links">
+        <a href="https://app.zoominfo.com/" target="_blank" rel="noreferrer">ZoomInfo ↗</a>
+        <a href="https://app.hubspot.com/" target="_blank" rel="noreferrer">HubSpot ↗</a>
         <Link href="/sources">About this site’s sources →</Link>
       </div>
     </footer>
