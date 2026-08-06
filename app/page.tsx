@@ -23,15 +23,6 @@ export default function Home() {
           <p className="eyebrow">TeamSimple · 2026 event plan</p>
           <h1>Know the route before you hit the floor.</h1>
           <p className="hero-note">Dates, staffing, meeting targets, event plans, and follow-up live here.</p>
-        </div>
-        <div className="hero-tools">
-          <div className="route-board" aria-label="Basecamp quick guide">
-            <div className="route-board-head"><span>Basecamp notes</span><span>2026</span></div>
-            <div className="route-line"><span>01</span><p>Check the event page before booking or shipping anything.</p></div>
-            <div className="route-line"><span>02</span><p>Know your accounts, your owner, and the next-step ask.</p></div>
-            <div className="route-line"><span>03</span><p>Log the conversation before the day ends.</p></div>
-            <Link className="button" href="/guides">Open the prep guide <span>↗</span></Link>
-          </div>
           <div className="ranger-card">
             <div className="ranger-figure">
               <Image src="/ranger-raccoon.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with the Simple logo" priority unoptimized />
@@ -40,6 +31,15 @@ export default function Home() {
               </span>
             </div>
             <p><strong>Start here:</strong> check the event page before you book, ship, or promote.</p>
+          </div>
+        </div>
+        <div className="hero-tools">
+          <div className="route-board" aria-label="Basecamp quick guide">
+            <div className="route-board-head"><span>Basecamp notes</span><span>2026</span></div>
+            <div className="route-line"><span>01</span><p>Check the event page before booking or shipping anything.</p></div>
+            <div className="route-line"><span>02</span><p>Know your accounts, your owner, and the next-step ask.</p></div>
+            <div className="route-line"><span>03</span><p>Log the conversation before the day ends.</p></div>
+            <Link className="button" href="/guides">Open the prep guide <span>↗</span></Link>
           </div>
         </div>
       </section>
