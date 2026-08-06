@@ -21,9 +21,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Know the route before you hit the floor\./);
   assert.match(html, /TeamSimple attendance/);
   assert.match(html, /Genesys Xperience/);
-  assert.match(html, /Resolve these before more work starts\./);
-  assert.match(html, /Contact\.io/);
-  assert.match(html, /Customer Connect Expo/);
+  assert.doesNotMatch(html, /Resolve these before more work starts\./);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|Building your site/i);
 });
 
@@ -37,8 +35,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
   assert.match(html, /Approval queue/);
-  assert.match(html, /Customer Connect Expo/);
-  assert.match(html, /ICMI/i);
+  assert.match(html, /No unresolved source conflicts are recorded\./);
 });
 
 test("server-renders dynamic event facts without empty filler notes", async () => {
@@ -48,6 +45,23 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /No guaranteed meetings/);
   assert.match(genesysHtml, /Do these next/);
   assert.match(genesysHtml, /Wish Line/);
+
+  const contact = await render("/events/contact-io");
+  assert.equal(contact.status, 200);
+  const contactHtml = await contact.text();
+  assert.match(contactHtml, /Not attending/);
+
+  const customerConnect = await render("/events/customer-connect-expo");
+  assert.equal(customerConnect.status, 200);
+  const customerConnectHtml = await customerConnect.text();
+  assert.match(customerConnectHtml, /Confirmed/);
+  assert.match(customerConnectHtml, /Four attendees and a 10×10 booth are planned/);
+
+  const icmi = await render("/events/icmi-contact-center-expo");
+  assert.equal(icmi.status, 200);
+  const icmiHtml = await icmi.text();
+  assert.match(icmiHtml, /Confirmed/);
+  assert.match(icmiHtml, /TeamSimple is attending/);
 
   const orlando = await render("/events/ccw-orlando");
   assert.equal(orlando.status, 200);

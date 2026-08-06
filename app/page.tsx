@@ -15,7 +15,6 @@ export const metadata: Metadata = {
 export default function Home() {
   const confirmedUpcoming = events.filter((e) => e.phase !== "past" && e.status === "Confirmed").length;
   const meetings = events.filter((e) => e.guaranteedMeetings.startsWith("Yes")).length;
-  const decisionEvents = events.filter((event) => event.status === "TBD" || event.status === "Tentative");
   return (
     <main id="page-top">
       <SiteHeader />
@@ -46,7 +45,6 @@ export default function Home() {
       </section>
       <PageContents items={[
         { id: "program-summary", label: "Program summary" },
-        { id: "decisions", label: "Open decisions" },
         { id: "events", label: "Event directory" },
       ]} />
 
@@ -57,27 +55,6 @@ export default function Home() {
         <div><strong>09</strong><span>planning workstreams</span></div>
       </section>
       <div className="shell section-return"><BackToTop /></div>
-
-      <section className="decision-queue" id="decisions">
-        <div className="shell">
-          <div className="section-intro">
-            <p className="eyebrow">Open decisions</p>
-            <h2>Resolve these before more work starts.</h2>
-            <p>These events are not fully cleared. Each card shows the first unresolved item in its event plan.</p>
-          </div>
-          <div className="decision-grid">{decisionEvents.map((event, index) => {
-            const conflict = event.notes.toLowerCase().startsWith("source conflict:");
-            const nextAction = event.priorityActions?.[0] ?? event.notes;
-            return <Link href={`/events/${event.slug}`} key={event.slug}>
-              <div className="decision-meta"><span>{String(index + 1).padStart(2, "0")}</span><b>{conflict ? "Source conflict" : event.status}</b></div>
-              <h3>{event.name}</h3>
-              <p>{nextAction}</p>
-              <small>{event.dates} · Open event ↗</small>
-            </Link>;
-          })}</div>
-          <BackToTop />
-        </div>
-      </section>
 
       <section className="directory shell" id="events">
         <div className="section-intro">

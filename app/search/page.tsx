@@ -15,7 +15,6 @@ const referenceRecords: SearchRecord[] = [
   { type: "Role", title: "AE field guide", href: "/ae", description: "Account preparation, onsite discovery, demos, HubSpot notes, Granola, and next steps.", keywords: "account executive meeting hypothesis deal booked meeting CRM follow-up" },
   { type: "Role", title: "SDR field guide", href: "/sdr", description: "Targeting, event outreach, qualification, handoffs, and post-event follow-up.", keywords: "sales development representative sequence phone email LinkedIn ZoomInfo event app" },
   { type: "Operations", title: "Marketing operations", href: "/marketing", description: "Event support matrix, operating lessons, production, capture, reporting, and measurement.", keywords: "campaign creative booth contract sponsor deliverables ROI budget support matrix lessons" },
-  { type: "Operations", title: "Open participation decisions", href: "/#decisions", description: "TBD and tentative events that are blocking registration, travel, or production work.", keywords: "decision queue tbd tentative go no-go approval registration travel production" },
   { type: "Operations", title: "Source monitor and approval queue", href: "/sources", description: "What controls the site, what the recurring scan checks, and which source conflicts need a decision.", keywords: "source hierarchy conference tracker notion google drive slack gmail hubspot granola monaco contracts files automation cadence conflict approval queue" },
 ];
 
