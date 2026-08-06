@@ -12,7 +12,7 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <Link href="/" className="brand" aria-label="Events Hub home">
-        <span className="brand-mark"><span>TS</span><b>▲</b></span>
+        <span className="brand-mark"><span>Team<br />Simple</span><b>▲</b></span>
         <span>Event Basecamp <small>2026</small></span>
       </Link>
       <time className="updated-stamp" dateTime="2026-08-06" aria-label="Last updated August 6, 2026">

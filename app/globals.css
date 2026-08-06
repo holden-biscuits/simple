@@ -29,7 +29,7 @@ button, input, select { font: inherit; }
 .brand small { color: var(--trail); font: 700 9px var(--font-geist-mono), monospace; letter-spacing: .18em; }
 .brand-mark { display: grid; grid-template-columns: 1fr; grid-template-rows: 1fr; place-items: center; width: 48px; height: 48px; background: var(--green); color: var(--paper); border: 2px solid var(--green); outline: 1px solid var(--paper); outline-offset: -4px; border-radius: 9px; font: 700 10px var(--font-geist-mono), monospace; letter-spacing: 0; transform: rotate(-3deg); }
 .brand-mark span, .brand-mark b { grid-area: 1 / 1; }
-.brand-mark span { transform: translateY(9px); }
+.brand-mark span { text-align: center; line-height: .95; transform: translateY(9px); }
 .brand-mark b { color: var(--signal); font-size: 20px; transform: translateY(-7px); }
 .updated-stamp { margin-left: auto; min-width: 130px; padding: 8px 12px 7px; display: flex; flex-direction: column; align-items: center; border: 2px solid var(--signal); outline: 1px dashed var(--signal); outline-offset: -5px; background: color-mix(in srgb, var(--signal) 9%, var(--paper)); color: var(--signal-dark); font-family: var(--font-geist-mono), monospace; text-transform: uppercase; transform: rotate(-1.5deg); }
 .updated-stamp span { font-size: 9px; font-weight: 800; letter-spacing: .12em; }
