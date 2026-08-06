@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { EventDirectory } from "./components/event-directory";
 import { SiteHeader } from "./components/site-header";
@@ -22,12 +23,18 @@ export default function Home() {
           <h1>Know the route before you hit the floor.</h1>
           <p className="hero-note">Dates, staffing, meeting targets, event plans, and follow-up live here.</p>
         </div>
-        <div className="route-board" aria-label="Basecamp quick guide">
-          <div className="route-board-head"><span>Basecamp notes</span><span>2026</span></div>
-          <div className="route-line"><span>01</span><p>Check the event page before booking or shipping anything.</p></div>
-          <div className="route-line"><span>02</span><p>Know your accounts, your owner, and the next-step ask.</p></div>
-          <div className="route-line"><span>03</span><p>Log the conversation before the day ends.</p></div>
-          <Link className="button" href="/guides">Open the prep guide <span>↗</span></Link>
+        <div className="hero-tools">
+          <div className="route-board" aria-label="Basecamp quick guide">
+            <div className="route-board-head"><span>Basecamp notes</span><span>2026</span></div>
+            <div className="route-line"><span>01</span><p>Check the event page before booking or shipping anything.</p></div>
+            <div className="route-line"><span>02</span><p>Know your accounts, your owner, and the next-step ask.</p></div>
+            <div className="route-line"><span>03</span><p>Log the conversation before the day ends.</p></div>
+            <Link className="button" href="/guides">Open the prep guide <span>↗</span></Link>
+          </div>
+          <div className="ranger-card">
+            <Image src="/ranger-raccoon.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with an orange S badge" priority />
+            <p><strong>Scout’s rule:</strong> check the event page before you pack.</p>
+          </div>
         </div>
       </section>
 
@@ -38,7 +45,7 @@ export default function Home() {
         <div><strong>09</strong><span>planning workstreams</span></div>
       </section>
 
-      <section className="directory shell">
+      <section className="directory shell" id="events">
         <div className="section-intro">
           <p className="eyebrow">2026 route</p>
           <h2>Pick an event. See the whole plan.</h2>

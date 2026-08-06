@@ -42,6 +42,8 @@ export const sourceLinks = {
     "https://docs.google.com/document/d/1gI8X6pHUFc2q9C5XwhtW29LASqmnfiCEw6RqzeovcZs/edit?tab=t.0",
   notion:
     "https://www.notion.so/3aa6fee642fe811ba195d64bedc3f6fe",
+  eventsDrive:
+    "https://drive.google.com/drive/folders/1p4C7CDY4bgiZ4V4EgmrMUeKHRRqwRxQq",
 };
 
 export const events: EventRecord[] = [

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const links = [
-  ["Events", "/"],
+  ["Events", "/#events"],
   ["Guides", "/guides"],
   ["AEs", "/ae"],
   ["SDRs", "/sdr"],
@@ -17,7 +17,7 @@ export function SiteHeader() {
       </Link>
       <nav aria-label="Primary navigation">
         {links.map(([label, href]) => (
-          <Link key={href} href={href}>{label}</Link>
+          <Link key={href} href={href} className={label === "Events" ? "events-nav-link" : undefined}>{label}</Link>
         ))}
       </nav>
     </header>

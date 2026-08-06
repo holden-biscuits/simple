@@ -29,11 +29,13 @@ export default function GuidesPage() {
           <ol>
             <li><strong>Conference tracker</strong><span>Controls the event roster, dates, status and topline staffing.</span></li>
             <li><strong>Events in Notion</strong><span>Controls execution detail for active event projects.</span></li>
+            <li><strong>Events Drive</strong><span>Stores contracts, creative, attendee files, and post-event artifacts.</span></li>
             <li><strong>Event page</strong><span>Combines the planning details and links to the organizer site.</span></li>
           </ol>
           <div className="source-links vertical">
             <a href={sourceLinks.sheet} target="_blank" rel="noreferrer">Open tracker ↗</a>
             <a href={sourceLinks.notion} target="_blank" rel="noreferrer">Open Notion ↗</a>
+            <a href={sourceLinks.eventsDrive} target="_blank" rel="noreferrer">Open Events Drive ↗</a>
             <a href={sourceLinks.ccwPlan} target="_blank" rel="noreferrer">Open Vegas reference ↗</a>
           </div>
         </article>
