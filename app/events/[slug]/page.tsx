@@ -60,7 +60,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     ["Meetings", meetingSummary],
     ["Team", isNotAttending ? "No team assigned" : event.attendeeCount ? `${event.attendeeCount} planned` : event.team.length ? `${event.team.length} named` : "Not assigned"],
   ];
-  const showResults = event.phase === "past" || resultGroups.some(([, items]) => items.length > 0);
+  const showResults = event.phase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
 
   return (
     <main id="page-top">
@@ -158,9 +158,18 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       </section>
 
       {showResults ? <section className="shell outcomes" id="event-results">
-        <div className="section-intro"><p className="eyebrow">Event results</p><h2>Results recorded in the tracker.</h2></div>
+        <div className="section-intro"><p className="eyebrow">Event results</p><h2>Results recorded across event sources.</h2></div>
         <div className="outcome-grid">{resultGroups.map(([label, items]) => <article key={label}><span>{label}</span>{items.length ? <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p>None</p>}</article>)}</div>
         {event.outcomeNotes?.length ? <ul className="outcome-notes">{event.outcomeNotes.map((note) => <li key={note}>{note}</li>)}</ul> : null}
+        {event.crmSnapshot ? <article className="crm-snapshot">
+          <div className="crm-snapshot-head">
+            <div><p className="eyebrow">{event.crmSnapshot.system} attribution</p><h3>{event.crmSnapshot.totalDeals} explicitly attributed deals</h3></div>
+            <a href={event.crmSnapshot.url} target="_blank" rel="noreferrer">Open HubSpot ↗</a>
+          </div>
+          <p className="crm-attribution">{event.crmSnapshot.attribution} · Checked {event.crmSnapshot.checkedAt}</p>
+          <div className="crm-stage-grid">{event.crmSnapshot.stages.map((stage) => <div key={stage.label}><strong>{stage.count}</strong><span>{stage.label}</span></div>)}</div>
+          <p className="crm-quality"><strong>Data quality</strong>{event.crmSnapshot.dataQualityNote}</p>
+        </article> : null}
         <BackToTop />
       </section> : null}
       </>}

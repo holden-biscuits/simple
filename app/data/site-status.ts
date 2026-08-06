@@ -10,6 +10,14 @@ export const siteStatus = {
     connectionCheckedAt: "2026-08-06",
     connectionCheckedLabel: "Aug 06 · 2026",
     lastSuccessfulScan: null as null | string,
+    latestChecks: [
+      {
+        system: "HubSpot",
+        checkedAt: "Aug 06 · 2026",
+        scope: "Deals with Deal Source = Event / Conference and Deal Source Detail = CCW Vegas follow-up",
+        result: "29 of 29 matching records reviewed. Stage counts were added to CCW Vegas; pipeline value remains unpublished because every attributed deal currently has $0 amount.",
+      },
+    ],
     sources: [
       { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing" },
       { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions" },

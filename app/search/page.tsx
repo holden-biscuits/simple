@@ -23,6 +23,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     event.meetingsBooked.length ? `${event.meetingsBooked.length} meeting${event.meetingsBooked.length === 1 ? "" : "s"}` : "",
     event.demosBooked.length ? `${event.demosBooked.length} demo${event.demosBooked.length === 1 ? "" : "s"}` : "",
     event.closed.length ? `${event.closed.length} closed` : "",
+    event.crmSnapshot ? `${event.crmSnapshot.totalDeals} HubSpot deal${event.crmSnapshot.totalDeals === 1 ? "" : "s"}` : "",
   ].filter(Boolean).join(" · ");
   const details = [
     event.venue ? `Venue · ${event.venue}` : "",
@@ -41,6 +42,12 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     ...event.meetingsBooked.map((item) => `Meeting · ${item}`),
     ...event.demosBooked.map((item) => `Demo · ${item}`),
     ...event.closed.map((item) => `Closed · ${item}`),
+    ...(event.crmSnapshot ? [
+      `${event.crmSnapshot.system} attribution · ${event.crmSnapshot.attribution}`,
+      `${event.crmSnapshot.system} deals · ${event.crmSnapshot.totalDeals}`,
+      ...event.crmSnapshot.stages.map((stage) => `${event.crmSnapshot?.system} stage · ${stage.label}: ${stage.count}`),
+      `Data quality · ${event.crmSnapshot.dataQualityNote}`,
+    ] : []),
   ].filter(Boolean);
   return {
     type: "Event",

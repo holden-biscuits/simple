@@ -39,6 +39,15 @@ export type EventRecord = {
   relatedLinks?: { label: string; url: string }[];
   meetingCountLabel?: string;
   outcomeNotes?: string[];
+  crmSnapshot?: {
+    system: "HubSpot";
+    checkedAt: string;
+    attribution: string;
+    totalDeals: number;
+    stages: { label: string; count: number }[];
+    dataQualityNote: string;
+    url: string;
+  };
   workstreams?: Partial<Record<WorkstreamKey, string[]>>;
 };
 
@@ -242,6 +251,22 @@ export const events: EventRecord[] = [
     demosBooked: [],
     closed: [],
     organizerUrl: "https://www.customercontactweek.com/ccw-lasvegas/schedule",
+    crmSnapshot: {
+      system: "HubSpot",
+      checkedAt: "Aug 6, 2026",
+      attribution: "Deal Source: Event / Conference · Deal Source Detail: CCW Vegas follow-up",
+      totalDeals: 29,
+      stages: [
+        { label: "Meeting booked", count: 5 },
+        { label: "Qualification", count: 6 },
+        { label: "Demo completed", count: 8 },
+        { label: "Validation", count: 2 },
+        { label: "Closed lost", count: 4 },
+        { label: "Disqualified", count: 4 },
+      ],
+      dataQualityNote: "All 29 attributed deals currently have $0 amount, so the CRM does not yet support a pipeline-value claim. No attributed deal is marked Closed Won.",
+      url: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+    },
     workstreams: {
       speaking: ["Fireside chat with Cat and Grant", "Drive engaged contacts to the session and help them add it to their calendar"],
       sponsorship: ["Booth and backdrop", "Klik lead capture", "Raffle poster and QR workflow"],

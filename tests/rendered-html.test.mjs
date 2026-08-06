@@ -36,6 +36,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Granola/);
   assert.match(html, /Approval queue/);
   assert.match(html, /No unresolved source conflicts are recorded\./);
+  assert.match(html, /Latest applied checks/);
+  assert.match(html, /29 of 29 matching records reviewed/);
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
@@ -81,4 +83,13 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(orlando.status, 200);
   const orlandoHtml = await orlando.text();
   assert.doesNotMatch(orlandoHtml, /Past event\. Booth presence is recorded/);
+
+  const vegas = await render("/events/ccw-vegas");
+  assert.equal(vegas.status, 200);
+  const vegasHtml = await vegas.text();
+  assert.match(vegasHtml, /crm-snapshot/);
+  assert.match(vegasHtml, /HubSpot/);
+  assert.match(vegasHtml, /explicitly attributed deals/);
+  assert.match(vegasHtml, /Demo completed/);
+  assert.match(vegasHtml, /All 29 attributed deals currently have \$0 amount/);
 });

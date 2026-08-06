@@ -50,6 +50,14 @@ export default function SourcesPage() {
             <p>{source.use}</p>
           </article>)}
         </div>
+        <div className="source-checks" aria-label="Latest source checks">
+          <p className="eyebrow">Latest applied checks</p>
+          {monitor.latestChecks.map((check) => <article key={`${check.system}-${check.checkedAt}`}>
+            <div><strong>{check.system}</strong><span>{check.checkedAt}</span></div>
+            <p>{check.scope}</p>
+            <p>{check.result}</p>
+          </article>)}
+        </div>
         <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Last completed scan: ${monitor.lastSuccessfulScan}` : "No completed scan receipt has been written yet. The next successful run will add one here."}</p>
         <BackToTop />
       </section>

@@ -77,6 +77,9 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
         ...event.meetingsBooked,
         ...event.demosBooked,
         ...event.closed,
+        event.crmSnapshot?.attribution ?? "",
+        event.crmSnapshot?.dataQualityNote ?? "",
+        ...(event.crmSnapshot?.stages.map((stage) => `${stage.label} ${stage.count}`) ?? []),
         ...Object.values(event.workstreams ?? {}).flat(),
       ].join(" ").toLowerCase();
       return (!q || searchable.includes(q)) && matchesAttendance(event, attendance);

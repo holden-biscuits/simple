@@ -173,6 +173,11 @@ button, input, select { font: inherit; }
 .source-coverage p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
 .source-state { padding: 6px 8px; color: white; background: var(--green); font: 800 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .source-state-indirect { color: #6b4100; background: #ffd08c; }
+.source-checks { margin-top: 40px; }
+.source-checks article { margin-top: 12px; padding: 22px; border: 1px solid var(--line); background: var(--canvas); }
+.source-checks article > div { display: flex; justify-content: space-between; gap: 20px; color: var(--signal-dark); font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.source-checks article p { margin: 12px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.source-checks article p:last-child { color: var(--ink); }
 .scan-receipt { margin: 25px 0 0; padding: 17px 20px; border-left: 4px solid var(--signal); background: var(--canvas); color: #484a42; }
 .approval-queue { padding-block: 100px; color: var(--paper); background: var(--green); }
 .approval-queue .eyebrow { color: #ff8b67; }
@@ -358,6 +363,18 @@ button, input, select { font: inherit; }
 .outcome-grid p { color: var(--muted); }
 .outcome-notes { margin: 22px 0 0; padding: 22px 24px 22px 42px; border-left: 4px solid var(--signal); background: var(--canvas); }
 .outcome-notes li { margin: 7px 0; line-height: 1.5; }
+.crm-snapshot { margin-top: 28px; padding: 34px; color: var(--paper); background: var(--green); border: 1px solid var(--ink); box-shadow: 9px 9px 0 var(--signal); }
+.crm-snapshot-head { display: flex; justify-content: space-between; align-items: start; gap: 30px; }
+.crm-snapshot .eyebrow { color: #ff9b7d; }
+.crm-snapshot h3 { margin: 8px 0 0; font: 400 clamp(32px, 4vw, 49px)/1 Georgia, serif; letter-spacing: -.035em; }
+.crm-snapshot-head a { flex: none; padding: 10px 12px; color: var(--green); background: var(--paper); font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.crm-attribution { margin: 26px 0 18px; color: rgba(255,255,255,.72); font-size: 14px; line-height: 1.5; }
+.crm-stage-grid { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid rgba(255,255,255,.38); border-left: 1px solid rgba(255,255,255,.38); }
+.crm-stage-grid div { min-height: 115px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid rgba(255,255,255,.38); border-bottom: 1px solid rgba(255,255,255,.38); }
+.crm-stage-grid strong { font: 400 38px Georgia, serif; }
+.crm-stage-grid span { color: rgba(255,255,255,.7); font: 700 9px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.crm-quality { margin: 18px 0 0; padding: 16px 18px; color: #302b26; background: #ffd08c; font-size: 14px; line-height: 1.55; }
+.crm-quality strong { display: block; margin-bottom: 4px; color: #6b4100; font: 800 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
 
 .footer { padding: 55px max(30px, calc((100vw - 1180px)/2)); background: var(--green); color: var(--paper); display: flex; justify-content: space-between; gap: 40px; align-items: end; border-top: 8px solid var(--signal); }
 .footer > div:first-child { display: flex; gap: 18px; align-items: center; }
@@ -380,6 +397,7 @@ button, input, select { font: inherit; }
   .lesson-grid { grid-template-columns: 1fr 1fr; }
   .event-body aside { position: static; }
   .fact-strip, .tldr-grid { grid-template-columns: 1fr 1fr; }
+  .crm-stage-grid { grid-template-columns: repeat(3, 1fr); }
   .role-links { grid-template-columns: 1fr; }
   .timeline article { grid-template-columns: 110px 1fr; }
   .timeline article p { grid-column: 2; }
@@ -396,6 +414,9 @@ button, input, select { font: inherit; }
   .home-hero h1 { font-size: 58px; }
   .role-hero h1, .event-hero h1 { font-size: 58px; }
   .stats, .event-grid, .directory-tools, .fact-strip, .tldr-grid, .outcome-grid { grid-template-columns: 1fr; }
+  .crm-snapshot { padding: 25px; box-shadow: 6px 6px 0 var(--signal); }
+  .crm-snapshot-head { flex-direction: column; }
+  .crm-stage-grid { grid-template-columns: 1fr 1fr; }
   .attendance-filters > div { grid-template-columns: 1fr 1fr; }
   .attendance-filters button:nth-child(2) { border-right: 0; }
   .attendance-filters button:nth-child(-n+2) { border-bottom: 1px solid var(--ink); }
