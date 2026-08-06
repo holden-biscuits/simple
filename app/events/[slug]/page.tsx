@@ -61,7 +61,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </div>
         </aside>
         <div className="workstreams">
-          <div className="section-intro"><p className="eyebrow">Event pack list</p><h2>What needs to happen.</h2></div>
+          <div className="section-intro"><p className="eyebrow">Event checklist</p><h2>What needs to happen.</h2></div>
           {(Object.keys(workstreamLabels) as WorkstreamKey[]).map((key, index) => {
             const items = workstreams[key];
             const isNone = items.length === 1 && items[0] === "None";
@@ -74,7 +74,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       </section>
 
       <section className="shell outcomes">
-        <div className="section-intro"><p className="eyebrow">Trail log</p><h2>Results recorded in the tracker.</h2></div>
+        <div className="section-intro"><p className="eyebrow">Event results</p><h2>Results recorded in the tracker.</h2></div>
         <div className="outcome-grid">{resultGroups.map(([label, items]) => <article key={label}><span>{label}</span>{items.length ? <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p>None</p>}</article>)}</div>
       </section>
       <Footer />

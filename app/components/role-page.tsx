@@ -27,7 +27,7 @@ export function RolePage({ code, title, intro, sections, handoff }: { code: stri
         ))}
       </section>
       <section className="handoff shell">
-        <p className="eyebrow">Before you pack up</p>
+        <p className="eyebrow">Before you close the event</p>
         <h2>{handoff}</h2>
       </section>
       <Footer />

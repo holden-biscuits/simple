@@ -38,7 +38,7 @@ export default function Home() {
                 <Image src="/simple-mark.svg" width={19} height={24} alt="" />
               </span>
             </div>
-            <p><strong>Scout’s rule:</strong> check the event page before you pack.</p>
+            <p><strong>Start here:</strong> check the event page before you book, ship, or promote.</p>
           </div>
         </div>
       </section>
@@ -52,7 +52,7 @@ export default function Home() {
 
       <section className="directory shell" id="events">
         <div className="section-intro">
-          <p className="eyebrow">2026 route</p>
+          <p className="eyebrow">2026 event program</p>
           <h2>Pick an event. See the whole plan.</h2>
           <p>The conference tracker supplies the event list. Active Notion projects add the working details. If nothing is planned for a workstream, the page says “None.”</p>
         </div>

@@ -130,6 +130,8 @@ button, input, select { font: inherit; }
 
 .guides-hero { min-height: 650px; }
 .guide-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; background: transparent; margin-top: 100px; }
+.guides-hero + .guide-layout { grid-template-columns: minmax(0, 760px); }
+.sources-layout { grid-template-columns: 1fr; margin-bottom: 110px; }
 .guide-panel { background: var(--canvas); padding: 50px; border: 1px solid var(--line); box-shadow: 8px 8px 0 var(--paper-deep); }
 .guide-panel h2 { font-size: 48px; }
 .source-order ol { list-style: none; padding: 0; margin: 40px 0; }

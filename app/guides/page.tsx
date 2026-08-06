@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { Footer } from "../components/footer";
-import { sourceLinks, workstreamLabels } from "../data/events";
+import { workstreamLabels } from "../data/events";
 
 const timeline = [
-  ["T−8 to T−6", "Decide & contract", "Confirm fit, status, budget, sponsor package, speaking, meetings and owner."],
-  ["T−6 to T−4", "Message & target", "Build target accounts, landing page, session narrative, attendee roster and promotion plan."],
-  ["T−4 to T−2", "Produce & book", "Finish creative and demos, order materials, book travel and secure meetings."],
-  ["T−2 to T−0", "Rehearse & ship", "Rehearse content, confirm logistics, ship the field kit and brief every attendee."],
-  ["On site", "Capture & qualify", "Keep Granola on, log context, tier the interaction and make a next-step ask."],
-  ["T+0 to T+2", "Reconcile & act", "Merge sources, dedupe, tag, route and send personalized follow-up."],
-  ["T+7", "Debrief & learn", "Reconcile outcomes and budget; document repeat, change and stop decisions."],
+  ["T−8 to T−6 weeks", "Decide & contract", "Confirm fit, status, budget, sponsor package, speaking, meetings and owner."],
+  ["T−6 to T−4 weeks", "Message & target", "Build target accounts, landing page, session narrative, attendee roster and promotion plan."],
+  ["T−4 to T−2 weeks", "Produce & book", "Finish creative and demos, order materials, book travel and secure meetings."],
+  ["T−2 to T−0 weeks", "Rehearse & ship", "Rehearse content, confirm logistics, ship event materials and brief every attendee."],
+  ["Event days", "Capture & qualify", "Keep Granola on, log context, tier the interaction and make a next-step ask."],
+  ["T+0 to T+2 days", "Reconcile & act", "Merge sources, dedupe, tag, route and send personalized follow-up."],
+  ["T+7 days", "Debrief & learn", "Reconcile outcomes and budget; document repeat, change and stop decisions."],
 ];
 
 export default function GuidesPage() {
@@ -18,37 +18,21 @@ export default function GuidesPage() {
     <main>
       <SiteHeader />
       <section className="role-hero guides-hero">
-        <p className="eyebrow">Basecamp guide</p>
+        <p className="eyebrow">Event process</p>
         <h1>How we prepare, work the floor, and follow up.</h1>
-        <p className="lede">The CCW Vegas plan supplies the default checklist. Every event page uses the same nine workstreams. If the team is not doing something, the page says “None.”</p>
+        <p className="lede">Every event page uses the same nine workstreams. If the team is not doing something, the page says “None.”</p>
       </section>
       <section className="shell guide-layout">
-        <article className="guide-panel source-order">
-          <p className="eyebrow">Source hierarchy</p>
-          <h2>Use the right source.</h2>
-          <ol>
-            <li><strong>Conference tracker</strong><span>Controls the event roster, dates, status and topline staffing.</span></li>
-            <li><strong>Events in Notion</strong><span>Controls execution detail for active event projects.</span></li>
-            <li><strong>Events Drive</strong><span>Stores contracts, creative, attendee files, and post-event artifacts.</span></li>
-            <li><strong>Event page</strong><span>Combines the planning details and links to the organizer site.</span></li>
-          </ol>
-          <div className="source-links vertical">
-            <a href={sourceLinks.sheet} target="_blank" rel="noreferrer">Open tracker ↗</a>
-            <a href={sourceLinks.notion} target="_blank" rel="noreferrer">Open Notion ↗</a>
-            <a href={sourceLinks.eventsDrive} target="_blank" rel="noreferrer">Open Events Drive ↗</a>
-            <a href={sourceLinks.ccwPlan} target="_blank" rel="noreferrer">Open Vegas reference ↗</a>
-          </div>
-        </article>
         <article className="guide-panel">
           <p className="eyebrow">Workstream directory</p>
-          <h2>The standard pack list.</h2>
+          <h2>The standard event checklist.</h2>
           <div className="workstream-index">
             {Object.values(workstreamLabels).map((label, index) => <div key={label}><span>{String(index + 1).padStart(2, "0")}</span><strong>{label}</strong></div>)}
           </div>
         </article>
       </section>
       <section className="shell timeline">
-        <div className="section-intro"><p className="eyebrow">Prep timeline</p><h2>Start eight weeks out.</h2></div>
+        <div className="section-intro"><p className="eyebrow">Suggested sequence</p><h2>Use the timing that fits the event.</h2><p>These are planning windows, not performance deadlines. Adjust them to the event.</p></div>
         {timeline.map(([time, title, body]) => <article key={time}><time>{time}</time><h3>{title}</h3><p>{body}</p></article>)}
       </section>
       <section className="shell tiering">
