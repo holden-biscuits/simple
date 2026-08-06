@@ -10,7 +10,7 @@ function programSummary(event: (typeof events)[number]) {
   const hasSponsorship = !event.sponsorship.toLowerCase().startsWith("none");
   const programs = [
     hasSponsorship ? "Sponsor / booth" : null,
-    event.speaking !== "None" ? "Speaking" : null,
+    event.speaking.toLowerCase() !== "none" && !event.speaking.toLowerCase().includes("no slot confirmed") ? "Speaking" : null,
     event.guaranteedMeetings.startsWith("Yes") ? "Meeting package" : null,
   ].filter(Boolean);
   return programs.join(" · ") || "Attendance only";
@@ -28,10 +28,11 @@ function marketingSummary(event: (typeof events)[number]) {
 }
 
 function openDecision(event: (typeof events)[number]) {
+  if (event.priorityActions?.length) return event.priorityActions[0];
   if (event.status === "TBD" || event.status === "Tentative") return "Go / no-go";
   if (!event.team.length) return "Assign final team";
   if (getWorkstreams(event).marketing.every((item) => item === "None")) return "Confirm whether support is needed";
-  return "Execute plan";
+  return "Confirm the next owner and deadline";
 }
 
 const operatingLessons = [

@@ -9,9 +9,16 @@ export type SearchRecord = {
   description: string;
   href: string;
   keywords: string;
+  details?: string[];
 };
 
 const types = ["All", "Event", "Guide", "Role", "Operations"] as const;
+
+function matchDetail(record: SearchRecord, normalized: string) {
+  if (!normalized || `${record.title} ${record.description}`.toLowerCase().includes(normalized)) return null;
+  const terms = normalized.split(/\s+/);
+  return record.details?.find((detail) => terms.some((term) => detail.toLowerCase().includes(term))) ?? null;
+}
 
 export function SiteSearch({ records }: { records: SearchRecord[] }) {
   const [query, setQuery] = useState("");
@@ -31,9 +38,12 @@ export function SiteSearch({ records }: { records: SearchRecord[] }) {
       </div>
       <div className="search-result-heading"><strong>{results.length}</strong><span>{normalized ? `results for “${query.trim()}”` : "pages and event records"}</span></div>
       <div className="search-results">
-        {results.map((record) => <Link href={record.href} key={`${record.href}-${record.title}`}>
-          <span>{record.type}</span><h2>{record.title}</h2><p>{record.description}</p><b aria-hidden="true">↗</b>
-        </Link>)}
+        {results.map((record) => {
+          const detail = matchDetail(record, normalized);
+          return <Link href={record.href} key={`${record.href}-${record.title}`}>
+            <span>{record.type}</span><h2>{record.title}</h2><p>{record.description}</p>{detail ? <p className="search-match"><strong>Matched detail</strong>{detail}</p> : null}<b aria-hidden="true">↗</b>
+          </Link>;
+        })}
       </div>
       {!results.length ? <p className="empty-state">No match. Try an event name, city, teammate, tool, workstream, or task.</p> : null}
     </section>

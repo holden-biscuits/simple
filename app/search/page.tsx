@@ -18,18 +18,34 @@ const referenceRecords: SearchRecord[] = [
   { type: "Operations", title: "About this site’s sources", href: "/sources", description: "What the tracker, Notion, Events Drive, and individual event pages control.", keywords: "source hierarchy conference tracker notion google drive contracts files" },
 ];
 
-const eventRecords: SearchRecord[] = events.map((event) => ({
-  type: "Event",
-  title: event.name,
-  href: `/events/${event.slug}`,
-  description: `${event.dates} · ${event.location} · ${event.status === "No" ? "Not attending" : event.status}`,
-  keywords: [
-    event.team.join(" "), event.available.join(" "), event.speaking, event.sponsorship,
-    event.guaranteedMeetings, event.notes, event.credentials ?? "", event.rating,
-    ...(event.specialConsiderations ?? []), ...Object.values(getWorkstreams(event)).flat(),
-    ...event.meetingsBooked, ...event.demosBooked, ...event.closed,
-  ].join(" "),
-}));
+const eventRecords: SearchRecord[] = events.map((event) => {
+  const details = [
+    event.venue ? `Venue · ${event.venue}` : "",
+    event.team.length ? `Team · ${event.team.join(", ")}` : "",
+    event.available.length ? `Available · ${event.available.join(", ")}` : "",
+    `Speaking · ${event.speaking}`,
+    `Sponsorship · ${event.sponsorship}`,
+    `Guaranteed meetings · ${event.guaranteedMeetings}`,
+    event.notes ? `Plan note · ${event.notes}` : "",
+    event.credentials ? `Credentials · ${event.credentials}` : "",
+    ...(event.specialConsiderations ?? []).map((item) => `Rule · ${item}`),
+    ...(event.priorityActions ?? []).map((item) => `Open item · ${item}`),
+    ...(event.relatedLinks ?? []).map((link) => `Link · ${link.label}`),
+    ...(event.outcomeNotes ?? []).map((item) => `Result · ${item}`),
+    ...Object.entries(getWorkstreams(event)).flatMap(([key, items]) => items.map((item) => `${workstreamLabels[key as keyof typeof workstreamLabels]} · ${item}`)),
+    ...event.meetingsBooked.map((item) => `Meeting · ${item}`),
+    ...event.demosBooked.map((item) => `Demo · ${item}`),
+    ...event.closed.map((item) => `Closed · ${item}`),
+  ].filter(Boolean);
+  return {
+    type: "Event",
+    title: event.name,
+    href: `/events/${event.slug}`,
+    description: `${event.dates} · ${event.location}${event.venue ? ` · ${event.venue}` : ""} · ${event.status === "No" ? "Not attending" : event.status}`,
+    keywords: details.join(" "),
+    details,
+  };
+});
 
 export default function SearchPage() {
   return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, and role instructions.</p></section><SiteSearch records={[...referenceRecords, ...eventRecords]} /><Footer /></main>;

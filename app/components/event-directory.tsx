@@ -29,7 +29,8 @@ function guaranteedMeetingSignal(event: EventRecord) {
 function EventCard({ event }: { event: EventRecord }) {
   const signal = event.status === "No" ? "Not attending" : event.status;
   const inactive = event.status === "No";
-  const speakingOpps = event.speaking === "None" ? 0 : 1;
+  const speakingText = event.speaking.toLowerCase();
+  const speakingOpps = speakingText === "none" || speakingText.includes("no slot confirmed") ? 0 : 1;
   const attending = event.attendeeCount ?? 0;
   return (
     <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
@@ -67,8 +68,12 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
         event.sponsorship,
         event.guaranteedMeetings,
         event.notes,
+        event.venue ?? "",
         event.credentials ?? "",
         ...(event.specialConsiderations ?? []),
+        ...(event.priorityActions ?? []),
+        ...(event.relatedLinks ?? []).map((link) => link.label),
+        ...(event.outcomeNotes ?? []),
         ...Object.values(event.workstreams ?? {}).flat(),
       ].join(" ").toLowerCase();
       return (!q || searchable.includes(q)) && matchesAttendance(event, attendance);

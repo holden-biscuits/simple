@@ -21,18 +21,22 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = event.guaranteedMeetings.startsWith("Yes");
   const bookedMeetingCount = event.meetingsBooked.length;
+  const bookedMeetingLabel = event.meetingCountLabel ?? bookedMeetingCount.toString();
+  const note = event.notes.trim();
+  const isSourceConflict = note.toLowerCase().startsWith("source conflict:");
   const facts = [
     ["Status", event.status === "No" ? "Not attending" : event.status],
-    ["Where", event.location],
+    ["City", event.location],
+    ...(event.venue ? [["Venue", event.venue]] : []),
     ["Planned headcount", event.attendeeCount?.toString() ?? "None"],
     ["Guaranteed package", hasGuaranteedMeetings ? event.guaranteedMeetings : "No"],
-    ["Meetings booked", bookedMeetingCount.toString()],
+    ["Meetings recorded", bookedMeetingLabel],
     ["Speaking", event.speaking],
     ["Sponsorship", event.sponsorship],
     ...(event.credentials ? [["Credentials", event.credentials]] : []),
   ] as string[][];
   const resultGroups = [
-    ["Meetings booked", event.meetingsBooked],
+    ["Meetings recorded", event.meetingsBooked.length ? event.meetingsBooked : event.meetingCountLabel ? [`${event.meetingCountLabel} meetings recorded; account names were not captured`] : []],
     ["Demos booked", event.demosBooked],
     ["Closed", event.closed],
   ] as const;
@@ -41,12 +45,12 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
   const programMix = [
     !event.sponsorship.toLowerCase().startsWith("none") ? "Sponsorship" : null,
-    event.speaking !== "None" ? "Speaking" : null,
+    event.speaking.toLowerCase() !== "none" && !event.speaking.toLowerCase().includes("no slot confirmed") ? "Speaking" : null,
     workstreams.swag.length === 1 && workstreams.swag[0] === "None" ? null : "Swag / materials",
   ].filter(Boolean).join(" · ") || "Attendance only";
   const meetingSummary = hasGuaranteedMeetings
-    ? `${event.guaranteedMeetings.replace(/^Yes\s*·?\s*/, "Included")} · ${bookedMeetingCount} booked`
-    : `No guaranteed meetings · ${bookedMeetingCount} booked`;
+    ? `Guaranteed meeting package · ${bookedMeetingLabel} recorded`
+    : `No guaranteed meetings · ${bookedMeetingLabel} recorded`;
   const tldr = [
     ["Participation", event.status === "No" ? "Not attending" : event.status],
     ["Program mix", programMix],
@@ -59,7 +63,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     <main id="page-top">
       <SiteHeader />
       <section className="event-hero">
-        <div className="event-back"><Link className="back-link" href="/#events"><b aria-hidden="true">←</b><span>Back to events</span></Link><span>{event.phase === "past" ? "Past event" : event.phase === "now" ? "Happening now" : "Upcoming"}</span></div>
+        <div className="event-back"><Link className="back-link" href="/#events"><b aria-hidden="true">←</b><span>Back to events</span></Link><span>{event.status === "No" ? "Not attending" : event.phase === "past" ? "Past event" : event.phase === "now" ? "Happening now" : "Upcoming"}</span></div>
         <div className="event-title-row">
           <div><p className="eyebrow">{event.dates}</p><h1>{event.name}</h1><p className="event-city">{event.location}</p></div>
           <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>
@@ -67,6 +71,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       </section>
       <PageContents items={[
         { id: "event-tldr", label: "TL;DR" },
+        ...(event.priorityActions?.length ? [{ id: "event-priorities", label: "Open items" }] : []),
         { id: "event-facts", label: "At a glance" },
         { id: "event-crew", label: "Crew" },
         ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
@@ -77,8 +82,19 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       <section className="event-tldr shell" id="event-tldr">
         <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>Know this before you go.</h2></div>
         <div className="tldr-grid">{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
-        <p className="tldr-note">{event.notes}</p>
+        {note ? <p className={`tldr-note${isSourceConflict ? " source-conflict" : ""}`}>
+          {isSourceConflict ? <strong>Source check needed</strong> : null}
+          {isSourceConflict ? note.replace(/^Source conflict:\s*/i, "") : note}
+        </p> : null}
       </section>
+
+      {event.priorityActions?.length ? (
+        <section className="event-priorities shell" id="event-priorities">
+          <div className="section-intro"><p className="eyebrow">Open items</p><h2>Do these next.</h2></div>
+          <ol>{event.priorityActions.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
+          <BackToTop />
+        </section>
+      ) : null}
 
       <section className="fact-strip shell" id="event-facts">{facts.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</section>
 
@@ -102,6 +118,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           <div className="detail-links">
             <a href={event.organizerUrl} target="_blank" rel="noreferrer">Live event site ↗</a>
             {event.notionUrl ? <a href={event.notionUrl} target="_blank" rel="noreferrer">Notion project ↗</a> : <span>Notion project · None</span>}
+            {event.relatedLinks?.map((link) => <a href={link.url} target="_blank" rel="noreferrer" key={link.url}>{link.label} ↗</a>)}
           </div>
           <BackToTop />
         </aside>
@@ -121,6 +138,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       {showResults ? <section className="shell outcomes" id="event-results">
         <div className="section-intro"><p className="eyebrow">Event results</p><h2>Results recorded in the tracker.</h2></div>
         <div className="outcome-grid">{resultGroups.map(([label, items]) => <article key={label}><span>{label}</span>{items.length ? <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p>None</p>}</article>)}</div>
+        {event.outcomeNotes?.length ? <ul className="outcome-notes">{event.outcomeNotes.map((note) => <li key={note}>{note}</li>)}</ul> : null}
         <BackToTop />
       </section> : null}
       <Footer />
