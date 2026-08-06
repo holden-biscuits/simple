@@ -35,6 +35,37 @@ export default function GuidesPage() {
         <div className="section-intro"><p className="eyebrow">Suggested sequence</p><h2>Use the timing that fits the event.</h2><p>These are planning windows, not performance deadlines. Adjust them to the event.</p></div>
         {timeline.map(([time, title, body]) => <article key={time}><time>{time}</time><h3>{title}</h3><p>{body}</p></article>)}
       </section>
+      <section className="role-grid shell">
+        <article className="role-block">
+          <div className="role-number">01</div>
+          <div>
+            <p className="eyebrow">Prospecting</p>
+            <h2>Use ZoomInfo before and during the event.</h2>
+            <ul>
+              <li>AEs and SDRs should download the event mobile app as soon as attendee access opens. Use it to find attendees, companies, sessions, and meeting opportunities.</li>
+              <li>Use names and companies from the mobile app to find and verify work emails, direct numbers, titles, and account ownership in ZoomInfo.</li>
+              <li>For vendor-specific events, use ZoomInfo technographics to find companies using that vendor’s technology, then layer in our ICP criteria and relevant account signals.</li>
+              <li>Research two to four likely stakeholders per priority company instead of relying on one contact.</li>
+              <li>Check HubSpot ownership and remove duplicates before enrolling anyone in outreach. The event app supplies the lead; ZoomInfo enriches it; HubSpot holds the record.</li>
+            </ul>
+          </div>
+        </article>
+        <article className="role-block">
+          <div className="role-number">02</div>
+          <div>
+            <p className="eyebrow">On the floor</p>
+            <h2>Booth etiquette.</h2>
+            <ul>
+              <li>Do not sit unless you are talking with someone who is also sitting. Do not eat at the booth; step away and coordinate coverage first.</li>
+              <li>Stay attentive to people approaching the booth. Keep phones away, face the aisle, and acknowledge visitors quickly.</li>
+              <li>Do not gather in a team huddle that blocks the booth or makes it feel closed. Leave clear space for someone to walk in.</li>
+              <li>Coordinate coverage before taking a break or leaving for a meeting. At least one person should be ready to greet visitors.</li>
+              <li>If someone asks a question you cannot answer, say so and bring in the right teammate. Make a warm introduction instead of pointing across the booth.</li>
+              <li>After each conversation, capture the useful notes, clear away cups or materials, and reset the space for the next person.</li>
+            </ul>
+          </div>
+        </article>
+      </section>
       <section className="shell tiering">
         <div><p className="eyebrow">Lead tiers</p><h2>Follow up in this order.</h2></div>
         <ol>
