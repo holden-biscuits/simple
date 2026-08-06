@@ -21,6 +21,9 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Know the route before you hit the floor\./);
   assert.match(html, /TeamSimple attendance/);
   assert.match(html, /Genesys Xperience/);
+  assert.match(html, /Resolve these before more work starts\./);
+  assert.match(html, /Contact\.io/);
+  assert.match(html, /Customer Connect Expo/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|Building your site/i);
 });
 
