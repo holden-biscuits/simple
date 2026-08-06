@@ -60,7 +60,9 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
       </div>
 
       {groups.map((group) => {
-        const matches = filtered.filter((event) => event.phase === group.phase);
+        const matches = filtered
+          .filter((event) => event.phase === group.phase)
+          .sort((a, b) => group.phase === "past" ? b.dateSort.localeCompare(a.dateSort) : 0);
         if (!matches.length) return null;
         return (
           <section className="event-group" key={group.phase}>
