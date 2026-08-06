@@ -38,6 +38,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /No unresolved source conflicts are recorded\./);
   assert.match(html, /Latest applied checks/);
   assert.match(html, /29 of 29 matching records reviewed/);
+  assert.match(html, /Google Sheets/);
+  assert.match(html, /27 event rows reviewed/);
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
@@ -92,4 +94,24 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(vegasHtml, /explicitly attributed deals/);
   assert.match(vegasHtml, /Demo completed/);
   assert.match(vegasHtml, /All 29 attributed deals currently have \$0 amount/);
+
+  const lead = await render("/events/the-lead-summit");
+  const leadHtml = await lead.text();
+  assert.match(leadHtml, /Taylor, Josh/);
+  assert.doesNotMatch(leadHtml, /Matt, Josh/);
+
+  const denver = await render("/events/ccw-exchange-denver");
+  const denverHtml = await denver.text();
+  assert.match(denverHtml, /Matt, Carter/);
+
+  const chicago = await render("/events/ccw-exchange-chicago");
+  const chicagoHtml = await chicago.text();
+  assert.match(chicagoHtml, /Taylor is the confirmed attendee/);
+  assert.match(chicagoHtml, /Carter and Josh are marked available/);
+
+  const shoptalkFall = await render("/events/shoptalk-fall");
+  const shoptalkFallHtml = await shoptalkFall.text();
+  assert.match(shoptalkFallHtml, /Sep 29–30, 2026/);
+  assert.match(shoptalkFallHtml, /Not attending/);
+  assert.doesNotMatch(shoptalkFallHtml, /4 planned/);
 });

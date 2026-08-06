@@ -17,6 +17,12 @@ export const siteStatus = {
         scope: "Deals with Deal Source = Event / Conference and Deal Source Detail = CCW Vegas follow-up",
         result: "29 of 29 matching records reviewed. Stage counts were added to CCW Vegas; pipeline value remains unpublished because every attributed deal currently has $0 amount.",
       },
+      {
+        system: "Google Sheets",
+        checkedAt: "Aug 06 · 2026",
+        scope: "2026 conference tracker · '2026'!A1:W30",
+        result: "27 event rows reviewed. Staffing was reconciled for The Lead Summit, CCW Exchange Denver and CCW Exchange Chicago; Shoptalk Fall dates and inactive headcount were corrected. Direct decisions for Contact.io, Customer Connect Expo and ICMI remain in force while the tracker is updated.",
+      },
     ],
     sources: [
       { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing" },
