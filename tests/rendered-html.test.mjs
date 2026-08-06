@@ -50,6 +50,11 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(contact.status, 200);
   const contactHtml = await contact.text();
   assert.match(contactHtml, /Not attending/);
+  assert.match(contactHtml, /No activation planned/);
+  assert.match(contactHtml, /Nothing to prep for this event\./);
+  assert.match(contactHtml, /No team assigned/);
+  assert.doesNotMatch(contactHtml, /What needs to happen\./);
+  assert.doesNotMatch(contactHtml, /Who’s going/);
 
   const customerConnect = await render("/events/customer-connect-expo");
   assert.equal(customerConnect.status, 200);
