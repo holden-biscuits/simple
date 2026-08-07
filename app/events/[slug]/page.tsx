@@ -12,6 +12,7 @@ import { getEventSystemLinkage } from "../../data/system-linkage";
 import { getEventMeasurementCheckpoint } from "../../data/event-measurement";
 import { getBriefIssueAction, getEventBriefReadiness } from "../../data/event-brief-readiness";
 import { getEventSourceChanges } from "../../data/site-status";
+import { getEventRoleRoutes } from "../../data/event-role-routes";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const measurementCheckpoint = getEventMeasurementCheckpoint(event, eventPhase);
   const briefReadiness = getEventBriefReadiness(event, programDate);
   const recentChanges = getEventSourceChanges(event.slug);
+  const roleRoutes = getEventRoleRoutes(event, eventPhase);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
@@ -96,6 +98,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section>
       <PageContents items={isNotAttending ? [
         { id: "event-tldr", label: "TL;DR" },
+        ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         { id: "event-update-route", label: "Update this event" },
         { id: "event-no-plan", label: "Event status" },
@@ -131,6 +134,17 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <Link href="/sources">See source record →</Link>
         </div>
       </section>
+
+      {roleRoutes.length ? <section className="event-role-routes shell" id="event-role-routes">
+        <div className="section-intro"><p className="eyebrow">Use the route for your role</p><h2>Start with what this event changes for you.</h2><p>These are event-specific starting points, not staffing assignments. Open the full role guide for the rules that apply everywhere.</p></div>
+        <div className={`event-role-route-grid event-role-route-grid-${roleRoutes.length}`}>{roleRoutes.map((route, index) => <Link href={route.href} key={route.role}>
+          <header><span>{String(index + 1).padStart(2, "0")}</span><b>{route.role}</b></header>
+          <h3>{route.title}</h3>
+          <p>{route.detail}</p>
+          <strong>{route.cta} →</strong>
+        </Link>)}</div>
+        <BackToTop />
+      </section> : null}
 
       {recentChanges.length ? <section className="event-recent-changes shell" id="event-changes">
         <div className="section-intro"><p className="eyebrow">Recent source activity</p><h2>What changed for this event.</h2><p>These are event-specific receipts from the source scan. Applied changes are already in this review build; unresolved differences still need a decision.</p></div>

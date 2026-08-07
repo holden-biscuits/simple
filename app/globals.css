@@ -58,7 +58,7 @@ button, input, select { font: inherit; }
 .inline-link { color: var(--signal-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .handoff .back-to-top, .tiering .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.7); }
 .handoff .back-to-top:hover, .handoff .back-to-top:focus-visible, .tiering .back-to-top:hover, .tiering .back-to-top:focus-visible { color: #ffb49c; }
-.start-map[id], .program-pulse[id], .directory[id], .role-block[id], .handoff[id], .guide-panel[id], .timeline[id], .tiering[id], .role-links[id], .event-tldr[id], .event-recent-changes[id], .event-update-route[id], .event-no-plan[id], .event-priorities[id], .event-considerations[id], .fact-strip[id], .event-body[id], .event-body aside[id], .workstream[id], .outcomes[id], .source-monitor[id], .freshness-policy[id], .canonical-event-key[id], .source-governance[id], .scan-contract[id], .data-streams[id], .operating-roadmap[id], .field-ownership[id], .stewardship[id], .crm-attribution[id], .writeback-section[id], .protected-decisions[id], .change-log[id], .approval-queue[id], .update-rules[id], .source-links[id], .marketing-lessons[id], .event-task-section[id], .marketing-matrix-section[id], .crm-activation[id], .measurement[id], .leadership-snapshot[id], .leadership-changes[id], .leadership-portfolio[id], .leadership-decisions[id], .leadership-operating-model[id], .leadership-outcomes[id], .leadership-trust[id] { scroll-margin-top: var(--anchor-offset); }
+.start-map[id], .program-pulse[id], .directory[id], .role-block[id], .handoff[id], .guide-panel[id], .timeline[id], .tiering[id], .role-links[id], .event-tldr[id], .event-role-routes[id], .event-recent-changes[id], .event-update-route[id], .event-no-plan[id], .event-priorities[id], .event-considerations[id], .fact-strip[id], .event-body[id], .event-body aside[id], .workstream[id], .outcomes[id], .source-monitor[id], .freshness-policy[id], .canonical-event-key[id], .source-governance[id], .scan-contract[id], .data-streams[id], .operating-roadmap[id], .field-ownership[id], .stewardship[id], .crm-attribution[id], .writeback-section[id], .protected-decisions[id], .change-log[id], .approval-queue[id], .update-rules[id], .source-links[id], .marketing-lessons[id], .event-task-section[id], .marketing-matrix-section[id], .crm-activation[id], .measurement[id], .leadership-snapshot[id], .leadership-changes[id], .leadership-portfolio[id], .leadership-decisions[id], .leadership-operating-model[id], .leadership-outcomes[id], .leadership-trust[id] { scroll-margin-top: var(--anchor-offset); }
 
 .home-hero { min-height: 700px; padding: 88px max(30px, calc((100vw - 1180px)/2)); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, .65fr); align-items: end; gap: 80px; position: relative; overflow: hidden; background-color: var(--canvas); }
 .home-hero::before, .role-hero::before, .event-hero::before { content: ''; position: absolute; inset: -25% -15% -20% 44%; pointer-events: none; opacity: .32; background: repeating-radial-gradient(ellipse at center, transparent 0 28px, rgba(22,75,56,.28) 29px 30px, transparent 31px 50px); transform: rotate(-12deg) scaleY(.7); }
@@ -685,6 +685,18 @@ button, input, select { font: inherit; }
 .round-link:hover { transform: rotate(0deg); background: var(--signal-dark); }
 .event-tldr { padding-block: 90px 55px; }
 .event-tldr .section-intro { margin-bottom: 30px; }
+.event-role-routes { padding-block: 55px 90px; }
+.event-role-routes .section-intro > p:last-child { max-width: 720px; margin: 16px 0 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+.event-role-route-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+.event-role-route-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.event-role-route-grid > a { min-height: 315px; padding: 24px; display: flex; flex-direction: column; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--canvas); }
+.event-role-route-grid > a:nth-child(2) { background: var(--green-light); }
+.event-role-route-grid > a:nth-child(3) { background: #f3c4af; }
+.event-role-route-grid > a:hover, .event-role-route-grid > a:focus-visible { position: relative; z-index: 1; outline: 3px solid var(--signal); outline-offset: -3px; }
+.event-role-route-grid header { display: flex; justify-content: space-between; gap: 18px; color: var(--signal-dark); font: 800 11.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.event-role-route-grid h3 { margin: 48px 0 12px; font: 400 29px/1.08 Georgia, serif; }
+.event-role-route-grid p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+.event-role-route-grid strong { margin-top: auto; padding-top: 26px; color: var(--green); font: 800 12px/1.4 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .tldr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
 .tldr-grid article { min-height: 145px; padding: 22px; display: flex; flex-direction: column; gap: 18px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--canvas); }
 .tldr-grid article:nth-child(3n+2) { background: var(--green-light); }
@@ -1011,6 +1023,8 @@ button, input, select { font: inherit; }
   .crm-activation-note { grid-template-columns: 1fr; }
   .event-body aside { position: static; }
   .event-change-grid { grid-template-columns: 1fr 1fr; }
+  .event-role-route-grid { grid-template-columns: 1fr 1fr; }
+  .event-role-route-grid > a:nth-child(3) { grid-column: 1 / -1; }
   .fact-strip, .tldr-grid { grid-template-columns: 1fr 1fr; }
   .crm-stage-grid { grid-template-columns: repeat(3, 1fr); }
   .role-links { grid-template-columns: 1fr; }
@@ -1100,6 +1114,8 @@ button, input, select { font: inherit; }
   .event-brief-readiness li:last-child:nth-child(odd) { grid-column: auto; }
   .event-brief-readiness li:last-child { border-bottom: 0; }
   .event-change-grid { grid-template-columns: 1fr; }
+  .event-role-route-grid { grid-template-columns: 1fr; }
+  .event-role-route-grid > a, .event-role-route-grid > a:nth-child(3) { min-height: 0; grid-column: auto; }
   .event-change { min-height: 0; }
   .event-update-route summary { align-items: flex-start; flex-direction: column; }
   .event-update-route-grid { grid-template-columns: 1fr; }

@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
 import { SiteSearch, type SearchRecord, type SearchType } from "../components/site-search";
-import { eventBySlug, events, getEventVerification, getProgramDate, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
+import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../data/event-signals";
 import { getEventBriefReadiness } from "../data/event-brief-readiness";
 import { siteStatus } from "../data/site-status";
+import { getEventRoleRoutes } from "../data/event-role-routes";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -40,8 +41,10 @@ const referenceRecords: SearchRecord[] = [
   { type: "Operations", title: "Event data reconciliation rules", href: "/sources#update-rules", description: "How the source scan handles direct corrections, source ownership, message signals, conflicts, and publication approval.", keywords: "reconciliation scanner rules protected override direct confirmation source owner apply review no change reject approval" },
 ];
 
+const searchProgramDate = getProgramDate();
+
 const eventRecords: SearchRecord[] = events.map((event) => {
-  const briefReadiness = getEventBriefReadiness(event, getProgramDate());
+  const briefReadiness = getEventBriefReadiness(event, searchProgramDate);
   const verification = getEventVerification(event);
   const guaranteedCountOpen = hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event);
   const staffing = getStaffingSignal(event);
@@ -72,6 +75,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     ...(event.priorityActions ?? []).map((item) => `Open item · ${item}`),
     ...(event.relatedLinks ?? []).map((link) => `Link · ${link.label}`),
     ...(event.outcomeNotes ?? []).map((item) => `Result · ${item}`),
+    ...getEventRoleRoutes(event, getEventPhase(event, searchProgramDate)).map((route) => `${route.role} route · ${route.title} ${route.detail}`),
     ...Object.entries(getWorkstreams(event)).flatMap(([key, items]) => items.map((item) => `${workstreamLabels[key as keyof typeof workstreamLabels]} · ${item}`)),
     ...event.meetingsBooked.map((item) => `Meeting · ${item}`),
     ...event.demosBooked.map((item) => `Demo · ${item}`),

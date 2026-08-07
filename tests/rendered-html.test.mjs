@@ -307,6 +307,13 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(scanContractSearchHtml, /Source scan automation contract/);
   assert.match(scanContractSearchHtml, /\/sources#scan-contract/);
 
+  const eventRoleSearch = await render("/search?q=what%20should%20an%20SDR%20do%20at%20Genesys&type=Event");
+  assert.equal(eventRoleSearch.status, 200);
+  const eventRoleSearchHtml = await eventRoleSearch.text();
+  assert.match(eventRoleSearchHtml, /Genesys Xperience/);
+  assert.match(eventRoleSearchHtml, /SDR route · Create traffic and qualify quickly/);
+  assert.match(eventRoleSearchHtml, /Work the booth and nearby traffic/);
+
   const genesysChangeSearch = await render("/search?q=what%20changed%20at%20Genesys&type=Operations");
   assert.equal(genesysChangeSearch.status, 200);
   const genesysChangeSearchHtml = await genesysChangeSearch.text();
@@ -474,6 +481,14 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Open event project(?:<!-- -->)? ↗/);
   assert.match(genesysHtml, new RegExp(`href="${"https://www.notion.so/3aa6fee642fe81c88a89de617863507c"}"[^>]*>Open event project(?:<!-- -->)? ↗`));
   assert.match(genesysHtml, /Open all update routes →/);
+  assert.match(genesysHtml, /id="event-role-routes"/);
+  assert.match(genesysHtml, /Start with what this event changes for you\./);
+  assert.match(genesysHtml, /No guaranteed meeting package is listed/);
+  assert.match(genesysHtml, /Work the booth and nearby traffic/);
+  assert.match(genesysHtml, /7 structured task(?:<!-- -->)?s are(?:<!-- -->)? tracked for this event/);
+  assert.match(genesysHtml, /href="\/ae#build-the-meeting-hypothesis"/);
+  assert.match(genesysHtml, /href="\/sdr#how-to-work-the-event"/);
+  assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
   assert.match(genesysHtml, /id="event-changes"/);
   assert.match(genesysHtml, /What changed for this event\./);
   assert.match(genesysHtml, /Confirmed the Genesys Xperience roster/);
@@ -545,6 +560,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.doesNotMatch(contactHtml, /What needs to happen\./);
   assert.doesNotMatch(contactHtml, /Who’s going/);
   assert.doesNotMatch(contactHtml, /Measurement checkpoint/);
+  assert.doesNotMatch(contactHtml, /id="event-role-routes"/);
 
   const trackerBaselineEvent = await render("/events/ccw-orlando");
   assert.equal(trackerBaselineEvent.status, 200);
@@ -584,6 +600,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const orlandoHtml = await orlando.text();
   assert.doesNotMatch(orlandoHtml, /Past event\. Booth presence is recorded/);
   assert.doesNotMatch(orlandoHtml, /id="event-priorities"/);
+  assert.doesNotMatch(orlandoHtml, /id="event-role-routes"/);
 
   const vegas = await render("/events/ccw-vegas");
   assert.equal(vegas.status, 200);
@@ -612,6 +629,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(orlando2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(orlando2027Html, /JW Marriott Bonnet Creek/);
   assert.match(orlando2027Html, /2027 conference tracker · Organizer site/);
+  assert.match(orlando2027Html, /6 Executive Leadership Exchange meetings\. Get the matched-account list/);
 
   const uk2027 = await render("/events/ccw-uk-executive-exchange-2027");
   assert.equal(uk2027.status, 200);
@@ -645,6 +663,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(chicagoHtml, /internal ICP sheet has 28 researched accounts/);
   assert.match(chicagoHtml, /9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked/);
+  assert.match(chicagoHtml, /Confirm the onsite footprint before promising a booth meeting/);
 
   const shoptalkFall = await render("/events/shoptalk-fall");
   const shoptalkFallHtml = await shoptalkFall.text();
