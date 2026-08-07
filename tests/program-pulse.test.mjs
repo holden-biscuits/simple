@@ -13,8 +13,8 @@ test("the program pulse prioritizes the active route and real data gaps", () => 
     "customer-connect-expo",
   ]);
   assert.equal(pulse.next60Days.length, 5);
-  assert.equal(pulse.rosterGaps.length, 13);
-  assert.equal(pulse.sourceConflicts.length, 3);
+  assert.equal(pulse.rosterGaps.length, 12);
+  assert.equal(pulse.sourceConflicts.length, 2);
   assert.equal(pulse.sourceChecksDue.length, 0);
   assert.equal(pulse.readiness.structuredPlans, 2);
   assert.equal(pulse.readiness.planSetupNeeded, 12);
@@ -36,8 +36,6 @@ test("attention labels distinguish source, staffing, execution and meeting-count
   assert.deepEqual(getEventAttention(chicago, "2026-08-06"), [
     "Confirm the sponsor package and inclusions",
     "Confirm the guaranteed-meeting count and format",
-    "Resolve the source conflict recorded on this brief",
-    "Name 1 remaining attendee",
     "Confirm the venue",
     "Confirm passes, registration, and credential limits",
     "Turn the open priorities into owned, dated tasks",

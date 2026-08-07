@@ -24,6 +24,9 @@ test("protected direct decisions still match the published event data", () => {
   assert.ok(event("genesys-xperience").workstreams.marketing.some((item) => item.includes("airport placement")));
 
   assert.equal(event("ccw-exchange-chicago").completedAt, "2026-08-07");
+  assert.deepEqual(event("ccw-exchange-chicago").team, ["Taylor"]);
+  assert.equal(event("ccw-exchange-chicago").attendeeCount, 1);
+  assert.deepEqual(event("ccw-exchange-chicago").available, []);
   assert.equal(event("ccw-exchange-chicago").rating, "Negative · Taylor’s post-event feedback");
   assert.equal(event("ccw-exchange-chicago").followupMeetingsBooked, 2);
   assert.ok(event("ccw-exchange-chicago").workstreams.followup.some((item) => item.includes("Kemper")));

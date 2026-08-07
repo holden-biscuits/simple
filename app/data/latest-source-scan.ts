@@ -24,7 +24,7 @@ const receipts: LatestScanReceipt[] = [
     source: "Direct decisions",
     state: "Checked",
     scope: "Protected participation, roster, meeting and speaking decisions",
-    result: "Six direct overrides remain protected; no newer controlling value was found.",
+    result: "The direct overrides in force during the scheduled run remained protected; no newer controlling value was found.",
   },
   {
     id: "2026-08-07-conference-tracker",

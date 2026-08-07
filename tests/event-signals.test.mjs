@@ -28,7 +28,7 @@ test("meeting-package status distinguishes known counts from unresolved counts",
 test("staffing signals distinguish named attendees from an unassigned plan", () => {
   assert.equal(getStaffingSignal(event("genesys-xperience")).card, "9 Attending");
   assert.equal(getStaffingSignal(event("ccw-orlando-2027")).card, "11 Planned");
-  assert.equal(getStaffingSignal(event("ccw-exchange-chicago")).card, "1 Named · 2 Planned");
+  assert.equal(getStaffingSignal(event("ccw-exchange-chicago")).card, "1 Attending");
   assert.equal(getStaffingSignal(event("contact-io")).card, "0 Attending");
   assert.equal(getStaffingSignal(event("ccw-orlando")).card, "2 Attending");
 });

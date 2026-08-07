@@ -52,6 +52,8 @@ test("event-specific write-backs resolve to published event pages", () => {
   ]);
   const chicago = getEventWritebackQueue("ccw-exchange-chicago");
   assert.deepEqual(chicago.map((item) => item.scope), [
+    "CCW Exchange Chicago final roster",
+    "CCW Exchange Chicago attendance closeout",
     "CCW Exchange Chicago completion",
     "CCW Exchange Chicago rating",
     "CCW Exchange Chicago contractual meeting count",

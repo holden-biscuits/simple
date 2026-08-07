@@ -26,11 +26,11 @@ test("early-stage briefs require foundation facts without pretending final logis
   assert.ok(!uk2027.issues.some((issue) => issue.key === "venue"));
 });
 
-test("current-event readiness keeps unresolved source and onsite inputs visible", () => {
+test("current-event readiness drops roster warnings after a direct closeout correction", () => {
   const chicago = getEventBriefReadiness(eventBySlug("ccw-exchange-chicago"), programDate);
   assert.equal(chicago.stage, "onsite");
-  assert.ok(chicago.issues.some((issue) => issue.key === "source-conflict"));
-  assert.ok(chicago.issues.some((issue) => issue.key === "roster"));
+  assert.ok(!chicago.issues.some((issue) => issue.key === "source-conflict"));
+  assert.ok(!chicago.issues.some((issue) => issue.key === "roster"));
   assert.ok(chicago.issues.some((issue) => issue.key === "venue"));
   assert.ok(chicago.issues.some((issue) => issue.key === "credentials"));
 });
@@ -38,8 +38,8 @@ test("current-event readiness keeps unresolved source and onsite inputs visible"
 test("current event pages replace planning administration with onsite facts", () => {
   const chicago = getEventPageBriefReadiness(eventBySlug("ccw-exchange-chicago"), programDate);
   assert.equal(chicago.stage, "onsite");
-  assert.ok(chicago.issues.some((issue) => issue.label === "A source conflict still affects this brief"));
-  assert.ok(chicago.issues.some((issue) => issue.label === "1 attendee name is still missing from the onsite roster"));
+  assert.ok(!chicago.issues.some((issue) => issue.label === "A source conflict still affects this brief"));
+  assert.ok(!chicago.issues.some((issue) => issue.label.includes("attendee name")));
   assert.ok(chicago.issues.some((issue) => issue.label === "Venue details are not recorded"));
   assert.ok(chicago.issues.some((issue) => issue.label === "Pass and credential details are not recorded"));
   assert.ok(!chicago.issues.some((issue) => issue.key === "execution-plan"));
