@@ -23,8 +23,8 @@ export type SourceOverride = {
 };
 
 export const siteStatus = {
-  contentUpdatedAt: "2026-08-06",
-  contentUpdatedLabel: "Aug 06 · 2026",
+  contentUpdatedAt: "2026-08-07",
+  contentUpdatedLabel: "Aug 07 · 2026",
   sourceMonitor: {
     automationState: "Active",
     cadence: "Daily · 9:00 AM PT",

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
-import { attendanceFilters, filterEventDirectory, matchesAttendance, matchesProgramYear, type AttendanceFilter } from "../data/event-filters";
+import { attendanceFilters, attentionFilters, filterEventDirectory, matchesAttendance, matchesAttention, matchesProgramYear, type AttendanceFilter, type AttentionFilter } from "../data/event-filters";
 import { getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "../data/event-signals";
 import { getEventDetailHref, getEventDirectoryHref, hasActiveDirectoryState, type EventDirectoryState } from "../data/directory-state";
 import { getSourceFreshness } from "../data/source-freshness";
@@ -40,29 +40,35 @@ function EventCard({ event, directoryState, programDate }: { event: EventRecord;
 export function EventDirectory({ events, programDate, initialState }: { events: EventRecord[]; programDate: string; initialState: EventDirectoryState }) {
   const [query, setQuery] = useState(initialState.query);
   const [attendance, setAttendance] = useState<AttendanceFilter>(initialState.attendance);
+  const [attention, setAttention] = useState<AttentionFilter>(initialState.attention);
   const [year, setYear] = useState(initialState.year);
   const years = useMemo(() => [...new Set(events.map((event) => event.dateSort.slice(0, 4)))].sort(), [events]);
-  const filtered = useMemo(() => filterEventDirectory(events, { query, attendance, year }), [events, query, attendance, year]);
+  const filtered = useMemo(() => filterEventDirectory(events, { query, attendance, attention, year }, programDate), [events, query, attendance, attention, year, programDate]);
 
   const attendanceCounts = useMemo(() => Object.fromEntries(attendanceFilters.map((filter) => [
     filter.value,
-    events.filter((event) => matchesProgramYear(event, year) && matchesAttendance(event, filter.value)).length,
-  ])) as Record<AttendanceFilter, number>, [events, year]);
+    events.filter((event) => matchesProgramYear(event, year) && matchesAttention(event, attention, programDate) && matchesAttendance(event, filter.value)).length,
+  ])) as Record<AttendanceFilter, number>, [attention, events, programDate, year]);
+  const attentionCounts = useMemo(() => Object.fromEntries(attentionFilters.map((filter) => [
+    filter.value,
+    events.filter((event) => matchesProgramYear(event, year) && matchesAttendance(event, attendance) && matchesAttention(event, filter.value, programDate)).length,
+  ])) as Record<AttentionFilter, number>, [attendance, events, programDate, year]);
   const yearCounts = useMemo(() => Object.fromEntries([
-    ["all", events.filter((event) => matchesAttendance(event, attendance)).length],
-    ...years.map((programYear) => [programYear, events.filter((event) => matchesAttendance(event, attendance) && matchesProgramYear(event, programYear)).length]),
-  ]) as Record<string, number>, [attendance, events, years]);
-  const filtersActive = query.trim().length > 0 || attendance !== "all" || year !== "all";
+    ["all", events.filter((event) => matchesAttendance(event, attendance) && matchesAttention(event, attention, programDate)).length],
+    ...years.map((programYear) => [programYear, events.filter((event) => matchesAttendance(event, attendance) && matchesAttention(event, attention, programDate) && matchesProgramYear(event, programYear)).length]),
+  ]) as Record<string, number>, [attendance, attention, events, programDate, years]);
+  const filtersActive = query.trim().length > 0 || attendance !== "all" || attention !== "all" || year !== "all";
   const activeFilterSummary = [
     year !== "all" ? year : null,
     attendance !== "all" ? attendanceFilters.find((filter) => filter.value === attendance)?.label : null,
+    attention !== "all" ? attentionFilters.find((filter) => filter.value === attention)?.label : null,
     query.trim() ? `Search: ${query.trim()}` : null,
   ].filter(Boolean).join(" · ");
-  const directoryState = useMemo(() => ({ query: query.trim(), attendance, year }), [attendance, query, year]);
+  const directoryState = useMemo(() => ({ query: query.trim(), attendance, attention, year }), [attendance, attention, query, year]);
 
   useEffect(() => {
     const current = new URL(window.location.href);
-    const hadDirectoryParams = ["q", "attendance", "year"].some((key) => current.searchParams.has(key));
+    const hadDirectoryParams = ["q", "attendance", "attention", "year"].some((key) => current.searchParams.has(key));
     if (!hasActiveDirectoryState(directoryState) && !hadDirectoryParams) return;
     window.history.replaceState(null, "", getEventDirectoryHref(directoryState));
   }, [directoryState]);
@@ -110,10 +116,25 @@ export function EventDirectory({ events, programDate, initialState }: { events: 
             ))}
           </div>
         </fieldset>
+        <fieldset className="directory-filter-set attention-filters">
+          <legend>Needs attention</legend>
+          <div>
+            {attentionFilters.map((filter) => (
+              <button
+                type="button"
+                key={filter.value}
+                aria-pressed={attention === filter.value}
+                onClick={() => setAttention(filter.value)}
+              >
+                <span>{filter.label}</span><b>{attentionCounts[filter.value]}</b>
+              </button>
+            ))}
+          </div>
+        </fieldset>
       </div>
       <div className="directory-result-summary" aria-live="polite">
         <span>Showing <strong>{filtered.length}</strong> of {events.length} events{activeFilterSummary ? ` · ${activeFilterSummary}` : ""}</span>
-        {filtersActive ? <button type="button" onClick={() => { setQuery(""); setAttendance("all"); setYear("all"); }}>Clear filters</button> : null}
+        {filtersActive ? <button type="button" onClick={() => { setQuery(""); setAttendance("all"); setAttention("all"); setYear("all"); }}>Clear filters</button> : null}
       </div>
 
       {groups.map((group) => {

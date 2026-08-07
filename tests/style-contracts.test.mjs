@@ -24,6 +24,8 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.pulse-metrics\s*\{\s*grid-template-columns:\s*1fr\s+1fr;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.next-stops > div:last-child\s*\{\s*grid-template-columns:\s*1fr;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.pulse-readiness\s*\{\s*grid-template-columns:\s*1fr;/);
+  assert.match(css, /\.attendance-filters > div, \.attention-filters > div\s*\{[^}]*grid-template-columns:\s*repeat\(4,/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.attendance-filters > div, \.attention-filters > div\s*\{\s*grid-template-columns:\s*1fr 1fr;/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.freshness-policy-grid\s*\{\s*grid-template-columns:\s*1fr 1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.freshness-policy-grid\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.audience-views\s*\{\s*grid-template-columns:\s*1fr/);

@@ -21,6 +21,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /property="og:image" content="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/og-2026-2027\.png"/);
   assert.match(html, /name="twitter:image" content="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/og-2026-2027\.png"/);
   assert.match(html, /aria-label="TeamSimple Event Basecamp home"/);
+  assert.match(html, /dateTime="2026-08-07"[^>]*aria-label="Last updated Aug 07 · 2026"/);
   assert.match(html, /TeamSimple/);
   assert.match(html, /Know the route before you hit the floor\./);
   assert.match(html, /What do you need to do\?/);
@@ -49,6 +50,10 @@ test("server-renders the event directory", async () => {
   assert.match(html, /<span>All years<\/span><b>29<\/b>/);
   assert.match(html, /<span>2026<\/span><b>26<\/b>/);
   assert.match(html, /<span>2027<\/span><b>3<\/b>/);
+  assert.match(html, /Needs attention/);
+  assert.match(html, /Source issue<\/span><b>3<\/b>/);
+  assert.match(html, /Roster open<\/span><b>13<\/b>/);
+  assert.match(html, /Plan setup<\/span><b>12<\/b>/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /CCW Orlando 2027/);
   assert.match(html, /CCW UK Executive Exchange 2027/);
@@ -368,6 +373,17 @@ test("directory filters survive an event-page round trip", async () => {
   const unsafe = await render("/events/genesys-xperience?returnTo=https%3A%2F%2Fevil.example%2F%23events");
   assert.equal(unsafe.status, 200);
   assert.match(await unsafe.text(), /href="\/#events"[^>]*class="back-link"/);
+
+  const attentionFiltered = await render("/?attendance=going&attention=source&year=2026");
+  assert.equal(attentionFiltered.status, 200);
+  const attentionFilteredHtml = await attentionFiltered.text();
+  assert.match(attentionFilteredHtml, /Showing <strong>2<\/strong> of (?:<!-- -->)?29(?:<!-- -->)? events/);
+  assert.match(attentionFilteredHtml, /aria-pressed="true"><span>Source issue<\/span><b>2<\/b>/);
+  assert.match(attentionFilteredHtml, /href="\/events\/ccw-exchange-chicago\?returnTo=%2F%3Fattendance%3Dgoing%26attention%3Dsource%26year%3D2026%23events"/);
+
+  const attentionEvent = await render("/events/ccw-exchange-chicago?returnTo=%2F%3Fattendance%3Dgoing%26attention%3Dsource%26year%3D2026%23events");
+  assert.equal(attentionEvent.status, 200);
+  assert.match(await attentionEvent.text(), /href="\/\?attendance=going&amp;attention=source&amp;year=2026#events"[^>]*class="back-link"/);
 });
 
 test("server-renders a searchable marketing support board", async () => {

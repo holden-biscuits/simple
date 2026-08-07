@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string | string[]; attendance?: string | string[]; year?: string | string[] }> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string | string[]; attendance?: string | string[]; attention?: string | string[]; year?: string | string[] }> }) {
   const params = await searchParams;
   const programDate = getProgramDate();
   const pulse = getProgramPulse(events, programDate);
