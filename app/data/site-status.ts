@@ -1,4 +1,17 @@
 export type SourceConnectionState = "Connected" | "Indirect";
+export type SourceChangeState = "Applied" | "Needs review" | "No change";
+export type SourceChange = {
+  id: string;
+  state: SourceChangeState;
+  checkedAt: string;
+  title: string;
+  field: string;
+  before: string;
+  after: string;
+  source: string;
+  sourceUrl?: string;
+  eventSlug?: string;
+};
 
 export const siteStatus = {
   contentUpdatedAt: "2026-08-06",
@@ -10,6 +23,106 @@ export const siteStatus = {
     connectionCheckedAt: "2026-08-06",
     connectionCheckedLabel: "Aug 06 · 2026",
     lastSuccessfulScan: "Aug 06, 2026 · 6:26 PM PT · manual baseline",
+    changeLog: [
+      {
+        id: "2027-program-added",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Added the 2027 event program",
+        field: "Event directory",
+        before: "26 events · 2026 only",
+        after: "29 events · 2026–2027",
+        source: "2027 conference tracker",
+        sourceUrl: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=113603184#gid=113603184",
+      },
+      {
+        id: "genesys-roster-confirmed",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Confirmed the Genesys Xperience roster",
+        field: "Attendees",
+        before: "Shorter tracker roster · Carter listed only as available",
+        after: "9 attending · Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars",
+        source: "Direct confirmation",
+        eventSlug: "genesys-xperience",
+      },
+      {
+        id: "genesys-email-deadline",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Updated the Genesys sponsor-email deadline",
+        field: "Pre-event email",
+        before: "Submission date still under review",
+        after: "Due Aug 13 · Cat reviews, Holden submits",
+        source: "Organizer email · Notion",
+        eventSlug: "genesys-xperience",
+      },
+      {
+        id: "customer-connect-confirmed",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Confirmed Customer Connect Expo participation",
+        field: "Participation and sponsorship",
+        before: "Decision pending",
+        after: "Confirmed · executed contract · 10×10 booth · 4 attendees planned",
+        source: "Direct decision · executed contract",
+        eventSlug: "customer-connect-expo",
+      },
+      {
+        id: "chicago-staffing-conflict",
+        state: "Needs review" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Resolve CCW Exchange Chicago staffing",
+        field: "Attendees",
+        before: "Tracker: Taylor confirmed · Josh available",
+        after: "Notion and calendar: Taylor + Josh attending",
+        source: "Conference tracker · Notion · calendar",
+        eventSlug: "ccw-exchange-chicago",
+      },
+      {
+        id: "travel-hospitality-staffing-conflict",
+        state: "Needs review" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Resolve CX Travel & Hospitality staffing",
+        field: "Attendees",
+        before: "Tracker: Taylor confirmed · Carter available",
+        after: "Calendar: Zach + Taylor · Notion: 3 travelers unconfirmed",
+        source: "Conference tracker · Notion · calendar",
+        eventSlug: "iqpc-cx-travel-hospitality",
+      },
+      {
+        id: "vegas-2027-workshop-date-conflict",
+        state: "Needs review" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Reconcile the CCW Vegas 2027 workshop date",
+        field: "Speaking schedule",
+        before: "Tracker: “Mon Jun 15”",
+        after: "Calendar check: Jun 15, 2027 is Tuesday",
+        source: "2027 conference tracker · calendar check",
+        eventSlug: "ccw-vegas-2027",
+      },
+      {
+        id: "slack-no-change",
+        state: "No change" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "No new event decision found in Slack",
+        field: "Event conversations",
+        before: "Matching event messages checked",
+        after: "No site change",
+        source: "Slack",
+      },
+      {
+        id: "hubspot-attribution-no-change",
+        state: "No change" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "No new event attribution found outside CCW Vegas",
+        field: "Deals and outcomes",
+        before: "29 explicitly attributed event deals reviewed",
+        after: "All 29 remain CCW Vegas · no attributable Genesys, Customer Connect, or Chicago record",
+        source: "HubSpot",
+        sourceUrl: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list",
+      },
+    ] as SourceChange[],
     latestChecks: [
       {
         system: "Google Sheets · organizer sites",

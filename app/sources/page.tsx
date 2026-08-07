@@ -14,6 +14,10 @@ export const metadata: Metadata = {
 export default function SourcesPage() {
   const conflicts = events.filter((event) => event.notes.toLowerCase().startsWith("source conflict:"));
   const monitor = siteStatus.sourceMonitor;
+  const changeStates = (["Applied", "Needs review", "No change"] as const).map((state) => ({
+    state,
+    count: monitor.changeLog.filter((change) => change.state === state).length,
+  }));
 
   return (
     <main id="page-top">
@@ -25,6 +29,7 @@ export default function SourcesPage() {
       </section>
       <PageContents items={[
         { id: "source-monitor", label: "Source monitor" },
+        { id: "change-log", label: "Change log" },
         { id: "approval-queue", label: "Approval queue" },
         { id: "source-hierarchy", label: "Source hierarchy" },
         { id: "update-rules", label: "Update rules" },
@@ -60,6 +65,36 @@ export default function SourcesPage() {
           </article>)}
         </div>
         <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Last completed scan: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed manually while building the fieldbook; the first successful recurring run will add its own receipt here."}</p>
+        <BackToTop />
+      </section>
+
+      <section className="shell change-log" id="change-log">
+        <div className="section-intro">
+          <p className="eyebrow">Change log</p>
+          <h2>What changed, and why.</h2>
+          <p>Each scan leaves a structured receipt. Applied changes show the previous and published values; disagreements stay visible until a person resolves them.</p>
+        </div>
+        <div className="change-log-summary" aria-label="Change log status counts">
+          {changeStates.map(({ state, count }) => <article key={state}><span>{state}</span><strong>{count}</strong></article>)}
+        </div>
+        <div className="change-log-list">
+          {monitor.changeLog.map((change) => {
+            const firstLabel = change.state === "Applied" ? "Before" : change.state === "Needs review" ? "Controlling source" : "Checked";
+            const secondLabel = change.state === "Applied" ? "Published" : change.state === "Needs review" ? "Conflicting source" : "Result";
+            return <article key={change.id} className={`change-record change-record-${change.state.toLowerCase().replace(" ", "-")}`}>
+              <header><span>{change.state}</span><time>{change.checkedAt}</time></header>
+              <div className="change-record-title"><p>{change.field}</p><h3>{change.title}</h3></div>
+              <dl>
+                <div><dt>{firstLabel}</dt><dd>{change.before}</dd></div>
+                <div><dt>{secondLabel}</dt><dd>{change.after}</dd></div>
+              </dl>
+              <footer>
+                {change.sourceUrl ? <a href={change.sourceUrl} target="_blank" rel="noreferrer">{change.source} ↗</a> : <span>{change.source}</span>}
+                {change.eventSlug ? <Link href={`/events/${change.eventSlug}`}>Open event →</Link> : null}
+              </footer>
+            </article>;
+          })}
+        </div>
         <BackToTop />
       </section>
 

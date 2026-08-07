@@ -49,6 +49,13 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Source monitor/);
+  assert.match(html, /What changed, and why\./);
+  assert.match(html, /<span>Applied<\/span><strong>4<\/strong>/);
+  assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
+  assert.match(html, /<span>No change<\/span><strong>2<\/strong>/);
+  assert.match(html, /Added the 2027 event program/);
+  assert.match(html, /26 events · 2026 only/);
+  assert.match(html, /29 events · 2026–2027/);
   assert.match(html, /Monday, Wednesday and Friday/);
   assert.match(html, /Conference tracker/);
   assert.match(html, /30 event rows checked · 2026 \+ 2027 · Aug 6/);
