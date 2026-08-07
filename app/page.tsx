@@ -115,6 +115,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
             <article><strong>{pulse.rosterGaps.length}</strong><span>rosters incomplete</span></article>
             <article><strong>{pulse.sourceConflicts.length}</strong><span>source conflicts</span></article>
           </div>
+          <div className="pulse-readiness" aria-label="Execution plan coverage">
+            <article><span>Structured task plans</span><strong>{pulse.readiness.structuredPlans} / {pulse.readiness.activeEvents}</strong><p>active events have a task list with statuses; individual owner gaps remain visible.</p></article>
+            <article><span>Plan setup needed</span><strong>{pulse.readiness.planSetupNeeded}</strong><p>events have priorities but still need owners and dates.</p></article>
+            <article><span>Due or overdue now</span><strong>{pulse.readiness.dueNow.length}</strong><p>next actions need attention today.</p></article>
+          </div>
           <div className="pulse-layout">
             <section className="next-stops" aria-labelledby="next-stops-title">
               <div className="pulse-heading"><p className="eyebrow">Route ahead</p><h3 id="next-stops-title">Current and next stops</h3></div>
@@ -133,7 +138,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
               <div className="pulse-heading"><p className="eyebrow">Action queue</p><h3 id="attention-title">Earliest plans with open inputs</h3></div>
               <ol>{pulse.attention.slice(0, 6).map((item, index) => <li key={item.eventKey}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
-                <div><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><p>{item.issues.join(" · ")}</p></div>
+                <div><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><p>{item.issues.join(" · ")}</p>{item.nextAction ? <div className="attention-next"><span>Next action</span><Link href={item.nextAction.href}>{item.nextAction.title}</Link><small>{item.nextAction.owner ? `Owner · ${item.nextAction.owner}` : "Owner · Open"} · {item.nextAction.due ? `Due · ${item.nextAction.due}` : "Due · Open"}</small></div> : null}</div>
               </li>)}</ol>
               <Link className="attention-source-link" href="/sources#approval-queue">Open source and approval record →</Link>
             </section>

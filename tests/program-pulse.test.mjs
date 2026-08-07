@@ -15,6 +15,8 @@ test("the program pulse prioritizes the active route and real data gaps", () => 
   assert.equal(pulse.next60Days.length, 5);
   assert.equal(pulse.rosterGaps.length, 13);
   assert.equal(pulse.sourceConflicts.length, 3);
+  assert.equal(pulse.readiness.structuredPlans, 2);
+  assert.equal(pulse.readiness.planSetupNeeded, 12);
 });
 
 test("attention labels distinguish source, staffing, execution and meeting-count gaps", () => {
@@ -26,6 +28,7 @@ test("attention labels distinguish source, staffing, execution and meeting-count
     "Source conflict",
     "1 attendee name open",
     "4 open plan items",
+    "Task owners and dates missing",
     "Sponsor package under review",
     "Guaranteed-meeting count open",
   ]);

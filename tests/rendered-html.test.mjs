@@ -65,6 +65,12 @@ test("server-renders the event directory", async () => {
   assert.match(html, /starting within 60 days/);
   assert.match(html, /rosters incomplete/);
   assert.match(html, /source conflicts/);
+  assert.match(html, /Structured task plans[\s\S]*2(?:<!-- -->)? \/ (?:<!-- -->)?14/);
+  assert.match(html, /Plan setup needed[\s\S]*12/);
+  assert.match(html, /Due or overdue now[\s\S]*1/);
+  assert.match(html, /Next action/);
+  assert.match(html, /Owner · Holden \+ AP/);
+  assert.match(html, /Owner · Open[\s\S]*Due · Open/);
   assert.match(html, /Current and next stops/);
   assert.match(html, /Earliest plans with open inputs/);
   assert.match(html, /Open source and approval record/);
