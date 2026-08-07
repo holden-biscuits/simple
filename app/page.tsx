@@ -61,7 +61,7 @@ export default function Home() {
         <div className="section-intro">
           <p className="eyebrow">2026 event program</p>
           <h2>Pick an event. See the whole plan.</h2>
-          <p>The conference tracker supplies the event list. Active Notion projects add the working details. If nothing is planned for a workstream, the page says “None.”</p>
+          <p>The conference tracker supplies the event list. Active Notion projects add the working details. Each page surfaces the workstreams in play and tucks everything else under “Not in this event plan.”</p>
         </div>
         <EventDirectory events={events} programDate={programDate} />
         <BackToTop />

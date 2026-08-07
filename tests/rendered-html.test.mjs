@@ -21,6 +21,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /aria-label="TeamSimple Event Basecamp home"/);
   assert.match(html, /TeamSimple/);
   assert.match(html, /Know the route before you hit the floor\./);
+  assert.match(html, /surfaces the workstreams in play/);
+  assert.doesNotMatch(html, /page says “None/);
   assert.match(html, /ranger-raccoon-clean-hat\.png/);
   assert.match(html, /class="ranger-hat-logo"/);
   assert.doesNotMatch(html, /ranger-raccoon-v2/);
@@ -115,6 +117,12 @@ test("search routes marketing tasks to the selected event workspace", async () =
   assert.match(html, /Genesys Xperience · Produce the booth-monitor product video/);
   assert.match(html, /\/marketing\?event=genesys-xperience#event-tasks/);
   assert.match(html, /Results open the exact event brief or marketing workspace you need/);
+
+  const eventAction = await render("/search?q=Lunch%20%26%20Learn%20contracted&type=Operations");
+  assert.equal(eventAction.status, 200);
+  const eventActionHtml = await eventAction.text();
+  assert.match(eventActionHtml, /ICMI Contact Center Expo · Confirm whether the Wednesday Lunch &amp; Learn is contracted/);
+  assert.match(eventActionHtml, /\/events\/icmi-contact-center-expo#event-priorities/);
 });
 
 test("server-renders field-role CRM rules and the updated guide model", async () => {
@@ -142,6 +150,12 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.doesNotMatch(genesysHtml, /Meetings scheduled/);
   assert.match(genesysHtml, /Team<\/span><strong>9 attending/);
   assert.doesNotMatch(genesysHtml, /Do these next/);
+  assert.match(genesysHtml, /id="event-priorities"/);
+  assert.match(genesysHtml, /Still needs attention\./);
+  assert.match(genesysHtml, /6(?:<!-- -->)? event-specific/);
+  assert.match(genesysHtml, /items are(?:<!-- -->)? still open in the current plan/);
+  assert.match(genesysHtml, /Deliver Cat’s final solution-talk deck by Aug 10/);
+  assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
   assert.match(genesysHtml, /Wish Line/);
   for (const person of ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]) assert.match(genesysHtml, new RegExp(`>${person}<`));
   assert.doesNotMatch(genesysHtml, />Available</);
@@ -166,6 +180,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(contactHtml, /No activation planned/);
   assert.match(contactHtml, /Nothing to prep for this event\./);
   assert.match(contactHtml, /No team assigned/);
+  assert.doesNotMatch(contactHtml, /id="event-priorities"/);
   assert.doesNotMatch(contactHtml, /What needs to happen\./);
   assert.doesNotMatch(contactHtml, /Who’s going/);
 
@@ -190,6 +205,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(orlando.status, 200);
   const orlandoHtml = await orlando.text();
   assert.doesNotMatch(orlandoHtml, /Past event\. Booth presence is recorded/);
+  assert.doesNotMatch(orlandoHtml, /id="event-priorities"/);
 
   const vegas = await render("/events/ccw-vegas");
   assert.equal(vegas.status, 200);

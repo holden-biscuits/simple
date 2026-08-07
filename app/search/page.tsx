@@ -41,6 +41,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     event.notes ? `Plan note · ${event.notes}` : "",
     event.credentials ? `Credentials · ${event.credentials}` : "",
     ...(event.specialConsiderations ?? []).map((item) => `Rule · ${item}`),
+    ...(event.priorityActions ?? []).map((item) => `Open item · ${item}`),
     ...(event.relatedLinks ?? []).map((link) => `Link · ${link.label}`),
     ...(event.outcomeNotes ?? []).map((item) => `Result · ${item}`),
     ...Object.entries(getWorkstreams(event)).flatMap(([key, items]) => items.map((item) => `${workstreamLabels[key as keyof typeof workstreamLabels]} · ${item}`)),
@@ -65,13 +66,14 @@ const eventRecords: SearchRecord[] = events.map((event) => {
 });
 
 const marketingTaskRecords: SearchRecord[] = events.flatMap((event) => {
-  const tasks: MarketingTask[] = event.marketingTasks?.length
-    ? event.marketingTasks
+  const hasStructuredMarketingTasks = Boolean(event.marketingTasks?.length);
+  const tasks: MarketingTask[] = hasStructuredMarketingTasks
+    ? event.marketingTasks!
     : (event.priorityActions ?? []).map((title) => ({ title, status: "Open" as const }));
   return tasks.map((task) => ({
     type: "Operations" as const,
     title: `${event.name} · ${task.title}`,
-    href: `/marketing?event=${event.slug}#event-tasks`,
+    href: hasStructuredMarketingTasks ? `/marketing?event=${event.slug}#event-tasks` : `/events/${event.slug}#event-priorities`,
     description: [task.status, task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null].filter(Boolean).join(" · "),
     keywords: [event.name, event.location, event.dates, task.title, task.status, task.owner, task.due, task.note, "event task marketing open item"].filter(Boolean).join(" "),
     details: [task.note ? `Task note · ${task.note}` : "", task.owner ? `Owner · ${task.owner}` : "", task.due ? `Due · ${task.due}` : ""].filter(Boolean),

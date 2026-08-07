@@ -387,6 +387,9 @@ button, input, select { font: inherit; }
 .event-no-plan .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.65); }
 .event-priorities { margin-block: 25px 80px; padding: 55px; display: grid; grid-template-columns: minmax(260px, .72fr) minmax(0, 1.28fr); gap: 70px; background: #f3c4af; border: 1px solid var(--green); box-shadow: 10px 10px 0 var(--green); }
 .event-priorities h2 { margin: 0; font: 400 clamp(34px, 4vw, 54px)/1 Georgia, serif; letter-spacing: -.04em; }
+.event-priorities .priority-intro > p:not(.eyebrow) { max-width: 330px; margin: 20px 0 0; color: #504a41; font-size: 15px; line-height: 1.55; }
+.event-priorities .priority-link { display: inline-block; margin-top: 24px; color: var(--green); border-bottom: 1px solid currentColor; font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.event-priorities .priority-link:hover, .event-priorities .priority-link:focus-visible { color: var(--signal-dark); }
 .event-priorities ol { margin: 0; padding: 0; list-style: none; counter-reset: priority; }
 .event-priorities li { display: grid; grid-template-columns: 44px 1fr; gap: 15px; padding: 18px 0; border-top: 1px solid color-mix(in srgb, var(--green) 45%, transparent); }
 .event-priorities li > span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: var(--paper); background: var(--green); font: 800 9px var(--font-geist-mono), monospace; }

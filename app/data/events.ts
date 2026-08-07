@@ -450,10 +450,10 @@ export const events: EventRecord[] = [
     venue: "Wynn Las Vegas · Orchestrators Hall",
     credentials: "9 booth passes",
     priorityActions: [
+      "Deliver Cat’s final solution-talk deck by Aug 10, then schedule rehearsal and confirm AV.",
       "Submit the contracted pre-event email copy by Aug 13: Cat reviews, then Holden sends it through the sponsor portal.",
       "Complete the final QA pass on usesimple.ai/xperience; the HubSpot form, campaign attribution, and 15-minute demo CTA are already in place.",
       "Move the approved Wish Line activation into production after the Aug 7 creative-agency handoff; the phone number is already purchased.",
-      "Deliver Cat’s final solution-talk deck by Aug 10, then schedule rehearsal and confirm AV.",
       "Produce the booth-monitor product video, using demo-environment screen recordings if that is the fastest credible route.",
       "Lock the post-event lead list, tiering, ownership, and follow-up workflow before the team arrives.",
     ],

@@ -51,6 +51,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const workstreamKeys = (Object.keys(workstreamLabels) as WorkstreamKey[]).filter((key) => key !== "marketing" && key !== "budget");
   const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
+  const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
   const programMix = isNotAttending ? "No activation planned" : [
     !event.sponsorship.toLowerCase().startsWith("none") ? "Sponsorship" : null,
     event.speaking.toLowerCase() !== "none" && !event.speaking.toLowerCase().includes("no slot confirmed") ? "Speaking" : null,
@@ -83,6 +84,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         { id: "event-no-plan", label: "Event status" },
       ] : [
         { id: "event-tldr", label: "TL;DR" },
+        ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
         { id: "event-crew", label: "Crew" },
         ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
         ...activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] })),
@@ -97,6 +99,19 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           {isSourceConflict ? note.replace(/^Source conflict:\s*/i, "") : note}
         </p> : null}
       </section>
+
+      {showPriorities ? (
+        <section className="event-priorities shell" id="event-priorities">
+          <div className="priority-intro">
+            <p className="eyebrow">{eventPhase === "now" ? "Onsite focus" : "Before the event"}</p>
+            <h2>Still needs attention.</h2>
+            <p>{event.priorityActions!.length} event-specific {event.priorityActions!.length === 1 ? "item is" : "items are"} still open in the current plan.</p>
+            <Link className="priority-link" href={`/marketing?event=${event.slug}#event-tasks`}>Open marketing workspace →</Link>
+          </div>
+          <ol>{event.priorityActions!.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
+          <BackToTop />
+        </section>
+      ) : null}
 
       {isNotAttending ? (
         <section className="event-no-plan shell" id="event-no-plan">
