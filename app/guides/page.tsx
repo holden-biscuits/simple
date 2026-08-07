@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { Footer } from "../components/footer";
 import { BackToTop, PageContentsLayout } from "../components/page-contents";
+import { PageMascot } from "../components/page-mascot";
 import { workstreamLabels } from "../data/events";
 
 const timeline = [
@@ -19,9 +20,12 @@ export default function GuidesPage() {
     <main id="page-top">
       <SiteHeader />
       <section className="role-hero guides-hero">
-        <p className="eyebrow">Event process</p>
-        <h1>How we prepare, work the floor, and follow up.</h1>
-        <p className="lede">Event pages show the field workstreams that apply. Empty sections stay out of the way, while marketing production and budget work live in the event tabs on the marketing page.</p>
+        <div className="role-hero-copy">
+          <p className="eyebrow">Event process</p>
+          <h1>How we prepare, work the floor, and follow up.</h1>
+          <p className="lede">Event pages show the field workstreams that apply. Empty sections stay out of the way, while marketing production and budget work live in the event tabs on the marketing page.</p>
+        </div>
+        <PageMascot variant="guides" />
       </section>
       <PageContentsLayout groups={[
         { label: "Plan", items: [

@@ -3,6 +3,7 @@ import { BackToTop, PageContentsLayout } from "../components/page-contents";
 import { Footer } from "../components/footer";
 import { EventMarketingWorkspace, MarketingSupportBoard } from "../components/marketing-support-board";
 import { SiteHeader } from "../components/site-header";
+import { PageMascot } from "../components/page-mascot";
 import { events, getEventPhase, getProgramDate } from "../data/events";
 import { measurementFields, measurementReadiness, measurementWindows, metricDefinitions } from "../data/event-measurement";
 import { eventPipelineSnapshot } from "../data/event-pipeline";
@@ -88,10 +89,13 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
     <main id="page-top">
       <SiteHeader />
       <section className="role-hero marketing-hero">
-        <p className="eyebrow">Marketing operations</p>
-        <h1>Make every event easier to execute and measure.</h1>
-        <p className="lede">This page tracks the support promised for each active event and the operating rules that keep contracts, creative, lead capture, follow-up, and reporting connected.</p>
-        <Link className="button" href="/#events">Open the event directory <span>↗</span></Link>
+        <div className="role-hero-copy">
+          <p className="eyebrow">Marketing operations</p>
+          <h1>Make every event easier to execute and measure.</h1>
+          <p className="lede">This page tracks the support promised for each active event and the operating rules that keep contracts, creative, lead capture, follow-up, and reporting connected.</p>
+          <Link className="button" href="/#events">Open the event directory <span>↗</span></Link>
+        </div>
+        <PageMascot variant="marketing" />
       </section>
       <PageContentsLayout groups={[
         { label: "Program now", items: [

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BackToTop, PageContentsLayout } from "../components/page-contents";
 import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
+import { PageMascot } from "../components/page-mascot";
 import { events, getProgramDate } from "../data/events";
 import { getLeadershipBrief, getLeadershipChangeDigest } from "../data/leadership-brief";
 import { siteStatus } from "../data/site-status";
@@ -29,9 +30,12 @@ export default function LeadershipPage() {
     <main id="page-top">
       <SiteHeader />
       <section className="role-hero leadership-hero">
-        <p className="eyebrow">Leadership brief</p>
-        <h1>See the program without losing the source truth.</h1>
-        <p className="lede">A portfolio view of commitments, execution readiness, decisions and attributable outcomes. Missing spend or CRM fields stay visible as gaps—not false certainty.</p>
+        <div className="role-hero-copy">
+          <p className="eyebrow">Leadership brief</p>
+          <h1>See the program without losing the source truth.</h1>
+          <p className="lede">A portfolio view of commitments, execution readiness, decisions and attributable outcomes. Missing spend or CRM fields stay visible as gaps—not false certainty.</p>
+        </div>
+        <PageMascot variant="leadership" />
       </section>
       <PageContentsLayout groups={[
         { label: "Program now", items: [

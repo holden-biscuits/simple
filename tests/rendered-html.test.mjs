@@ -755,12 +755,16 @@ test("server-renders field-role CRM rules and the updated guide model", async ()
   assert.equal(ae.status, 200);
   const aeHtml = await ae.text();
   assert.match(aeHtml, /Turn event conversations into real next steps\./);
+  assert.match(aeHtml, /src="\/ranger-ae-spyglass\.webp"/);
+  assert.match(aeHtml, /The TeamSimple ranger raccoon looking through a spyglass/);
 
   const sdr = await render("/sdr");
   assert.equal(sdr.status, 200);
   const sdrHtml = await sdr.text();
   assert.match(sdrHtml, /role-hero-sdr/);
   assert.match(sdrHtml, /Turn event conversations into qualified meetings\./);
+  assert.match(sdrHtml, /src="\/ranger-sdr-listening\.webp"/);
+  assert.match(sdrHtml, /The TeamSimple ranger raccoon listening closely/);
   assert.match(sdrHtml, /How to work the event/);
   assert.match(sdrHtml, /Protect the AEs’ time/);
   assert.match(sdrHtml, /keeping the booth from going quiet/);
@@ -775,8 +779,25 @@ test("server-renders field-role CRM rules and the updated guide model", async ()
   assert.equal(guides.status, 200);
   const guidesHtml = await guides.text();
   assert.match(guidesHtml, /Empty sections stay out of the way/);
+  assert.match(guidesHtml, /src="\/ranger-guides-map\.webp"/);
+  assert.match(guidesHtml, /The TeamSimple ranger raccoon thoughtfully reading a trail map/);
   assert.match(guidesHtml, /marketing production and budget work live in the event tabs/);
   assert.doesNotMatch(guidesHtml, /If the team is not doing something, the page says/);
+});
+
+test("server-renders the page-specific leadership and marketing mascots", async () => {
+  const leadership = await render("/leadership");
+  assert.equal(leadership.status, 200);
+  const leadershipHtml = await leadership.text();
+  assert.match(leadershipHtml, /src="\/ranger-leadership-rock\.webp"/);
+  assert.match(leadershipHtml, /The TeamSimple ranger raccoon pointing ahead with one boot on a rock/);
+
+  const marketing = await render("/marketing");
+  assert.equal(marketing.status, 200);
+  const marketingHtml = await marketing.text();
+  assert.match(marketingHtml, /src="\/ranger-marketing-books\.webp"/);
+  assert.match(marketingHtml, /The TeamSimple ranger raccoon peeking out from a giant pile/);
+  assert.match(marketingHtml, /src="\/simple-mark\.svg"/);
 });
 
 test("server-renders dynamic event facts without empty filler notes", async () => {

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "./site-header";
 import { Footer } from "./footer";
 import { BackToTop, PageContentsLayout } from "./page-contents";
+import { PageMascot } from "./page-mascot";
 
 export type RoleSection = { label: string; title: string; items: ReactNode[] };
 
@@ -16,10 +17,13 @@ export function RolePage({ code, title, intro, sections, handoff }: { code: stri
     <main id="page-top">
       <SiteHeader />
       <section className={`role-hero role-hero-${code.toLowerCase()}`}>
-        <p className="eyebrow">Crew guide · {code}</p>
-        <h1>{title}</h1>
-        <p className="lede">{intro}</p>
-        <Link className="button" href="/">Check the event map <span>↗</span></Link>
+        <div className="role-hero-copy">
+          <p className="eyebrow">Crew guide · {code}</p>
+          <h1>{title}</h1>
+          <p className="lede">{intro}</p>
+          <Link className="button" href="/">Check the event map <span>↗</span></Link>
+        </div>
+        <PageMascot variant={code.toLowerCase() as "ae" | "sdr"} />
       </section>
       <PageContentsLayout primaryLabel="Guide sections" items={[...contents, { id: "event-close", label: "Before you close" }]}>
       <section className="role-grid shell">
