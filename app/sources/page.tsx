@@ -67,6 +67,7 @@ export default function SourcesPage() {
           <article><span>Delivery</span><strong>{monitor.delivery}</strong></article>
           <article><span>Last connection check</span><strong>{monitor.connectionCheckedLabel}</strong></article>
         </div>
+        <p className="automation-proof"><strong>Verified automation:</strong> <code>{monitor.automationId}</code> is an active {monitor.automationKind.toLowerCase()} targeting this Codex task. Schedule checked {monitor.automationVerifiedAt}. Every receipt must identify whether it came from the scheduled heartbeat or a task review.</p>
         <div className="source-coverage">
           {monitor.sources.map((source) => <article key={source.name}>
             <div><span className={`source-state source-state-${source.state.toLowerCase()}`}>{source.state}</span><small>{source.system}</small></div>
@@ -84,7 +85,7 @@ export default function SourcesPage() {
             <p>{check.result}</p>
           </article>)}
         </div>
-        <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Last completed scan: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed manually while building the fieldbook; the first successful recurring run will add its own receipt here."}</p>
+        <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Latest evidence refresh · ${monitor.lastSuccessfulScanMode}: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed in this task while building the fieldbook; the first successful recurring run will add its own labeled receipt here."}</p>
         <div className="freshness-policy" id="freshness-policy">
           <div className="section-intro"><p className="eyebrow">Freshness policy</p><h2>The closer the event, the tighter the check.</h2><p>A connected source is not automatically current. Event cards and pages compare the last verified date with these operating windows.</p></div>
           <div className="freshness-policy-grid">{freshnessPolicies.map((policy) => <article key={policy.window}><span>{policy.window}</span><strong>{policy.cadence}</strong><p>{policy.detail}</p></article>)}</div>

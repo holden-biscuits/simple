@@ -5,6 +5,7 @@ import { siteStatus, type SourceOverride } from "./site-status.ts";
 export type SourceScanBatch = {
   scanId: string;
   checkedAt: string;
+  runMode: "scheduled-heartbeat" | "task-review";
   proposals: EventUpdateProposal[];
 };
 
@@ -21,6 +22,7 @@ export type SourceScanWritebackGroup = {
 export type SourceScanOutput = {
   scanId: string;
   checkedAt: string;
+  runMode: SourceScanBatch["runMode"];
   records: SourceScanRecord[];
   summary: {
     total: number;
@@ -42,7 +44,7 @@ export type SourceScanOutput = {
 };
 
 export const sourceScanContract = [
-  { step: "01", title: "Normalize", detail: "Every finding becomes one proposal with an Event key, field, proposed value, source, confidence and evidence." },
+  { step: "01", title: "Normalize", detail: "Every run declares whether it is the scheduled heartbeat or a task review. Every finding becomes one proposal with an Event key, field, proposed value, source, confidence and evidence." },
   { step: "02", title: "Reconcile", detail: "The batch checks field ownership, protected direct decisions, confidence, current values and exact event identity." },
   { step: "03", title: "Partition", detail: "Each proposal lands in exactly one queue: apply to review, needs review, no change or rejected." },
   { step: "04", title: "Route", detail: "Valid changes name the owning write-back destination. Production and every upstream write still require explicit approval." },
@@ -98,6 +100,7 @@ export function processSourceScan(
   return {
     scanId: batch.scanId,
     checkedAt: batch.checkedAt,
+    runMode: batch.runMode,
     records,
     summary: {
       total: records.length,

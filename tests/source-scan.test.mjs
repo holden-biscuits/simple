@@ -3,7 +3,7 @@ import test from "node:test";
 import { processSourceScan } from "../app/data/source-scan.ts";
 
 function scan(proposals) {
-  return processSourceScan({ scanId: "scan-2026-08-07", checkedAt: "2026-08-07T16:00:00Z", proposals });
+  return processSourceScan({ scanId: "scan-2026-08-07", checkedAt: "2026-08-07T16:00:00Z", runMode: "scheduled-heartbeat", proposals });
 }
 
 test("a source scan partitions every proposal into one auditable outcome", () => {
@@ -15,6 +15,7 @@ test("a source scan partitions every proposal into one auditable outcome", () =>
   ]);
 
   assert.deepEqual(result.summary, { total: 4, applyToReview: 1, needsReview: 1, noChange: 1, rejected: 1 });
+  assert.equal(result.runMode, "scheduled-heartbeat");
   assert.equal(result.publishable[0].proposal.id, "new-demo");
   assert.equal(result.reviewQueue[0].proposal.id, "email-date");
   assert.equal(result.noChangeReceipts[0].proposal.id, "meeting-match");

@@ -29,9 +29,13 @@ export const siteStatus = {
     automationState: "Active",
     cadence: "Daily · 9:00 AM PT",
     delivery: "Roundup posted in this Codex task",
+    automationId: "event-fieldbook-source-scan",
+    automationKind: "Codex heartbeat",
+    automationVerifiedAt: "Aug 07 · 2026",
     connectionCheckedAt: "2026-08-06",
     connectionCheckedLabel: "Aug 06 · 2026",
     lastSuccessfulScan: "Aug 07, 2026 · 12:32 AM PT · HubSpot attribution refresh",
+    lastSuccessfulScanMode: "Task review",
     protectedOverrides: [
       { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", fieldKey: "status", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
       { id: "customer-connect-participation", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },

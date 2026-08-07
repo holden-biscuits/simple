@@ -164,6 +164,9 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /26 events · 2026 only/);
   assert.match(html, /29 events · 2026–2027/);
   assert.match(html, /Daily · 9:00 AM PT/);
+  assert.match(html, /Verified automation:/);
+  assert.match(html, /event-fieldbook-source-scan/);
+  assert.match(html, /Every receipt must identify whether it came from the scheduled heartbeat or a task review/);
   assert.match(html, /Do not let stale sources undo these\./);
   assert.match(html, /Contact\.io[\s\S]*Not attending/);
   assert.match(html, /Genesys Xperience[\s\S]*Guaranteed meetings[\s\S]*None/);
@@ -178,7 +181,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
   assert.doesNotMatch(html, /first run pending/);
-  assert.match(html, /Last completed scan: Aug 07, 2026 · 12:32 AM PT · HubSpot attribution refresh/);
+  assert.match(html, /Latest evidence refresh · Task review: Aug 07, 2026 · 12:32 AM PT · HubSpot attribution refresh/);
   assert.match(html, /four systems are read on a schedule/);
   assert.match(html, /zero sources push directly into production/);
   assert.match(html, /Make the joins trustworthy before adding more dashboards\./);
