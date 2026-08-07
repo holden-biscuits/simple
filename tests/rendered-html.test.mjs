@@ -135,6 +135,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /CCW Vegas 2027 workshop date[\s\S]*June 15, 2027 is Tuesday/);
   assert.match(html, /replace Monaco with HubSpot/);
   assert.match(html, /Meeting attribution and outcome QA/);
+  assert.match(html, /Normalized event-cost ledger[\s\S]*Add a Costs tab keyed by Event key/);
   assert.match(html, /2 say Scheduled and 2 have no outcome/);
   assert.match(html, /Reauthorize Marketing Event writes/);
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
@@ -206,7 +207,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Leadership gets decisions, not data-entry work\./);
   assert.match(html, /Needs judgment[\s\S]*1/);
   assert.match(html, /Ready to approve[\s\S]*6/);
-  assert.match(html, /Foundation work[\s\S]*7/);
+  assert.match(html, /Foundation work[\s\S]*8/);
   assert.match(html, /Pipeline value is not supported\./);
   assert.match(html, /All 29 attributed deals currently have a \$0 amount/);
   assert.match(html, /href="\/leadership">Leaders<\/a>/);
@@ -249,6 +250,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const writebackSearchHtml = await writebackSearch.text();
   assert.match(writebackSearchHtml, /Source write-back queue/);
   assert.match(writebackSearchHtml, /\/sources#writeback-queue/);
+
+  const measurementSearch = await render("/search?q=event%20measurement%20contract&type=Operations");
+  assert.equal(measurementSearch.status, 200);
+  const measurementSearchHtml = await measurementSearch.text();
+  assert.match(measurementSearchHtml, /Event measurement contract/);
+  assert.match(measurementSearchHtml, /\/marketing#measurement/);
 
   const stewardshipSearch = await render("/search?q=who%20updates%20event%20data&type=Operations");
   assert.equal(stewardshipSearch.status, 200);
@@ -300,6 +307,14 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /aria-selected="true"[^>]*id="event-task-tab-genesys-xperience"/);
   assert.match(html, /id="event-task-tab-genesys-xperience"[^>]*tabindex="0"/);
   assert.doesNotMatch(html, /Confirm the next owner and deadline/);
+  assert.match(html, /Six records make the scorecard usable\./);
+  assert.match(html, /Fully loaded cost[\s\S]*Forecast at approval · final by 7 days after/);
+  assert.match(html, /30 and 90 days after[\s\S]*sourced pipeline · influenced pipeline · closed revenue/);
+  assert.match(html, /Held meeting[\s\S]*Scheduled, blank-outcome and no-show records do not count/);
+  assert.match(html, /Meeting-to-opportunity rate[\s\S]*Event-sourced opportunities ÷ held meetings/);
+  assert.match(html, /Portfolio comparison is blocked today\./);
+  assert.match(html, /Cvent’s 2026 event-value guidance/);
+  assert.match(html, /HubSpot’s Marketing Events guidance/);
 
   const customerConnect = await render("/marketing?event=customer-connect-expo");
   assert.equal(customerConnect.status, 200);
@@ -376,6 +391,11 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Event system coverage/);
   assert.match(genesysHtml, /Conference tracker[\s\S]*Located/);
   assert.match(genesysHtml, /Events Drive[\s\S]*Setup needed/);
+  assert.match(genesysHtml, /Measurement checkpoint/);
+  assert.match(genesysHtml, /Primary objective[\s\S]*Not recorded as a governed field/);
+  assert.match(genesysHtml, /Fully loaded cost[\s\S]*No normalized cost record/);
+  assert.match(genesysHtml, /CRM association[\s\S]*Exact Event key join missing/);
+  assert.match(genesysHtml, /Open measurement contract/);
   assert.match(genesysHtml, /Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
   assert.match(genesysHtml, /href="\/sources">See source record/);
   assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
@@ -420,6 +440,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.doesNotMatch(contactHtml, /id="event-priorities"/);
   assert.doesNotMatch(contactHtml, /What needs to happen\./);
   assert.doesNotMatch(contactHtml, /Who’s going/);
+  assert.doesNotMatch(contactHtml, /Measurement checkpoint/);
 
   const trackerBaselineEvent = await render("/events/ccw-orlando");
   assert.equal(trackerBaselineEvent.status, 200);

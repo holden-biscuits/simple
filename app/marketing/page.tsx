@@ -4,6 +4,7 @@ import { Footer } from "../components/footer";
 import { EventMarketingWorkspace, MarketingSupportBoard } from "../components/marketing-support-board";
 import { SiteHeader } from "../components/site-header";
 import { events, getEventPhase, getProgramDate } from "../data/events";
+import { measurementFields, measurementWindows, metricDefinitions } from "../data/event-measurement";
 
 export const dynamic = "force-dynamic";
 
@@ -104,14 +105,30 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
       </section>
 
       <section className="shell measurement" id="measurement">
-        <div><p className="eyebrow">Measurement</p><h2>Report the chain, not just the crowd.</h2><p>For every event, report spend and fulfillment alongside qualified conversations, meetings booked, demos, pipeline, and closed revenue. Keep brand, partner, and customer outcomes as separate evidence—not a substitute for commercial results.</p></div>
-        <dl>
+        <div className="measurement-intro"><p className="eyebrow">Measurement</p><h2>Report the chain, not just the crowd.</h2><p>For every event, report spend and fulfillment alongside qualified conversations, meetings held, demos, pipeline, and closed revenue. Keep brand, partner, and customer outcomes as separate evidence—not a substitute for commercial results.</p></div>
+        <dl className="measurement-chain">
           <div><dt>Inputs</dt><dd>Spend · people · deliverables · campaign activity</dd></div>
           <div><dt>Engagement</dt><dd>App targets · sessions · booth conversations · scans</dd></div>
           <div><dt>Progression</dt><dd>Qualified contacts · meetings · demos · opportunities</dd></div>
           <div><dt>Return</dt><dd>Pipeline · closed revenue · partner/customer outcomes · lessons</dd></div>
         </dl>
-        <p className="practice-sources">Practice references: <a href="https://www.cvent.com/en/blog/events/how-effectively-collect-leads-trade-shows" target="_blank" rel="noreferrer">Cvent’s 2026 trade-show lead capture guidance ↗</a> and <a href="https://www.salesforce.com/en-us/wp-content/uploads/sites/4/documents/partners/gtm-offerings/isv-agentforce-marketing-playbook.pdf" target="_blank" rel="noreferrer">Salesforce’s event follow-up playbook ↗</a>.</p>
+        <div className="measurement-contract">
+          <div className="section-intro"><p className="eyebrow">Minimum data contract</p><h3>Six records make the scorecard usable.</h3><p>If one is missing, show the gap. Do not replace it with a proxy metric.</p></div>
+          <div className="measurement-table-wrap"><table className="measurement-table">
+            <thead><tr><th>Required field</th><th>System of record</th><th>When</th><th>Rule</th></tr></thead>
+            <tbody>{measurementFields.map((item) => <tr key={item.field}><th scope="row">{item.field}</th><td data-label="System of record">{item.owner}</td><td data-label="When">{item.timing}</td><td data-label="Rule">{item.rule}</td></tr>)}</tbody>
+          </table></div>
+        </div>
+        <div className="measurement-windows">
+          <div className="section-intro"><p className="eyebrow">Reporting windows</p><h3>Close the loop while the evidence still exists.</h3></div>
+          <div>{measurementWindows.map((item, index) => <article key={item.window}><span>{String(index + 1).padStart(2, "0")}</span><time>{item.window}</time><h4>{item.action}</h4><p>{item.output}</p></article>)}</div>
+        </div>
+        <div className="metric-definitions">
+          <div className="section-intro"><p className="eyebrow">Metric definitions</p><h3>Use the same denominator every time.</h3><p>These definitions prevent a scheduled calendar entry, a badge scan, and a qualified opportunity from collapsing into one flattering number.</p></div>
+          <div>{metricDefinitions.map((item) => <article key={item.metric}><span>{item.metric}</span><p>{item.definition}</p>{item.formula ? <code>{item.formula}</code> : null}</article>)}</div>
+        </div>
+        <aside className="measurement-gate"><strong>Portfolio comparison is blocked today.</strong><p>No normalized event-cost ledger exists, active events do not have exact CRM joins, and HubSpot has no Marketing Event records. Until those three foundations are complete, report coverage and follow-up—not event ROI rankings.</p><Link href="/sources#writeback-queue">Open the setup queue →</Link></aside>
+        <p className="practice-sources">Practice references: <a href="https://www.cvent.com/en/blog/events/how-to-prove-event-roi" target="_blank" rel="noreferrer">Cvent’s 2026 event-value guidance ↗</a>, <a href="https://www.bizzabo.com/blog/trade-show-roi" target="_blank" rel="noreferrer">Bizzabo’s trade-show measurement model ↗</a>, and <a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">HubSpot’s Marketing Events guidance ↗</a>.</p>
         <BackToTop />
       </section>
       <Footer />

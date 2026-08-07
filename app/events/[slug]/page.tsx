@@ -9,6 +9,7 @@ import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuarante
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
 import { getEventSystemLinkage } from "../../data/system-linkage";
+import { getEventMeasurementCheckpoint } from "../../data/event-measurement";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +32,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const verification = getEventVerification(event);
   const freshness = getSourceFreshness(event, programDate);
   const systemLinkage = getEventSystemLinkage(event);
+  const measurementCheckpoint = getEventMeasurementCheckpoint(event, eventPhase);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
@@ -137,6 +139,16 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <div className="event-linkage-strip" aria-label="Event system coverage">
             {systemLinkage.map((item) => <div key={item.system}><span>{item.system}</span><strong className={`linkage-state linkage-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</strong><p>{item.detail}</p></div>)}
           </div>
+          {!isNotAttending ? <div className="event-measurement-checkpoint">
+            <header><span>Measurement checkpoint</span><strong>{measurementCheckpoint.state}</strong></header>
+            <div>
+              <p><span>Primary objective</span><b>{measurementCheckpoint.objective}</b></p>
+              <p><span>Fully loaded cost</span><b>{measurementCheckpoint.cost}</b></p>
+              <p><span>CRM association</span><b>{measurementCheckpoint.crm}</b></p>
+              <p><span>Meeting evidence</span><b>{measurementCheckpoint.meetings}</b></p>
+            </div>
+            <footer><p>{measurementCheckpoint.nextAction}</p><Link href="/marketing#measurement">Open measurement contract →</Link></footer>
+          </div> : null}
         </details>
       </section>
 

@@ -262,6 +262,16 @@ export const stewardshipRoles: StewardshipRole[] = [
 export const writebackQueue: WritebackItem[] = [
   {
     system: "Conference tracker",
+    scope: "Normalized event-cost ledger",
+    current: "No governed event-level dataset combines forecast and final sponsorship, travel, production, paid media, activation and freight cost",
+    proposed: "Add a Costs tab keyed by Event key with forecast, approved and final values by category, plus owner and last-updated fields",
+    evidence: "Fieldbook measurement-contract audit · Aug 6",
+    evidenceUrl: "/marketing#measurement",
+    state: "Setup needed",
+    url: sourceLinks.sheet,
+  },
+  {
+    system: "Conference tracker",
     scope: "Canonical Event key column",
     current: "Event rows are matched by names and dates; no immutable shared key exists upstream",
     proposed: "Add an Event key text column and backfill the 29 published Basecamp keys without regenerating them from display names",

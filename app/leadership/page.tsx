@@ -6,6 +6,7 @@ import { SiteHeader } from "../components/site-header";
 import { events, getProgramDate } from "../data/events";
 import { getLeadershipBrief } from "../data/leadership-brief";
 import { siteStatus } from "../data/site-status";
+import { measurementReadiness } from "../data/event-measurement";
 
 export const metadata: Metadata = {
   title: "Leadership brief · Event Basecamp",
@@ -94,7 +95,7 @@ export default function LeadershipPage() {
         <div className="leadership-risk-grid">
           <article><span>01 · Execution coverage</span><h3>{brief.pulse.readiness.planSetupNeeded} active events lack a structured plan.</h3><p>Priorities exist, but complete ownership, due dates and task status do not. This is the largest obstacle to a dependable program forecast.</p><Link href="/marketing#event-tasks">Open event workspaces →</Link></article>
           <article><span>02 · Source conflicts</span><h3>{sourceConflicts.length} event briefs have contradictory facts.</h3><p>{sourceConflicts.length ? sourceConflicts.map((item) => item.name).join(" · ") : "No unresolved source conflicts are recorded."}</p><Link href="/sources#approval-queue">Review decisions →</Link></article>
-          <article><span>03 · Spend and ROI</span><h3>No normalized event-cost dataset exists yet.</h3><p>The program can report commitments and outcomes, but it cannot responsibly rank event ROI until sponsorship, travel, production and activation spend share a controlled schema.</p><Link href="/marketing#measurement">Open measurement rules →</Link></article>
+          <article><span>03 · Spend and ROI</span><h3>{measurementReadiness.normalizedCostEvents} events have a normalized cost record.</h3><p>No normalized event-cost dataset exists yet. The program cannot responsibly rank event ROI until sponsorship, travel, production, paid media, activation and freight share a controlled schema.</p><Link href="/marketing#measurement">Open measurement contract →</Link></article>
           <article><span>04 · Reporting foundation</span><h3>{brief.linkage.activeCrmEvents} of {brief.linkage.activeEvents} active events have an exact CRM join.</h3><p>{brief.linkage.activeNotionProjects} active event workspaces are linked, but event-specific Drive folders and canonical HubSpot associations still need setup. Portfolio pipeline is not yet a trustworthy leadership metric.</p><Link href="/sources#canonical-event-key">Open linkage coverage →</Link></article>
         </div>
         <BackToTop />

@@ -28,6 +28,10 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.linkage-coverage, \.event-linkage-strip, \.linkage-gap-list\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /\.stewardship-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*1fr\)/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.stewardship-grid, \.leadership-queue-grid\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(css, /\.measurement-windows > div:last-child\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*1fr\)/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.measurement-windows > div:last-child, \.metric-definitions > div:last-child\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(css, /\.event-measurement-checkpoint > div\s*\{[^}]*grid-template-columns:\s*repeat\(4,\s*1fr\)/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-measurement-checkpoint > div\s*\{\s*grid-template-columns:\s*1fr/);
 });
 
 test("the CRM attribution audit remains readable below desktop", () => {
