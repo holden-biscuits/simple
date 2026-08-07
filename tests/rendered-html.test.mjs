@@ -73,6 +73,16 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Source monitor/);
+  assert.match(html, /A scheduled snapshot, not a live database\./);
+  assert.match(html, /The missing join:/);
+  assert.match(html, /Sheets, Notion and HubSpot do not yet share it/);
+  assert.match(html, /Update the system that owns the fact\./);
+  assert.match(html, /Tracker outcome columns should become rollups or references/);
+  assert.match(html, /Changes that belong upstream\./);
+  assert.match(html, /Five protected direct corrections/);
+  assert.match(html, /replace Monaco logging with HubSpot/);
+  assert.match(html, /Marketing Event writes need HubSpot reauthorization/);
+  assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
   assert.match(html, /<span>Applied<\/span><strong>4<\/strong>/);
   assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
@@ -146,6 +156,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const startSearchHtml = await startSearch.text();
   assert.match(startSearchHtml, /Start with the task/);
   assert.match(startSearchHtml, /\/#start-map/);
+
+  const writebackSearch = await render("/search?q=write%20back&type=Operations");
+  assert.equal(writebackSearch.status, 200);
+  const writebackSearchHtml = await writebackSearch.text();
+  assert.match(writebackSearchHtml, /Source write-back queue/);
+  assert.match(writebackSearchHtml, /\/sources#writeback-queue/);
 });
 
 test("server-renders a searchable marketing support board", async () => {

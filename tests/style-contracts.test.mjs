@@ -1,0 +1,12 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+test("anchored navigation clears sticky chrome at each breakpoint", () => {
+  assert.match(css, /--anchor-offset:\s*175px/);
+  assert.match(css, /\.source-governance\[id\][\s\S]*scroll-margin-top:\s*var\(--anchor-offset\)/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*--anchor-offset:\s*96px[\s\S]*\.page-contents\s*\{\s*top:\s*0;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*--anchor-offset:\s*24px/);
+});

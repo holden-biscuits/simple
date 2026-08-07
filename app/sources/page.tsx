@@ -4,6 +4,7 @@ import { SiteHeader } from "../components/site-header";
 import { Footer } from "../components/footer";
 import { BackToTop, PageContents } from "../components/page-contents";
 import { events, sourceLinks } from "../data/events";
+import { fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 
 export const metadata: Metadata = {
@@ -29,6 +30,9 @@ export default function SourcesPage() {
       </section>
       <PageContents items={[
         { id: "source-monitor", label: "Source monitor" },
+        { id: "data-flow", label: "How data moves" },
+        { id: "field-ownership", label: "Where to update" },
+        { id: "writeback-queue", label: "Write-back queue" },
         { id: "protected-decisions", label: "Direct decisions" },
         { id: "change-log", label: "Change log" },
         { id: "approval-queue", label: "Approval queue" },
@@ -67,6 +71,65 @@ export default function SourcesPage() {
         </div>
         <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Last completed scan: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed manually while building the fieldbook; the first successful recurring run will add its own receipt here."}</p>
         <BackToTop />
+      </section>
+
+      <section className="source-governance" id="data-flow">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Current data flow</p>
+            <h2>A scheduled snapshot, not a live database.</h2>
+            <p>The deployed site cannot read private GTM systems from a visitor’s browser. A scheduled Codex task reads the connected sources, reconciles the facts, updates a review build and waits for publication approval.</p>
+          </div>
+          <div className="source-flow-grid">
+            {sourceFlow.map((step) => <article key={step.number}>
+              <span>{step.number}</span>
+              <h3>{step.title}</h3>
+              <p>{step.detail}</p>
+            </article>)}
+          </div>
+          <p className="source-governance-note"><strong>The missing join:</strong> each system needs the same stable Event key. The fieldbook already has one in every event URL; Sheets, Notion and HubSpot do not yet share it.</p>
+          <BackToTop />
+        </div>
+      </section>
+
+      <section className="shell field-ownership" id="field-ownership">
+        <div className="section-intro">
+          <p className="eyebrow">Field ownership</p>
+          <h2>Update the system that owns the fact.</h2>
+          <p>The fieldbook is the place to read the whole plan. It is not the place to originate every fact.</p>
+        </div>
+        <div className="source-route-table-wrap">
+          <table className="source-route-table">
+            <thead><tr><th>Data</th><th>System of record</th><th>How it gets here</th><th>Where corrections go</th><th>Automation rule</th></tr></thead>
+            <tbody>{fieldOwners.map((route) => <tr key={route.data}>
+              <th scope="row">{route.data}</th>
+              <td data-label="System of record">{route.owner}</td>
+              <td data-label="How it gets here">{route.intake}</td>
+              <td data-label="Where corrections go">{route.correction}</td>
+              <td data-label="Automation rule">{route.automation}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        <BackToTop />
+      </section>
+
+      <section className="writeback-section" id="writeback-queue">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Write-back queue</p>
+            <h2>Changes that belong upstream.</h2>
+            <p>These are known mismatches or setup jobs. Nothing in this queue writes to an external system until the exact change is approved.</p>
+          </div>
+          <div className="writeback-grid">
+            {writebackQueue.map((item) => <a href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noreferrer" : undefined} key={`${item.system}-${item.scope}`}>
+              <header><span>{item.system}</span><b className={`writeback-state writeback-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</b></header>
+              <h3>{item.scope}</h3>
+              <p>{item.action}</p>
+              <strong>Open destination ↗</strong>
+            </a>)}
+          </div>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="shell protected-decisions" id="protected-decisions">
