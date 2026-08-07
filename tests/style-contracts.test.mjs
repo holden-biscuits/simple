@@ -64,6 +64,12 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.not-found-routes\s*\{\s*grid-template-columns:\s*1fr/);
 });
 
+test("the mobile header preserves every route without consuming the first viewport", () => {
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.site-header\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0, 1fr\) auto;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.site-header nav\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*flex-wrap:\s*nowrap;[^}]*overflow-x:\s*auto;[^}]*scroll-snap-type:\s*inline proximity;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.site-header nav a\s*\{[^}]*flex:\s*0 0 auto;[^}]*scroll-snap-align:\s*start;/);
+});
+
 test("the CRM attribution audit remains readable below desktop", () => {
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.crm-health-grid\s*\{\s*grid-template-columns:\s*1fr 1fr/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.crm-rule-grid, \.crm-operating-model\s*\{\s*grid-template-columns:\s*1fr/);
