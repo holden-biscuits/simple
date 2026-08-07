@@ -13,6 +13,7 @@ import { getProgramSystemLinkage } from "../data/system-linkage";
 import { sourceReceiptStates, sourceScanContract } from "../data/source-scan";
 import { audienceSegmentContract, getAudienceSegmentRegistry } from "../data/audience-segment-registry";
 import { latestSourceScan } from "../data/latest-source-scan";
+import { eventPipelineSnapshot } from "../data/event-pipeline";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -345,6 +346,11 @@ export default function SourcesPage() {
             <article><span>Meeting records to QA</span><strong>{crmAttributionAudit.meetingWindow.possibleEventMeetings}</strong><p>{crmAttributionAudit.meetingWindow.outcomeNote}</p></article>
             <article><span>Marketing Events</span><strong>{crmAttributionAudit.marketingEvents}</strong><p>No canonical event objects are available yet; writes require HubSpot reauthorization.</p></article>
           </div>
+          <aside className="crm-portfolio-rollup">
+            <div><span>Portfolio opportunity view</span><strong>{eventPipelineSnapshot.opportunities} qualifying opportunities</strong></div>
+            <p>The {crmAttributionAudit.exactDeals}-record attribution baseline includes every exactly joined CRM record. The operating view excludes Closed Lost and Disqualified, leaving {eventPipelineSnapshot.opportunities} opportunities. All {eventPipelineSnapshot.dealsWithoutAmount} currently lack a reportable amount, so open pipeline and closed-won revenue both remain $0.</p>
+            <Link href="/marketing#event-pipeline">Open pipeline chart →</Link>
+          </aside>
           <aside className="crm-audit-alert">
             <span>Needs RevOps review · {crmAttributionAudit.sourceMismatch.count} record</span>
             <p>{crmAttributionAudit.sourceMismatch.note}</p>

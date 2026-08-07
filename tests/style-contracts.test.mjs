@@ -80,7 +80,9 @@ test("the mobile header preserves every route without consuming the first viewpo
 });
 
 test("the CRM attribution audit remains readable below desktop", () => {
+  assert.match(css, /\.crm-portfolio-rollup\s*\{[^}]*grid-template-columns:\s*minmax\(180px,\s*\.55fr\)\s+minmax\(340px,\s*1\.45fr\)\s+auto/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.crm-health-grid\s*\{\s*grid-template-columns:\s*1fr 1fr/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.crm-portfolio-rollup\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.crm-rule-grid, \.crm-operating-model\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.crm-health-grid, \.crm-rule-grid, \.crm-operating-model\s*\{\s*grid-template-columns:\s*1fr/);
 });

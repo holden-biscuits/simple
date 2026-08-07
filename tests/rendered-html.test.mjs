@@ -201,6 +201,11 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Reconcile any related execution text in Notion; the next review build refreshes Event Basecamp/);
   assert.match(html, /Only publish outcomes the CRM can prove\./);
   assert.match(html, /Exact event deals[\s\S]*29/);
+  assert.match(html, /Portfolio opportunity view/);
+  assert.match(html, /22(?:<!-- -->)? qualifying opportunities/);
+  assert.match(html, /29(?:<!-- -->)?-record attribution baseline/);
+  assert.match(html, /All (?:<!-- -->)?22(?:<!-- -->)? currently lack a reportable amount/);
+  assert.match(html, /href="\/marketing#event-pipeline"[^>]*>Open pipeline chart/);
   assert.match(html, /Needs RevOps review[\s\S]*One additional deal carries the CCW follow-up detail but not an event source/);
   assert.match(html, /Open (?:<!-- -->)?Memorial Hermann Health System(?:<!-- -->)? in HubSpot/);
   assert.match(html, /Meeting records to QA[\s\S]*4/);
@@ -338,8 +343,14 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Needs judgment[\s\S]*2/);
   assert.match(html, /Ready to approve[\s\S]*12/);
   assert.match(html, /Foundation work[\s\S]*9/);
-  assert.match(html, /Pipeline value is not supported\./);
-  assert.match(html, /All 29 attributed deals currently have a \$0 amount/);
+  assert.match(html, /Qualifying opportunities[\s\S]*22/);
+  assert.match(html, /Open pipeline[\s\S]*\$0/);
+  assert.match(html, /Closed-won revenue[\s\S]*\$0/);
+  assert.match(html, /Exact attribution records[\s\S]*29/);
+  assert.match(html, /Read the two populations correctly\./);
+  assert.match(html, /29(?:<!-- -->)? records meet the exact event-attribution rule/);
+  assert.match(html, /22(?:<!-- -->)? remain after Closed Lost and Disqualified are excluded/);
+  assert.match(html, /\$0 pipeline and revenue describe CRM completeness—not the business value/);
   assert.match(html, /<a[^>]*href="\/leadership"[^>]*>Leaders<\/a>/);
 });
 

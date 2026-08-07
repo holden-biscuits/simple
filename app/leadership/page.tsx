@@ -163,12 +163,12 @@ export default function LeadershipPage() {
             <p>These figures describe data coverage and explicitly attributed records. They are not an ROI claim.</p>
           </div>
           <div className="leadership-outcome-grid">
-            <article><span>Exact event deals</span><strong>{brief.outcomes.exactDeals}</strong><p>All currently resolve to CCW Vegas through controlled deal-source fields.</p></article>
-            <article><span>Events represented</span><strong>{brief.outcomes.representedEvents}</strong><p>The controlled CRM setup names only one event.</p></article>
-            <article><span>Meeting records to QA</span><strong>{brief.outcomes.meetingRecordsToQa}</strong><p>{brief.outcomes.completedMeetingOutcomes} have a completed outcome; none count as held yet.</p></article>
-            <article><span>Marketing Event records</span><strong>{brief.outcomes.marketingEvents}</strong><p>Canonical Marketing Event objects still need to be created.</p></article>
+            <article><span>Qualifying opportunities</span><strong>{brief.outcomes.qualifyingOpportunities}</strong><p>Event-sourced deals excluding Closed Lost and Disqualified.</p></article>
+            <article><span>Open pipeline</span><strong>${brief.outcomes.openPipeline.toLocaleString()}</strong><p>Sum of positive amounts on qualifying open deals.</p></article>
+            <article><span>Closed-won revenue</span><strong>${brief.outcomes.closedWonRevenue.toLocaleString()}</strong><p>Recognized only when a qualifying deal is Closed Won.</p></article>
+            <article><span>Exact attribution records</span><strong>{brief.outcomes.exactDeals}</strong><p>The broader historical baseline; all currently resolve to CCW Vegas.</p></article>
           </div>
-          <div className="leadership-caveat"><strong>Pipeline value is not supported.</strong><p>All 29 attributed deals currently have a $0 amount, and none are Closed Won. Leadership should use the stage distribution as follow-up coverage—not as sourced pipeline or revenue.</p><Link href="/events/ccw-vegas#event-results">Open the CCW Vegas record →</Link></div>
+          <div className="leadership-caveat"><strong>Read the two populations correctly.</strong><p>{brief.outcomes.exactDeals} records meet the exact event-attribution rule. {brief.outcomes.qualifyingOpportunities} remain after Closed Lost and Disqualified are excluded. All {brief.outcomes.dealsWithoutAmount} qualifying opportunities lack a reportable amount, so $0 pipeline and revenue describe CRM completeness—not the business value of the event.</p><Link href="/marketing#event-pipeline">Open the pipeline chart →</Link></div>
           <BackToTop />
         </div>
       </section>
@@ -181,8 +181,8 @@ export default function LeadershipPage() {
         <div className="leadership-trust-grid">
           <article><span>Use now</span><h3>Schedule and commitments</h3><p>Tracker-backed dates, participation, activation packages and named rosters, with direct corrections protected from stale upstream data.</p></article>
           <article><span>Use now</span><h3>Execution readiness</h3><p>Structured task coverage, named owners, due dates, source conflicts and freshness status. Open values remain visibly open.</p></article>
-          <article><span>Use carefully</span><h3>CRM outcomes</h3><p>Only exact event joins. Scheduled or blank-outcome meetings, text matches and date proximity stay out of completed results.</p></article>
-          <article><span>Do not claim yet</span><h3>Portfolio ROI</h3><p>There is no normalized spend model or complete event-key coverage in HubSpot. Until both exist, ROI and event-sourced pipeline totals would be misleading.</p></article>
+          <article><span>Use carefully</span><h3>CRM outcomes</h3><p>Keep the {brief.outcomes.exactDeals}-record attribution baseline separate from the {brief.outcomes.qualifyingOpportunities}-opportunity operating view. Scheduled or blank-outcome meetings still do not count as held.</p></article>
+          <article><span>Do not claim yet</span><h3>Portfolio ROI</h3><p>Current pipeline is $0 because deal amounts are missing, while normalized event cost and complete Event-key coverage are also absent. Do not turn a data gap into an ROI conclusion.</p></article>
         </div>
         <div className="leadership-links"><Link href="/sources#data-streams">See the data architecture →</Link><Link href="/sources#writeback-queue">See upstream work →</Link><Link href="/search">Search Event Basecamp →</Link></div>
         <BackToTop />

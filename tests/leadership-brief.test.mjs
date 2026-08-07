@@ -26,6 +26,10 @@ test("leadership brief derives the active portfolio from governed event data", (
 test("leadership outcomes preserve CRM limits", () => {
   const brief = getLeadershipBrief(events, "2026-08-06");
   assert.deepEqual(brief.outcomes, {
+    qualifyingOpportunities: 22,
+    openPipeline: 0,
+    closedWonRevenue: 0,
+    dealsWithoutAmount: 22,
     exactDeals: 29,
     representedEvents: 1,
     meetingRecordsToQa: 4,

@@ -3,6 +3,7 @@ import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal } from "./ev
 import { getProgramPulse } from "./program-pulse.ts";
 import { getEventReadiness } from "./program-readiness.ts";
 import { crmAttributionAudit } from "./crm-attribution.ts";
+import { eventPipelineSnapshot } from "./event-pipeline.ts";
 import { writebackQueue } from "./source-governance.ts";
 import { getProgramSystemLinkage } from "./system-linkage.ts";
 import { getEventBriefReadiness, getProgramBriefReadiness } from "./event-brief-readiness.ts";
@@ -69,12 +70,16 @@ export function getLeadershipBrief(catalog: EventRecord[], programDate: string) 
     portfolio,
     writebacks,
     outcomes: {
+      qualifyingOpportunities: eventPipelineSnapshot.opportunities,
+      openPipeline: eventPipelineSnapshot.openPipeline,
+      closedWonRevenue: eventPipelineSnapshot.closedWonRevenue,
+      dealsWithoutAmount: eventPipelineSnapshot.dealsWithoutAmount,
       exactDeals: crmAttributionAudit.exactDeals,
       representedEvents: crmAttributionAudit.representedEvents,
       meetingRecordsToQa: crmAttributionAudit.meetingWindow.possibleEventMeetings,
       completedMeetingOutcomes: crmAttributionAudit.meetingWindow.completedOutcomes,
       marketingEvents: crmAttributionAudit.marketingEvents,
-      pipelineClaimSupported: false,
+      pipelineClaimSupported: eventPipelineSnapshot.dealsWithoutAmount === 0,
     },
   };
 }

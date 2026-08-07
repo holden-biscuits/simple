@@ -468,6 +468,11 @@ button, input, select { font: inherit; }
 .crm-health-grid span, .crm-rule-grid span, .crm-operating-model span { color: #ff9a7d; font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .crm-health-grid strong { display: block; margin: 42px 0 14px; font: 400 52px/1 Georgia, serif; }
 .crm-health-grid p, .crm-rule-grid p, .crm-operating-model p { margin: 0; color: rgba(255,255,255,.7); font-size: 14px; line-height: 1.55; }
+.crm-portfolio-rollup { margin-top: 16px; padding: 20px; display: grid; grid-template-columns: minmax(180px, .55fr) minmax(340px, 1.45fr) auto; gap: 22px; align-items: center; color: #302b26; background: #ffd08c; border-left: 6px solid var(--signal); }
+.crm-portfolio-rollup div span { display: block; margin-bottom: 8px; color: #6b4100; font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.crm-portfolio-rollup div strong { font: 400 24px/1.1 Georgia, serif; }
+.crm-portfolio-rollup p { margin: 0; font-size: 14px; line-height: 1.55; }
+.crm-portfolio-rollup a { color: var(--green); border-bottom: 1px solid currentColor; font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .crm-audit-alert { display: grid; grid-template-columns: minmax(180px, .6fr) minmax(320px, 1.4fr) auto; gap: 22px; align-items: center; margin-top: 16px; padding: 18px 20px; border: 1px solid rgba(255,154,125,.7); background: rgba(255,89,48,.09); }
 .crm-audit-alert span { color: #ff9a7d; font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .crm-audit-alert p { margin: 0; color: rgba(255,255,255,.78); font-size: 14px; line-height: 1.55; }
@@ -1308,6 +1313,8 @@ button, input, select { font: inherit; }
   .timeline article p { grid-column: 2; }
   .crm-health-grid { grid-template-columns: 1fr 1fr; }
   .crm-audit-alert { grid-template-columns: 1fr; align-items: start; }
+  .crm-portfolio-rollup { grid-template-columns: 1fr; align-items: start; }
+  .crm-portfolio-rollup a { justify-self: start; }
   .crm-rule-grid, .crm-operating-model { grid-template-columns: 1fr; }
   .stewardship-grid { grid-template-columns: 1fr 1fr; }
   .stewardship-boundary, .leadership-operating-note { grid-template-columns: 1fr; }
