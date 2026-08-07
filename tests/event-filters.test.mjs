@@ -28,7 +28,7 @@ test("attention filters expose the kind of operating gap without including archi
   assert.equal(events.filter((event) => matchesAttention(event, "source", "2026-08-07")).length, 2);
   assert.equal(events.filter((event) => matchesAttention(event, "roster", "2026-08-07")).length, 12);
   assert.equal(events.filter((event) => matchesAttention(event, "meetings", "2026-08-07")).length, 6);
-  assert.equal(events.filter((event) => matchesAttention(event, "plan", "2026-08-07")).length, 9);
+  assert.equal(events.filter((event) => matchesAttention(event, "plan", "2026-08-07")).length, 8);
 
   const sourceIssues = filterEventDirectory(events, { query: "", attendance: "going", attention: "source", year: "2026" }, "2026-08-07");
   assert.deepEqual(sourceIssues.map((event) => event.slug), ["iqpc-cx-travel-hospitality"]);

@@ -18,7 +18,7 @@ test("protected direct decisions still match the published event data", () => {
   assert.equal(event("contact-io").status, "No");
   assert.equal(event("customer-connect-expo").status, "Confirmed");
   assert.ok(event("customer-connect-expo").priorityActions.some((item) => item.includes("Aug 11 at 9:30 AM PT")));
-  assert.ok(event("customer-connect-expo").workstreams.sponsorship.some((item) => item === "Insurance is recommended, not mandatory"));
+  assert.ok(event("customer-connect-expo").workstreams.sponsorship.some((item) => item === "Insurance is not needed for our pipe-and-drape booth"));
   assert.equal(event("icmi-contact-center-expo").status, "Confirmed");
   assert.deepEqual(event("genesys-xperience").team, ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]);
   assert.equal(event("genesys-xperience").guaranteedMeetings, "No");

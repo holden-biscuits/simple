@@ -8,7 +8,7 @@ test("event change history returns only records tied to that event", () => {
   assert.ok(genesys.every((change) => change.eventSlug === "genesys-xperience"));
 
   const customerConnect = getEventSourceChanges("customer-connect-expo");
-  assert.deepEqual(customerConnect.map((change) => change.id), ["customer-connect-onboarding-signal", "customer-connect-portal-registration", "customer-connect-confirmed"]);
+  assert.deepEqual(customerConnect.map((change) => change.id), ["customer-connect-notion-closeout", "customer-connect-notion-refresh", "customer-connect-onboarding-signal", "customer-connect-portal-registration", "customer-connect-confirmed"]);
 });
 
 test("program-wide receipts do not leak onto individual event pages", () => {
