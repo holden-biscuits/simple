@@ -1,3 +1,5 @@
+import { hasGuaranteedMeetingPackage } from "./event-signals.ts";
+
 export type EventPhase = "past" | "now" | "upcoming";
 
 export type EventVerification = {
@@ -1139,7 +1141,7 @@ export function getWorkstreams(event: EventRecord): Record<WorkstreamKey, string
     meetings:
       event.meetingsBooked.length > 0
         ? [`${event.meetingsBooked.length} meeting account${event.meetingsBooked.length === 1 ? "" : "s"} recorded`]
-        : event.guaranteedMeetings.startsWith("Yes")
+        : hasGuaranteedMeetingPackage(event)
           ? ["Guaranteed meetings"]
           : ["None"],
     swag: ["None"],

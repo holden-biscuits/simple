@@ -6,6 +6,7 @@ import { SiteHeader } from "./components/site-header";
 import { Footer } from "./components/footer";
 import { BackToTop, PageContents } from "./components/page-contents";
 import { events, getEventPhase, getProgramDate } from "./data/events";
+import { hasGuaranteedMeetingPackage } from "./data/event-signals";
 
 export const metadata: Metadata = {
   title: "Event Basecamp · 2026–2027",
@@ -17,7 +18,7 @@ export const dynamic = "force-dynamic";
 export default function Home() {
   const programDate = getProgramDate();
   const confirmedUpcoming = events.filter((event) => getEventPhase(event, programDate) !== "past" && event.status === "Confirmed").length;
-  const meetings = events.filter((e) => e.guaranteedMeetings.startsWith("Yes")).length;
+  const meetings = events.filter(hasGuaranteedMeetingPackage).length;
   return (
     <main id="page-top">
       <SiteHeader />

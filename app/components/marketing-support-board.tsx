@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord, type MarketingTask } from "../data/events";
+import { hasGuaranteedMeetingPackage } from "../data/event-signals";
 
 type BoardFilter = "all" | "support" | "no-support" | "team-open" | "speaking";
 
@@ -28,7 +29,7 @@ function activationSignals(event: EventRecord) {
   return [
     !event.sponsorship.toLowerCase().startsWith("none") ? "Sponsor / booth" : null,
     hasSpeaking(event) ? "Speaking" : null,
-    event.guaranteedMeetings.startsWith("Yes") ? "Meeting package" : null,
+    hasGuaranteedMeetingPackage(event) ? "Meeting package" : null,
   ].filter(Boolean) as string[];
 }
 

@@ -5,6 +5,7 @@ import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getEventPhase, getEventVerification, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { hasGuaranteedMeetingPackage } from "../../data/event-signals";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const verification = getEventVerification(event);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
-  const hasGuaranteedMeetings = event.guaranteedMeetings.startsWith("Yes");
+  const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
   const bookedMeetingCount = event.meetingsBooked.length;
   const bookedMeetingLabel = event.meetingCountLabel ?? bookedMeetingCount.toString();
   const guaranteedPackageSummary = hasGuaranteedMeetings

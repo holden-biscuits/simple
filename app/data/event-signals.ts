@@ -1,6 +1,7 @@
-export function getGuaranteedMeetingSignal(event: { guaranteedMeetings: string }) {
+type GuaranteedMeetingSource = { guaranteedMeetings: string };
+
+function knownGuaranteedMeetingLabel(event: GuaranteedMeetingSource) {
   const meetings = event.guaranteedMeetings.trim();
-  if (!meetings.toLowerCase().startsWith("yes")) return "0 Guaranteed Meetings";
 
   const range = meetings.match(/\b(\d+)\s*[–-]\s*(\d+)\b/);
   if (range) return `${range[1]}–${range[2]} Guaranteed Meetings`;
@@ -11,5 +12,19 @@ export function getGuaranteedMeetingSignal(event: { guaranteedMeetings: string }
   const exact = meetings.match(/^yes(?:\s*·\s*|\s+)(\d+)\b/i);
   if (exact) return `${exact[1]} Guaranteed Meeting${exact[1] === "1" ? "" : "s"}`;
 
-  return "Guaranteed Meetings · Count TBD";
+  return null;
+}
+
+export function hasGuaranteedMeetingPackage(event: GuaranteedMeetingSource) {
+  return event.guaranteedMeetings.trim().toLowerCase().startsWith("yes");
+}
+
+export function hasKnownGuaranteedMeetingCount(event: GuaranteedMeetingSource) {
+  return hasGuaranteedMeetingPackage(event) && knownGuaranteedMeetingLabel(event) !== null;
+}
+
+export function getGuaranteedMeetingSignal(event: GuaranteedMeetingSource) {
+  if (!hasGuaranteedMeetingPackage(event)) return "0 Guaranteed Meetings";
+
+  return knownGuaranteedMeetingLabel(event) ?? "Guaranteed Meetings · Count TBD";
 }
