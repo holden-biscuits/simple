@@ -10,6 +10,8 @@ export type SearchRecord = {
   href: string;
   keywords: string;
   details?: string[];
+  context?: string;
+  status?: string;
   hiddenUntilQuery?: boolean;
 };
 
@@ -22,6 +24,7 @@ const quickSearches = [
   { label: "Open event work", query: "open event task" },
   { label: "Where do I update it?", query: "where should I update event data" },
   { label: "What changed?", query: "what changed" },
+  { label: "Live data feeds", query: "which data feeds are live" },
   { label: "HubSpot results", query: "HubSpot event results" },
   { label: "Booth rules", query: "Booth etiquette" },
 ] as const;
@@ -39,7 +42,13 @@ const searchAliases: Record<string, string[]> = {
   changed: ["changed", "change", "updated", "update"],
   changes: ["changes", "change", "updated", "update"],
   updated: ["updated", "update", "changed", "change"],
-  live: ["live", "feed", "stream", "scheduled", "connected"],
+  live: ["live", "scheduled", "active"],
+  feeds: ["feeds", "feed", "stream"],
+  missing: ["missing", "open", "needed", "unnamed", "incomplete"],
+  needs: ["needs", "need", "open", "attention", "incomplete"],
+  needed: ["needed", "need", "open", "attention", "incomplete"],
+  conflicts: ["conflicts", "conflict", "mismatch", "review"],
+  mismatch: ["mismatch", "conflict", "review"],
   results: ["results", "outcomes", "meetings", "demos", "deals", "pipeline", "revenue"],
   cost: ["cost", "spend", "budget", "investment"],
   costs: ["costs", "spend", "budget", "investment"],
@@ -127,7 +136,7 @@ export function SiteSearch({ records, initialQuery = "", initialType = "All" }: 
         {results.map((record) => {
           const detail = matchDetail(record, normalized);
           return <Link href={record.href} key={`${record.href}-${record.title}`}>
-            <span>{record.type}</span><h2>{record.title}</h2><p>{record.description}</p>{detail ? <p className="search-match"><strong>Matched detail</strong>{detail}</p> : null}<b aria-hidden="true">↗</b>
+            <div className="search-result-meta"><span>{record.type}</span>{record.context ? <span>{record.context}</span> : null}{record.status ? <span>{record.status}</span> : null}</div><h2>{record.title}</h2><p>{record.description}</p>{detail ? <p className="search-match"><strong>Matched detail</strong>{detail}</p> : null}<b aria-hidden="true">↗</b>
           </Link>;
         })}
       </div>

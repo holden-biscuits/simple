@@ -7,6 +7,8 @@ import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuarante
 import { getEventBriefReadiness } from "../data/event-brief-readiness";
 import { siteStatus } from "../data/site-status";
 import { getEventRoleRoutes } from "../data/event-role-routes";
+import { dataStreams, fieldOwners, writebackQueue } from "../data/source-governance";
+import { matchesAttendance, matchesAttention } from "../data/event-filters";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -42,6 +44,81 @@ const referenceRecords: SearchRecord[] = [
 ];
 
 const searchProgramDate = getProgramDate();
+
+const attentionViewRecords: SearchRecord[] = [
+  {
+    type: "Operations",
+    context: "Saved event view",
+    status: `${events.filter((event) => matchesAttendance(event, "going") && matchesAttention(event, "roster", searchProgramDate)).length} events`,
+    title: "Events with rosters still open",
+    href: "/?attendance=going&attention=roster#events",
+    description: "Confirmed, active events where the planned headcount is higher than the named team.",
+    keywords: "roster open missing names unnamed attendees staffing incomplete need names who is attending who is going attention",
+  },
+  {
+    type: "Operations",
+    context: "Saved event view",
+    status: `${events.filter((event) => matchesAttention(event, "source", searchProgramDate)).length} events`,
+    title: "Events with a source issue",
+    href: "/?attention=source#events",
+    description: "Active events with a stated source conflict or an overdue source check.",
+    keywords: "source issue conflict mismatch stale overdue freshness review attention current truth",
+  },
+  {
+    type: "Operations",
+    context: "Saved event view",
+    status: `${events.filter((event) => matchesAttendance(event, "going") && matchesAttention(event, "plan", searchProgramDate)).length} events`,
+    title: "Events that need plan setup",
+    href: "/?attendance=going&attention=plan#events",
+    description: "Confirmed, active events that still lack a structured execution plan with task status.",
+    keywords: "plan setup missing owner due date tasks workstream incomplete needs attention execution readiness",
+  },
+  {
+    type: "Operations",
+    context: "Saved event view",
+    status: `${events.filter((event) => matchesAttendance(event, "going") && matchesAttention(event, "meetings", searchProgramDate)).length} events`,
+    title: "Guaranteed-meeting counts still open",
+    href: "/?attendance=going&attention=meetings#events",
+    description: "Events with a guaranteed-meeting package where the count or format is not yet recorded.",
+    keywords: "guaranteed meeting meetings count unknown open TBD package format matched accounts how many",
+  },
+];
+
+const dataStreamRecords: SearchRecord[] = dataStreams.map((stream) => ({
+  type: "Operations",
+  context: "Data stream",
+  status: stream.state,
+  title: `${stream.system} data stream`,
+  href: "/sources#data-streams",
+  description: stream.refresh,
+  keywords: [stream.system, stream.state, stream.refresh, stream.feeds, stream.writeback, "feed stream sync update source"].join(" "),
+  details: [`Feeds · ${stream.feeds}`, `Write-back · ${stream.writeback}`],
+  hiddenUntilQuery: true,
+}));
+
+const fieldOwnerRecords: SearchRecord[] = fieldOwners.map((field) => ({
+  type: "Operations",
+  context: "System of record",
+  status: field.owner,
+  title: `${field.data} · where to update`,
+  href: "/sources#field-ownership",
+  description: `Update in ${field.owner}.`,
+  keywords: [field.data, field.owner, field.intake, field.correction, field.automation, "where update edit correct owner source of truth system of record"].join(" "),
+  details: [`Correction route · ${field.correction}`, `Automation · ${field.automation}`],
+  hiddenUntilQuery: true,
+}));
+
+const writebackRecords: SearchRecord[] = writebackQueue.map((item) => ({
+  type: "Operations",
+  context: "Write-back item",
+  status: item.state,
+  title: `${item.scope} · upstream work`,
+  href: "/sources#writeback-queue",
+  description: `${item.system} · ${item.proposed}`,
+  keywords: [item.system, item.scope, item.current, item.proposed, item.evidence, item.state, "write back upstream correction setup decision approval"].join(" "),
+  details: [`Current · ${item.current}`, `Proposed · ${item.proposed}`, `Evidence · ${item.evidence}`],
+  hiddenUntilQuery: true,
+}));
 
 const eventRecords: SearchRecord[] = events.map((event) => {
   const briefReadiness = getEventBriefReadiness(event, searchProgramDate);
@@ -89,6 +166,8 @@ const eventRecords: SearchRecord[] = events.map((event) => {
   ].filter(Boolean);
   return {
     type: "Event",
+    context: "Event brief",
+    status: event.status === "No" ? "Not attending" : event.status,
     title: event.name,
     href: `/events/${event.slug}`,
     description: `${event.dates} · ${event.location}${event.venue ? ` · ${event.venue}` : ""} · ${event.status === "No" ? "Not attending" : event.status}${outcomeCounts ? ` · ${outcomeCounts} recorded` : ""}`,
@@ -104,6 +183,8 @@ const marketingTaskRecords: SearchRecord[] = events.flatMap((event) => {
     : (event.priorityActions ?? []).map((title) => ({ title, status: "Open" as const }));
   return tasks.map((task) => ({
     type: "Operations" as const,
+    context: hasStructuredMarketingTasks ? "Marketing task" : "Event action",
+    status: task.status,
     title: `${event.name} · ${task.title}`,
     href: hasStructuredMarketingTasks ? `/marketing?event=${event.slug}#event-tasks` : `/events/${event.slug}#event-priorities`,
     description: [task.status, task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null].filter(Boolean).join(" · "),
@@ -120,6 +201,8 @@ const eventChangeRecords: SearchRecord[] = siteStatus.sourceMonitor.changeLog.fl
   const resultLabel = change.state === "Applied" ? "Now" : change.state === "Needs review" ? "Conflicting source" : "Result";
   return [{
     type: "Operations" as const,
+    context: "Source change",
+    status: change.state,
     title: `${event.name} · ${change.title}`,
     href: `/events/${event.slug}#event-changes`,
     description: `${change.state} · ${change.field} · checked ${change.checkedAt}`,
@@ -148,5 +231,5 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const initialQuery = typeof params.q === "string" ? params.q : "";
   const requestedType = typeof params.type === "string" ? params.type : "All";
   const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...eventChangeRecords, ...marketingTaskRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, ...eventChangeRecords, ...marketingTaskRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }

@@ -319,6 +319,47 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(scanContractSearchHtml, /Source scan automation contract/);
   assert.match(scanContractSearchHtml, /\/sources#scan-contract/);
 
+  const rosterGapSearch = await render("/search?q=roster%20missing&type=Operations");
+  assert.equal(rosterGapSearch.status, 200);
+  const rosterGapSearchHtml = await rosterGapSearch.text();
+  assert.match(rosterGapSearchHtml, /Events with rosters still open/);
+  assert.match(rosterGapSearchHtml, /href="\/\?attendance=going&amp;attention=roster#events"/);
+  assert.match(rosterGapSearchHtml, /Saved event view/);
+
+  const meetingCountSearch = await render("/search?q=guaranteed%20meeting%20count%20unknown&type=Operations");
+  assert.equal(meetingCountSearch.status, 200);
+  const meetingCountSearchHtml = await meetingCountSearch.text();
+  assert.match(meetingCountSearchHtml, /Guaranteed-meeting counts still open/);
+  assert.match(meetingCountSearchHtml, /href="\/\?attendance=going&amp;attention=meetings#events"/);
+
+  const liveFeedSearch = await render("/search?q=which%20data%20feeds%20are%20live&type=Operations");
+  assert.equal(liveFeedSearch.status, 200);
+  const liveFeedSearchHtml = await liveFeedSearch.text();
+  assert.match(liveFeedSearchHtml, /HubSpot data stream/);
+  assert.match(liveFeedSearchHtml, /Feeds · Meetings, demos, deals, pipeline and revenue only when a canonical event association is present/);
+  assert.match(liveFeedSearchHtml, /Data stream/);
+
+  const fieldOwnerSearch = await render("/search?q=where%20do%20I%20update%20meeting%20outcomes&type=Operations");
+  assert.equal(fieldOwnerSearch.status, 200);
+  const fieldOwnerSearchHtml = await fieldOwnerSearch.text();
+  assert.match(fieldOwnerSearchHtml, /Meetings, demos, deals, pipeline and closed revenue · where to update/);
+  assert.match(fieldOwnerSearchHtml, /Update in HubSpot/);
+  assert.match(fieldOwnerSearchHtml, /System of record/);
+
+  const exactWritebackSearch = await render("/search?q=Contact.io%20participation%20write%20back&type=Operations");
+  assert.equal(exactWritebackSearch.status, 200);
+  const exactWritebackSearchHtml = await exactWritebackSearch.text();
+  assert.match(exactWritebackSearchHtml, /Contact.io participation · upstream work/);
+  assert.match(exactWritebackSearchHtml, /Status: No · 0 attendees · clear the available roster/);
+  assert.match(exactWritebackSearchHtml, /Ready for approval/);
+
+  const hubspotMismatchSearch = await render("/search?q=HubSpot%20source%20mismatch%20Memorial%20Hermann&type=Operations");
+  assert.equal(hubspotMismatchSearch.status, 200);
+  const hubspotMismatchSearchHtml = await hubspotMismatchSearch.text();
+  assert.match(hubspotMismatchSearchHtml, /CCW Vegas · Reconcile one CCW deal-source mismatch/);
+  assert.match(hubspotMismatchSearchHtml, /Memorial Hermann carries Outbound — SDR and remains excluded/);
+  assert.match(hubspotMismatchSearchHtml, /Source change/);
+
   const eventRoleSearch = await render("/search?q=what%20should%20an%20SDR%20do%20at%20Genesys&type=Event");
   assert.equal(eventRoleSearch.status, 200);
   const eventRoleSearchHtml = await eventRoleSearch.text();

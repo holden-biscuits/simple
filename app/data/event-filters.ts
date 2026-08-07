@@ -1,9 +1,10 @@
 import { getEventPhase, type EventRecord } from "./events.ts";
 import { getEventReadiness } from "./program-readiness.ts";
 import { getSourceFreshness } from "./source-freshness.ts";
+import { hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
 
 export type AttendanceFilter = "all" | "going" | "deciding" | "not-going";
-export type AttentionFilter = "all" | "source" | "roster" | "plan";
+export type AttentionFilter = "all" | "source" | "roster" | "meetings" | "plan";
 
 export const attendanceFilters: { value: AttendanceFilter; label: string }[] = [
   { value: "all", label: "All" },
@@ -16,6 +17,7 @@ export const attentionFilters: { value: AttentionFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "source", label: "Source issue" },
   { value: "roster", label: "Roster open" },
+  { value: "meetings", label: "Meeting count open" },
   { value: "plan", label: "Plan setup" },
 ];
 
@@ -38,6 +40,7 @@ export function matchesAttention(event: EventRecord, filter: AttentionFilter, pr
       || ["due", "overdue"].includes(getSourceFreshness(event, programDate).state);
   }
   if (filter === "roster") return event.attendeeCount !== null && event.team.length < event.attendeeCount;
+  if (filter === "meetings") return hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event);
   return getEventReadiness(event, programDate).planState !== "structured";
 }
 
