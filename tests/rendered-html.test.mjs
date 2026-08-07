@@ -725,6 +725,11 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Swag \/ materials<\/span><strong>In plan · see field checklist/);
   assert.doesNotMatch(genesysHtml, /Meetings scheduled/);
   assert.match(genesysHtml, /Team<\/span><strong>9 attending/);
+  assert.match(genesysHtml, /Next move[\s\S]*Deliver the final solution-talk deck/);
+  assert.match(genesysHtml, /Owner[\s\S]*Cat \+ Holden/);
+  assert.match(genesysHtml, /Due[\s\S]*Aug 10/);
+  assert.match(genesysHtml, /Status[\s\S]*In progress/);
+  assert.match(genesysHtml, /Open task plan/);
   assert.doesNotMatch(genesysHtml, /Do these next/);
   assert.match(genesysHtml, /id="event-priorities"/);
   assert.match(genesysHtml, /Still needs attention\./);
@@ -769,6 +774,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(contactHtml, /No team assigned/);
   assert.doesNotMatch(contactHtml, /id="event-changes"/);
   assert.doesNotMatch(contactHtml, /id="event-priorities"/);
+  assert.doesNotMatch(contactHtml, /class="event-next-move/);
   assert.doesNotMatch(contactHtml, /What needs to happen\./);
   assert.doesNotMatch(contactHtml, /Who’s going/);
   assert.doesNotMatch(contactHtml, /Measurement checkpoint/);
@@ -783,6 +789,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(trackerBaselineHtml, /Archived(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
   assert.match(trackerBaselineHtml, /<p>Conference tracker<small>/);
   assert.match(trackerBaselineHtml, /Notion setup needed/);
+  assert.doesNotMatch(trackerBaselineHtml, /class="event-next-move/);
 
   const customerConnect = await render("/events/customer-connect-expo");
   assert.equal(customerConnect.status, 200);
@@ -798,6 +805,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /executed exhibition-space contract/);
   assert.match(customerConnectHtml, /Aug 10 at 9:00 AM PT/);
   assert.match(customerConnectHtml, /25% complete on Aug 6/);
+  assert.match(customerConnectHtml, /Next move[\s\S]*Confirm invoice payment status with AP/);
+  assert.match(customerConnectHtml, /Owner[\s\S]*Holden \+ AP/);
+  assert.match(customerConnectHtml, /Open task plan/);
   assert.match(customerConnectHtml, /Exhibitor portal/);
   assert.match(customerConnectHtml, /Complimentary tickets/);
   assert.match(customerConnectHtml, /6(?:<!-- -->)? of nine workstreams are in play/);

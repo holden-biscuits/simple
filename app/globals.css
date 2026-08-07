@@ -850,6 +850,16 @@ button, input, select { font: inherit; }
 .tldr-grid article:nth-child(3n) { background: #f3c4af; }
 .tldr-grid span { color: var(--muted); font: 700 11px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .tldr-grid strong { margin-top: auto; font: 400 21px/1.28 Georgia, serif; }
+.event-next-move { margin-top: 22px; padding: 20px; display: grid; grid-template-columns: minmax(260px, 1.35fr) minmax(330px, 1.25fr) auto; gap: 28px; align-items: center; border: 1px solid var(--green); border-left: 7px solid var(--green); background: var(--canvas); box-shadow: 6px 6px 0 var(--paper-deep); }
+.event-next-move-overdue, .event-next-move-due-today { border-color: var(--signal-dark); }
+.event-next-move-due-soon { border-left-color: var(--signal); }
+.event-next-move > div > span, .event-next-move dt { color: var(--signal-dark); font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.event-next-move h3 { margin: 8px 0 0; font: 400 26px/1.12 Georgia, serif; }
+.event-next-move dl { margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-left: 1px solid var(--line); }
+.event-next-move dl div { min-height: 72px; padding: 8px 14px; border-right: 1px solid var(--line); }
+.event-next-move dd { margin: 9px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+.event-next-move > a { min-height: 48px; padding: 12px 15px; display: flex; align-items: center; color: var(--paper); background: var(--green); font: 800 11.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; white-space: nowrap; }
+.event-next-move > a:hover, .event-next-move > a:focus-visible { background: var(--signal-dark); outline: 3px solid color-mix(in srgb, var(--green) 25%, transparent); }
 .event-brief-readiness { margin-top: 22px; border: 1px solid var(--green); background: var(--canvas); box-shadow: 6px 6px 0 var(--paper-deep); }
 .event-brief-readiness > header { min-height: 82px; padding: 17px 20px; display: flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--paper); background: var(--green); }
 .event-brief-readiness > header div { display: grid; gap: 4px; }
@@ -1428,6 +1438,8 @@ button, input, select { font: inherit; }
   .audience-segment-summary, .audience-segment-contract { grid-template-columns: 1fr 1fr; }
   .audience-segment-boundary { grid-template-columns: 1fr; gap: 14px; }
   .audience-segment-boundary a { justify-self: start; }
+  .event-next-move { grid-template-columns: 1fr; gap: 18px; }
+  .event-next-move > a { justify-self: start; }
 }
 
 @media (max-width: 640px) {
@@ -1437,6 +1449,9 @@ button, input, select { font: inherit; }
   .audience-segment-boundary { padding: 20px; box-shadow: 5px 5px 0 var(--paper-deep); }
   .audience-segment-table { min-width: 0; }
   .audience-segment-table th:nth-child(n) { width: auto; }
+  .event-next-move dl { grid-template-columns: 1fr; border-top: 1px solid var(--line); border-left: 0; }
+  .event-next-move dl div { min-height: 0; padding: 12px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+  .event-next-move dl div:last-child { border-bottom: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1458,7 +1473,7 @@ button, input, select { font: inherit; }
 .matrix-signals span, .matrix-empty, .matrix-staffing, .matrix-open-meta span, .measurement dt,
 .measurement-table thead th, .measurement-windows article > span, .measurement-windows time, .metric-definitions article > span,
 .search-quick > span, .search-types button b, .search-result-heading span, .search-result-meta span, .search-match strong,
-.tldr-grid span, .event-brief-readiness > header span, .event-brief-readiness > header b, .event-brief-readiness li span,
+.tldr-grid span, .event-next-move > div > span, .event-next-move dt, .event-brief-readiness > header span, .event-brief-readiness > header b, .event-brief-readiness li span,
 .event-brief-readiness > footer, .tldr-note strong, .event-verification div span, .event-update-route summary small,
 .event-update-route-body aside > span, .event-update-route-grid span, .event-linkage-strip span,
 .event-measurement-checkpoint > header span, .event-measurement-checkpoint > header strong,
@@ -1478,6 +1493,6 @@ button, input, select { font: inherit; }
 .not-found-secondary, .not-found-routes span, .not-found-routes b, .round-link, .event-verification a,
 .event-update-route summary > b, .event-update-route-grid b, .event-linkage-strip p,
 .event-measurement-checkpoint > footer a, .event-priorities .priority-link, .workstream-title-row a,
-.not-in-plan summary, .crm-snapshot-head a, .leadership-alerts b, .leadership-risk-grid a,
+.not-in-plan summary, .event-next-move > a, .crm-snapshot-head a, .leadership-alerts b, .leadership-risk-grid a,
 .leadership-operating-note a, .leadership-caveat a, .leadership-links a,
 .audience-segment-boundary a, .audience-segment-table td a { font-size: 12px; }

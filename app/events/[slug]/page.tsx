@@ -16,6 +16,7 @@ import { getEventRoleRoutes } from "../../data/event-role-routes";
 import { getEventFootprint } from "../../data/event-footprint";
 import { eventUpdateRoutes, getEventWritebackQueue } from "../../data/source-governance";
 import { getEventProspectingBrief } from "../../data/event-prospecting";
+import { getEventReadiness } from "../../data/program-readiness";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +45,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const eventWritebacks = getEventWritebackQueue(event.slug);
   const roleRoutes = getEventRoleRoutes(event, eventPhase);
   const prospecting = getEventProspectingBrief(event);
+  const executionReadiness = getEventReadiness(event, programDate);
+  const nextMove = event.status !== "No" && eventPhase !== "past" ? executionReadiness.nextAction : undefined;
   const zoomInfoOnlyReason = prospecting.confidence === "Matched-account qualification"
     ? "Use the organizer's matched accounts; do not manufacture an attendee segment."
     : prospecting.confidence === "No active plan"
@@ -141,6 +144,15 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       <section className="event-tldr shell" id="event-tldr">
         <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>Know this before you go.</h2></div>
         <div className={`tldr-grid tldr-grid-${tldr.length}`}>{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
+        {nextMove ? <div className={`event-next-move event-next-move-${nextMove.urgency}`}>
+          <div><span>Next move</span><h3>{nextMove.title}</h3></div>
+          <dl>
+            <div><dt>Owner</dt><dd>{nextMove.owner ?? "Open"}</dd></div>
+            <div><dt>Due</dt><dd>{nextMove.due ?? "Open"}</dd></div>
+            <div><dt>Status</dt><dd>{nextMove.structured ? nextMove.status : "Needs an owner and date"}</dd></div>
+          </dl>
+          <Link href={nextMove.href}>{nextMove.structured ? "Open task plan" : "Turn priorities into a plan"} →</Link>
+        </div> : null}
         {!isNotAttending && eventPhase !== "past" ? <div className={`event-brief-readiness event-brief-readiness-${briefReadiness.state}`}>
           <header><div><span>Brief readiness</span><strong>{briefReadiness.label}</strong></div><b>{briefReadiness.timing}</b></header>
           {briefReadiness.issues.length ? <ul>{briefReadiness.issues.map((issue) => {
