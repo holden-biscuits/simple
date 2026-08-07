@@ -122,17 +122,20 @@ const fieldOwnerRecords: SearchRecord[] = fieldOwners.map((field) => ({
   hiddenUntilQuery: true,
 }));
 
-const writebackRecords: SearchRecord[] = writebackQueue.map((item) => ({
-  type: "Operations",
-  context: "Write-back item",
-  status: item.state,
-  title: `${item.scope} · upstream work`,
-  href: "/sources#writeback-queue",
-  description: `${item.system} · ${item.proposed}`,
-  keywords: [item.system, item.scope, item.current, item.proposed, item.evidence, item.state, "write back upstream correction setup decision approval"].join(" "),
-  details: [`Current · ${item.current}`, `Proposed · ${item.proposed}`, `Evidence · ${item.evidence}`],
-  hiddenUntilQuery: true,
-}));
+const writebackRecords: SearchRecord[] = writebackQueue.map((item) => {
+  const event = item.eventSlug ? eventBySlug(item.eventSlug) : undefined;
+  return {
+    type: "Operations",
+    context: event ? "Event source correction" : "Program write-back item",
+    status: item.state,
+    title: `${item.scope} · upstream work`,
+    href: event ? `/events/${event.slug}#event-writebacks` : "/sources#writeback-queue",
+    description: `${item.system} · ${item.proposed}`,
+    keywords: [event?.name, event?.location, item.system, item.scope, item.current, item.proposed, item.evidence, item.state, "write back upstream correction setup decision approval"].filter(Boolean).join(" "),
+    details: [`Current · ${item.current}`, `Proposed · ${item.proposed}`, `Evidence · ${item.evidence}`],
+    hiddenUntilQuery: true,
+  };
+});
 
 const eventRecords: SearchRecord[] = events.map((event) => {
   const briefReadiness = getEventBriefReadiness(event, searchProgramDate);

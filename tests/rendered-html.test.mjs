@@ -398,6 +398,15 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(exactWritebackSearchHtml, /Contact.io participation · upstream work/);
   assert.match(exactWritebackSearchHtml, /Status: No · 0 attendees · clear the available roster/);
   assert.match(exactWritebackSearchHtml, /Ready for approval/);
+  assert.match(exactWritebackSearchHtml, /Event source correction/);
+  assert.match(exactWritebackSearchHtml, /href="\/events\/contact-io#event-writebacks"/);
+
+  const genesysWritebackSearch = await render("/search?q=Genesys%20roster%20upstream&type=Operations");
+  assert.equal(genesysWritebackSearch.status, 200);
+  const genesysWritebackSearchHtml = await genesysWritebackSearch.text();
+  assert.match(genesysWritebackSearchHtml, /Genesys Xperience roster · upstream work/);
+  assert.match(genesysWritebackSearchHtml, /href="\/events\/genesys-xperience#event-writebacks"/);
+  assert.match(genesysWritebackSearchHtml, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars attending/);
 
   const hubspotMismatchSearch = await render("/search?q=HubSpot%20source%20mismatch%20Memorial%20Hermann&type=Operations");
   assert.equal(hubspotMismatchSearch.status, 200);
