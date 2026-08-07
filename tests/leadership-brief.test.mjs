@@ -11,6 +11,10 @@ test("leadership brief derives the active portfolio from governed event data", (
   assert.equal(brief.pulse.rosterGaps.length, 13);
   assert.equal(brief.pulse.sourceConflicts.length, 3);
   assert.equal(brief.pulse.sourceChecksDue.length, 0);
+  assert.equal(brief.linkage.activeEvents, 14);
+  assert.equal(brief.linkage.activeNotionProjects, 10);
+  assert.equal(brief.linkage.activeDriveFolders, 0);
+  assert.equal(brief.linkage.activeCrmEvents, 0);
   assert.equal(brief.portfolio[0].eventKey, "ccw-exchange-chicago");
   assert.equal(brief.portfolio.at(-1).eventKey, "ccw-vegas-2027");
 });
@@ -25,5 +29,5 @@ test("leadership outcomes preserve CRM limits", () => {
     marketingEvents: 0,
     pipelineClaimSupported: false,
   });
-  assert.deepEqual(brief.writebacks, { ready: 6, decisions: 1, setup: 5 });
+  assert.deepEqual(brief.writebacks, { ready: 6, decisions: 1, setup: 7 });
 });

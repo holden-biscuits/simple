@@ -202,6 +202,26 @@ export const fieldOwners: FieldOwner[] = [
 export const writebackQueue: WritebackItem[] = [
   {
     system: "Conference tracker",
+    scope: "Canonical Event key column",
+    current: "Event rows are matched by names and dates; no immutable shared key exists upstream",
+    proposed: "Add an Event key text column and backfill the 29 published Basecamp keys without regenerating them from display names",
+    evidence: "Published event catalog and contract validation · Aug 6",
+    evidenceUrl: "/sources#canonical-event-key",
+    state: "Setup needed",
+    url: sourceLinks.sheet,
+  },
+  {
+    system: "Notion",
+    scope: "Canonical Event key property",
+    current: "10 of 14 active event projects are linked; none has a governed Event key property",
+    proposed: "Add an Event key text property, backfill each linked project, and use it for task, file and CRM associations",
+    evidence: "Event project link audit · Aug 6",
+    evidenceUrl: "/sources#canonical-event-key",
+    state: "Setup needed",
+    url: sourceLinks.notion,
+  },
+  {
+    system: "Conference tracker",
     scope: "Contact.io participation",
     current: "Status: TBD · 5 attendees planned · Carter available",
     proposed: "Status: No · 0 attendees · clear the available roster",

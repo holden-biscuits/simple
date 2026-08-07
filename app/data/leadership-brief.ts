@@ -4,6 +4,7 @@ import { getProgramPulse } from "./program-pulse.ts";
 import { getEventReadiness } from "./program-readiness.ts";
 import { crmAttributionAudit } from "./crm-attribution.ts";
 import { writebackQueue } from "./source-governance.ts";
+import { getProgramSystemLinkage } from "./system-linkage.ts";
 
 function activationLabel(event: EventRecord) {
   const speaking = getSpeakingStatus(event);
@@ -17,6 +18,7 @@ function activationLabel(event: EventRecord) {
 
 export function getLeadershipBrief(catalog: EventRecord[], programDate: string) {
   const pulse = getProgramPulse(catalog, programDate);
+  const linkage = getProgramSystemLinkage(catalog, programDate);
   const portfolio = pulse.active.map((event) => {
     const readiness = getEventReadiness(event, programDate);
     return {
@@ -42,6 +44,7 @@ export function getLeadershipBrief(catalog: EventRecord[], programDate: string) 
   return {
     programDate,
     pulse,
+    linkage,
     portfolio,
     writebacks,
     outcomes: {

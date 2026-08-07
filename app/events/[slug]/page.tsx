@@ -8,6 +8,7 @@ import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDat
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
+import { getEventSystemLinkage } from "../../data/system-linkage";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const eventPhase = getEventPhase(event, programDate);
   const verification = getEventVerification(event);
   const freshness = getSourceFreshness(event, programDate);
+  const systemLinkage = getEventSystemLinkage(event);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
@@ -129,6 +131,9 @@ export default async function EventPage({ params, searchParams }: { params: Prom
               <a href={sourceLinks.eventsDrive} target="_blank" rel="noreferrer"><span>Contracts · creative · files</span><strong>Events Drive</strong><p>Store the actual artifact, then link it from the event project.</p><b>Open Drive ↗</b></a>
               <a href="https://app.hubspot.com/contacts/245561359/objects/0-47/views/all/list" target="_blank" rel="noreferrer"><span>Meetings · demos · pipeline</span><strong>HubSpot</strong><p>Add or correct the CRM record. Do not record an inferred outcome on the site.</p><b>Open HubSpot ↗</b></a>
             </div>
+          </div>
+          <div className="event-linkage-strip" aria-label="Event system coverage">
+            {systemLinkage.map((item) => <div key={item.system}><span>{item.system}</span><strong className={`linkage-state linkage-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</strong><p>{item.detail}</p></div>)}
           </div>
         </details>
       </section>

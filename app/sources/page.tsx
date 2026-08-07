@@ -3,12 +3,13 @@ import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { Footer } from "../components/footer";
 import { BackToTop, PageContents } from "../components/page-contents";
-import { events, sourceLinks } from "../data/events";
+import { events, getProgramDate, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
 import { crmAttributionAudit } from "../data/crm-attribution";
 import { audienceViews, dataStreams, eventKeyRollout, fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
+import { getProgramSystemLinkage } from "../data/system-linkage";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -19,6 +20,7 @@ export default function SourcesPage() {
   const conflicts = events.filter((event) => event.notes.toLowerCase().startsWith("source conflict:"));
   const catalogHealth = getEventCatalogHealth(events);
   const monitor = siteStatus.sourceMonitor;
+  const linkage = getProgramSystemLinkage(events, getProgramDate());
   const changeStates = (["Applied", "Needs review", "No change"] as const).map((state) => ({
     state,
     count: monitor.changeLog.filter((change) => change.state === state).length,
@@ -93,6 +95,13 @@ export default function SourcesPage() {
             <p>The event URL already supplies the key. Carrying that exact value upstream replaces fragile name-and-date matching and makes approved write-back, attribution and leadership rollups dependable.</p>
           </div>
           <div className="event-key-example"><span>Example</span><code>genesys-xperience</code><p>Stable even if the display name, dates or venue change.</p></div>
+          <div className="linkage-coverage" aria-label="Cross-system event coverage">
+            <article><span>Fieldbook keys</span><strong>{linkage.stableFieldbookKeys} / {linkage.totalEvents}</strong><p>Every published event has a stable key.</p></article>
+            <article><span>Active Notion projects</span><strong>{linkage.activeNotionProjects} / {linkage.activeEvents}</strong><p>{linkage.activeNotionMissing.length} active event workspaces still need a link.</p></article>
+            <article><span>Active Drive folders</span><strong>{linkage.activeDriveFolders} / {linkage.activeEvents}</strong><p>No event-specific folder is stored in the governed record yet.</p></article>
+            <article><span>Active CRM joins</span><strong>{linkage.activeCrmEvents} / {linkage.activeEvents}</strong><p>One past event has a controlled legacy join; active-event attribution still needs setup.</p></article>
+          </div>
+          {linkage.activeNotionMissing.length ? <div className="linkage-gap-list"><span>Active workspaces still missing</span><p>{linkage.activeNotionMissing.map((event) => event.name).join(" · ")}</p></div> : null}
           <div className="source-route-table-wrap">
             <table className="source-route-table event-key-table">
               <thead><tr><th>System</th><th>Field or convention</th><th>Status</th><th>Implementation rule</th></tr></thead>

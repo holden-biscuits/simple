@@ -97,6 +97,13 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /One durable join across every system\./);
   assert.match(html, /genesys-xperience/);
   assert.match(html, /HubSpot meetings/);
+  assert.match(html, /Fieldbook keys[\s\S]*29(?:<!-- -->)? \/ (?:<!-- -->)?29/);
+  assert.match(html, /Active Notion projects[\s\S]*10(?:<!-- -->)? \/ (?:<!-- -->)?14/);
+  assert.match(html, /Active Drive folders[\s\S]*0(?:<!-- -->)? \/ (?:<!-- -->)?14/);
+  assert.match(html, /Active CRM joins[\s\S]*0(?:<!-- -->)? \/ (?:<!-- -->)?14/);
+  assert.match(html, /Active workspaces still missing[\s\S]*CCW UK Executive Exchange 2027/);
+  assert.match(html, /Canonical Event key column/);
+  assert.match(html, /Canonical Event key property/);
   assert.match(html, /Happening now[\s\S]*Daily/);
   assert.match(html, /Starts within 14 days[\s\S]*Every 3 days/);
   assert.match(html, /More than 60 days away[\s\S]*Monthly/);
@@ -188,7 +195,8 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /CCW Exchange Chicago/);
   assert.match(html, /CCW Vegas 2027/);
   assert.match(html, /No normalized event-cost dataset exists yet\./);
-  assert.match(html, /Only (?:<!-- -->)?1(?:<!-- -->)? event has exact deal attribution\./);
+  assert.match(html, /0(?:<!-- -->)? of (?:<!-- -->)?14(?:<!-- -->)? active events have an exact CRM join\./);
+  assert.match(html, /10(?:<!-- -->)? active event workspaces are linked/);
   assert.match(html, /Pipeline value is not supported\./);
   assert.match(html, /All 29 attributed deals currently have a \$0 amount/);
   assert.match(html, /href="\/leadership">Leaders<\/a>/);
@@ -349,6 +357,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /\[evt:(?:<!-- -->)?genesys-xperience(?:<!-- -->)?\]/);
   assert.match(genesysHtml, /Dates · participation · roster/);
   assert.match(genesysHtml, /Meetings · demos · pipeline/);
+  assert.match(genesysHtml, /Event system coverage/);
+  assert.match(genesysHtml, /Conference tracker[\s\S]*Located/);
+  assert.match(genesysHtml, /Events Drive[\s\S]*Setup needed/);
   assert.match(genesysHtml, /Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
   assert.match(genesysHtml, /href="\/sources">See source record/);
   assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
