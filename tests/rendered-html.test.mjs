@@ -261,7 +261,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /What changed, and why\./);
   assert.match(html, /<span>Applied<\/span><strong>17<\/strong>/);
   assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
-  assert.match(html, /<span>No change<\/span><strong>5<\/strong>/);
+  assert.match(html, /<span>No change<\/span><strong>6<\/strong>/);
   assert.match(html, /Accepted Gabby Pring’s Customer Connect answers/);
   assert.match(html, /Aug 11 at 9:30 AM PT/);
   assert.match(html, /insurance not needed for our pipe-and-drape booth/);
@@ -359,7 +359,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /9(?:<!-- -->)? active event workspaces are linked/);
   assert.match(html, /Leadership gets decisions, not data-entry work\./);
   assert.match(html, /Needs judgment[\s\S]*2/);
-  assert.match(html, /Ready to approve<\/span><strong>19/);
+  assert.match(html, /Ready to approve<\/span><strong>20/);
   assert.match(html, /Foundation work<\/span><strong>10/);
   assert.match(html, /Source-based opportunities[\s\S]*22/);
   assert.match(html, /Exact CCW opportunities[\s\S]*21/);

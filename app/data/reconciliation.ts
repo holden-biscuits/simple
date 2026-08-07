@@ -3,7 +3,7 @@ import { siteStatus, type SourceOverride } from "./site-status.ts";
 import { eventFieldRoutes, type SourceSystem } from "./source-governance.ts";
 
 export type UpdateConfidence = "high" | "medium" | "low";
-export type ReconciliationDecision = "apply-to-review" | "needs-review" | "no-change" | "reject";
+export type ReconciliationDecision = "apply-to-review" | "needs-review" | "writeback-only" | "no-change" | "reject";
 
 export type EventUpdateProposal = {
   id: string;
@@ -14,6 +14,8 @@ export type EventUpdateProposal = {
   confidence: UpdateConfidence;
   evidence: string;
   evidenceUrl?: string;
+  observedValue?: unknown;
+  correctionTarget?: Extract<SourceSystem, "sheet" | "notion" | "drive" | "hubspot">;
 };
 
 export type ReconciliationResult = {
@@ -40,6 +42,12 @@ function valuesMatch(left: unknown, right: unknown) {
 }
 
 const signalOnlySources = new Set<SourceSystem>(["gmail", "slack", "granola", "monaco"]);
+const correctionDestinations: Record<NonNullable<EventUpdateProposal["correctionTarget"]>, string> = {
+  sheet: "Conference tracker",
+  notion: "Notion",
+  drive: "Events Drive",
+  hubspot: "HubSpot",
+};
 
 export function reconcileEventUpdate(
   proposal: EventUpdateProposal,
@@ -55,6 +63,18 @@ export function reconcileEventUpdate(
   const currentValue = event[proposal.field];
   if (!route) return { ...base, currentValue, decision: "reject", reason: "The field has no declared system of record." };
   if (valuesMatch(currentValue, proposal.proposedValue)) {
+    if (proposal.correctionTarget && typeof proposal.observedValue !== "undefined" && !valuesMatch(proposal.observedValue, proposal.proposedValue)) {
+      if (proposal.source !== "direct" && proposal.source !== route.owner) {
+        return { ...base, currentValue, decision: "needs-review", reason: `The proposed correction is not backed by the field owner; reconcile it in ${route.destination}.`, writebackDestination: route.destination };
+      }
+      return {
+        ...base,
+        currentValue,
+        decision: "writeback-only",
+        reason: "Event Basecamp already matches the controlling value; the named upstream mirror still needs the exact correction.",
+        writebackDestination: correctionDestinations[proposal.correctionTarget],
+      };
+    }
     return { ...base, currentValue, decision: "no-change", reason: "The proposed value already matches Event Basecamp.", writebackDestination: route.destination };
   }
 

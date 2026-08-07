@@ -44,8 +44,8 @@ test("event-specific write-backs resolve to published event pages", () => {
     "Genesys CRM logging route",
   ]);
   const customerConnect = getEventWritebackQueue("customer-connect-expo");
-  assert.deepEqual(customerConnect.map((item) => item.system), ["Conference tracker"]);
-  assert.deepEqual(customerConnect.map((item) => item.scope), ["Customer Connect Expo participation"]);
+  assert.deepEqual(customerConnect.map((item) => item.system), ["Conference tracker", "Notion"]);
+  assert.deepEqual(customerConnect.map((item) => item.scope), ["Customer Connect Expo participation", "Customer Connect Expo date property"]);
   const chicago = getEventWritebackQueue("ccw-exchange-chicago");
   assert.deepEqual(chicago.map((item) => item.scope), [
     "CCW Exchange Chicago final roster",

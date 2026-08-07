@@ -20,7 +20,7 @@ test("a source scan partitions every proposal into one auditable outcome", () =>
     { id: "unknown-event", eventKey: "not-a-real-event", field: "status", proposedValue: "Confirmed", source: "sheet", confidence: "high", evidence: "Conference tracker" },
   ]);
 
-  assert.deepEqual(result.summary, { total: 4, applyToReview: 1, needsReview: 1, noChange: 1, rejected: 1, checkedReceipts: 1, unavailableReceipts: 1, notDueReceipts: 1 });
+  assert.deepEqual(result.summary, { total: 4, applyToReview: 1, needsReview: 1, writebackOnly: 0, noChange: 1, rejected: 1, checkedReceipts: 1, unavailableReceipts: 1, notDueReceipts: 1 });
   assert.equal(result.runMode, "scheduled-heartbeat");
   assert.deepEqual(result.audit, { complete: true, errors: [] });
   assert.equal(result.publishable[0].proposal.id, "new-demo");
@@ -84,4 +84,50 @@ test("findings without evidence never enter reconciliation", () => {
   assert.equal(result.summary.rejected, 1);
   assert.match(result.rejected[0].result.reason, /Evidence is required/);
   assert.equal(result.gates.upstreamWriteback, "none");
+});
+
+test("a stale secondary system becomes an upstream-only correction when the site already matches its owner", () => {
+  const result = processSourceScan({
+    scanId: "task-review-customer-connect-date",
+    checkedAt: "2026-08-07T23:45:00Z",
+    runMode: "task-review",
+    sourceReceipts: [
+      { id: "tracker-customer-connect-date", source: "sheet", state: "checked", scope: "Customer Connect date row", result: "Tracker says Sep 9–10, 2026." },
+      { id: "notion-customer-connect-date", source: "notion", state: "checked", scope: "Customer Connect date property", result: "Notion starts the event on Sep 8." },
+      { id: "organizer-customer-connect-date", source: "organizer", state: "checked", scope: "Customer Connect registration page", result: "Organizer publishes Sep 9–10, 2026." },
+    ],
+    proposals: [{
+      id: "customer-connect-notion-date",
+      eventKey: "customer-connect-expo",
+      field: "dates",
+      proposedValue: "Sep 9–10, 2026",
+      observedValue: "Sep 8–10, 2026",
+      correctionTarget: "notion",
+      source: "sheet",
+      confidence: "high",
+      evidence: "Fresh tracker row and organizer registration page agree; Notion begins one day early.",
+    }],
+  });
+
+  assert.equal(result.gates.reviewBuild, "no-publishable-change");
+  assert.equal(result.gates.upstreamWriteback, "exact-approval-required");
+  assert.equal(result.summary.writebackOnly, 1);
+  assert.equal(result.writebackOnly[0].proposal.id, "customer-connect-notion-date");
+  assert.deepEqual(result.writebackGroups.map((group) => group.destination), ["Notion"]);
+});
+
+test("an incomplete upstream-only correction is rejected instead of silently becoming no change", () => {
+  const result = scan([{
+    id: "incomplete-upstream-correction",
+    eventKey: "customer-connect-expo",
+    field: "dates",
+    proposedValue: "Sep 9–10, 2026",
+    correctionTarget: "notion",
+    source: "sheet",
+    confidence: "high",
+    evidence: "Tracker and organizer agree.",
+  }]);
+
+  assert.equal(result.summary.rejected, 1);
+  assert.match(result.rejected[0].result.reason, /correctionTarget and observedValue/);
 });

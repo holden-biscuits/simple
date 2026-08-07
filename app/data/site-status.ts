@@ -66,6 +66,18 @@ export const siteStatus = {
     ] as SourceOverride[],
     changeLog: [
       {
+        id: "customer-connect-date-owner-check",
+        state: "No change" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Verified the Customer Connect public dates",
+        field: "Dates",
+        before: "Basecamp + tracker: Sep 9–10, 2026 · Notion: Sep 8–10, 2026",
+        after: "Organizer registration page confirms Sep 9–10 · Basecamp stays unchanged · exact Notion correction queued",
+        source: "Conference tracker · Customer Connect organizer site · Notion",
+        sourceUrl: "https://www.customerconnectexpo.com/registration",
+        eventSlug: "customer-connect-expo",
+      },
+      {
         id: "customer-connect-notion-closeout",
         state: "Applied" as SourceChangeState,
         checkedAt: "Aug 07 · 2026",
@@ -353,6 +365,13 @@ export const siteStatus = {
       },
     ] as SourceChange[],
     latestChecks: [
+      {
+        system: "Google Sheets + Notion + organizer site",
+        checkedAt: "Aug 07 · 2026 · task review",
+        scope: "Customer Connect dates + exact tracker rows already waiting for write-back",
+        result: "The official Customer Connect page and tracker agree on Sep 9–10; Notion starts Sep 8, so one upstream-only correction is queued. Contact.io, Customer Connect participation, ICMI, Chicago and the Genesys roster still do not match the protected decisions in the tracker.",
+        state: "Current" as SourceCheckState,
+      },
       {
         system: "Notion · direct confirmation",
         checkedAt: "Aug 07 · 2026",

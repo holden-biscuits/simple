@@ -441,6 +441,17 @@ export const writebackQueue: WritebackItem[] = [
     url: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0&range=A18:R18",
   },
   {
+    system: "Notion",
+    scope: "Customer Connect Expo date property",
+    eventSlug: "customer-connect-expo",
+    current: "Notion date property: Sep 8–10, 2026",
+    proposed: "Set the event dates to Sep 9–10, 2026; keep Sep 8 only if it is relabeled as a separate setup or travel day",
+    evidence: "Fresh tracker row + Customer Connect registration page + Notion property read · Aug 7",
+    evidenceUrl: "https://www.customerconnectexpo.com/registration",
+    state: "Ready for approval",
+    url: "https://app.notion.com/p/3b46fee642fe80dc9ff9d1ae2661aa2c",
+  },
+  {
     system: "Conference tracker",
     scope: "ICMI participation",
     eventSlug: "icmi-contact-center-expo",

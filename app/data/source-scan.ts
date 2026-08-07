@@ -42,6 +42,7 @@ export type SourceScanOutput = {
     total: number;
     applyToReview: number;
     needsReview: number;
+    writebackOnly: number;
     noChange: number;
     rejected: number;
     checkedReceipts: number;
@@ -54,6 +55,7 @@ export type SourceScanOutput = {
   };
   publishable: SourceScanRecord[];
   reviewQueue: SourceScanRecord[];
+  writebackOnly: SourceScanRecord[];
   noChangeReceipts: SourceScanRecord[];
   rejected: SourceScanRecord[];
   writebackGroups: SourceScanWritebackGroup[];
@@ -67,8 +69,8 @@ export type SourceScanOutput = {
 export const sourceScanContract = [
   { step: "01", title: "Normalize", detail: "Every run declares whether it is the scheduled heartbeat or a task review, then records each source as checked, unavailable or not due. Every finding becomes one proposal with an Event key, field, proposed value, source, confidence and evidence." },
   { step: "02", title: "Reconcile", detail: "The batch checks field ownership, protected direct decisions, confidence, current values and exact event identity." },
-  { step: "03", title: "Partition", detail: "Each proposal lands in exactly one queue: apply to review, needs review, no change or rejected." },
-  { step: "04", title: "Route", detail: "Valid changes name the owning write-back destination. Event-specific queue entries carry the Event key so they also appear on the relevant event page. Production and every upstream write still require explicit approval." },
+  { step: "03", title: "Partition", detail: "Each proposal lands in exactly one queue: apply to review, needs review, upstream-only correction, no change or rejected." },
+  { step: "04", title: "Route", detail: "Valid changes name the exact write-back destination. An upstream-only correction leaves Basecamp unchanged and fixes a stale mirror only after approval. Event-specific entries carry the Event key so they also appear on the relevant event page." },
 ] as const;
 
 export const sourceReceiptStates = [
@@ -93,7 +95,7 @@ function rejection(proposal: EventUpdateProposal, reason: string): SourceScanRec
 function groupWritebacks(records: SourceScanRecord[]): SourceScanWritebackGroup[] {
   const grouped = new Map<string, SourceScanRecord[]>();
   for (const record of records) {
-    if (record.result.decision !== "apply-to-review" && record.result.decision !== "needs-review") continue;
+    if (!["apply-to-review", "needs-review", "writeback-only"].includes(record.result.decision)) continue;
     const destination = record.result.writebackDestination;
     if (!destination) continue;
     grouped.set(destination, [...(grouped.get(destination) ?? []), record]);
@@ -140,11 +142,15 @@ export function processSourceScan(
     seenProposalIds.add(proposalId);
     if (!proposal.eventKey.trim()) return rejection(proposal, "The Event key is required.");
     if (!proposal.evidence.trim()) return rejection(proposal, "Evidence is required before a source finding can enter reconciliation.");
+    if (Boolean(proposal.correctionTarget) !== (typeof proposal.observedValue !== "undefined")) {
+      return rejection(proposal, "An upstream-only correction requires both correctionTarget and observedValue.");
+    }
     return { proposal, result: reconcileEventUpdate(proposal, catalog, protectedOverrides) };
   });
 
   const publishable = records.filter((record) => record.result.decision === "apply-to-review");
   const reviewQueue = records.filter((record) => record.result.decision === "needs-review");
+  const writebackOnly = records.filter((record) => record.result.decision === "writeback-only");
   const noChangeReceipts = records.filter((record) => record.result.decision === "no-change");
   const rejected = records.filter((record) => record.result.decision === "reject");
   const writebackGroups = groupWritebacks(records);
@@ -159,6 +165,7 @@ export function processSourceScan(
       total: records.length,
       applyToReview: publishable.length,
       needsReview: reviewQueue.length,
+      writebackOnly: writebackOnly.length,
       noChange: noChangeReceipts.length,
       rejected: rejected.length,
       checkedReceipts: batch.sourceReceipts.filter((receipt) => receipt.state === "checked").length,
@@ -168,6 +175,7 @@ export function processSourceScan(
     audit,
     publishable,
     reviewQueue,
+    writebackOnly,
     noChangeReceipts,
     rejected,
     writebackGroups,
