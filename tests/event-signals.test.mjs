@@ -31,11 +31,14 @@ test("staffing signals distinguish named attendees from an unassigned plan", () 
   assert.equal(getStaffingSignal(event("ccw-orlando-2027")).card, "0 Attending / 11 Passes");
   assert.equal(getStaffingSignal(event("ccw-uk-executive-exchange-2027")).card, "0 Attending / 3 Passes");
   assert.equal(getStaffingSignal(event("ccw-vegas-2027")).card, "0 Attending / 9 Passes");
-  assert.equal(getStaffingSignal(event("ccw-exchange-chicago")).card, "1 Attending");
+  assert.equal(getStaffingSignal(event("ccw-exchange-chicago")).card, "1 Attending / 1 Pass");
   assert.equal(getStaffingSignal(event("contact-io")).card, "0 Attending");
-  assert.equal(getStaffingSignal(event("ccw-orlando")).card, "2 Attending / 2 Passes");
+  assert.equal(getStaffingSignal(event("ccw-orlando")).card, "2 Attending");
   assert.equal(getStaffingSignal(event("iqpc-cx-travel-hospitality")).assignmentGap, 2);
   assert.equal(getStaffingSignal(event("genesys-xperience")).assignmentGap, 0);
+  assert.equal(getStaffingSignal(event("iqpc-cx-travel-hospitality")).summary, "1 attending / 3 passes · 2 unassigned");
+  assert.equal(getStaffingSignal(event("ccw-uk-executive-exchange-2027")).summary, "0 attending / 3 passes · 3 unassigned");
+  assert.equal(getStaffingSignal(event("genesys-xperience")).summary, "9 attending / 9 passes");
 });
 
 test("activation signals distinguish attendance from activation certainty", () => {

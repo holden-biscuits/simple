@@ -1076,7 +1076,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(orlando2027.status, 200);
   const orlando2027Html = await orlando2027.text();
   assert.match(orlando2027Html, /Jan 25–27, 2027/);
-  assert.match(orlando2027Html, /11 planned · names open/);
+  assert.match(orlando2027Html, /0 attending \/ 11 passes · 11 unassigned/);
   assert.match(orlando2027Html, /6 Executive Leadership Exchange meetings/);
   assert.match(orlando2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(orlando2027Html, /JW Marriott Bonnet Creek/);
@@ -1100,7 +1100,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const vegas2027Html = await vegas2027.text();
   assert.match(vegas2027Html, /Source check needed/);
   assert.match(vegas2027Html, /June 15, 2027 is Tuesday/);
-  assert.match(vegas2027Html, /15 planned · names open/);
+  assert.match(vegas2027Html, /0 attending \/ 9 passes · 9 unassigned/);
   assert.match(vegas2027Html, /9 sponsor passes · 15 attendees planned/);
   assert.match(vegas2027Html, /Caesars Forum/);
 

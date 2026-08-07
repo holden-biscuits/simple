@@ -246,7 +246,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
             </th>
             <td data-label="Activation"><div className="matrix-signals">{signals.length ? signals.map((signal) => <span key={signal}>{signal}</span>) : <span>Attendance only</span>}</div></td>
             <td data-label="Marketing support">{support.length ? <ul>{support.map((item) => <li key={item}>{item}</li>)}</ul> : <span className="matrix-empty">None listed</span>}</td>
-            <td data-label="Event team"><span className={`matrix-staffing matrix-staffing-${staffing.state}`}>{staffing.state === "named" ? "Named" : staffing.state === "not-attending" ? "None" : "Open"}</span><p>{staffingDetail}</p></td>
+            <td data-label="Event team"><span className={`matrix-staffing matrix-staffing-${staffing.state}`}>{staffing.state === "named" ? "Attending" : staffing.state === "not-attending" ? "None" : "Open"}</span><p>{staffingDetail}</p></td>
             <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p><div className="matrix-open-meta"><span>{openTask?.owner ? `Owner · ${openTask.owner}` : "Owner · Open"}</span><span>{openTask?.due ? `Due · ${openTask.due}` : "Due · Open"}</span>{!planStatus.tracked ? <span className="matrix-task-gap">Task setup open</span> : null}</div>{updateRoute ? <a className="matrix-open-plan" href={updateRoute.href} target="_blank" rel="noreferrer">{updateRoute.label} ↗</a> : <Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link>}</td>
           </tr>;
         })}</tbody>

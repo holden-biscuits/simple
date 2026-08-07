@@ -67,9 +67,9 @@ export function getStaffingSignal(event: StaffingSource) {
     passCount: 0,
     assignmentGap: 0,
   };
-  if (planned && named === planned) return {
+  if (planned && named === planned && !assignmentGap) return {
     card,
-    summary: `${planned} attending`,
+    summary: passes ? `${planned} attending / ${passes} pass${passes === 1 ? "" : "es"}` : `${planned} attending`,
     detail: event.team.join(", "),
     state: "named" as const,
     passCount: passes,
@@ -77,25 +77,25 @@ export function getStaffingSignal(event: StaffingSource) {
   };
   if (planned && named > 0) return {
     card,
-    summary: `${named} named · ${planned} planned`,
-    detail: `${event.team.join(", ")} · ${named} of ${planned} named`,
+    summary: passes ? `${named} attending / ${passes} passes · ${assignmentGap} unassigned` : `${named} attending`,
+    detail: `${event.team.join(", ")}${assignmentGap ? ` · ${assignmentGap} pass${assignmentGap === 1 ? "" : "es"} unassigned` : ""}`,
     state: "open" as const,
     passCount: passes,
     assignmentGap,
   };
   if (planned) return {
     card,
-    summary: `${planned} planned · names open`,
-    detail: `0 of ${planned} named`,
+    summary: passes ? `0 attending / ${passes} passes · ${assignmentGap} unassigned` : "No team assigned",
+    detail: assignmentGap ? `${assignmentGap} passes unassigned` : "No team assigned",
     state: "open" as const,
     passCount: passes,
     assignmentGap,
   };
   if (named) return {
     card,
-    summary: `${named} named`,
-    detail: event.team.join(", "),
-    state: "named" as const,
+    summary: passes ? `${named} attending / ${passes} passes${assignmentGap ? ` · ${assignmentGap} unassigned` : ""}` : `${named} attending`,
+    detail: `${event.team.join(", ")}${assignmentGap ? ` · ${assignmentGap} pass${assignmentGap === 1 ? "" : "es"} unassigned` : ""}`,
+    state: assignmentGap ? "open" as const : "named" as const,
     passCount: passes,
     assignmentGap,
   };
