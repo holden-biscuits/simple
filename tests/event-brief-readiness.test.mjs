@@ -16,6 +16,15 @@ test("brief readiness changes its requirements as an event approaches", () => {
   assert.ok(customerConnect.issues.some((issue) => issue.key === "roster"));
   assert.ok(customerConnect.issues.some((issue) => issue.key === "credentials"));
   assert.ok(customerConnect.issues.some((issue) => issue.key === "execution-gaps"));
+
+  const travelExchange = getEventBriefReadiness(eventBySlug("iqpc-cx-travel-hospitality"), programDate);
+  assert.ok(travelExchange.issues.some((issue) => issue.label === "Assign 2 remaining passes"));
+});
+
+test("brief readiness uses pass allocation instead of a larger planning estimate", () => {
+  const vegas2027 = getEventBriefReadiness(eventBySlug("ccw-vegas-2027"), "2027-05-01");
+  assert.ok(vegas2027.issues.some((issue) => issue.label === "Assign 9 remaining passes"));
+  assert.ok(!vegas2027.issues.some((issue) => issue.label.includes("15")));
 });
 
 test("early-stage briefs require foundation facts without pretending final logistics are due", () => {

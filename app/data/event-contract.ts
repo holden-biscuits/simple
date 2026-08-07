@@ -1,4 +1,5 @@
 import type { EventRecord } from "./events";
+import { getStaffingSignal } from "./event-signals.ts";
 
 export type EventContractIssue = {
   eventKey: string;
@@ -64,10 +65,10 @@ export function validateEventCatalog(catalog: EventRecord[]) {
       add("status", "error", "Events marked not attending cannot have an active roster.");
     }
     if (event.status !== "No" && event.attendeeCount !== null && event.team.length > event.attendeeCount) {
-      add("team", "error", "Named attendees cannot exceed the planned attendee count.");
+      add("team", "error", "Recorded attendees cannot exceed the expected attendee count.");
     }
-    if (event.status !== "No" && (event.attendeeCount ?? 0) > 0 && event.team.length === 0) {
-      add("team", "warning", "Attendee count is known, but the roster is not named.");
+    if (event.status !== "No" && getStaffingSignal(event).assignmentGap > 0) {
+      add("team", "warning", "Some passes still need attendees assigned.");
     }
     if (event.notes.toLowerCase().startsWith("source conflict:")) {
       add("notes", "warning", "An authoritative source conflict still needs a decision.");

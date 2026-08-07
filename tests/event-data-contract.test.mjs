@@ -30,6 +30,16 @@ test("source conflicts and unnamed rosters remain visible as review warnings", (
   const health = getEventCatalogHealth(events);
   assert.ok(health.sourceConflicts > 0);
   assert.ok(health.unnamedRosters > 0);
+
+  const credentialsOnly = {
+    ...structuredClone(events[0]),
+    slug: "credentials-only-test",
+    status: "Confirmed",
+    attendeeCount: null,
+    team: [],
+    credentials: "4 sponsor passes",
+  };
+  assert.ok(validateEventCatalog([credentialsOnly]).some((issue) => issue.field === "team" && issue.message === "Some passes still need attendees assigned."));
 });
 
 test("event TLDR callouts are optional, concise, and route to local detail", () => {

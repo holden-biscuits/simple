@@ -276,7 +276,7 @@ export default function SourcesPage() {
           <div className="catalog-health" aria-label="Event data publish checks">
             <article><span>Stable event keys</span><strong>{catalogHealth.eventKeys}</strong><p>Unique IDs ready to carry into Sheets, Notion and HubSpot.</p></article>
             <article><span>Blocking errors</span><strong>{catalogHealth.errors.length}</strong><p>Duplicate keys, broken dates or invalid source links stop a build.</p></article>
-            <article><span>Rosters to name</span><strong>{catalogHealth.unnamedRosters}</strong><p>Attendance is planned, but the people are not yet recorded.</p></article>
+            <article><span>Passes to assign</span><strong>{catalogHealth.unnamedRosters}</strong><p>Available passes still need attendees assigned.</p></article>
             <article><span>Source conflicts</span><strong>{catalogHealth.sourceConflicts}</strong><p>Contradictory facts remain in the approval queue.</p></article>
           </div>
           <BackToTop />

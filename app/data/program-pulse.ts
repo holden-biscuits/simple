@@ -2,6 +2,7 @@ import { getEventPhase, getProgramDate, type EventRecord } from "./events.ts";
 import { getEventReadiness, getProgramReadiness, type ReadinessAction } from "./program-readiness.ts";
 import { getSourceFreshness } from "./source-freshness.ts";
 import { getEventBriefReadiness } from "./event-brief-readiness.ts";
+import { getStaffingSignal } from "./event-signals.ts";
 
 export type ProgramAttentionItem = {
   eventKey: string;
@@ -36,7 +37,7 @@ export function getProgramPulse(catalog: EventRecord[], programDate: string) {
     current: active.filter((event) => getEventPhase(event, programDate) === "now"),
     nextStops: active.filter((event) => event.dateEndSort >= programDate).slice(0, 4),
     next60Days: active.filter((event) => event.dateSort > programDate && event.dateSort <= through60Days),
-    rosterGaps: active.filter((event) => event.attendeeCount !== null && event.team.length < event.attendeeCount),
+    rosterGaps: active.filter((event) => getStaffingSignal(event).assignmentGap > 0),
     sourceConflicts: active.filter((event) => event.notes.toLowerCase().startsWith("source conflict:")),
     sourceChecksDue: active.filter((event) => ["due", "overdue"].includes(getSourceFreshness(event, programDate).state)),
     readiness: getProgramReadiness(active, programDate),

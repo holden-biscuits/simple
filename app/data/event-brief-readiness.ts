@@ -1,5 +1,5 @@
 import { getEventPhase, sourceLinks, type EventRecord } from "./events.ts";
-import { getSpeakingStatus, getSponsorshipStatus, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
+import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
 import { getEventReadiness } from "./program-readiness.ts";
 import { getSourceFreshness } from "./source-freshness.ts";
 
@@ -87,11 +87,11 @@ export function getEventBriefReadiness(event: EventRecord, programDate: string):
   if (["due", "overdue"].includes(getSourceFreshness(event, programDate).state)) add("source-check", "Refresh the event’s owning sources", "Source review");
 
   if (nearTerm) {
-    if (event.attendeeCount !== null && event.team.length < event.attendeeCount) {
-      const remaining = event.attendeeCount - event.team.length;
-      add("roster", `Name ${remaining} remaining attendee${remaining === 1 ? "" : "s"}`, "Conference tracker");
-    } else if (event.attendeeCount === null && !event.team.length) {
-      add("roster", "Name the attending team and planned headcount", "Conference tracker");
+    const staffing = getStaffingSignal(event);
+    if (staffing.assignmentGap) {
+      add("roster", `Assign ${staffing.assignmentGap} remaining pass${staffing.assignmentGap === 1 ? "" : "es"}`, "Conference tracker");
+    } else if (!staffing.passCount && !event.team.length) {
+      add("roster", "Confirm who is attending and how many passes are available", "Conference tracker");
     }
     if (!event.venue) add("venue", "Confirm the venue", "Organizer source");
     if (!event.credentials) add("credentials", "Confirm passes, registration, and credential limits", "Event project");
@@ -126,9 +126,9 @@ function onsiteIssueLabel(issue: BriefReadinessIssue, event: EventRecord) {
   if (issue.key === "meeting-count") return "Guaranteed-meeting count and format are not recorded";
   if (issue.key === "source-conflict") return "A source conflict still affects this brief";
   if (issue.key === "source-check") return "The event sources need a same-day refresh";
-  if (issue.key === "roster" && event.attendeeCount !== null) {
-    const remaining = Math.max(0, event.attendeeCount - event.team.length);
-    return `${remaining} attendee name${remaining === 1 ? " is" : "s are"} still missing from the onsite roster`;
+  if (issue.key === "roster" && getStaffingSignal(event).assignmentGap) {
+    const remaining = getStaffingSignal(event).assignmentGap;
+    return `${remaining} pass${remaining === 1 ? "" : "es"} still need${remaining === 1 ? "s" : ""} an attendee`;
   }
   if (issue.key === "roster") return "The onsite roster is not recorded";
   if (issue.key === "venue") return "Venue details are not recorded";

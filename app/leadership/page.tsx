@@ -61,7 +61,7 @@ export default function LeadershipPage() {
           <article><strong>{brief.pulse.active.length}</strong><span>Active program</span><p>Confirmed, tentative and TBD events that have not ended.</p></article>
           <article><strong>{brief.pulse.next60Days.length}</strong><span>Starting within 60 days</span><p>Near-term commitments that should have owners and dates.</p></article>
           <article><strong>{brief.briefReadiness.ready.length} / {brief.briefReadiness.events.length}</strong><span>Briefs on track</span><p>Decision-critical inputs required for each event’s current planning stage are present.</p></article>
-          <article><strong>{brief.pulse.rosterGaps.length}</strong><span>Roster gaps</span><p>Planned headcount exceeds the named attendee list.</p></article>
+          <article><strong>{brief.pulse.rosterGaps.length}</strong><span>Passes to assign</span><p>Events where the current pass allocation exceeds the attending team.</p></article>
         </div>
         <div className="leadership-alerts">
           <Link href="/sources#approval-queue"><span>Source conflicts</span><strong>{brief.pulse.sourceConflicts.length}</strong><p>Conflicting facts are held for a decision.</p><b>Review →</b></Link>

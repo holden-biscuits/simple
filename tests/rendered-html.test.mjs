@@ -206,7 +206,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /HubSpot Marketing Event now shares the stable Event key/);
   assert.match(html, /Stable event keys[\s\S]*29/);
   assert.match(html, /Blocking errors[\s\S]*0/);
-  assert.match(html, /Rosters to name[\s\S]*11/);
+  assert.match(html, /Passes to assign[\s\S]*11/);
   assert.match(html, /Source conflicts[\s\S]*3/);
   assert.match(html, /Update the system that owns the fact\./);
   assert.match(html, /Reconcile any related execution text in Notion; the next review build refreshes Event Basecamp/);
