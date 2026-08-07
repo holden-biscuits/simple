@@ -317,6 +317,18 @@ button, input, select { font: inherit; }
 .operating-roadmap-grid dl div { padding-top: 16px; border-top: 1px solid rgba(255,255,255,.22); }
 .operating-roadmap-grid dt { color: #ff9a7d; font: 800 11.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .operating-roadmap-grid dd { margin: 7px 0 0; color: rgba(255,255,255,.88); font-size: 14px; line-height: 1.5; }
+.scan-contract { padding-block: 100px; }
+.scan-contract .section-intro { max-width: 910px; }
+.scan-contract-grid { margin-top: 50px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+.scan-contract-grid article { min-height: 310px; padding: 26px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--canvas); }
+.scan-contract-grid article:nth-child(2), .scan-contract-grid article:nth-child(4) { background: #f3c4af; }
+.scan-contract-grid span { color: var(--signal-dark); font: 800 11px var(--font-geist-mono), monospace; }
+.scan-contract-grid h3 { margin: 50px 0 15px; font: 400 28px/1.08 Georgia, serif; }
+.scan-contract-grid p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.scan-contract-output { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid var(--line); }
+.scan-contract-output div { padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.scan-contract-output span { color: var(--green); font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.scan-contract-output p { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .catalog-health { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 18px; border: 1px solid rgba(255,255,255,.24); }
 .catalog-health article { min-height: 190px; padding: 23px; border-right: 1px solid rgba(255,255,255,.24); }
 .catalog-health article:last-child { border-right: 0; }
@@ -936,6 +948,7 @@ button, input, select { font: inherit; }
   .monitor-summary { grid-template-columns: 1fr 1fr; }
   .source-flow-grid { grid-template-columns: 1fr 1fr; }
   .operating-roadmap-grid { grid-template-columns: 1fr; }
+  .scan-contract-grid, .scan-contract-output { grid-template-columns: 1fr 1fr; }
   .freshness-policy-grid { grid-template-columns: 1fr 1fr; }
   .audience-views { grid-template-columns: 1fr; }
   .source-flow-grid article:nth-child(2n)::after { display: none; }
@@ -1079,6 +1092,8 @@ button, input, select { font: inherit; }
   .marketing-board-filters button:last-child { grid-column: auto; border-right: 0; }
   .marketing-board-filters button:nth-last-child(-n+2) { border-bottom: 0; }
   .marketing-result-summary { align-items: flex-start; flex-direction: column; padding-block: 16px; }
+  .scan-contract-grid, .scan-contract-output { grid-template-columns: 1fr; }
+  .scan-contract-grid article { min-height: 0; }
   .crm-activation-status { grid-template-columns: auto 1fr; }
   .crm-activation-status p { grid-column: 1 / -1; text-align: left; }
   .crm-activation-grid { grid-template-columns: 1fr; }

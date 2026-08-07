@@ -109,6 +109,10 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Starts within 14 days[\s\S]*Every 3 days/);
   assert.match(html, /More than 60 days away[\s\S]*Monthly/);
   assert.match(html, /A scheduled snapshot, not a live database\./);
+  assert.match(html, /Every scan becomes one auditable batch\./);
+  assert.match(html, /Apply to review|apply to review/);
+  assert.match(html, /No-change and rejected findings remain counted/);
+  assert.match(html, /no upstream write runs without exact approval/);
   assert.match(html, /The missing join:/);
   assert.match(html, /Sheets, Notion and HubSpot do not yet share it/);
   assert.match(html, /Stable event keys[\s\S]*29/);
@@ -288,6 +292,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const durabilitySearchHtml = await durabilitySearch.text();
   assert.match(durabilitySearchHtml, /Event data operating roadmap/);
   assert.match(durabilitySearchHtml, /\/sources#operating-roadmap/);
+
+  const scanContractSearch = await render("/search?q=source%20scan%20batch&type=Operations");
+  assert.equal(scanContractSearch.status, 200);
+  const scanContractSearchHtml = await scanContractSearch.text();
+  assert.match(scanContractSearchHtml, /Source scan automation contract/);
+  assert.match(scanContractSearchHtml, /\/sources#scan-contract/);
 
   const emptySearch = await render("/search?q=definitely-no-such-event-or-guide");
   assert.equal(emptySearch.status, 200);

@@ -10,6 +10,7 @@ import { audienceViews, dataStreams, eventKeyRollout, fieldOwners, operatingRoad
 import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
 import { getProgramSystemLinkage } from "../data/system-linkage";
+import { sourceScanContract } from "../data/source-scan";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -39,6 +40,7 @@ export default function SourcesPage() {
         { id: "freshness-policy", label: "Freshness policy" },
         { id: "canonical-event-key", label: "Canonical Event key" },
         { id: "data-flow", label: "How data moves" },
+        { id: "scan-contract", label: "Scan contract" },
         { id: "data-streams", label: "Feeds and write-back" },
         { id: "operating-roadmap", label: "Build order" },
         { id: "field-ownership", label: "Where to update" },
@@ -143,6 +145,24 @@ export default function SourcesPage() {
           </div>
           <BackToTop />
         </div>
+      </section>
+
+      <section className="shell scan-contract" id="scan-contract">
+        <div className="section-intro">
+          <p className="eyebrow">Automation contract</p>
+          <h2>Every scan becomes one auditable batch.</h2>
+          <p>A connector result is not allowed to edit the fieldbook directly. Every finding must pass through the same identity, ownership, evidence and approval gates.</p>
+        </div>
+        <div className="scan-contract-grid">
+          {sourceScanContract.map((item) => <article key={item.step}><span>{item.step}</span><h3>{item.title}</h3><p>{item.detail}</p></article>)}
+        </div>
+        <div className="scan-contract-output">
+          <div><span>Review build</span><p>Only “apply to review” records may change the saved site version.</p></div>
+          <div><span>Human queue</span><p>Conflicts, message-only findings and protected decisions stay visible with evidence.</p></div>
+          <div><span>Run receipt</span><p>No-change and rejected findings remain counted instead of disappearing from the audit.</p></div>
+          <div><span>Write-back plan</span><p>Every valid correction is grouped by its owning destination; no upstream write runs without exact approval.</p></div>
+        </div>
+        <BackToTop />
       </section>
 
       <section className="shell data-streams" id="data-streams">
