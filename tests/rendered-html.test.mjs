@@ -351,6 +351,15 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /aria-selected="true"[^>]*id="event-task-tab-genesys-xperience"/);
   assert.match(html, /id="event-task-tab-genesys-xperience"[^>]*tabindex="0"/);
   assert.doesNotMatch(html, /Confirm the next owner and deadline/);
+  assert.match(html, /Build attribution before the first scan\./);
+  assert.match(html, /Marketing Event records detected/);
+  assert.match(html, /14(?:<!-- -->)? active events need canonical HubSpot event coverage/);
+  assert.match(html, /Create one event record/);
+  assert.match(html, /Attach the campaign/);
+  assert.match(html, /Track participant state/);
+  assert.match(html, /registered, canceled, and attended states/);
+  assert.match(html, /Join the commercial record/);
+  assert.match(html, /https:\/\/knowledge\.hubspot\.com\/integrations\/use-marketing-events/);
   assert.match(html, /Six records make the scorecard usable\./);
   assert.match(html, /Fully loaded cost[\s\S]*Forecast at approval · final by 7 days after/);
   assert.match(html, /30 and 90 days after[\s\S]*sourced pipeline · influenced pipeline · closed revenue/);

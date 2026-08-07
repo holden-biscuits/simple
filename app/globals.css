@@ -553,6 +553,24 @@ button, input, select { font: inherit; }
 .marketing-empty-state { margin: 0; padding: 34px; color: var(--green); background: var(--paper); }
 .marketing-matrix-section .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.6); }
 .marketing-playbook { padding-top: 95px; }
+.crm-activation { padding-block: 100px; color: var(--paper); background: var(--green); }
+.crm-activation .section-intro { max-width: 920px; }
+.crm-activation .section-intro > p:last-child { color: rgba(255,255,255,.72); }
+.crm-activation .eyebrow { color: #ff9a7d; }
+.crm-activation-status { margin-top: 46px; padding-block: 22px; display: grid; grid-template-columns: auto minmax(190px, .55fr) minmax(320px, 1.45fr); gap: 18px; align-items: baseline; border-top: 1px solid rgba(255,255,255,.42); border-bottom: 1px solid rgba(255,255,255,.42); }
+.crm-activation-status strong { color: #ff9a7d; font: 400 56px/.9 Georgia, serif; }
+.crm-activation-status span { color: var(--paper); font: 800 10.5px/1.4 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.crm-activation-status p { margin: 0; color: rgba(255,255,255,.72); text-align: right; }
+.crm-activation-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid rgba(255,255,255,.34); }
+.crm-activation-grid article { min-height: 340px; padding: 28px; border-right: 1px solid rgba(255,255,255,.34); border-bottom: 1px solid rgba(255,255,255,.34); }
+.crm-activation-grid article > span { color: #ff9a7d; font: 800 11px var(--font-geist-mono), monospace; }
+.crm-activation-grid h3 { margin: 52px 0 16px; font: 400 27px/1.08 Georgia, serif; }
+.crm-activation-grid p { margin: 0; color: rgba(255,255,255,.72); font-size: 14px; line-height: 1.55; }
+.crm-activation-note { margin-top: 34px; padding: 24px; display: grid; grid-template-columns: minmax(210px, .7fr) minmax(320px, 1.3fr) auto; gap: 26px; align-items: center; color: var(--ink); background: var(--paper); border-left: 7px solid var(--signal); }
+.crm-activation-note strong { color: var(--green); font: 400 23px/1.14 Georgia, serif; }
+.crm-activation-note p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.crm-activation-note a { color: var(--green); border-bottom: 1px solid currentColor; font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.crm-activation .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.6); }
 .measurement { margin-bottom: 110px; padding: 65px; display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; background: var(--canvas); border: 1px solid var(--line); box-shadow: 10px 10px 0 var(--paper-deep); }
 .measurement h2 { margin: 0; font: 400 clamp(38px, 5vw, 65px)/1 Georgia, serif; letter-spacing: -.04em; }
 .measurement p { color: var(--muted); }
@@ -928,6 +946,8 @@ button, input, select { font: inherit; }
   .marketing-board-filters > div { grid-template-columns: repeat(3, 1fr); }
   .marketing-board-filters button:nth-child(3) { border-right: 0; }
   .marketing-board-filters button:nth-child(-n+3) { border-bottom: 1px solid rgba(255,255,255,.34); }
+  .crm-activation-grid { grid-template-columns: 1fr 1fr; }
+  .crm-activation-note { grid-template-columns: 1fr; }
   .event-body aside { position: static; }
   .fact-strip, .tldr-grid { grid-template-columns: 1fr 1fr; }
   .crm-stage-grid { grid-template-columns: repeat(3, 1fr); }
@@ -1059,6 +1079,10 @@ button, input, select { font: inherit; }
   .marketing-board-filters button:last-child { grid-column: auto; border-right: 0; }
   .marketing-board-filters button:nth-last-child(-n+2) { border-bottom: 0; }
   .marketing-result-summary { align-items: flex-start; flex-direction: column; padding-block: 16px; }
+  .crm-activation-status { grid-template-columns: auto 1fr; }
+  .crm-activation-status p { grid-column: 1 / -1; text-align: left; }
+  .crm-activation-grid { grid-template-columns: 1fr; }
+  .crm-activation-grid article { min-height: 0; }
   .marketing-table-wrap { overflow: visible; border: 0; }
   .marketing-table { min-width: 0; display: block; }
   .marketing-table thead { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }

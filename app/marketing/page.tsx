@@ -4,7 +4,7 @@ import { Footer } from "../components/footer";
 import { EventMarketingWorkspace, MarketingSupportBoard } from "../components/marketing-support-board";
 import { SiteHeader } from "../components/site-header";
 import { events, getEventPhase, getProgramDate } from "../data/events";
-import { measurementFields, measurementWindows, metricDefinitions } from "../data/event-measurement";
+import { measurementFields, measurementReadiness, measurementWindows, metricDefinitions } from "../data/event-measurement";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +56,25 @@ const playbook = [
   },
 ];
 
+const crmActivationSteps = [
+  {
+    title: "Create one event record",
+    copy: "Create a HubSpot Marketing Event for every event TeamSimple is attending. Use the fieldbook event name, dates, organizer URL, and canonical Event key.",
+  },
+  {
+    title: "Attach the campaign",
+    copy: "Associate the Marketing Event with its HubSpot campaign before outreach begins so promotion, forms, lists, and follow-up share one reporting container.",
+  },
+  {
+    title: "Track participant state",
+    copy: "Import or sync people with registered, canceled, and attended states. Keep booth conversations and qualified leads as additional outcomes—not substitutes for attendance.",
+  },
+  {
+    title: "Join the commercial record",
+    copy: "Put the canonical Event key on meetings and deals. Record the conversation owner, account, outcome, and next step so leadership can separate sourced pipeline from influence.",
+  },
+];
+
 export default async function MarketingPage({ searchParams }: { searchParams: Promise<{ event?: string }> }) {
   const { event: selectedEvent } = await searchParams;
   const programDate = getProgramDate();
@@ -74,6 +93,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         { id: "event-tasks", label: "Event tasks" },
         { id: "support-matrix", label: "Support matrix" },
         ...playbook.map((section) => ({ id: section.id, label: section.label })),
+        { id: "crm-setup", label: "HubSpot setup" },
         { id: "measurement", label: "Measurement" },
       ]} />
 
@@ -102,6 +122,22 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
           <div className="role-number">{String(index + 1).padStart(2, "0")}</div>
           <div><p className="eyebrow">{section.label}</p><h2>{section.title}</h2><ul>{section.items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop /></div>
         </article>)}
+      </section>
+
+      <section className="crm-activation" id="crm-setup">
+        <div className="shell">
+          <div className="section-intro"><p className="eyebrow">HubSpot activation</p><h2>Build attribution before the first scan.</h2><p>The event plan is not measurement-ready until the event, campaign, participants, meetings, and deals can be joined without guessing.</p></div>
+          <div className="crm-activation-status">
+            <strong>{measurementReadiness.marketingEventRecords}</strong>
+            <span>Marketing Event records detected</span>
+            <p>{activeEvents.length} active events need canonical HubSpot event coverage.</p>
+          </div>
+          <div className="crm-activation-grid">
+            {crmActivationSteps.map((step, index) => <article key={step.title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{step.title}</h3><p>{step.copy}</p></article>)}
+          </div>
+          <aside className="crm-activation-note"><strong>Start with the event record, not a reporting spreadsheet.</strong><p>HubSpot supports manually created Marketing Events for in-person programs, campaign association, participant statuses, segments, and event reporting. The fieldbook’s canonical Event key supplies the missing join from that attendance record to meetings, deals, and cost.</p><a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">Open HubSpot’s Marketing Events guidance ↗</a></aside>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="shell measurement" id="measurement">
