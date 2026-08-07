@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { getEventPhase, type EventPhase, type EventRecord } from "../data/events";
+import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
 
 type AttendanceFilter = "all" | "going" | "deciding" | "not-going";
 
@@ -27,6 +27,7 @@ function guaranteedMeetingSignal(event: EventRecord) {
 }
 
 function EventCard({ event }: { event: EventRecord }) {
+  const verification = getEventVerification(event);
   const signal = event.status === "No" ? "Not attending" : event.status;
   const inactive = event.status === "No";
   const speakingText = event.speaking.toLowerCase();
@@ -46,6 +47,10 @@ function EventCard({ event }: { event: EventRecord }) {
         <span>{speakingOpps} Speaking Opp</span>
         <span>{guaranteedMeetingSignal(event)}</span>
         <span>{attending} Attending</span>
+      </div>
+      <div className="event-card-freshness">
+        <span>Checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt.replace(", 2026", "")}</time></span>
+        <span>{verification.sources.length === 1 ? verification.sources[0] : `${verification.sources[0]} + ${verification.sources.length - 1}`}</span>
       </div>
     </Link>
   );

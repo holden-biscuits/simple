@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getEventPhase, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getEventPhase, getEventVerification, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +21,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const event = eventBySlug(slug);
   if (!event) notFound();
   const eventPhase = getEventPhase(event);
+  const verification = getEventVerification(event);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = event.guaranteedMeetings.startsWith("Yes");
@@ -98,6 +99,11 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           {isSourceConflict ? <strong>Source check needed</strong> : null}
           {isSourceConflict ? note.replace(/^Source conflict:\s*/i, "") : note}
         </p> : null}
+        <div className="event-verification">
+          <div><span>Source check</span><strong>Checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt}</time></strong></div>
+          <p>{verification.sources.join(" · ")}</p>
+          <Link href="/sources">See source record →</Link>
+        </div>
       </section>
 
       {showPriorities ? (

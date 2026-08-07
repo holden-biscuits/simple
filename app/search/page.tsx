@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
 import { SiteSearch, type SearchRecord, type SearchType } from "../components/site-search";
-import { events, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
+import { events, getEventVerification, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -21,6 +21,7 @@ const referenceRecords: SearchRecord[] = [
 ];
 
 const eventRecords: SearchRecord[] = events.map((event) => {
+  const verification = getEventVerification(event);
   const guaranteedCountOpen = event.guaranteedMeetings.startsWith("Yes") && !/\d+[–-]\d+/.test(event.guaranteedMeetings);
   const staffingOpen = Boolean(event.attendeeCount && event.team.length < event.attendeeCount);
   const outcomeCounts = [
@@ -40,6 +41,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     staffingOpen ? `Staffing · names open · ${event.team.length} named · ${event.attendeeCount} planned` : "",
     event.notes ? `Plan note · ${event.notes}` : "",
     event.credentials ? `Credentials · ${event.credentials}` : "",
+    `Source check · ${verification.checkedAt} · ${verification.sources.join(" · ")}`,
     ...(event.specialConsiderations ?? []).map((item) => `Rule · ${item}`),
     ...(event.priorityActions ?? []).map((item) => `Open item · ${item}`),
     ...(event.relatedLinks ?? []).map((link) => `Link · ${link.label}`),

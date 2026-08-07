@@ -1,5 +1,11 @@
 export type EventPhase = "past" | "now" | "upcoming";
 
+export type EventVerification = {
+  checkedAt: string;
+  checkedAtISO: string;
+  sources: string[];
+};
+
 export type WorkstreamKey =
   | "speaking"
   | "sponsorship"
@@ -906,6 +912,54 @@ export const events: EventRecord[] = [
     },
   },
 ].sort((a, b) => a.dateSort.localeCompare(b.dateSort));
+
+const trackerBaseline: EventVerification = {
+  checkedAt: "Aug 6, 2026",
+  checkedAtISO: "2026-08-06",
+  sources: ["Conference tracker"],
+};
+
+const eventVerificationOverrides: Record<string, EventVerification> = {
+  "ccw-vegas": {
+    checkedAt: "Aug 6, 2026",
+    checkedAtISO: "2026-08-06",
+    sources: ["Conference tracker", "CCW Vegas plan", "HubSpot"],
+  },
+  "ccw-exchange-chicago": {
+    checkedAt: "Aug 6, 2026",
+    checkedAtISO: "2026-08-06",
+    sources: ["Conference tracker", "Notion", "Gmail", "Slack", "HubSpot"],
+  },
+  "contact-io": {
+    checkedAt: "Aug 6, 2026",
+    checkedAtISO: "2026-08-06",
+    sources: ["Direct decision", "Conference tracker"],
+  },
+  "genesys-xperience": {
+    checkedAt: "Aug 6, 2026",
+    checkedAtISO: "2026-08-06",
+    sources: ["Direct update", "Notion", "Gmail", "HubSpot", "Restricted Genesys brief"],
+  },
+  "iqpc-cx-travel-hospitality": {
+    checkedAt: "Aug 6, 2026",
+    checkedAtISO: "2026-08-06",
+    sources: ["Conference tracker", "Notion", "Gmail", "Organizer site"],
+  },
+  "customer-connect-expo": {
+    checkedAt: "Aug 6, 2026",
+    checkedAtISO: "2026-08-06",
+    sources: ["Direct decision", "Notion", "Gmail", "Slack"],
+  },
+  "icmi-contact-center-expo": {
+    checkedAt: "Aug 6, 2026",
+    checkedAtISO: "2026-08-06",
+    sources: ["Direct decision", "Conference tracker", "Notion"],
+  },
+};
+
+export function getEventVerification(event: Pick<EventRecord, "slug">): EventVerification {
+  return eventVerificationOverrides[event.slug] ?? trackerBaseline;
+}
 
 export const programTimeZone = "America/Los_Angeles";
 

@@ -28,6 +28,8 @@ test("server-renders the event directory", async () => {
   assert.doesNotMatch(html, /ranger-raccoon-v2/);
   assert.match(html, /TeamSimple attendance/);
   assert.match(html, /Genesys Xperience/);
+  assert.match(html, /Checked <time dateTime="2026-08-06">Aug 6<\/time>/);
+  assert.match(html, /Conference tracker \+ 4/);
   assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
   assert.match(html, /Guaranteed Meetings · Count TBD/);
   assert.doesNotMatch(html, /Resolve these before more work starts\./);
@@ -84,6 +86,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(html, /16 meetings · 7 demos recorded/);
   assert.match(html, /<span>All<\/span><b>\d+<\/b>/);
   assert.match(html, /Holden/);
+
+  const sourceSearch = await render("/search?q=Restricted%20Genesys%20brief&type=Event");
+  assert.equal(sourceSearch.status, 200);
+  const sourceSearchHtml = await sourceSearch.text();
+  assert.match(sourceSearchHtml, /Genesys Xperience/);
+  assert.match(sourceSearchHtml, /Source check · Aug 6, 2026 · Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
 });
 
 test("server-renders a searchable marketing support board", async () => {
@@ -154,6 +162,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(genesys.status, 200);
   const genesysHtml = await genesys.text();
   assert.match(genesysHtml, /No guaranteed meetings/);
+  assert.match(genesysHtml, /Checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
+  assert.match(genesysHtml, /Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
+  assert.match(genesysHtml, /href="\/sources">See source record/);
   assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
   assert.doesNotMatch(genesysHtml, /Meetings scheduled/);
   assert.match(genesysHtml, /Team<\/span><strong>9 attending/);
@@ -196,6 +207,12 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.doesNotMatch(contactHtml, /id="event-priorities"/);
   assert.doesNotMatch(contactHtml, /What needs to happen\./);
   assert.doesNotMatch(contactHtml, /Who’s going/);
+
+  const trackerBaselineEvent = await render("/events/ccw-orlando");
+  assert.equal(trackerBaselineEvent.status, 200);
+  const trackerBaselineHtml = await trackerBaselineEvent.text();
+  assert.match(trackerBaselineHtml, /Checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
+  assert.match(trackerBaselineHtml, /<p>Conference tracker<\/p>/);
 
   const customerConnect = await render("/events/customer-connect-expo");
   assert.equal(customerConnect.status, 200);
