@@ -903,6 +903,10 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /6(?:<!-- -->)? event-specific/);
   assert.match(genesysHtml, /items are(?:<!-- -->)? still open in the current plan/);
   assert.match(genesysHtml, /Deliver Cat’s final solution-talk deck by Aug 10/);
+  assert.match(genesysHtml, /Use each item’s link to document the update in its owning event record/);
+  assert.match(genesysHtml, /Document the update in Notion/);
+  assert.match(genesysHtml, /Update the HubSpot event/);
+  assert.match(genesysHtml, /record\/0-54\/827998353134/);
   assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
   assert.match(genesysHtml, /Wish Line/);
   assert.match(genesysHtml, /Featured activation/);

@@ -1081,12 +1081,18 @@ button, input, select { font: inherit; }
 .event-priorities { margin-block: 25px 80px; padding: 55px; display: grid; grid-template-columns: minmax(260px, .72fr) minmax(0, 1.28fr); gap: 70px; background: #f3c4af; border: 1px solid var(--green); box-shadow: 10px 10px 0 var(--green); }
 .event-priorities h2 { margin: 0; font: 400 clamp(34px, 4vw, 54px)/1 Georgia, serif; letter-spacing: -.04em; }
 .event-priorities .priority-intro > p:not(.eyebrow) { max-width: 330px; margin: 20px 0 0; color: #504a41; font-size: 15px; line-height: 1.55; }
-.event-priorities .priority-link { display: inline-block; margin-top: 24px; color: var(--green); border-bottom: 1px solid currentColor; font: 800 11px var(--font-geist-mono), monospace; text-transform: uppercase; }
-.event-priorities .priority-link:hover, .event-priorities .priority-link:focus-visible { color: var(--signal-dark); }
+.event-priorities .priority-route-note { padding-top: 22px; border-top: 1px solid color-mix(in srgb, var(--green) 45%, transparent); }
 .event-priorities ol { margin: 0; padding: 0; list-style: none; counter-reset: priority; }
 .event-priorities li { display: grid; grid-template-columns: 44px 1fr; gap: 15px; padding: 18px 0; border-top: 1px solid color-mix(in srgb, var(--green) 45%, transparent); }
 .event-priorities li > span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: var(--paper); background: var(--green); font: 800 10px var(--font-geist-mono), monospace; }
 .event-priorities li p { margin: 4px 0 0; font-size: 17px; line-height: 1.5; }
+.priority-item-route { width: fit-content; min-height: 44px; margin-top: 14px; padding: 8px 11px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--green); color: var(--green); background: color-mix(in srgb, var(--canvas) 78%, transparent); }
+.priority-item-route b, .priority-item-route span { font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.priority-item-route b { padding-right: 12px; border-right: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+.priority-item-route span { color: var(--signal-dark); }
+.priority-item-route:hover, .priority-item-route:focus-visible { color: var(--paper); background: var(--green); outline: 3px solid color-mix(in srgb, var(--signal) 35%, transparent); outline-offset: 2px; }
+.priority-item-route:hover span, .priority-item-route:focus-visible span { color: var(--paper); }
+.priority-item-route-setup { border-style: dashed; }
 .event-priorities .back-to-top { grid-column: 2; }
 .fact-strip { display: grid; grid-template-columns: repeat(3, 1fr); border-left: 1px solid var(--line); }
 .fact-strip div { padding: 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-height: 115px; background: rgba(244,240,228,.84); }
@@ -1583,6 +1589,8 @@ button, input, select { font: inherit; }
   .event-no-plan { padding: 35px 25px; gap: 30px; box-shadow: 6px 6px 0 var(--signal); }
   .event-priorities { margin-block: 15px 60px; padding: 35px 25px; gap: 35px; box-shadow: 6px 6px 0 var(--green); }
   .event-priorities .back-to-top { grid-column: auto; }
+  .priority-item-route { width: 100%; align-items: flex-start; flex-direction: column; gap: 5px; }
+  .priority-item-route b { padding-right: 0; border-right: 0; }
   .timeline article { grid-template-columns: 1fr; }
   .timeline article p { grid-column: auto; }
   .footer { align-items: flex-start; flex-direction: column; }
@@ -1721,7 +1729,7 @@ button, input, select { font: inherit; }
 .metric-definitions code, .measurement-gate a, .search-tool > label, .search-quick button, .search-types button,
 .not-found-secondary, .not-found-routes span, .not-found-routes b, .round-link, .event-verification a,
 .event-update-route summary > b, .event-update-route-grid b, .event-linkage-strip p,
-.event-measurement-checkpoint > footer a, .event-priorities .priority-link, .workstream-title-row a,
+.event-measurement-checkpoint > footer a, .priority-item-route b, .priority-item-route span, .workstream-title-row a,
 .not-in-plan summary, .event-next-move > a, .crm-snapshot-head a, .leadership-alerts b, .leadership-risk-grid a,
 .leadership-operating-note a, .leadership-caveat a, .leadership-links a,
 .audience-segment-boundary a, .audience-segment-table td a { font-size: 12px; }

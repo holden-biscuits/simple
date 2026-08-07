@@ -19,6 +19,7 @@ import { eventUpdateRoutes, getEventWritebackQueue } from "../../data/source-gov
 import { getEventProspectingBrief } from "../../data/event-prospecting";
 import { getEventReadiness } from "../../data/program-readiness";
 import { getEventPageModel } from "../../data/event-page-model";
+import { getOpenItemRoute } from "../../data/open-item-routes";
 
 export const dynamic = "force-dynamic";
 
@@ -135,7 +136,6 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ...(!isNotAttending && workstreamContents.length ? [{ label: pageModel.secondaryLabel, items: workstreamContents }] : []),
     { label: isNotAttending ? "Source record" : eventPhase === "past" ? "Closeout + sources" : "Results + sources", items: eventRecordContents },
   ];
-  const firstActiveWorkstreamHref = activeWorkstreamKeys.length ? `#workstream-${activeWorkstreamKeys[0]}` : "#event-crew";
   const footprint = getEventFootprint(event);
   const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see event materials";
   const partnerGuidelines = event.relatedLinks?.find((link) => link.label.includes("Genesys sales rules"));
@@ -277,9 +277,21 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <p className="eyebrow">{eventPhase === "now" ? "Onsite focus" : "Before the event"}</p>
             <h2>{eventPhase === "now" ? "Do these next." : "Still needs attention."}</h2>
             <p>{event.priorityActions!.length} event-specific {eventPhase === "now" ? `priorit${event.priorityActions!.length === 1 ? "y is" : "ies are"} live today` : `${event.priorityActions!.length === 1 ? "item is" : "items are"} still open in the current plan`}.</p>
-            <Link className="priority-link" href={eventPhase === "now" ? firstActiveWorkstreamHref : `/marketing?event=${event.slug}#event-tasks`}>{eventPhase === "now" ? "Open event plan" : "Open marketing workspace"} →</Link>
+            <p className="priority-route-note">Use each item’s link to document the update in its owning event record.</p>
           </div>
-          <ol>{event.priorityActions!.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
+          <ol>{event.priorityActions!.map((item, index) => {
+            const route = getOpenItemRoute(event, item);
+            return <li key={item}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <p>{item}</p>
+                <a className={route.setupNeeded ? "priority-item-route priority-item-route-setup" : "priority-item-route"} href={route.href} target="_blank" rel="noreferrer" aria-label={`${route.label}: ${item}`}>
+                  <b>{route.system}</b>
+                  <span>{route.label} ↗</span>
+                </a>
+              </div>
+            </li>;
+          })}</ol>
           <BackToTop />
         </section>
       ) : null}
