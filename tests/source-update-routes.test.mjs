@@ -50,4 +50,13 @@ test("event-specific write-backs resolve to published event pages", () => {
     "Customer Connect task plan · organizer call",
     "Customer Connect sponsorship workstream",
   ]);
+  const chicago = getEventWritebackQueue("ccw-exchange-chicago");
+  assert.deepEqual(chicago.map((item) => item.scope), [
+    "CCW Exchange Chicago completion",
+    "CCW Exchange Chicago rating",
+    "CCW Exchange Chicago contractual meeting count",
+    "CCW Exchange Chicago follow-up meetings",
+    "CCW Exchange Chicago cookie follow-up",
+  ]);
+  assert.equal(chicago.find((item) => item.scope.includes("contractual meeting count"))?.state, "Decision needed");
 });

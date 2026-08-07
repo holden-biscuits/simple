@@ -74,6 +74,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const isSourceConflict = note.toLowerCase().startsWith("source conflict:");
   const resultGroups = [
     [meetingProgressLabel, event.meetingsBooked.length ? event.meetingsBooked : event.meetingCountLabel ? [`${event.meetingCountLabel} meetings ${eventPhase === "past" ? "recorded" : "booked"}; account names were not captured`] : []],
+    ["Follow-up meetings booked", event.followupMeetingsBooked ? [`${event.followupMeetingsBooked} scheduled · account, contact, date, owner, and outcome pending in HubSpot`] : []],
     ["Demos booked", event.demosBooked],
     ["Closed", event.closed],
   ] as const;
@@ -93,6 +94,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ["Swag / materials", swagSummary],
     ["Guaranteed meetings", meetingPackage],
     ...(showMeetingProgress ? [[meetingProgressLabel, meetingProgressValue]] : []),
+    ...(event.followupMeetingsBooked ? [["Follow-up meetings", `${event.followupMeetingsBooked} booked · HubSpot details pending`]] : []),
     ...(event.credentials ? [["Passes / credentials", event.credentials]] : []),
     ["Team", staffing.summary],
   ];
@@ -143,7 +145,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       ]} />
 
       <section className="event-tldr shell" id="event-tldr">
-        <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>Know this before you go.</h2></div>
+        <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>{eventPhase === "past" ? "What happened and what happens next." : "Know this before you go."}</h2></div>
         <div className={`tldr-grid tldr-grid-${tldr.length}`}>{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
         {event.tldrCallout ? <aside className="event-tldr-callout" aria-label={event.tldrCallout.title}>
           <div><span>{event.tldrCallout.label}</span><h3>{event.tldrCallout.title}</h3></div>
@@ -284,13 +286,13 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <BackToTop />
         </aside>
         <div className="workstreams">
-          <div className="section-intro"><p className="eyebrow">Field checklist</p><h2>What the event team needs to know and do.</h2><p>{activeWorkstreamKeys.length} of nine workstreams are in play. Relevant sections are open below; everything else stays in the explicit not-in-plan summary.</p></div>
+          <div className="section-intro"><p className="eyebrow">{eventPhase === "past" ? "Closeout record" : "Field checklist"}</p><h2>{eventPhase === "past" ? "What was planned and what remains to close." : "What the event team needs to know and do."}</h2><p>{eventPhase === "past" ? `${activeWorkstreamKeys.length} of nine workstreams contain closeout details. Empty sections stay in the not-in-plan summary.` : `${activeWorkstreamKeys.length} of nine workstreams are in play. Relevant sections are open below; everything else stays in the explicit not-in-plan summary.`}</p></div>
           {activeWorkstreamKeys.map((key, index) => {
             const items = workstreams[key];
             return <article className="workstream" id={`workstream-${key}`} key={key}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
-                <div className="workstream-title-row"><h3>{workstreamLabels[key]}</h3>{key === "marketing" ? <Link href={`/marketing?event=${event.slug}#event-tasks`}>Open workspace →</Link> : key === "budget" ? <Link href="/marketing#measurement">Open measurement →</Link> : null}</div>
+                <div className="workstream-title-row"><h3>{workstreamLabels[key]}</h3>{key === "marketing" && eventPhase !== "past" ? <Link href={`/marketing?event=${event.slug}#event-tasks`}>Open workspace →</Link> : key === "budget" ? <Link href="/marketing#measurement">Open measurement →</Link> : null}</div>
                 <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop />
               </div>
             </article>;

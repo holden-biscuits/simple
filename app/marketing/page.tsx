@@ -16,6 +16,7 @@ const operatingLessons = [
   ["Program-specific production", "A booth, a seat drop, a client case study, and a workshop are different jobs. The contract language should become a concrete deliverables list."],
   ["Plan the handoff first", "Agree on lead tiers, required notes, routing, and follow-up timing before the team arrives. Reconstructing context after the event costs pipeline."],
   ["Use the local option", "For international events, compare local printing and rentals against shipping before committing. It can reduce customs risk and last-minute failures."],
+  ["Keep a gifting kit ready", "Chicago exposed the cost of rebuilding gifting from scratch. Maintain an approved menu, budget bands, vendors, address and consent checks, a delivery owner, and a HubSpot follow-up rule so an account drop can launch without inventing the process again."],
 ];
 
 const playbook = [
@@ -50,6 +51,7 @@ const playbook = [
     items: [
       "Import and deduplicate every source immediately. High-intent contacts should reach the right owner while the event is still recent.",
       "Personalize follow-up from the captured conversation. Route lower-intent contacts to an appropriate nurture instead of forcing a sales sequence.",
+      "Treat gifting as a measured follow-up motion. Record the account, recipient, reason, delivery status, owner, conversation outcome, and next step in HubSpot.",
       "Reconcile attendance, scans, qualified conversations, booked meetings, demos, pipeline, spend, content, and partner outcomes.",
       "Run a short debrief: what to repeat, change, stop, and test next time. Add those decisions to the event record, not a private document.",
       "Close the loop in the system that owns each fact: outcomes in HubSpot, program status in the tracker, execution decisions in Notion, and final artifacts in the Events Drive. The fieldbook refreshes from those records after reconciliation.",

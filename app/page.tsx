@@ -174,8 +174,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
               <Link className="attention-source-link" href="/sources#approval-queue">Open source and approval record →</Link>
             </section>
           </div>
-          <Link className="pulse-leadership-link" href="/leadership">Open the leadership program brief →</Link>
-          <BackToTop />
+          <div className="pulse-footer-links">
+            <Link className="pulse-leadership-link" href="/leadership">Open the leadership program brief →</Link>
+            <BackToTop />
+          </div>
         </div>
       </section>
 

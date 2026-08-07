@@ -45,6 +45,7 @@ export type EventRecord = {
   dates: string;
   dateSort: string;
   dateEndSort: string;
+  completedAt?: string;
   location: string;
   status: "Confirmed" | "TBD" | "Tentative" | "No";
   speaking: string;
@@ -58,6 +59,7 @@ export type EventRecord = {
   notes: string;
   rating: string;
   meetingsBooked: string[];
+  followupMeetingsBooked?: number;
   demosBooked: string[];
   closed: string[];
   organizerUrl: string;
@@ -384,6 +386,7 @@ export const events: EventRecord[] = [
     dates: "Aug 5–7, 2026",
     dateSort: "2026-08-05",
     dateEndSort: "2026-08-07",
+    completedAt: "2026-08-07",
     location: "Chicago, IL",
     status: "Confirmed",
     speaking: "10-minute quickfire · Taylor",
@@ -394,28 +397,30 @@ export const events: EventRecord[] = [
     team: ["Taylor"],
     available: ["Carter", "Josh"],
     notes: "Source conflict: The conference tracker names Taylor and marks Josh available, while the Notion project and calendar record list Taylor + Josh. Keep Taylor as the only confirmed attendee until the tracker is reconciled.",
-    rating: "None",
+    rating: "Negative · Taylor’s post-event feedback",
     meetingsBooked: [],
+    followupMeetingsBooked: 2,
     demosBooked: [],
     closed: [],
     organizerUrl: "https://www.ccwexchangeaugust.com/",
     notionUrl: "https://www.notion.so/3aa6fee642fe81668e92e48b51819e13",
-    priorityActions: [
-      "Get the organizer’s current meeting schedule and matched-account list. Pair it with the internal 28-account ICP sheet and add one useful talking point to every meeting brief.",
-      "Confirm Taylor’s quickfire run-of-show and AV handoff before the session.",
-      "Capture the decision context and next step from every meeting, then log meetings and demos in HubSpot.",
-      "Send same-week follow-up with one clear CTA and update the conference tracker after the team debrief.",
+    outcomeNotes: [
+      "Taylor reported negative overall feedback after the event.",
+      "Two follow-up meetings are scheduled; account, contact, date, owner, and outcome are not yet recorded in HubSpot.",
+      "No opportunities are confirmed yet.",
+      "The contractual meeting amount may be 10, but it is not verified in the owning source.",
+      "Taylor is coordinating cookie deliveries to Kemper, Beyond Finance, United Airlines, CNA, TransUnion, and Spot Hero.",
     ],
     workstreams: {
-      speaking: ["10-minute quickfire with Taylor", "Confirm the run-of-show and AV handoff; keep the talk to one argument, one proof point, and one CTA"],
-      sponsorship: ["No expo booth", "Confirm whether the package includes a seat drop or materials distribution before placing anything"],
-      meetings: ["Guaranteed 1:1 meetings", "The internal ICP sheet has 28 researched accounts: 9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked", "Use the organizer’s matched-account schedule—not the ICP sheet—to confirm actual meetings", "Prepare one useful talking point per confirmed meeting", "Record decision context and the next step in HubSpot"],
-      swag: ["Only organizer-approved one-pagers or leave-behinds"],
-      secondary: ["If a dinner is not already set, use Aug 6 only when there is a clear prospect or customer list"],
-      travel: ["Taylor is the confirmed attendee; one additional attendee is not yet named in the tracker", "Carter and Josh are marked available", "Verify return travel and registration only if unresolved"],
-      marketing: ["Taylor LinkedIn post tied to the quickfire’s point of view and one CTA"],
-      followup: ["Send same-week follow-up with one CTA", "Debrief, then update the tracker with rating, meetings, and demos"],
-      budget: ["Reconcile package inclusions and final event expenses after the show"],
+      speaking: ["10-minute quickfire with Taylor; final delivery details have not been added to the closeout"],
+      sponsorship: ["No expo booth", "Final seat-drop or materials fulfillment has not been recorded"],
+      meetings: ["Two post-event follow-up meetings are scheduled; account, contact, date, owner, and outcome still need to be recorded in HubSpot", "The contractual meeting amount may be 10, but it is not verified in the owning source", "Do not count either scheduled follow-up as held or as an opportunity until HubSpot records the outcome"],
+      swag: ["Only organizer-approved one-pagers or leave-behinds were in plan; final use is not recorded"],
+      secondary: ["None"],
+      travel: ["Taylor is the confirmed attendee in the tracker; the Taylor + Josh source conflict remains unresolved", "Carter and Josh remain marked available in the tracker"],
+      marketing: ["Capture Taylor’s negative feedback and decide what would need to change before repeating this format"],
+      followup: ["Taylor is coordinating cookie deliveries to Kemper, Beyond Finance, United Airlines, CNA, TransUnion, and Spot Hero", "For each delivery, record the recipient, reason, delivery status, conversation outcome, owner, and next step", "Use the ready-to-go gifting plan for future account drops instead of rebuilding the process event by event"],
+      budget: ["Verify the contractual meeting amount and reconcile the final event expenses", "Record the cookie-delivery cost and approved gifting budget"],
     },
   },
   {
@@ -1079,7 +1084,7 @@ const eventVerificationOverrides: Record<string, EventVerification> = {
   "ccw-exchange-chicago": {
     checkedAt: "Aug 7, 2026",
     checkedAtISO: "2026-08-07",
-    sources: ["Conference tracker", "Notion", "Gmail", "Slack", "HubSpot"],
+    sources: ["Direct update", "Taylor post-event feedback", "Conference tracker", "Notion", "HubSpot"],
   },
   "contact-io": {
     checkedAt: "Aug 6, 2026",
@@ -1141,6 +1146,7 @@ export function getProgramDate(now = new Date()) {
 }
 
 export function getEventPhase(event: EventRecord, programDate = getProgramDate()): EventPhase {
+  if (event.completedAt && programDate >= event.completedAt) return "past";
   if (programDate < event.dateSort) return "upcoming";
   if (programDate > event.dateEndSort) return "past";
   return "now";

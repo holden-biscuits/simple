@@ -33,15 +33,16 @@ test("leadership outcomes preserve CRM limits", () => {
     marketingEvents: 0,
     pipelineClaimSupported: false,
   });
-  assert.deepEqual(brief.writebacks, { ready: 12, decisions: 1, setup: 9 });
+  assert.deepEqual(brief.writebacks, { ready: 17, decisions: 2, setup: 9 });
 });
 
 test("leadership change digest separates applied facts from unresolved claims", () => {
   const digest = getLeadershipChangeDigest(events, siteStatus.sourceMonitor.changeLog);
-  assert.equal(digest.applied.length, 6);
+  assert.equal(digest.applied.length, 8);
   assert.equal(digest.needsReview.length, 5);
   assert.equal(digest.applied.find((change) => change.id === "genesys-roster-confirmed")?.href, "/events/genesys-xperience#event-changes");
   assert.equal(digest.applied.find((change) => change.id === "genesys-wish-line-route-confirmed")?.href, "/events/genesys-xperience#event-changes");
+  assert.equal(digest.applied.find((change) => change.id === "chicago-closeout-applied")?.href, "/events/ccw-exchange-chicago#event-changes");
   assert.equal(digest.applied.find((change) => change.id === "2027-program-added")?.href, "/sources#change-log");
   assert.equal(digest.needsReview.find((change) => change.id === "chicago-staffing-conflict")?.eventName, "CCW Exchange Chicago");
   assert.equal(digest.needsReview.find((change) => change.id === "hubspot-ccw-source-mismatch")?.eventName, "CCW Vegas");

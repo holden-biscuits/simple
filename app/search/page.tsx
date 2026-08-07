@@ -188,6 +188,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
   const outcomeCounts = [
     event.meetingsBooked.length ? `${event.meetingsBooked.length} meeting${event.meetingsBooked.length === 1 ? "" : "s"}` : "",
     event.demosBooked.length ? `${event.demosBooked.length} demo${event.demosBooked.length === 1 ? "" : "s"}` : "",
+    event.followupMeetingsBooked ? `${event.followupMeetingsBooked} follow-up meeting${event.followupMeetingsBooked === 1 ? "" : "s"} booked` : "",
     event.closed.length ? `${event.closed.length} closed` : "",
     event.crmSnapshot ? `${event.crmSnapshot.totalDeals} HubSpot deal${event.crmSnapshot.totalDeals === 1 ? "" : "s"}` : "",
   ].filter(Boolean).join(" · ");
@@ -200,6 +201,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     `Sponsorship · ${event.sponsorship}`,
     `Sponsorship status · ${getSponsorshipStatus(event)}`,
     `Guaranteed meetings · ${event.guaranteedMeetings}`,
+    event.followupMeetingsBooked ? `Follow-up meetings booked · ${event.followupMeetingsBooked}` : "",
     guaranteedCountOpen ? "Meeting package · count TBD" : "",
     staffingOpen ? `Staffing · names open · ${staffing.detail}` : "",
     event.notes ? `Plan note · ${event.notes}` : "",

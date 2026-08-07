@@ -1,17 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { audienceSegmentContract, getAudienceSegmentRegistry } from "../app/data/audience-segment-registry.ts";
-import { events, getProgramDate } from "../app/data/events.ts";
+import { events, getEventPhase, getProgramDate } from "../app/data/events.ts";
 
 const registry = getAudienceSegmentRegistry(events, getProgramDate());
 
 test("the audience registry covers every active event without inventing live segments", () => {
-  assert.equal(registry.activeEvents, 14);
+  assert.equal(registry.activeEvents, 13);
   assert.equal(registry.specificationsReady, 7);
-  assert.equal(registry.waitingForOrganizerAudience, 7);
+  assert.equal(registry.waitingForOrganizerAudience, 6);
   assert.equal(registry.automaticallyMaintained, 0);
   const activeKeys = events
-    .filter((event) => event.status !== "No" && event.dateEndSort >= getProgramDate())
+    .filter((event) => event.status !== "No" && getEventPhase(event, getProgramDate()) !== "past")
     .map((event) => event.slug);
   for (const eventKey of activeKeys) assert.ok(registry.items.some((item) => item.eventKey === eventKey), `${eventKey} needs a registry entry`);
 });
@@ -26,11 +26,9 @@ test("existing HubSpot event lists stay labeled as static snapshots", () => {
   }
 });
 
-test("matched-account events wait for organizer evidence", () => {
+test("completed matched-account events leave the active segment registry", () => {
   const chicago = registry.items.find((item) => item.eventKey === "ccw-exchange-chicago");
-  assert.equal(chicago?.state, "Waiting for organizer audience");
-  assert.match(chicago?.membershipRule ?? "", /organizer's matched-account or meeting file/i);
-  assert.match(chicago?.refreshRule ?? "", /T\+90 days/);
+  assert.equal(chicago, undefined);
 });
 
 test("segment membership separates targeting from attendance", () => {
@@ -39,4 +37,3 @@ test("segment membership separates targeting from attendance", () => {
   assert.match(audienceSegmentContract[1].detail, /event app.*organizer file.*booked meeting/i);
   assert.match(audienceSegmentContract[2].detail, /canonical Event key/i);
 });
-

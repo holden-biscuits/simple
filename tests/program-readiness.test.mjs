@@ -22,11 +22,11 @@ test("the next action favors a due task and preserves its owner", () => {
   assert.equal(readiness.nextAction?.urgency, "due-today");
 });
 
-test("priority-only events expose the setup gap without inventing an owner or date", () => {
+test("completed events do not retain an invented pre-event task plan", () => {
   const chicago = events.find((event) => event.slug === "ccw-exchange-chicago");
   assert.ok(chicago);
   const readiness = getEventReadiness(chicago, "2026-08-06");
-  assert.equal(readiness.planState, "priorities-only");
+  assert.equal(readiness.planState, "missing");
   assert.equal(readiness.nextAction?.structured, false);
   assert.equal(readiness.nextAction?.owner, undefined);
   assert.equal(readiness.nextAction?.due, undefined);

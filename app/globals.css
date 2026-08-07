@@ -158,6 +158,8 @@ button, input, select { font: inherit; }
 .attention-next small { color: rgba(255,255,255,.62); font: 700 9.5px/1.4 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .attention-source-link { margin: auto 24px 24px; padding-top: 28px; color: var(--paper); font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .program-pulse .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.55); }
+.pulse-footer-links { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; }
+.pulse-footer-links .back-to-top { margin-top: 28px; }
 .pulse-leadership-link { margin-top: 28px; display: inline-block; color: #ffc1ae; border-bottom: 1px solid currentColor; font: 800 11px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .pulse-leadership-link:hover, .pulse-leadership-link:focus-visible { color: white; }
 

@@ -23,5 +23,11 @@ test("protected direct decisions still match the published event data", () => {
   assert.ok(event("genesys-xperience").workstreams.marketing.some((item) => item.includes("quarter-mile taxi geofence")));
   assert.ok(event("genesys-xperience").workstreams.marketing.some((item) => item.includes("airport placement")));
 
+  assert.equal(event("ccw-exchange-chicago").completedAt, "2026-08-07");
+  assert.equal(event("ccw-exchange-chicago").rating, "Negative · Taylor’s post-event feedback");
+  assert.equal(event("ccw-exchange-chicago").followupMeetingsBooked, 2);
+  assert.ok(event("ccw-exchange-chicago").workstreams.followup.some((item) => item.includes("Kemper")));
+  assert.ok(event("ccw-exchange-chicago").outcomeNotes.some((item) => item.includes("No opportunities are confirmed")));
+
   assert.equal(getSpeakingOpportunitySignal(event("ccw-vegas-2027")), "1 Speaking Opp");
 });

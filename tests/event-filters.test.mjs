@@ -25,18 +25,17 @@ test("directory filters compose year, attendance and search", () => {
 });
 
 test("attention filters expose the kind of operating gap without including archived events", () => {
-  assert.equal(events.filter((event) => matchesAttention(event, "source", "2026-08-07")).length, 3);
-  assert.equal(events.filter((event) => matchesAttention(event, "roster", "2026-08-07")).length, 13);
-  assert.equal(events.filter((event) => matchesAttention(event, "meetings", "2026-08-07")).length, 7);
-  assert.equal(events.filter((event) => matchesAttention(event, "plan", "2026-08-07")).length, 12);
+  assert.equal(events.filter((event) => matchesAttention(event, "source", "2026-08-07")).length, 2);
+  assert.equal(events.filter((event) => matchesAttention(event, "roster", "2026-08-07")).length, 12);
+  assert.equal(events.filter((event) => matchesAttention(event, "meetings", "2026-08-07")).length, 6);
+  assert.equal(events.filter((event) => matchesAttention(event, "plan", "2026-08-07")).length, 11);
 
   const sourceIssues = filterEventDirectory(events, { query: "", attendance: "going", attention: "source", year: "2026" }, "2026-08-07");
-  assert.deepEqual(sourceIssues.map((event) => event.slug), ["ccw-exchange-chicago", "iqpc-cx-travel-hospitality"]);
+  assert.deepEqual(sourceIssues.map((event) => event.slug), ["iqpc-cx-travel-hospitality"]);
   assert.equal(sourceIssues.some((event) => event.slug === "ccw-vegas"), false);
 
   const openMeetingCounts = filterEventDirectory(events, { query: "", attendance: "going", attention: "meetings", year: "2026" }, "2026-08-07");
   assert.deepEqual(openMeetingCounts.map((event) => event.slug), [
-    "ccw-exchange-chicago",
     "iqpc-cx-travel-hospitality",
     "iqpc-cx-retail-atlanta",
     "consero-cx-forum",

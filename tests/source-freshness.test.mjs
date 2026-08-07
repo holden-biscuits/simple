@@ -9,11 +9,11 @@ const find = (slug) => {
   return event;
 };
 
-test("current events use a daily source-check window", () => {
+test("explicitly completed events are archived on their final day", () => {
   const freshness = getSourceFreshness(find("ccw-exchange-chicago"), "2026-08-07");
-  assert.equal(freshness.state, "current");
-  assert.equal(freshness.maxAgeDays, 1);
-  assert.equal(freshness.nextCheckISO, "2026-08-08");
+  assert.equal(freshness.state, "archived");
+  assert.equal(freshness.maxAgeDays, undefined);
+  assert.equal(freshness.nextCheckISO, undefined);
 });
 
 test("upcoming events tighten from weekly to every three days", () => {
