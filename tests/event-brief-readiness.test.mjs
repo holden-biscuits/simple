@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { eventBySlug, events } from "../app/data/events.ts";
-import { getEventBriefReadiness, getProgramBriefReadiness } from "../app/data/event-brief-readiness.ts";
+import { getBriefIssueAction, getEventBriefReadiness, getProgramBriefReadiness } from "../app/data/event-brief-readiness.ts";
 
 const programDate = "2026-08-06";
 
@@ -40,4 +40,25 @@ test("program readiness excludes past and non-attending events", () => {
   assert.equal(program.events.length, 14);
   assert.equal(program.ready.length + program.attention.length, 14);
   assert.equal(program.openInputs, program.events.reduce((total, event) => total + event.issues.length, 0));
+});
+
+test("every readiness destination resolves to the system that can fix it", () => {
+  const customerConnect = eventBySlug("customer-connect-expo");
+  assert.ok(customerConnect);
+  assert.deepEqual(getBriefIssueAction({ key: "roster", label: "Name the roster", destination: "Conference tracker" }, customerConnect), {
+    href: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0#gid=0",
+    label: "Open tracker",
+    external: true,
+  });
+  assert.equal(getBriefIssueAction({ key: "workspace", label: "Open the project", destination: "Event project" }, customerConnect).href, customerConnect.notionUrl);
+  assert.equal(getBriefIssueAction({ key: "venue", label: "Confirm the venue", destination: "Organizer source" }, customerConnect).href, customerConnect.organizerUrl);
+  assert.deepEqual(getBriefIssueAction({ key: "conflict", label: "Resolve the conflict", destination: "Source review" }, customerConnect), {
+    href: "/sources#approval-queue",
+    label: "Open source review",
+    external: false,
+  });
+
+  const uk2027 = eventBySlug("ccw-uk-executive-exchange-2027");
+  assert.ok(uk2027);
+  assert.equal(getBriefIssueAction({ key: "workspace", label: "Create the project", destination: "Event project" }, uk2027).label, "Open Notion setup");
 });

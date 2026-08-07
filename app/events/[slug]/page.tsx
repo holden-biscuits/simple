@@ -10,7 +10,7 @@ import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
 import { getEventSystemLinkage } from "../../data/system-linkage";
 import { getEventMeasurementCheckpoint } from "../../data/event-measurement";
-import { getEventBriefReadiness } from "../../data/event-brief-readiness";
+import { getBriefIssueAction, getEventBriefReadiness } from "../../data/event-brief-readiness";
 
 export const dynamic = "force-dynamic";
 
@@ -111,8 +111,11 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <div className="tldr-grid">{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
         {!isNotAttending && eventPhase !== "past" ? <div className={`event-brief-readiness event-brief-readiness-${briefReadiness.state}`}>
           <header><div><span>Brief readiness</span><strong>{briefReadiness.label}</strong></div><b>{briefReadiness.timing}</b></header>
-          {briefReadiness.issues.length ? <ul>{briefReadiness.issues.map((issue) => <li key={issue.key}><p>{issue.label}</p><span>{issue.destination}</span></li>)}</ul> : <p>No decision-critical inputs are missing for this planning stage. Check the open work below before treating the plan as complete.</p>}
-          <footer><span>{briefReadiness.issues.length ? `${briefReadiness.issues.length} open input${briefReadiness.issues.length === 1 ? "" : "s"}` : "Required inputs present"}</span><a href="#event-update-route">See where to update →</a></footer>
+          {briefReadiness.issues.length ? <ul>{briefReadiness.issues.map((issue) => {
+            const action = getBriefIssueAction(issue, event);
+            return <li key={issue.key}><div><p>{issue.label}</p><span>{issue.destination}</span></div>{action.external ? <a href={action.href} target="_blank" rel="noreferrer">{action.label} ↗</a> : <Link href={action.href}>{action.label} →</Link>}</li>;
+          })}</ul> : <p>No decision-critical inputs are missing for this planning stage. Check the open work below before treating the plan as complete.</p>}
+          <footer><span>{briefReadiness.issues.length ? `${briefReadiness.issues.length} open input${briefReadiness.issues.length === 1 ? "" : "s"}` : "Required inputs present"}</span><a href="#event-update-route">Open all update routes →</a></footer>
         </div> : null}
         {note ? <p className={`tldr-note${isSourceConflict ? " source-conflict" : ""}`}>
           {isSourceConflict ? <strong>Source check needed</strong> : null}

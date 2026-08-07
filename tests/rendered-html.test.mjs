@@ -444,6 +444,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(genesys.status, 200);
   const genesysHtml = await genesys.text();
   assert.match(genesysHtml, /No guaranteed meetings/);
+  assert.match(genesysHtml, /Open event project(?:<!-- -->)? ↗/);
+  assert.match(genesysHtml, new RegExp(`href="${"https://www.notion.so/3aa6fee642fe81c88a89de617863507c"}"[^>]*>Open event project(?:<!-- -->)? ↗`));
+  assert.match(genesysHtml, /Open all update routes →/);
   assert.match(genesysHtml, /Current(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
   assert.match(genesysHtml, /Next check Aug 13/);
   assert.match(genesysHtml, /Update the source that owns it\./);
@@ -527,6 +530,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Exhibitor portal/);
   assert.match(customerConnectHtml, /Complimentary tickets/);
   assert.match(customerConnectHtml, /6(?:<!-- -->)? of nine workstreams are in play/);
+  assert.match(customerConnectHtml, /Open tracker(?:<!-- -->)? ↗/);
+  assert.match(customerConnectHtml, /Open event project(?:<!-- -->)? ↗/);
   assert.match(customerConnectHtml, /id="workstream-marketing"/);
   assert.match(customerConnectHtml, /id="workstream-budget"/);
   assert.doesNotMatch(customerConnectHtml, /id="workstream-swag"/);
@@ -536,6 +541,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const icmiHtml = await icmi.text();
   assert.match(icmiHtml, /TeamSimple is attending/);
   assert.match(icmiHtml, /Sponsorship under review · Speaking under review/);
+  assert.match(icmiHtml, /Open tracker(?:<!-- -->)? ↗/);
 
   const orlando = await render("/events/ccw-orlando");
   assert.equal(orlando.status, 200);
@@ -578,6 +584,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(uk2027Html, /minimum 10 30-minute meetings/);
   assert.match(uk2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(uk2027Html, /3 sponsor passes · 2 attendees planned/);
+  assert.match(uk2027Html, /Open tracker(?:<!-- -->)? ↗/);
 
   const vegas2027 = await render("/events/ccw-vegas-2027");
   assert.equal(vegas2027.status, 200);
@@ -593,6 +600,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /Taylor is the confirmed attendee/);
   assert.match(chicagoHtml, /Carter and Josh are marked available/);
   assert.match(chicagoHtml, /Source check needed/);
+  assert.match(chicagoHtml, /href="\/sources#approval-queue"[^>]*>Open source review(?:<!-- -->)? →/);
+  assert.match(chicagoHtml, /Open organizer source(?:<!-- -->)? ↗/);
   assert.match(chicagoHtml, /1 named · 2 planned/);
   assert.match(chicagoHtml, /Guaranteed meetings<\/span><strong>Included · count TBD/);
   assert.match(chicagoHtml, /Meetings booked<\/span><strong>None recorded yet/);

@@ -1,4 +1,4 @@
-import { getEventPhase, type EventRecord } from "./events.ts";
+import { getEventPhase, sourceLinks, type EventRecord } from "./events.ts";
 import { getSpeakingStatus, getSponsorshipStatus, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
 import { getEventReadiness } from "./program-readiness.ts";
 import { getSourceFreshness } from "./source-freshness.ts";
@@ -19,6 +19,24 @@ export type EventBriefReadiness = {
   state: "ready" | "attention" | "inactive";
   issues: BriefReadinessIssue[];
 };
+
+export type BriefIssueAction = {
+  href: string;
+  label: string;
+  external: boolean;
+};
+
+export function getBriefIssueAction(
+  issue: BriefReadinessIssue,
+  event: Pick<EventRecord, "notionUrl" | "organizerUrl">,
+): BriefIssueAction {
+  if (issue.destination === "Conference tracker") return { href: sourceLinks.sheet, label: "Open tracker", external: true };
+  if (issue.destination === "Organizer source") return { href: event.organizerUrl, label: "Open organizer source", external: true };
+  if (issue.destination === "Event project") return event.notionUrl
+    ? { href: event.notionUrl, label: "Open event project", external: true }
+    : { href: sourceLinks.notion, label: "Open Notion setup", external: true };
+  return { href: "/sources#approval-queue", label: "Open source review", external: false };
+}
 
 function daysBetween(from: string, to: string) {
   return Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000);
