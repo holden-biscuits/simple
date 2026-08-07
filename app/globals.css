@@ -1091,3 +1091,39 @@ button, input, select { font: inherit; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .brand-mark, .route-board, .updated-stamp, .event-card, .not-found-code { transform: none !important; }
 }
+
+/* Essential interface type floor: compact branding may stay smaller; operational text may not. */
+.pulse-metrics span, .pulse-readiness span, .next-stops time, .attention-board time, .next-stops a > div span,
+.attention-board li > span, .attention-next > span, .attention-next small, .status, .event-signals span,
+.monitor-summary span, .source-coverage small, .source-receipt, .source-state, .source-checks article > div,
+.freshness-policy-grid span, .event-key-example span, .event-key-state, .linkage-coverage span, .linkage-gap-list > span,
+.stream-state, .audience-views span, .catalog-health span, .stewardship-grid header, .stewardship-grid dt,
+.stewardship-boundary span, .source-route-table thead th, .crm-health-grid span, .crm-rule-grid span,
+.crm-operating-model span, .writeback-grid header, .writeback-diff dt, .change-log-summary span,
+.change-record header, .change-record footer, .change-record-title p, .change-record dt, .protected-decision-grid header,
+.update-rules span, .event-task-count span, .event-task-count small, .event-task-grid h4, .task-state,
+.event-task-list .task-meta, .marketing-table thead th, .marketing-table tbody th span, .marketing-table tbody th small,
+.matrix-signals span, .matrix-empty, .matrix-staffing, .matrix-open-meta span, .measurement dt,
+.measurement-table thead th, .measurement-windows article > span, .measurement-windows time, .metric-definitions article > span,
+.search-quick > span, .search-types button b, .search-result-heading span, .search-results > a > span, .search-match strong,
+.tldr-grid span, .event-brief-readiness > header span, .event-brief-readiness > header b, .event-brief-readiness li span,
+.event-brief-readiness > footer, .tldr-note strong, .event-verification div span, .event-update-route summary small,
+.event-update-route-body aside > span, .event-update-route-grid span, .event-linkage-strip span,
+.event-measurement-checkpoint > header span, .event-measurement-checkpoint > header strong,
+.event-measurement-checkpoint > div span, .event-crew-groups h3, .crm-stage-grid span, .crm-quality strong,
+.leadership-metrics span, .leadership-alerts span, .leadership-table thead th,
+.leadership-table tbody th time, .leadership-table tbody th small, .leadership-table td small, .leadership-status,
+.leadership-risk-grid span, .leadership-queue-grid span, .leadership-operating-note strong,
+.leadership-outcome-grid span, .leadership-trust-grid span { font-size: 11.5px; }
+
+.page-contents > strong, .page-contents a, .back-to-top, .start-map-grid b, .attention-source-link,
+.pulse-leadership-link, .directory-filter-set button, .directory-filter-set button b, .directory-result-summary,
+.search-empty > span, .search-empty button, .search-empty a, .stewardship-grid a, .writeback-destination,
+.protected-decision-grid b, .event-task-tabs button span, .event-task-links, .marketing-board-toolbar label,
+.marketing-board-filters legend, .marketing-board-filters button, .marketing-result-summary, .matrix-open-plan,
+.metric-definitions code, .measurement-gate a, .search-tool > label, .search-quick button, .search-types button,
+.not-found-secondary, .not-found-routes span, .not-found-routes b, .round-link, .event-verification a,
+.event-update-route summary > b, .event-update-route-grid b, .event-linkage-strip p,
+.event-measurement-checkpoint > footer a, .event-priorities .priority-link, .workstream-title-row a,
+.not-in-plan summary, .crm-snapshot-head a, .leadership-alerts b, .leadership-risk-grid a,
+.leadership-operating-note a, .leadership-caveat a, .leadership-links a { font-size: 12px; }

@@ -42,3 +42,13 @@ test("the CRM attribution audit remains readable below desktop", () => {
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.crm-rule-grid, \.crm-operating-model\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.crm-health-grid, \.crm-rule-grid, \.crm-operating-model\s*\{\s*grid-template-columns:\s*1fr/);
 });
+
+test("essential interface text has a durable readability floor", () => {
+  const floor = css.slice(css.indexOf("Essential interface type floor"));
+  assert.match(floor, /\.attention-next small[\s\S]*font-size:\s*11\.5px/);
+  assert.match(floor, /\.leadership-table td small[\s\S]*font-size:\s*11\.5px/);
+  assert.match(floor, /\.event-measurement-checkpoint > div span[\s\S]*font-size:\s*11\.5px/);
+  assert.match(floor, /\.directory-filter-set button[\s\S]*font-size:\s*12px/);
+  assert.match(floor, /\.search-quick button[\s\S]*font-size:\s*12px/);
+  assert.match(floor, /\.event-update-route-grid b[\s\S]*font-size:\s*12px/);
+});
