@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
-import { SiteSearch, type SearchRecord } from "../components/site-search";
+import { SiteSearch, type SearchRecord, type SearchType } from "../components/site-search";
 import { events, getWorkstreams, workstreamLabels } from "../data/events";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
+
+const validSearchTypes: SearchType[] = ["All", "Event", "Guide", "Role", "Operations"];
 
 const referenceRecords: SearchRecord[] = [
   { type: "Guide", title: "Standard event checklist", href: "/guides#standard-checklist", description: "The nine workstreams used to plan every event.", keywords: Object.values(workstreamLabels).join(" ") },
@@ -19,6 +21,8 @@ const referenceRecords: SearchRecord[] = [
 ];
 
 const eventRecords: SearchRecord[] = events.map((event) => {
+  const guaranteedCountOpen = event.guaranteedMeetings.startsWith("Yes") && !/\d+[–-]\d+/.test(event.guaranteedMeetings);
+  const staffingOpen = Boolean(event.attendeeCount && event.team.length < event.attendeeCount);
   const outcomeCounts = [
     event.meetingsBooked.length ? `${event.meetingsBooked.length} meeting${event.meetingsBooked.length === 1 ? "" : "s"}` : "",
     event.demosBooked.length ? `${event.demosBooked.length} demo${event.demosBooked.length === 1 ? "" : "s"}` : "",
@@ -32,6 +36,8 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     `Speaking · ${event.speaking}`,
     `Sponsorship · ${event.sponsorship}`,
     `Guaranteed meetings · ${event.guaranteedMeetings}`,
+    guaranteedCountOpen ? "Meeting package · count TBD" : "",
+    staffingOpen ? `Staffing · names open · ${event.team.length} named · ${event.attendeeCount} planned` : "",
     event.notes ? `Plan note · ${event.notes}` : "",
     event.credentials ? `Credentials · ${event.credentials}` : "",
     ...(event.specialConsiderations ?? []).map((item) => `Rule · ${item}`),
@@ -59,6 +65,10 @@ const eventRecords: SearchRecord[] = events.map((event) => {
   };
 });
 
-export default function SearchPage() {
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, and role instructions.</p></section><SiteSearch records={[...referenceRecords, ...eventRecords]} /><Footer /></main>;
+export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string | string[]; type?: string | string[] }> }) {
+  const params = await searchParams;
+  const initialQuery = typeof params.q === "string" ? params.q : "";
+  const requestedType = typeof params.type === "string" ? params.type : "All";
+  const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, and role instructions. The URL updates as you search, so you can share the exact result set.</p></section><SiteSearch records={[...referenceRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }

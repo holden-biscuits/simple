@@ -19,6 +19,9 @@ test("server-renders the event directory", async () => {
   const html = await response.text();
   assert.match(html, /<title>Event Basecamp · 2026<\/title>/i);
   assert.match(html, /Know the route before you hit the floor\./);
+  assert.match(html, /ranger-raccoon-clean-hat\.png/);
+  assert.match(html, /class="ranger-hat-logo"/);
+  assert.doesNotMatch(html, /ranger-raccoon-v2/);
   assert.match(html, /TeamSimple attendance/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
@@ -56,10 +59,15 @@ test("server-renders the source monitor and approval queue", async () => {
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
-  const response = await render("/search");
+  const response = await render("/search?q=names%20open&type=Event");
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Find the detail, not the page\./);
+  assert.match(html, /value="names open"/);
+  assert.match(html, /The URL updates as you search/);
+  assert.match(html, /Useful starting points/);
+  assert.match(html, /Staffing · names open/);
+  assert.match(html, /Meeting package · count TBD/);
   assert.match(html, /16 meetings · 7 demos recorded/);
   assert.match(html, /<span>All<\/span><b>\d+<\/b>/);
   assert.match(html, /Holden/);

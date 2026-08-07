@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type SearchRecord = {
   type: "Event" | "Guide" | "Role" | "Operations";
@@ -12,7 +12,16 @@ export type SearchRecord = {
   details?: string[];
 };
 
-const types = ["All", "Event", "Guide", "Role", "Operations"] as const;
+export const searchTypes = ["All", "Event", "Guide", "Role", "Operations"] as const;
+export type SearchType = (typeof searchTypes)[number];
+
+const quickSearches = [
+  { label: "Genesys", query: "Genesys" },
+  { label: "Staffing gaps", query: "names open" },
+  { label: "Meeting count TBD", query: "meeting package count TBD" },
+  { label: "HubSpot", query: "HubSpot" },
+  { label: "Booth etiquette", query: "Booth etiquette" },
+] as const;
 
 function matchDetail(record: SearchRecord, normalized: string) {
   if (!normalized || `${record.title} ${record.description}`.toLowerCase().includes(normalized)) return null;
@@ -42,9 +51,9 @@ function searchScore(record: SearchRecord, normalized: string) {
   return score;
 }
 
-export function SiteSearch({ records }: { records: SearchRecord[] }) {
-  const [query, setQuery] = useState("");
-  const [type, setType] = useState<(typeof types)[number]>("All");
+export function SiteSearch({ records, initialQuery = "", initialType = "All" }: { records: SearchRecord[]; initialQuery?: string; initialType?: SearchType }) {
+  const [query, setQuery] = useState(initialQuery);
+  const [type, setType] = useState<SearchType>(initialType);
   const normalized = query.trim().toLowerCase();
   const matchingRecords = useMemo(() => records
     .map((record, index) => ({ record, index, score: searchScore(record, normalized) }))
@@ -53,16 +62,28 @@ export function SiteSearch({ records }: { records: SearchRecord[] }) {
   const results = useMemo(() => matchingRecords
     .filter(({ record }) => type === "All" || record.type === type)
     .map(({ record }) => record), [matchingRecords, type]);
-  const typeCounts = useMemo(() => Object.fromEntries(types.map((item) => [
+  const typeCounts = useMemo(() => Object.fromEntries(searchTypes.map((item) => [
     item,
     item === "All" ? matchingRecords.length : matchingRecords.filter(({ record }) => record.type === item).length,
-  ])) as Record<(typeof types)[number], number>, [matchingRecords]);
+  ])) as Record<SearchType, number>, [matchingRecords]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (query.trim()) params.set("q", query.trim()); else params.delete("q");
+    if (type !== "All") params.set("type", type); else params.delete("type");
+    const search = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${search ? `?${search}` : ""}${window.location.hash}`);
+  }, [query, type]);
 
   return (
     <section className="shell search-tool" aria-label="Search the fieldbook">
       <label><span>Search the fieldbook</span><input autoFocus type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Genesys, booth, HubSpot, travel, or ZoomInfo" /></label>
+      <div className="search-quick">
+        <span>Useful starting points</span>
+        <div>{quickSearches.map((item) => <button type="button" key={item.query} onClick={() => { setQuery(item.query); setType("All"); }}>{item.label}</button>)}</div>
+      </div>
       <div className="search-types" role="group" aria-label="Result type">
-        {types.map((item) => <button type="button" key={item} aria-pressed={type === item} onClick={() => setType(item)}><span>{item}</span><b>{typeCounts[item]}</b></button>)}
+        {searchTypes.map((item) => <button type="button" key={item} aria-pressed={type === item} onClick={() => setType(item)}><span>{item}</span><b>{typeCounts[item]}</b></button>)}
       </div>
       <div className="search-result-heading"><strong>{results.length}</strong><span>{normalized ? `results for “${query.trim()}”` : "pages and event records"}</span></div>
       <div className="search-results">

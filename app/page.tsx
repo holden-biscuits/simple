@@ -25,10 +25,8 @@ export default function Home() {
           <p className="hero-note">Dates, staffing, meeting targets, event plans, and follow-up live here.</p>
           <div className="ranger-card">
             <div className="ranger-figure">
-              <Image src="/ranger-raccoon.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with the Simple logo" priority unoptimized />
-              <span className="ranger-hat-logo" aria-hidden="true">
-                <Image src="/simple-mark.svg" width={19} height={24} alt="" />
-              </span>
+              <Image src="/ranger-raccoon-clean-hat.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with the Simple logo" priority unoptimized />
+              <span className="ranger-hat-logo" aria-hidden="true"><Image src="/simple-mark.svg" width={19} height={24} alt="" /></span>
             </div>
             <p><strong>Start here:</strong> check the event page before you book, ship, or promote.</p>
           </div>
