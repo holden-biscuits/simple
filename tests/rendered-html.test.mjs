@@ -73,6 +73,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Owner · Open[\s\S]*Due · Open/);
   assert.match(html, /Current and next stops/);
   assert.match(html, /Earliest plans with open inputs/);
+  assert.match(html, /\+4 more on the brief/);
   assert.match(html, /Open source and approval record/);
   assert.match(html, /Current(?:<!-- -->)? · <time dateTime="2026-08-06">Aug 6<\/time>/);
   assert.match(html, /Source checks due[\s\S]*0/);
@@ -197,7 +198,9 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   const html = await response.text();
   assert.match(html, /See the program without losing the source truth\./);
   assert.match(html, /Active program<\/span><p>Confirmed, tentative and TBD events/);
-  assert.match(html, /Structured task plans/);
+  assert.match(html, /Briefs on track/);
+  assert.match(html, /2(?:<!-- -->)? \/ (?:<!-- -->)?14/);
+  assert.match(html, /Planning gaps open/);
   assert.match(html, /Every active commitment and its next move\./);
   assert.match(html, /CCW Exchange Chicago/);
   assert.match(html, /CCW Vegas 2027/);

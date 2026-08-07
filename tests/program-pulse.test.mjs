@@ -25,7 +25,7 @@ test("the program pulse raises source checks when a verification window expires"
   const genesys = events.find((event) => event.slug === "genesys-xperience");
   assert.ok(genesys);
   assert.ok(pulse.sourceChecksDue.some((event) => event.slug === "genesys-xperience"));
-  assert.ok(getEventAttention(genesys, "2026-08-14").includes("Source check due"));
+  assert.ok(getEventAttention(genesys, "2026-08-14").includes("Refresh the event’s owning sources"));
 });
 
 test("attention labels distinguish source, staffing, execution and meeting-count gaps", () => {
@@ -34,12 +34,13 @@ test("attention labels distinguish source, staffing, execution and meeting-count
   assert.ok(chicago);
   assert.ok(genesys);
   assert.deepEqual(getEventAttention(chicago), [
-    "Source conflict",
-    "1 attendee name open",
-    "4 open plan items",
-    "Task owners and dates missing",
-    "Sponsor package under review",
-    "Guaranteed-meeting count open",
+    "Confirm the sponsor package and inclusions",
+    "Confirm the guaranteed-meeting count and format",
+    "Resolve the source conflict recorded on this brief",
+    "Name 1 remaining attendee",
+    "Confirm the venue",
+    "Confirm passes, registration, and credential limits",
+    "Turn the open priorities into owned, dated tasks",
   ]);
-  assert.deepEqual(getEventAttention(genesys), ["6 open plan items"]);
+  assert.deepEqual(getEventAttention(genesys), ["Add missing owners or due dates to 2 open tasks"]);
 });

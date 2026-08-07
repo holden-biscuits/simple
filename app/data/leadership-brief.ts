@@ -5,6 +5,7 @@ import { getEventReadiness } from "./program-readiness.ts";
 import { crmAttributionAudit } from "./crm-attribution.ts";
 import { writebackQueue } from "./source-governance.ts";
 import { getProgramSystemLinkage } from "./system-linkage.ts";
+import { getEventBriefReadiness, getProgramBriefReadiness } from "./event-brief-readiness.ts";
 
 function activationLabel(event: EventRecord) {
   const speaking = getSpeakingStatus(event);
@@ -32,6 +33,7 @@ export function getLeadershipBrief(catalog: EventRecord[], programDate: string) 
       activation: activationLabel(event),
       staffing: getStaffingSignal(event),
       readiness,
+      briefReadiness: getEventBriefReadiness(event, programDate),
       issues: pulse.attention.find((item) => item.eventKey === event.slug)?.issues ?? [],
     };
   });
@@ -44,6 +46,7 @@ export function getLeadershipBrief(catalog: EventRecord[], programDate: string) 
   return {
     programDate,
     pulse,
+    briefReadiness: getProgramBriefReadiness(catalog, programDate),
     linkage,
     portfolio,
     writebacks,

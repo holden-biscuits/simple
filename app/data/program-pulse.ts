@@ -1,7 +1,7 @@
 import { getEventPhase, getProgramDate, type EventRecord } from "./events.ts";
-import { getSpeakingStatus, getSponsorshipStatus, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
 import { getEventReadiness, getProgramReadiness, type ReadinessAction } from "./program-readiness.ts";
 import { getSourceFreshness } from "./source-freshness.ts";
+import { getEventBriefReadiness } from "./event-brief-readiness.ts";
 
 export type ProgramAttentionItem = {
   eventKey: string;
@@ -19,21 +19,7 @@ function addDays(isoDate: string, days: number) {
 }
 
 export function getEventAttention(event: EventRecord, programDate = getProgramDate()) {
-  const issues: string[] = [];
-  const named = event.team.length;
-  const planned = event.attendeeCount;
-
-  if (event.notes.toLowerCase().startsWith("source conflict:")) issues.push("Source conflict");
-  if (event.status !== "Confirmed" && event.status !== "No") issues.push(`Participation ${event.status}`);
-  if (planned !== null && named < planned) issues.push(`${planned - named} attendee name${planned - named === 1 ? "" : "s"} open`);
-  if (event.priorityActions?.length) issues.push(`${event.priorityActions.length} open plan item${event.priorityActions.length === 1 ? "" : "s"}`);
-  if (!event.marketingTasks?.length) issues.push("Task owners and dates missing");
-  if (getSpeakingStatus(event) === "Under review") issues.push("Speaking under review");
-  if (getSponsorshipStatus(event) === "Under review") issues.push("Sponsor package under review");
-  if (hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event)) issues.push("Guaranteed-meeting count open");
-  if (["due", "overdue"].includes(getSourceFreshness(event, programDate).state)) issues.push("Source check due");
-
-  return issues;
+  return getEventBriefReadiness(event, programDate).issues.map((issue) => issue.label);
 }
 
 export function getProgramPulse(catalog: EventRecord[], programDate: string) {

@@ -11,6 +11,9 @@ test("leadership brief derives the active portfolio from governed event data", (
   assert.equal(brief.pulse.rosterGaps.length, 13);
   assert.equal(brief.pulse.sourceConflicts.length, 3);
   assert.equal(brief.pulse.sourceChecksDue.length, 0);
+  assert.equal(brief.briefReadiness.ready.length, 2);
+  assert.equal(brief.briefReadiness.attention.length, 12);
+  assert.equal(brief.briefReadiness.openInputs, 33);
   assert.equal(brief.linkage.activeEvents, 14);
   assert.equal(brief.linkage.activeNotionProjects, 10);
   assert.equal(brief.linkage.activeDriveFolders, 0);

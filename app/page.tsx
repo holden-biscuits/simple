@@ -145,7 +145,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
               <div className="pulse-heading"><p className="eyebrow">Action queue</p><h3 id="attention-title">Earliest plans with open inputs</h3></div>
               <ol>{pulse.attention.slice(0, 6).map((item, index) => <li key={item.eventKey}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
-                <div><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><p>{item.issues.join(" · ")}</p>{item.nextAction ? <div className="attention-next"><span>Next action</span><Link href={item.nextAction.href}>{item.nextAction.title}</Link><small>{item.nextAction.owner ? `Owner · ${item.nextAction.owner}` : "Owner · Open"} · {item.nextAction.due ? `Due · ${item.nextAction.due}` : "Due · Open"}</small></div> : null}</div>
+                <div><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><p>{item.issues.slice(0, 3).join(" · ")}{item.issues.length > 3 ? ` · +${item.issues.length - 3} more on the brief` : ""}</p>{item.nextAction ? <div className="attention-next"><span>Next action</span><Link href={item.nextAction.href}>{item.nextAction.title}</Link><small>{item.nextAction.owner ? `Owner · ${item.nextAction.owner}` : "Owner · Open"} · {item.nextAction.due ? `Due · ${item.nextAction.due}` : "Due · Open"}</small></div> : null}</div>
               </li>)}</ol>
               <Link className="attention-source-link" href="/sources#approval-queue">Open source and approval record →</Link>
             </section>

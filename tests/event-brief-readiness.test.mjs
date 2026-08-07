@@ -1,0 +1,43 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { eventBySlug, events } from "../app/data/events.ts";
+import { getEventBriefReadiness, getProgramBriefReadiness } from "../app/data/event-brief-readiness.ts";
+
+const programDate = "2026-08-06";
+
+test("brief readiness changes its requirements as an event approaches", () => {
+  const genesys = getEventBriefReadiness(eventBySlug("genesys-xperience"), programDate);
+  assert.equal(genesys.stage, "planning");
+  assert.equal(genesys.timing, "26 days out");
+  assert.deepEqual(genesys.issues.map((issue) => issue.key), ["execution-gaps"]);
+
+  const customerConnect = getEventBriefReadiness(eventBySlug("customer-connect-expo"), programDate);
+  assert.equal(customerConnect.stage, "planning");
+  assert.ok(customerConnect.issues.some((issue) => issue.key === "roster"));
+  assert.ok(customerConnect.issues.some((issue) => issue.key === "credentials"));
+  assert.ok(customerConnect.issues.some((issue) => issue.key === "execution-gaps"));
+});
+
+test("early-stage briefs require foundation facts without pretending final logistics are due", () => {
+  const uk2027 = getEventBriefReadiness(eventBySlug("ccw-uk-executive-exchange-2027"), programDate);
+  assert.equal(uk2027.stage, "foundation");
+  assert.deepEqual(uk2027.issues.map((issue) => issue.key), ["dates"]);
+  assert.ok(!uk2027.issues.some((issue) => issue.key === "roster"));
+  assert.ok(!uk2027.issues.some((issue) => issue.key === "venue"));
+});
+
+test("current-event readiness keeps unresolved source and onsite inputs visible", () => {
+  const chicago = getEventBriefReadiness(eventBySlug("ccw-exchange-chicago"), programDate);
+  assert.equal(chicago.stage, "onsite");
+  assert.ok(chicago.issues.some((issue) => issue.key === "source-conflict"));
+  assert.ok(chicago.issues.some((issue) => issue.key === "roster"));
+  assert.ok(chicago.issues.some((issue) => issue.key === "venue"));
+  assert.ok(chicago.issues.some((issue) => issue.key === "credentials"));
+});
+
+test("program readiness excludes past and non-attending events", () => {
+  const program = getProgramBriefReadiness(events, programDate);
+  assert.equal(program.events.length, 14);
+  assert.equal(program.ready.length + program.attention.length, 14);
+  assert.equal(program.openInputs, program.events.reduce((total, event) => total + event.issues.length, 0));
+});

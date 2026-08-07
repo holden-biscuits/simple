@@ -50,7 +50,7 @@ export default function LeadershipPage() {
         <div className="leadership-metrics">
           <article><strong>{brief.pulse.active.length}</strong><span>Active program</span><p>Confirmed, tentative and TBD events that have not ended.</p></article>
           <article><strong>{brief.pulse.next60Days.length}</strong><span>Starting within 60 days</span><p>Near-term commitments that should have owners and dates.</p></article>
-          <article><strong>{brief.pulse.readiness.structuredPlans} / {brief.pulse.readiness.activeEvents}</strong><span>Structured task plans</span><p>The remaining events have priorities without complete operating ownership.</p></article>
+          <article><strong>{brief.briefReadiness.ready.length} / {brief.briefReadiness.events.length}</strong><span>Briefs on track</span><p>Decision-critical inputs required for each event’s current planning stage are present.</p></article>
           <article><strong>{brief.pulse.rosterGaps.length}</strong><span>Roster gaps</span><p>Planned headcount exceeds the named attendee list.</p></article>
         </div>
         <div className="leadership-alerts">
@@ -67,17 +67,17 @@ export default function LeadershipPage() {
           <div className="section-intro">
             <p className="eyebrow">Portfolio</p>
             <h2>Every active commitment and its next move.</h2>
-            <p>Sorted by event date. Readiness describes the operating plan—not whether the event itself is strategically worthwhile.</p>
+            <p>Sorted by event date. Brief readiness checks the inputs needed at this stage; it does not score the event’s strategic value.</p>
           </div>
           <div className="leadership-table-wrap">
             <table className="leadership-table">
-              <thead><tr><th>Event</th><th>Participation</th><th>Activation</th><th>Staffing</th><th>Execution</th><th>Next move</th></tr></thead>
+              <thead><tr><th>Event</th><th>Participation</th><th>Activation</th><th>Staffing</th><th>Readiness</th><th>Next move</th></tr></thead>
               <tbody>{brief.portfolio.map((item) => <tr key={item.eventKey}>
                 <th scope="row"><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><small>{item.location}{item.phase === "now" ? " · happening now" : ""}</small></th>
                 <td data-label="Participation"><span className={`leadership-status leadership-status-${item.status.toLowerCase()}`}>{item.status}</span></td>
                 <td data-label="Activation">{item.activation}</td>
                 <td data-label="Staffing"><strong>{item.staffing.summary}</strong>{item.staffing.state === "open" ? <small>{item.staffing.detail}</small> : null}</td>
-                <td data-label="Execution"><strong>{planLabel(item.readiness.planState)}</strong><small>{item.readiness.planState === "structured" ? `${item.readiness.openTasks} open task${item.readiness.openTasks === 1 ? "" : "s"}` : `${item.readiness.openTasks} unstructured priorit${item.readiness.openTasks === 1 ? "y" : "ies"}`}</small></td>
+                <td data-label="Readiness"><strong>{item.briefReadiness.label}</strong><small>{item.briefReadiness.timing} · {item.briefReadiness.issues.length ? `${item.briefReadiness.issues.length} open input${item.briefReadiness.issues.length === 1 ? "" : "s"}` : "required inputs present"} · {planLabel(item.readiness.planState)}</small></td>
                 <td data-label="Next move">{item.readiness.nextAction ? <><Link href={item.readiness.nextAction.href}>{item.readiness.nextAction.title}</Link><small>{item.readiness.nextAction.owner ? `Owner · ${item.readiness.nextAction.owner}` : "Owner · Open"} · {item.readiness.nextAction.due ? `Due · ${item.readiness.nextAction.due}` : "Due · Open"}</small></> : <span>Plan complete</span>}</td>
               </tr>)}</tbody>
             </table>
