@@ -11,6 +11,7 @@ import { connectorCapabilities, dataStreams, fieldOwners, writebackQueue } from 
 import { matchesAttendance, matchesAttention } from "../data/event-filters";
 import { getEventProspectingBrief } from "../data/event-prospecting";
 import { getAudienceSegmentRegistry } from "../data/audience-segment-registry";
+import { latestSourceScan } from "../data/latest-source-scan";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -153,6 +154,30 @@ const audienceSegmentRecords: SearchRecord[] = audienceSegmentRegistry.items.map
   hiddenUntilQuery: true,
 }));
 
+const latestScanRecord: SearchRecord = {
+  type: "Operations",
+  context: "Scan receipt",
+  status: latestSourceScan.audit.complete ? "Audit complete" : "Audit incomplete",
+  title: "Latest scheduled source scan",
+  href: "/sources#latest-scan",
+  description: `${latestSourceScan.checkedAtLabel} · ${latestSourceScan.summary.total} findings · ${latestSourceScan.summary.needsReview} need review · ${latestSourceScan.summary.noChange} no change`,
+  keywords: [
+    latestSourceScan.runMode,
+    latestSourceScan.scanId,
+    ...Object.values(latestSourceScan.gates),
+    ...latestSourceScan.receipts.flatMap((receipt) => [receipt.source, receipt.state, receipt.scope, receipt.result]),
+    ...latestSourceScan.findings.flatMap((finding) => [finding.event, finding.field, finding.state, finding.destination, finding.result]),
+    "scheduled source scan receipt checked unavailable not due audit gate",
+  ].join(" "),
+  details: [
+    `Review build · ${latestSourceScan.gates.reviewBuild}`,
+    `Production · ${latestSourceScan.gates.production}`,
+    `Upstream write-back · ${latestSourceScan.gates.upstreamWriteback}`,
+    ...latestSourceScan.receipts.map((receipt) => `${receipt.source} · ${receipt.state} · ${receipt.result}`),
+  ],
+  hiddenUntilQuery: true,
+};
+
 const eventRecords: SearchRecord[] = events.map((event) => {
   const prospecting = getEventProspectingBrief(event);
   const briefReadiness = getEventBriefReadiness(event, searchProgramDate);
@@ -270,5 +295,5 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const initialQuery = typeof params.q === "string" ? params.q : "";
   const requestedType = typeof params.type === "string" ? params.type : "All";
   const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, audience segments, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, ...eventChangeRecords, ...marketingTaskRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...audienceSegmentRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, audience segments, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, latestScanRecord, ...eventChangeRecords, ...marketingTaskRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...audienceSegmentRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }

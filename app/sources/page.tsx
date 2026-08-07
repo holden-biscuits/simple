@@ -12,6 +12,7 @@ import { freshnessPolicies } from "../data/source-freshness";
 import { getProgramSystemLinkage } from "../data/system-linkage";
 import { sourceReceiptStates, sourceScanContract } from "../data/source-scan";
 import { audienceSegmentContract, getAudienceSegmentRegistry } from "../data/audience-segment-registry";
+import { latestSourceScan } from "../data/latest-source-scan";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -40,6 +41,7 @@ export default function SourcesPage() {
       <PageContents items={[
         { id: "quick-update-routes", label: "Make an update" },
         { id: "source-monitor", label: "Source monitor" },
+        { id: "latest-scan", label: "Latest scan" },
         { id: "freshness-policy", label: "Freshness policy" },
         { id: "canonical-event-key", label: "Canonical Event key" },
         { id: "data-flow", label: "How data moves" },
@@ -108,6 +110,45 @@ export default function SourcesPage() {
           </article>)}
         </div>
         <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Latest evidence refresh · ${monitor.lastSuccessfulScanMode}: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed in this task while building the fieldbook; the first successful recurring run will add its own labeled receipt here."}</p>
+        <div className="latest-scan-receipt" id="latest-scan">
+          <div className="section-intro">
+            <p className="eyebrow">Latest scheduled run</p>
+            <h2>What the 9:00 AM scan actually did.</h2>
+            <p>The audit passed. Three Customer Connect fields need review in Notion; no fact was safe to publish automatically.</p>
+          </div>
+          <div className="latest-scan-meta">
+            <span>{latestSourceScan.runMode}</span>
+            <time dateTime={latestSourceScan.checkedAtISO}>{latestSourceScan.checkedAtLabel}</time>
+            <code>{latestSourceScan.scanId}</code>
+          </div>
+          <div className="latest-scan-summary" aria-label="Latest scan result counts">
+            <article><span>Audit</span><strong>{latestSourceScan.audit.complete ? "Complete" : "Incomplete"}</strong></article>
+            <article><span>Findings</span><strong>{latestSourceScan.summary.total}</strong></article>
+            <article><span>Needs review</span><strong>{latestSourceScan.summary.needsReview}</strong></article>
+            <article><span>No change</span><strong>{latestSourceScan.summary.noChange}</strong></article>
+            <article><span>Rejected</span><strong>{latestSourceScan.summary.rejected}</strong></article>
+          </div>
+          <div className="latest-scan-gates" aria-label="Latest scan approval gates">
+            <article><span>Review build</span><strong>{latestSourceScan.gates.reviewBuild}</strong></article>
+            <article><span>Production</span><strong>{latestSourceScan.gates.production}</strong></article>
+            <article><span>Upstream write-back</span><strong>{latestSourceScan.gates.upstreamWriteback}</strong></article>
+          </div>
+          <div className="latest-scan-sources" aria-label="Latest scan source receipts">
+            {latestSourceScan.receipts.map((receipt) => <article className="latest-scan-source" key={receipt.id}>
+              <header><strong>{receipt.source}</strong><span className={`scan-receipt-state scan-receipt-state-${receipt.state.toLowerCase().replaceAll(" ", "-")}`}>{receipt.state}</span></header>
+              <p>{receipt.scope}</p>
+              <small>{receipt.result}</small>
+            </article>)}
+          </div>
+          <div className="latest-scan-findings" aria-label="Latest scan findings">
+            <header><span>Finding</span><span>Decision</span><span>Owning destination</span></header>
+            {latestSourceScan.findings.map((finding) => <article key={finding.id}>
+              <div><strong>{finding.event}</strong><span>{finding.field}</span></div>
+              <div><strong>{finding.state}</strong><span>{finding.result}</span></div>
+              <div><strong>{finding.destination}</strong><span>{finding.state === "Needs review" ? "Awaiting exact approval" : "Verified; no write needed"}</span></div>
+            </article>)}
+          </div>
+        </div>
         <div className="freshness-policy" id="freshness-policy">
           <div className="section-intro"><p className="eyebrow">Freshness policy</p><h2>The closer the event, the tighter the check.</h2><p>A connected source is not automatically current. Event cards and pages compare the last verified date with these operating windows.</p></div>
           <div className="freshness-policy-grid">{freshnessPolicies.map((policy) => <article key={policy.window}><span>{policy.window}</span><strong>{policy.cadence}</strong><p>{policy.detail}</p></article>)}</div>

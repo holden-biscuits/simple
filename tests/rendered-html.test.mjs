@@ -137,6 +137,22 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Contracts · creative · files[\s\S]*Events Drive/);
   assert.match(html, /Meetings · demos · pipeline[\s\S]*HubSpot/);
   assert.match(html, /Source monitor/);
+  assert.match(html, /id="latest-scan"/);
+  assert.match(html, /What the 9:00 AM scan actually did\./);
+  assert.match(html, /Latest scheduled run/);
+  assert.match(html, /<span>Audit<\/span><strong>Complete<\/strong>/);
+  assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
+  assert.match(html, /<span>No change<\/span><strong>2<\/strong>/);
+  assert.match(html, /<span>Rejected<\/span><strong>0<\/strong>/);
+  assert.match(html, /Review build[\s\S]*No publishable change/);
+  assert.match(html, /Production[\s\S]*Approval required/);
+  assert.match(html, /Upstream write-back[\s\S]*Exact approval required/);
+  assert.match(html, /Conference tracker[\s\S]*Not due/);
+  assert.match(html, /Granola[\s\S]*Unavailable/);
+  assert.match(html, /HubSpot[\s\S]*Checked/);
+  assert.match(html, /Customer Connect Expo[\s\S]*Priority actions/);
+  assert.match(html, /Customer Connect Expo[\s\S]*Marketing tasks/);
+  assert.match(html, /Customer Connect Expo[\s\S]*Sponsorship workstream/);
   assert.match(html, /The closer the event, the tighter the check\./);
   assert.match(html, /Connected does not mean live\./);
   assert.match(html, /Verified access · Aug 7/);
@@ -402,6 +418,14 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const scanContractSearchHtml = await scanContractSearch.text();
   assert.match(scanContractSearchHtml, /Source scan automation contract/);
   assert.match(scanContractSearchHtml, /\/sources#scan-contract/);
+
+  const latestScanSearch = await render("/search?q=scheduled%20source%20scan%20not%20due&type=Operations");
+  assert.equal(latestScanSearch.status, 200);
+  const latestScanSearchHtml = await latestScanSearch.text();
+  assert.match(latestScanSearchHtml, /Latest scheduled source scan/);
+  assert.match(latestScanSearchHtml, /href="\/sources#latest-scan"/);
+  assert.match(latestScanSearchHtml, /Audit complete/);
+  assert.match(latestScanSearchHtml, /5 findings · 3 need review · 2 no change/);
 
   const lifecycleSearch = await render("/search?q=what%20do%20I%20do%20after%20an%20event&type=Guide");
   assert.equal(lifecycleSearch.status, 200);
