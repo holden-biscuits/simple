@@ -52,7 +52,7 @@ export default function SourcesPage() {
         </div>
         <div className="source-checks" aria-label="Latest source checks">
           <p className="eyebrow">Latest applied checks</p>
-          {monitor.latestChecks.map((check) => <article key={`${check.system}-${check.checkedAt}`}>
+          {monitor.latestChecks.map((check) => <article key={`${check.system}-${check.checkedAt}-${check.scope}`}>
             <div><strong>{check.system}</strong><span>{check.checkedAt}</span></div>
             <p>{check.scope}</p>
             <p>{check.result}</p>

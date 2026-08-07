@@ -18,6 +18,8 @@ test("server-renders the event directory", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>Event Basecamp · 2026<\/title>/i);
+  assert.match(html, /aria-label="TeamSimple Event Basecamp home"/);
+  assert.match(html, /TeamSimple/);
   assert.match(html, /Know the route before you hit the floor\./);
   assert.match(html, /ranger-raccoon-clean-hat\.png/);
   assert.match(html, /class="ranger-hat-logo"/);

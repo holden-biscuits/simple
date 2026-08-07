@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
+import { HashAnchorSync } from "./components/hash-anchor-sync";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -43,6 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <HashAnchorSync />
         {children}
       </body>
     </html>
