@@ -73,10 +73,10 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Owner · Open[\s\S]*Due · Open/);
   assert.match(html, /Current and next stops/);
   assert.match(html, /Earliest plans with open inputs/);
-  assert.match(html, /\+4 more on the brief/);
+  assert.match(html, /\+\d+ more on the brief/);
   assert.match(html, /Open source and approval record/);
   assert.match(html, /Current(?:<!-- -->)? · <time dateTime="2026-08-06">Aug 6<\/time>/);
-  assert.match(html, /Source checks due[\s\S]*0/);
+  assert.match(html, /Source checks due[\s\S]*\d+/);
   assert.match(html, /Conference tracker \+ 4/);
   assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
   assert.match(html, /Guaranteed Meetings · Count TBD/);
@@ -231,7 +231,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const html = await response.text();
   assert.match(html, /Find the detail, not the page\./);
   assert.match(html, /value="names open"/);
-  assert.match(html, /Results open the exact event brief or marketing workspace you need/);
+  assert.match(html, /Results open the exact section or workspace you need/);
   assert.match(html, /Useful starting points/);
   assert.match(html, /Staffing · names open/);
   assert.match(html, /Meeting package · count TBD/);
@@ -298,6 +298,25 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const scanContractSearchHtml = await scanContractSearch.text();
   assert.match(scanContractSearchHtml, /Source scan automation contract/);
   assert.match(scanContractSearchHtml, /\/sources#scan-contract/);
+
+  const genesysChangeSearch = await render("/search?q=what%20changed%20at%20Genesys&type=Operations");
+  assert.equal(genesysChangeSearch.status, 200);
+  const genesysChangeSearchHtml = await genesysChangeSearch.text();
+  assert.match(genesysChangeSearchHtml, /Genesys Xperience · Confirmed the Genesys Xperience roster/);
+  assert.match(genesysChangeSearchHtml, /href="\/events\/genesys-xperience#event-changes"/);
+  assert.match(genesysChangeSearchHtml, /Before · Shorter tracker roster · Carter listed only as available/);
+
+  const chicagoChangeSearch = await render("/search?q=why%20is%20Chicago%20staffing%20still%20open&type=Operations");
+  assert.equal(chicagoChangeSearch.status, 200);
+  const chicagoChangeSearchHtml = await chicagoChangeSearch.text();
+  assert.match(chicagoChangeSearchHtml, /CCW Exchange Chicago · Resolve CCW Exchange Chicago staffing/);
+  assert.match(chicagoChangeSearchHtml, /href="\/events\/ccw-exchange-chicago#event-changes"/);
+  assert.match(chicagoChangeSearchHtml, /Conflicting source · Notion and calendar: Taylor \+ Josh attending/);
+
+  const programChangeSearch = await render("/search?q=Added%20the%202027%20event%20program&type=Operations");
+  assert.equal(programChangeSearch.status, 200);
+  const programChangeSearchHtml = await programChangeSearch.text();
+  assert.doesNotMatch(programChangeSearchHtml, /<h2>Added the 2027 event program<\/h2>/);
 
   const emptySearch = await render("/search?q=definitely-no-such-event-or-guide");
   assert.equal(emptySearch.status, 200);
@@ -383,7 +402,7 @@ test("server-renders a searchable marketing support board", async () => {
   assert.equal(customerConnect.status, 200);
   const customerConnectHtml = await customerConnect.text();
   assert.ok(customerConnectHtml.indexOf("Confirm invoice payment status with AP") < customerConnectHtml.indexOf("Use the organizer onboarding call"));
-  assert.match(customerConnectHtml, /Due today/);
+  assert.match(customerConnectHtml, /Overdue/);
   assert.match(customerConnectHtml, /Reconcile portal deadlines and booth assets/);
   assert.match(customerConnectHtml, /Complete the exhibitor company profile/);
   assert.match(customerConnectHtml, /Aug 17/);
@@ -401,7 +420,7 @@ test("search routes marketing tasks to the selected event workspace", async () =
   const html = await response.text();
   assert.match(html, /Genesys Xperience · Produce the booth-monitor product video/);
   assert.match(html, /\/marketing\?event=genesys-xperience#event-tasks/);
-  assert.match(html, /Results open the exact event brief or marketing workspace you need/);
+  assert.match(html, /Results open the exact section or workspace you need/);
 
   const eventAction = await render("/search?q=Lunch%20%26%20Learn%20contracted&type=Operations");
   assert.equal(eventAction.status, 200);

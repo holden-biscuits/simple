@@ -33,7 +33,7 @@ test("attention labels distinguish source, staffing, execution and meeting-count
   const genesys = events.find((event) => event.slug === "genesys-xperience");
   assert.ok(chicago);
   assert.ok(genesys);
-  assert.deepEqual(getEventAttention(chicago), [
+  assert.deepEqual(getEventAttention(chicago, "2026-08-06"), [
     "Confirm the sponsor package and inclusions",
     "Confirm the guaranteed-meeting count and format",
     "Resolve the source conflict recorded on this brief",
@@ -42,5 +42,5 @@ test("attention labels distinguish source, staffing, execution and meeting-count
     "Confirm passes, registration, and credential limits",
     "Turn the open priorities into owned, dated tasks",
   ]);
-  assert.deepEqual(getEventAttention(genesys), ["Add missing owners or due dates to 2 open tasks"]);
+  assert.deepEqual(getEventAttention(genesys, "2026-08-06"), ["Add missing owners or due dates to 2 open tasks"]);
 });

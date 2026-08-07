@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
 import { SiteSearch, type SearchRecord, type SearchType } from "../components/site-search";
-import { events, getEventVerification, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
+import { eventBySlug, events, getEventVerification, getProgramDate, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../data/event-signals";
 import { getEventBriefReadiness } from "../data/event-brief-readiness";
-import { getProgramDate } from "../data/events";
+import { siteStatus } from "../data/site-status";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -109,10 +109,40 @@ const marketingTaskRecords: SearchRecord[] = events.flatMap((event) => {
   }));
 });
 
+const eventChangeRecords: SearchRecord[] = siteStatus.sourceMonitor.changeLog.flatMap((change) => {
+  if (!change.eventSlug) return [];
+  const event = eventBySlug(change.eventSlug);
+  if (!event) return [];
+  const resultLabel = change.state === "Applied" ? "Now" : change.state === "Needs review" ? "Conflicting source" : "Result";
+  return [{
+    type: "Operations" as const,
+    title: `${event.name} · ${change.title}`,
+    href: `/events/${event.slug}#event-changes`,
+    description: `${change.state} · ${change.field} · checked ${change.checkedAt}`,
+    keywords: [
+      event.name,
+      event.location,
+      change.title,
+      change.state,
+      change.field,
+      change.before,
+      change.after,
+      change.source,
+      "what changed recent change source receipt update conflict why still open",
+    ].join(" "),
+    details: [
+      `Before · ${change.before}`,
+      `${resultLabel} · ${change.after}`,
+      `Source · ${change.source}`,
+    ],
+    hiddenUntilQuery: true,
+  }];
+});
+
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string | string[]; type?: string | string[] }> }) {
   const params = await searchParams;
   const initialQuery = typeof params.q === "string" ? params.q : "";
   const requestedType = typeof params.type === "string" ? params.type : "All";
   const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, and role instructions. Results open the exact event brief or marketing workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...marketingTaskRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...eventChangeRecords, ...marketingTaskRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }
