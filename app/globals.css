@@ -327,7 +327,7 @@ button, input, select { font: inherit; }
 .round-link:hover { transform: rotate(0deg); background: var(--signal-dark); }
 .event-tldr { padding-block: 90px 55px; }
 .event-tldr .section-intro { margin-bottom: 30px; }
-.tldr-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+.tldr-grid { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
 .tldr-grid article { min-height: 145px; padding: 22px; display: flex; flex-direction: column; gap: 18px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--canvas); }
 .tldr-grid article:nth-child(2) { background: var(--green-light); }
 .tldr-grid article:nth-child(3) { background: #f3c4af; }

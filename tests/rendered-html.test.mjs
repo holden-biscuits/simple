@@ -22,6 +22,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /TeamSimple attendance/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
+  assert.match(html, /Guaranteed Meetings · Count TBD/);
   assert.doesNotMatch(html, /Resolve these before more work starts\./);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|Building your site/i);
 });
@@ -85,6 +86,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /No guaranteed meetings/);
   assert.match(genesysHtml, /Meeting package<\/span><strong>None/);
   assert.match(genesysHtml, /Meetings scheduled<\/span><strong>0/);
+  assert.match(genesysHtml, /Team<\/span><strong>9 attending/);
   assert.match(genesysHtml, /Do these next/);
   assert.match(genesysHtml, /Wish Line/);
   assert.match(genesysHtml, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
@@ -150,6 +152,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /Taylor is the confirmed attendee/);
   assert.match(chicagoHtml, /Carter and Josh are marked available/);
   assert.match(chicagoHtml, /Source check needed/);
+  assert.match(chicagoHtml, /1 named · 2 planned/);
+  assert.match(chicagoHtml, /Meeting package<\/span><strong>Included · count TBD/);
   assert.match(chicagoHtml, /internal 28-account ICP sheet/);
   assert.match(chicagoHtml, /9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked/);
 

@@ -23,6 +23,21 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const hasGuaranteedMeetings = event.guaranteedMeetings.startsWith("Yes");
   const bookedMeetingCount = event.meetingsBooked.length;
   const bookedMeetingLabel = event.meetingCountLabel ?? bookedMeetingCount.toString();
+  const guaranteedPackageSummary = hasGuaranteedMeetings
+    ? event.guaranteedMeetings.replace(/^Yes\s*(?:·\s*)?/i, "") || "Included · count TBD"
+    : "None";
+  const namedAttendeeCount = event.team.length;
+  const teamSummary = isNotAttending
+    ? "No team assigned"
+    : event.attendeeCount && namedAttendeeCount === event.attendeeCount
+      ? `${event.attendeeCount} attending`
+      : event.attendeeCount && namedAttendeeCount > 0
+        ? `${namedAttendeeCount} named · ${event.attendeeCount} planned`
+        : event.attendeeCount
+          ? `${event.attendeeCount} planned · names open`
+          : namedAttendeeCount
+            ? `${namedAttendeeCount} named`
+            : "Not assigned";
   const note = event.notes.trim();
   const isSourceConflict = note.toLowerCase().startsWith("source conflict:");
   const facts = [
@@ -30,7 +45,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     ["City", event.location],
     ...(event.venue ? [["Venue", event.venue]] : []),
     ["Planned headcount", event.attendeeCount?.toString() ?? "None"],
-    ["Guaranteed package", hasGuaranteedMeetings ? event.guaranteedMeetings : "No"],
+    ["Guaranteed package", guaranteedPackageSummary],
     ["Meetings recorded", bookedMeetingLabel],
     ["Speaking", event.speaking],
     ["Sponsorship", event.sponsorship],
@@ -49,14 +64,14 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     event.speaking.toLowerCase() !== "none" && !event.speaking.toLowerCase().includes("no slot confirmed") ? "Speaking" : null,
     isEmptyWorkstream(workstreams.swag) ? null : "Swag / materials",
   ].filter(Boolean).join(" · ") || "Attendance only";
-  const meetingPackage = isNotAttending ? "None" : hasGuaranteedMeetings ? event.guaranteedMeetings : "None";
+  const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;
   const meetingProgressLabel = event.phase === "past" ? "Meetings recorded" : "Meetings scheduled";
   const tldr = [
     ["Participation", event.status === "No" ? "Not attending" : event.status],
     ["Program mix", programMix],
     ["Meeting package", meetingPackage],
     [meetingProgressLabel, isNotAttending ? "0" : bookedMeetingLabel],
-    ["Team", isNotAttending ? "No team assigned" : event.attendeeCount ? `${event.attendeeCount} planned` : event.team.length ? `${event.team.length} named` : "Not assigned"],
+    ["Team", teamSummary],
   ];
   const showResults = event.phase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
 

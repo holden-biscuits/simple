@@ -23,7 +23,7 @@ function matchesAttendance(event: EventRecord, filter: AttendanceFilter) {
 function guaranteedMeetingSignal(event: EventRecord) {
   if (!event.guaranteedMeetings.startsWith("Yes")) return "0 Guaranteed Meetings";
   const range = event.guaranteedMeetings.match(/\d+[–-]\d+/)?.[0];
-  return range ? `${range} Guaranteed Meetings` : "Guaranteed Meetings Included";
+  return range ? `${range} Guaranteed Meetings` : "Guaranteed Meetings · Count TBD";
 }
 
 function EventCard({ event }: { event: EventRecord }) {
