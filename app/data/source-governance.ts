@@ -72,12 +72,60 @@ export type EventFieldRoute = {
   destination: string;
 };
 
+export type EventUpdateRoute = {
+  id: "tracker" | "notion" | "drive" | "hubspot";
+  scope: string;
+  system: string;
+  detail: string;
+  action: string;
+  url: string;
+  attendingOnly?: boolean;
+};
+
 export const eventFieldRoutes: EventFieldRoute[] = [
   ...["slug", "name", "dates", "dateSort", "dateEndSort", "location", "status", "speaking", "speakingStatus", "sponsorship", "sponsorshipStatus", "guaranteedMeetings", "attendeeCount", "team", "available", "rating"].map((field) => ({ field, owner: "sheet" as const, destination: "Conference tracker" })),
   ...["notionUrl", "credentials", "specialConsiderations", "priorityActions", "marketingTasks", "notes", "workstreams"].map((field) => ({ field, owner: "notion" as const, destination: "Conference project in Notion" })),
   ...["meetingsBooked", "meetingCountLabel", "demosBooked", "closed", "outcomeNotes", "crmSnapshot"].map((field) => ({ field, owner: "hubspot" as const, destination: "HubSpot" })),
   ...["organizerUrl", "venue"].map((field) => ({ field, owner: "organizer" as const, destination: "Organizer source, then the conference tracker or Notion" })),
   { field: "relatedLinks", owner: "drive", destination: "Events Drive, then the conference project in Notion" },
+];
+
+export const eventUpdateRoutes: EventUpdateRoute[] = [
+  {
+    id: "tracker",
+    scope: "Dates · participation · roster",
+    system: "Conference tracker",
+    detail: "Correct the event row first. Update participation, package, date, location, and roster changes as soon as they are confirmed.",
+    action: "Open Sheets",
+    url: sourceLinks.sheet,
+  },
+  {
+    id: "notion",
+    scope: "Tasks · owners · decisions",
+    system: "Event project",
+    detail: "Update the owner, deadline, status, or execution decision the same business day. Link the evidence instead of copying a second version.",
+    action: "Open Notion",
+    url: sourceLinks.notion,
+    attendingOnly: true,
+  },
+  {
+    id: "drive",
+    scope: "Contracts · creative · files",
+    system: "Events Drive",
+    detail: "Upload the approved artifact once, use the event folder, and link the file from the event project.",
+    action: "Open Drive",
+    url: sourceLinks.eventsDrive,
+    attendingOnly: true,
+  },
+  {
+    id: "hubspot",
+    scope: "Meetings · demos · pipeline",
+    system: "HubSpot",
+    detail: "Log booked meetings before the event day ends. Record the outcome and next step separately; never infer that a scheduled meeting happened.",
+    action: "Open HubSpot",
+    url: sourceLinks.hubspot,
+    attendingOnly: true,
+  },
 ];
 
 export const sourceFlow: SourceFlowStep[] = [

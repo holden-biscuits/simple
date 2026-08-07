@@ -82,6 +82,8 @@ export const sourceLinks = {
     "https://www.notion.so/3aa6fee642fe811ba195d64bedc3f6fe",
   eventsDrive:
     "https://drive.google.com/drive/folders/1p4C7CDY4bgiZ4V4EgmrMUeKHRRqwRxQq",
+  hubspot:
+    "https://app.hubspot.com/contacts/245561359/objects/0-47/views/all/list",
 };
 
 export const events: EventRecord[] = [

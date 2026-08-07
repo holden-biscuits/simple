@@ -100,6 +100,12 @@ test("server-renders the source monitor and approval queue", async () => {
   const response = await render("/sources");
   assert.equal(response.status, 200);
   const html = await response.text();
+  assert.match(html, /Fix the source that owns the fact\./);
+  assert.match(html, /A Slack message or email is evidence—not the final record\./);
+  assert.match(html, /Dates · participation · roster[\s\S]*Conference tracker/);
+  assert.match(html, /Tasks · owners · decisions[\s\S]*Event project/);
+  assert.match(html, /Contracts · creative · files[\s\S]*Events Drive/);
+  assert.match(html, /Meetings · demos · pipeline[\s\S]*HubSpot/);
   assert.match(html, /Source monitor/);
   assert.match(html, /The closer the event, the tighter the check\./);
   assert.match(html, /Connected does not mean live\./);

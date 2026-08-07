@@ -6,7 +6,7 @@ import { BackToTop, PageContents } from "../components/page-contents";
 import { events, getProgramDate, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
 import { crmAttributionAudit } from "../data/crm-attribution";
-import { audienceViews, connectorCapabilities, dataStreams, eventKeyRollout, fieldOwners, operatingRoadmap, sourceFlow, stewardshipRoles, writebackQueue } from "../data/source-governance";
+import { audienceViews, connectorCapabilities, dataStreams, eventKeyRollout, eventUpdateRoutes, fieldOwners, operatingRoadmap, sourceFlow, stewardshipRoles, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
 import { getProgramSystemLinkage } from "../data/system-linkage";
@@ -36,6 +36,7 @@ export default function SourcesPage() {
         <p className="lede">See what controls the site, what the recurring scan checks, and which disagreements still need a decision.</p>
       </section>
       <PageContents items={[
+        { id: "quick-update-routes", label: "Make an update" },
         { id: "source-monitor", label: "Source monitor" },
         { id: "freshness-policy", label: "Freshness policy" },
         { id: "canonical-event-key", label: "Canonical Event key" },
@@ -54,6 +55,24 @@ export default function SourcesPage() {
         { id: "update-rules", label: "Update rules" },
         { id: "source-files", label: "Open source files" },
       ]} />
+
+      <section className="shell quick-update-routes" id="quick-update-routes">
+        <div className="section-intro">
+          <p className="eyebrow">Make an update</p>
+          <h2>Fix the source that owns the fact.</h2>
+          <p>Choose what changed. The next source scan will reconcile the update into a review build; the live fieldbook changes only after that build is approved.</p>
+        </div>
+        <div className="quick-update-grid">
+          {eventUpdateRoutes.map((route, index) => <a href={route.url} target="_blank" rel="noreferrer" key={route.id}>
+            <header><span>{String(index + 1).padStart(2, "0")}</span><small>{route.scope}</small></header>
+            <h3>{route.system}</h3>
+            <p>{route.detail}</p>
+            <strong>{route.action} ↗</strong>
+          </a>)}
+        </div>
+        <aside className="quick-update-note"><strong>A Slack message or email is evidence—not the final record.</strong><p>Once a change is confirmed, put it in the tracker, event project, Events Drive, or HubSpot. That keeps decisions searchable and prevents the fieldbook from becoming another manual source of truth.</p></aside>
+        <BackToTop />
+      </section>
 
       <section className="shell source-monitor" id="source-monitor">
         <div className="section-intro">

@@ -58,7 +58,7 @@ button, input, select { font: inherit; }
 .inline-link { color: var(--signal-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .handoff .back-to-top, .tiering .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.7); }
 .handoff .back-to-top:hover, .handoff .back-to-top:focus-visible, .tiering .back-to-top:hover, .tiering .back-to-top:focus-visible { color: #ffb49c; }
-.start-map[id], .event-lifecycle[id], .program-pulse[id], .directory[id], .role-block[id], .handoff[id], .guide-panel[id], .timeline[id], .tiering[id], .role-links[id], .event-tldr[id], .event-role-routes[id], .event-recent-changes[id], .event-update-route[id], .event-no-plan[id], .event-priorities[id], .event-considerations[id], .fact-strip[id], .event-body[id], .event-body aside[id], .workstream[id], .outcomes[id], .source-monitor[id], .freshness-policy[id], .canonical-event-key[id], .source-governance[id], .scan-contract[id], .data-streams[id], .operating-roadmap[id], .field-ownership[id], .stewardship[id], .crm-attribution[id], .writeback-section[id], .protected-decisions[id], .change-log[id], .approval-queue[id], .update-rules[id], .source-links[id], .marketing-program-pulse[id], .marketing-lessons[id], .event-task-section[id], .marketing-matrix-section[id], .crm-activation[id], .measurement[id], .leadership-snapshot[id], .leadership-changes[id], .leadership-portfolio[id], .leadership-decisions[id], .leadership-operating-model[id], .leadership-outcomes[id], .leadership-trust[id] { scroll-margin-top: var(--anchor-offset); }
+.start-map[id], .event-lifecycle[id], .program-pulse[id], .directory[id], .role-block[id], .handoff[id], .guide-panel[id], .timeline[id], .tiering[id], .role-links[id], .event-tldr[id], .event-role-routes[id], .event-recent-changes[id], .event-update-route[id], .event-no-plan[id], .event-priorities[id], .event-considerations[id], .fact-strip[id], .event-body[id], .event-body aside[id], .workstream[id], .outcomes[id], .quick-update-routes[id], .source-monitor[id], .freshness-policy[id], .canonical-event-key[id], .source-governance[id], .scan-contract[id], .data-streams[id], .operating-roadmap[id], .field-ownership[id], .stewardship[id], .crm-attribution[id], .writeback-section[id], .protected-decisions[id], .change-log[id], .approval-queue[id], .update-rules[id], .source-links[id], .marketing-program-pulse[id], .marketing-lessons[id], .event-task-section[id], .marketing-matrix-section[id], .crm-activation[id], .measurement[id], .leadership-snapshot[id], .leadership-changes[id], .leadership-portfolio[id], .leadership-decisions[id], .leadership-operating-model[id], .leadership-outcomes[id], .leadership-trust[id] { scroll-margin-top: var(--anchor-offset); }
 
 .home-hero { min-height: 700px; padding: 88px max(30px, calc((100vw - 1180px)/2)); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, .65fr); align-items: end; gap: 80px; position: relative; overflow: hidden; background-color: var(--canvas); }
 .home-hero::before, .role-hero::before, .event-hero::before { content: ''; position: absolute; inset: -25% -15% -20% 44%; pointer-events: none; opacity: .32; background: repeating-radial-gradient(ellipse at center, transparent 0 28px, rgba(22,75,56,.28) 29px 30px, transparent 31px 50px); transform: rotate(-12deg) scaleY(.7); }
@@ -255,6 +255,18 @@ button, input, select { font: inherit; }
 .guide-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; background: transparent; margin-top: 100px; }
 .guides-hero + .guide-layout { grid-template-columns: minmax(0, 760px); }
 .sources-layout { grid-template-columns: 1fr; margin-bottom: 110px; }
+.quick-update-routes { padding-block: 95px 105px; }
+.quick-update-grid { margin-top: 50px; display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+.quick-update-grid a { min-height: 285px; padding: 24px; display: flex; flex-direction: column; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--canvas); }
+.quick-update-grid a:nth-child(2), .quick-update-grid a:nth-child(3) { background: var(--green-light); }
+.quick-update-grid a:hover, .quick-update-grid a:focus-visible { position: relative; z-index: 1; outline: 0; box-shadow: inset 0 -7px 0 var(--signal); }
+.quick-update-grid header { display: flex; align-items: center; justify-content: space-between; gap: 18px; color: var(--signal-dark); font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.quick-update-grid h3 { margin: 48px 0 10px; font: 400 34px/1.05 Georgia, serif; }
+.quick-update-grid p { max-width: 560px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.quick-update-grid strong { margin-top: auto; padding-top: 24px; color: var(--green); font: 800 11px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.quick-update-note { margin-top: 24px; padding: 22px 24px; display: grid; grid-template-columns: minmax(230px, .7fr) 1fr; gap: 30px; border-left: 6px solid var(--signal); background: var(--paper-deep); }
+.quick-update-note strong { font: 400 22px/1.2 Georgia, serif; }
+.quick-update-note p { margin: 0; color: var(--muted); line-height: 1.55; }
 .source-monitor { padding-block: 100px; }
 .monitor-summary { display: grid; grid-template-columns: 1fr 1.35fr 1.35fr 1fr; border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
 .monitor-summary article { min-height: 145px; padding: 22px; display: flex; flex-direction: column; gap: 24px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--canvas); }
@@ -1077,6 +1089,7 @@ button, input, select { font: inherit; }
   .event-no-mark { width: 135px; height: 135px; font-size: 150px; }
   .monitor-summary { grid-template-columns: 1fr 1fr; }
   .source-flow-grid { grid-template-columns: 1fr 1fr; }
+  .quick-update-grid { grid-template-columns: 1fr 1fr; }
   .operating-roadmap-grid { grid-template-columns: 1fr; }
   .scan-contract-grid, .scan-contract-output { grid-template-columns: 1fr 1fr; }
   .freshness-policy-grid { grid-template-columns: 1fr 1fr; }
@@ -1186,6 +1199,11 @@ button, input, select { font: inherit; }
   .freshness-policy-grid { grid-template-columns: 1fr; }
   .monitor-summary, .source-coverage, .protected-decision-grid, .update-rules, .change-log-summary, .change-log-list { grid-template-columns: 1fr; }
   .source-flow-grid, .writeback-grid { grid-template-columns: 1fr; }
+  .quick-update-grid { grid-template-columns: 1fr; }
+  .quick-update-grid a { min-height: 235px; }
+  .quick-update-grid a:nth-child(2), .quick-update-grid a:nth-child(3) { background: var(--canvas); }
+  .quick-update-grid a:nth-child(even) { background: var(--green-light); }
+  .quick-update-note { grid-template-columns: 1fr; gap: 12px; }
   .stewardship-grid, .leadership-queue-grid { grid-template-columns: 1fr; }
   .stewardship-grid article { min-height: 0; }
   .leadership-queue-grid article:last-child { grid-column: auto; }

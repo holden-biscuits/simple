@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, sourceLinks, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
@@ -14,6 +14,7 @@ import { getBriefIssueAction, getEventBriefReadiness } from "../../data/event-br
 import { getEventSourceChanges } from "../../data/site-status";
 import { getEventRoleRoutes } from "../../data/event-role-routes";
 import { getEventFootprint } from "../../data/event-footprint";
+import { eventUpdateRoutes } from "../../data/source-governance";
 
 export const dynamic = "force-dynamic";
 
@@ -82,6 +83,16 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ["Team", staffing.summary],
   ];
   const showResults = eventPhase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
+  const updateRoutes = eventUpdateRoutes
+    .filter((route) => !route.attendingOnly || !isNotAttending)
+    .map((route) => route.id === "notion"
+      ? {
+          ...route,
+          url: event.notionUrl ?? route.url,
+          system: event.notionUrl ? route.system : "Notion setup needed",
+          detail: event.notionUrl ? route.detail : "Create or locate the event project before execution work starts.",
+        }
+      : route);
 
   return (
     <main id="page-top">
@@ -169,12 +180,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
               <p>Use this exact value across the tracker, Notion and HubSpot. Until the CRM properties exist, include <code>[evt:{event.slug}]</code> in an event-sourced activity.</p>
             </aside>
             <div className="event-update-route-grid">
-              <a href={sourceLinks.sheet} target="_blank" rel="noreferrer"><span>Dates · participation · roster</span><strong>Conference tracker</strong><p>Correct the event row first. Update participation and roster changes as soon as they are confirmed.</p><b>Open Sheets ↗</b></a>
-              {!isNotAttending ? <>
-                <a href={event.notionUrl ?? sourceLinks.notion} target="_blank" rel="noreferrer"><span>Tasks · owners · decisions</span><strong>{event.notionUrl ? "Event project" : "Notion setup needed"}</strong><p>{event.notionUrl ? "Update the owner, deadline or status the same business day." : "Create or locate the event project before execution work starts."}</p><b>Open Notion ↗</b></a>
-                <a href={sourceLinks.eventsDrive} target="_blank" rel="noreferrer"><span>Contracts · creative · files</span><strong>Events Drive</strong><p>Upload the approved artifact once, then link it from the event project.</p><b>Open Drive ↗</b></a>
-                <a href="https://app.hubspot.com/contacts/245561359/objects/0-47/views/all/list" target="_blank" rel="noreferrer"><span>Meetings · demos · pipeline</span><strong>HubSpot</strong><p>Log booked meetings before the event day ends. Record outcomes separately; never infer one here.</p><b>Open HubSpot ↗</b></a>
-              </> : null}
+              {updateRoutes.map((route) => <a href={route.url} target="_blank" rel="noreferrer" key={route.id}><span>{route.scope}</span><strong>{route.system}</strong><p>{route.detail}</p><b>{route.action} ↗</b></a>)}
             </div>
           </div>
           <div className="event-linkage-strip" aria-label="Event system coverage">
