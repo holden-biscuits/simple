@@ -3,9 +3,9 @@ import { BackToTop, PageContents } from "../components/page-contents";
 import { Footer } from "../components/footer";
 import { MarketingSupportBoard } from "../components/marketing-support-board";
 import { SiteHeader } from "../components/site-header";
-import { events } from "../data/events";
+import { events, getEventPhase, getProgramDate } from "../data/events";
 
-const activeEvents = events.filter((event) => event.phase !== "past" && event.status !== "No");
+export const dynamic = "force-dynamic";
 
 const operatingLessons = [
   ["One roster", "The tracker and Notion can drift. Name the final team in one place before registration, travel, and booth shifts are locked."],
@@ -56,6 +56,8 @@ const playbook = [
 ];
 
 export default function MarketingPage() {
+  const programDate = getProgramDate();
+  const activeEvents = events.filter((event) => getEventPhase(event, programDate) !== "past" && event.status !== "No");
   return (
     <main id="page-top">
       <SiteHeader />
@@ -81,7 +83,7 @@ export default function MarketingPage() {
       <section className="marketing-matrix-section" id="support-matrix">
         <div className="shell">
           <div className="section-intro"><p className="eyebrow">Active event support</p><h2>See the work and the gaps in one place.</h2><p>The board uses the same event records as the directory. It does not treat the event team as the marketing owner, and it does not invent a deadline when none is recorded.</p></div>
-          <MarketingSupportBoard events={activeEvents} />
+          <MarketingSupportBoard events={activeEvents} programDate={programDate} />
           <BackToTop />
         </div>
       </section>

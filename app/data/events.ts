@@ -16,7 +16,7 @@ export type EventRecord = {
   name: string;
   dates: string;
   dateSort: string;
-  phase: EventPhase;
+  dateEndSort: string;
   location: string;
   status: "Confirmed" | "TBD" | "Tentative" | "No";
   speaking: string;
@@ -68,7 +68,7 @@ export const events: EventRecord[] = [
     name: "CCW Orlando",
     dates: "Jan 21–23, 2026",
     dateSort: "2026-01-21",
-    phase: "past",
+    dateEndSort: "2026-01-23",
     location: "Orlando, FL",
     status: "Confirmed",
     speaking: "None",
@@ -89,7 +89,7 @@ export const events: EventRecord[] = [
     name: "CCW Exchange San Diego",
     dates: "Feb 4–6, 2026",
     dateSort: "2026-02-04",
-    phase: "past",
+    dateEndSort: "2026-02-06",
     location: "San Diego, CA",
     status: "Confirmed",
     speaking: "Speaking slot on Feb 5",
@@ -110,7 +110,7 @@ export const events: EventRecord[] = [
     name: "HBS 35th Women in Business Conference",
     dates: "Feb 7, 2026",
     dateSort: "2026-02-07",
-    phase: "past",
+    dateEndSort: "2026-02-07",
     location: "Boston, MA",
     status: "Confirmed",
     speaking: "Panel",
@@ -131,7 +131,7 @@ export const events: EventRecord[] = [
     name: "CCW Exchange Austin",
     dates: "Mar 3–6, 2026",
     dateSort: "2026-03-03",
-    phase: "past",
+    dateEndSort: "2026-03-06",
     location: "Austin, TX",
     status: "Confirmed",
     speaking: "None",
@@ -152,7 +152,7 @@ export const events: EventRecord[] = [
     name: "Shoptalk Spring",
     dates: "Mar 23–26, 2026",
     dateSort: "2026-03-23",
-    phase: "past",
+    dateEndSort: "2026-03-26",
     location: "Las Vegas, NV",
     status: "Confirmed",
     speaking: "None",
@@ -173,7 +173,7 @@ export const events: EventRecord[] = [
     name: "CCW Chief Experience Officer Executive Exchange",
     dates: "May 13–15, 2026",
     dateSort: "2026-05-13",
-    phase: "past",
+    dateEndSort: "2026-05-15",
     location: "Charlotte, NC",
     status: "Confirmed",
     speaking: "None",
@@ -194,7 +194,7 @@ export const events: EventRecord[] = [
     name: "The Lead Summit",
     dates: "May 20–21, 2026",
     dateSort: "2026-05-20",
-    phase: "past",
+    dateEndSort: "2026-05-21",
     location: "New York, NY",
     status: "Confirmed",
     speaking: "None",
@@ -215,7 +215,7 @@ export const events: EventRecord[] = [
     name: "NiCE World",
     dates: "Jun 8–10, 2026",
     dateSort: "2026-06-08",
-    phase: "past",
+    dateEndSort: "2026-06-10",
     location: "Orlando, FL",
     status: "Confirmed",
     speaking: "None",
@@ -236,7 +236,7 @@ export const events: EventRecord[] = [
     name: "CCW Vegas",
     dates: "Jun 22–26, 2026",
     dateSort: "2026-06-22",
-    phase: "past",
+    dateEndSort: "2026-06-26",
     location: "Las Vegas, NV",
     status: "Confirmed",
     speaking: "45-minute fireside chat · Cat + Grant",
@@ -284,7 +284,7 @@ export const events: EventRecord[] = [
     name: "IQPC CX Retail UK",
     dates: "Jul 1–2, 2026",
     dateSort: "2026-07-01",
-    phase: "past",
+    dateEndSort: "2026-07-02",
     location: "London, UK",
     status: "Confirmed",
     speaking: "30-minute plenary · Zach",
@@ -307,7 +307,7 @@ export const events: EventRecord[] = [
     name: "CCW Exchange Denver",
     dates: "Jul 15–17, 2026",
     dateSort: "2026-07-15",
-    phase: "past",
+    dateEndSort: "2026-07-17",
     location: "Denver, CO",
     status: "Confirmed",
     speaking: "10-minute quickfire · Matt",
@@ -328,7 +328,7 @@ export const events: EventRecord[] = [
     name: "Consero Summit",
     dates: "Jul 22, 2026",
     dateSort: "2026-07-22",
-    phase: "past",
+    dateEndSort: "2026-07-22",
     location: "New York, NY",
     status: "Confirmed",
     speaking: "40-minute fireside · Cat + Grant",
@@ -349,7 +349,7 @@ export const events: EventRecord[] = [
     name: "CCW Exchange Chicago",
     dates: "Aug 5–7, 2026",
     dateSort: "2026-08-05",
-    phase: "now",
+    dateEndSort: "2026-08-07",
     location: "Chicago, IL",
     status: "Confirmed",
     speaking: "10-minute quickfire · Taylor",
@@ -388,7 +388,7 @@ export const events: EventRecord[] = [
     name: "Contact.io",
     dates: "Aug 23–25, 2026",
     dateSort: "2026-08-23",
-    phase: "upcoming",
+    dateEndSort: "2026-08-25",
     location: "Denver, CO",
     status: "No",
     speaking: "None",
@@ -421,7 +421,7 @@ export const events: EventRecord[] = [
     name: "Genesys Xperience",
     dates: "Sep 1–3, 2026",
     dateSort: "2026-09-01",
-    phase: "upcoming",
+    dateEndSort: "2026-09-03",
     location: "Las Vegas, NV",
     status: "Confirmed",
     speaking: "20-minute solution talk · Sep 3 at 1:10 PM",
@@ -476,7 +476,7 @@ export const events: EventRecord[] = [
     name: "IQPC CX Travel & Hospitality",
     dates: "Sep 8–9, 2026",
     dateSort: "2026-09-08",
-    phase: "upcoming",
+    dateEndSort: "2026-09-09",
     location: "London, UK",
     status: "Confirmed",
     speaking: "30-minute plenary",
@@ -521,7 +521,7 @@ export const events: EventRecord[] = [
     name: "Customer Connect Expo",
     dates: "Sep 9–10, 2026",
     dateSort: "2026-09-09",
-    phase: "upcoming",
+    dateEndSort: "2026-09-10",
     location: "Atlanta, GA",
     status: "Confirmed",
     speaking: "None",
@@ -565,7 +565,7 @@ export const events: EventRecord[] = [
     name: "IQPC CX Retail",
     dates: "Sep 14–15, 2026",
     dateSort: "2026-09-14",
-    phase: "upcoming",
+    dateEndSort: "2026-09-15",
     location: "Atlanta, GA",
     status: "Confirmed",
     speaking: "30-minute plenary",
@@ -604,7 +604,7 @@ export const events: EventRecord[] = [
     name: "Shoptalk Fall",
     dates: "Sep 29–30, 2026",
     dateSort: "2026-09-29",
-    phase: "upcoming",
+    dateEndSort: "2026-09-30",
     location: "Nashville, TN",
     status: "No",
     speaking: "None",
@@ -630,7 +630,7 @@ export const events: EventRecord[] = [
     name: "Consero CX & Contact Center Forum",
     dates: "Oct 4–6, 2026",
     dateSort: "2026-10-04",
-    phase: "upcoming",
+    dateEndSort: "2026-10-06",
     location: "The Woodlands, TX",
     status: "Confirmed",
     speaking: "50-minute interactive breakout",
@@ -666,7 +666,7 @@ export const events: EventRecord[] = [
     name: "CCW Amsterdam",
     dates: "Oct 5–7, 2026",
     dateSort: "2026-10-05",
-    phase: "upcoming",
+    dateEndSort: "2026-10-07",
     location: "Amsterdam, Netherlands",
     status: "No",
     speaking: "None",
@@ -686,7 +686,7 @@ export const events: EventRecord[] = [
     name: "CCW Nashville",
     dates: "Oct 7–9, 2026",
     dateSort: "2026-10-07",
-    phase: "upcoming",
+    dateEndSort: "2026-10-09",
     location: "Nashville, TN",
     status: "Confirmed",
     speaking: "Panel · Oct 8",
@@ -728,7 +728,7 @@ export const events: EventRecord[] = [
     name: "ICMI Contact Center Expo",
     dates: "Oct 26–29, 2026",
     dateSort: "2026-10-26",
-    phase: "upcoming",
+    dateEndSort: "2026-10-29",
     location: "Orlando, FL",
     status: "Confirmed",
     speaking: "Lunch & Learn · Wednesday · confirmation needs reconciliation",
@@ -769,7 +769,7 @@ export const events: EventRecord[] = [
     name: "CCW UK Executive Exchange",
     dates: "Nov 2–4, 2026",
     dateSort: "2026-11-02",
-    phase: "upcoming",
+    dateEndSort: "2026-11-04",
     location: "London / Windsor, UK",
     status: "Confirmed",
     speaking: "45-minute interactive workshop",
@@ -804,7 +804,7 @@ export const events: EventRecord[] = [
     name: "CCW Executive Exchange Miami",
     dates: "Nov 2–4, 2026",
     dateSort: "2026-11-02",
-    phase: "upcoming",
+    dateEndSort: "2026-11-04",
     location: "Miami, FL",
     status: "Confirmed",
     speaking: "Main-stage client case study",
@@ -840,7 +840,7 @@ export const events: EventRecord[] = [
     name: "Reuters Customer Service & Experience East",
     dates: "Nov 17–18, 2026",
     dateSort: "2026-11-17",
-    phase: "upcoming",
+    dateEndSort: "2026-11-18",
     location: "New York, NY",
     status: "Confirmed",
     speaking: "45-minute workshop",
@@ -872,6 +872,25 @@ export const events: EventRecord[] = [
     },
   },
 ].sort((a, b) => a.dateSort.localeCompare(b.dateSort));
+
+export const programTimeZone = "America/Los_Angeles";
+
+export function getProgramDate(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: programTimeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+export function getEventPhase(event: EventRecord, programDate = getProgramDate()): EventPhase {
+  if (programDate < event.dateSort) return "upcoming";
+  if (programDate > event.dateEndSort) return "past";
+  return "now";
+}
 
 export const eventBySlug = (slug: string) => events.find((event) => event.slug === slug);
 

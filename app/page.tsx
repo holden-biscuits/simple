@@ -5,15 +5,18 @@ import { EventDirectory } from "./components/event-directory";
 import { SiteHeader } from "./components/site-header";
 import { Footer } from "./components/footer";
 import { BackToTop, PageContents } from "./components/page-contents";
-import { events } from "./data/events";
+import { events, getEventPhase, getProgramDate } from "./data/events";
 
 export const metadata: Metadata = {
   title: "Event Basecamp · 2026",
   description: "Dates, owners, plans, and follow-up for the 2026 event program.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
-  const confirmedUpcoming = events.filter((e) => e.phase !== "past" && e.status === "Confirmed").length;
+  const programDate = getProgramDate();
+  const confirmedUpcoming = events.filter((event) => getEventPhase(event, programDate) !== "past" && event.status === "Confirmed").length;
   const meetings = events.filter((e) => e.guaranteedMeetings.startsWith("Yes")).length;
   return (
     <main id="page-top">
@@ -60,7 +63,7 @@ export default function Home() {
           <h2>Pick an event. See the whole plan.</h2>
           <p>The conference tracker supplies the event list. Active Notion projects add the working details. If nothing is planned for a workstream, the page says “None.”</p>
         </div>
-        <EventDirectory events={events} />
+        <EventDirectory events={events} programDate={programDate} />
         <BackToTop />
       </section>
       <Footer />

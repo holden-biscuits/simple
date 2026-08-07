@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { getWorkstreams, isEmptyWorkstream, type EventRecord } from "../data/events";
+import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord } from "../data/events";
 
 type BoardFilter = "all" | "support" | "no-support" | "team-open" | "speaking";
 
@@ -47,7 +47,7 @@ function staffingSignal(event: EventRecord) {
   return { state: "open", label: "No team named" };
 }
 
-export function MarketingSupportBoard({ events }: { events: EventRecord[] }) {
+export function MarketingSupportBoard({ events, programDate }: { events: EventRecord[]; programDate: string }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<BoardFilter>("all");
 
@@ -106,7 +106,7 @@ export function MarketingSupportBoard({ events }: { events: EventRecord[] }) {
             <th>
               <Link href={`/events/${event.slug}`}>{event.name}</Link>
               <span>{event.dates} · {event.location}</span>
-              <small>{event.phase === "now" ? "Happening now" : "Upcoming"}</small>
+              <small>{getEventPhase(event, programDate) === "now" ? "Happening now" : "Upcoming"}</small>
             </th>
             <td data-label="Activation"><div className="matrix-signals">{signals.length ? signals.map((signal) => <span key={signal}>{signal}</span>) : <span>Attendance only</span>}</div></td>
             <td data-label="Marketing support">{support.length ? <ul>{support.map((item) => <li key={item}>{item}</li>)}</ul> : <span className="matrix-empty">None listed</span>}</td>

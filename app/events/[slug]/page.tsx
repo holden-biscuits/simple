@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getEventPhase, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() { return events.map((event) => ({ slug: event.slug })); }
 
@@ -18,6 +20,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const { slug } = await params;
   const event = eventBySlug(slug);
   if (!event) notFound();
+  const eventPhase = getEventPhase(event);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = event.guaranteedMeetings.startsWith("Yes");
@@ -65,7 +68,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     isEmptyWorkstream(workstreams.swag) ? null : "Swag / materials",
   ].filter(Boolean).join(" · ") || "Attendance only";
   const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;
-  const meetingProgressLabel = event.phase === "past" ? "Meetings recorded" : "Meetings scheduled";
+  const meetingProgressLabel = eventPhase === "past" ? "Meetings recorded" : "Meetings scheduled";
   const tldr = [
     ["Participation", event.status === "No" ? "Not attending" : event.status],
     ["Program mix", programMix],
@@ -73,13 +76,13 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     [meetingProgressLabel, isNotAttending ? "0" : bookedMeetingLabel],
     ["Team", teamSummary],
   ];
-  const showResults = event.phase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
+  const showResults = eventPhase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
 
   return (
     <main id="page-top">
       <SiteHeader />
       <section className={`event-hero${isNotAttending ? " event-hero-inactive" : ""}`}>
-        <div className="event-back"><Link className="back-link" href="/#events"><b aria-hidden="true">←</b><span>Back to events</span></Link><span>{event.status === "No" ? "Not attending" : event.phase === "past" ? "Past event" : event.phase === "now" ? "Happening now" : "Upcoming"}</span></div>
+        <div className="event-back"><Link className="back-link" href="/#events"><b aria-hidden="true">←</b><span>Back to events</span></Link><span>{event.status === "No" ? "Not attending" : eventPhase === "past" ? "Past event" : eventPhase === "now" ? "Happening now" : "Upcoming"}</span></div>
         <div className="event-title-row">
           <div><p className="eyebrow">{event.dates}</p><h1>{event.name}</h1><p className="event-city">{event.location}</p></div>
           <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import type { EventPhase, EventRecord } from "../data/events";
+import { getEventPhase, type EventPhase, type EventRecord } from "../data/events";
 
 type AttendanceFilter = "all" | "going" | "deciding" | "not-going";
 
@@ -51,7 +51,7 @@ function EventCard({ event }: { event: EventRecord }) {
   );
 }
 
-export function EventDirectory({ events }: { events: EventRecord[] }) {
+export function EventDirectory({ events, programDate }: { events: EventRecord[]; programDate: string }) {
   const [query, setQuery] = useState("");
   const [attendance, setAttendance] = useState<AttendanceFilter>("all");
   const filtered = useMemo(() => {
@@ -128,7 +128,7 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
 
       {groups.map((group) => {
         const matches = filtered
-          .filter((event) => event.phase === group.phase)
+          .filter((event) => getEventPhase(event, programDate) === group.phase)
           .sort((a, b) => group.phase === "past"
             ? b.dateSort.localeCompare(a.dateSort)
             : a.dateSort.localeCompare(b.dateSort));
