@@ -470,9 +470,13 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Aug 13/);
   assert.match(genesysHtml, /Travel and hotels should already be booked/);
   assert.match(genesysHtml, /Marketing tasks/);
-  assert.doesNotMatch(genesysHtml, /id="workstream-marketing"/);
-  assert.doesNotMatch(genesysHtml, /id="workstream-budget"/);
+  assert.match(genesysHtml, /8(?:<!-- -->)? of nine workstreams are in play/);
+  assert.match(genesysHtml, /id="workstream-marketing"/);
+  assert.match(genesysHtml, /id="workstream-budget"/);
+  assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks">Open workspace/);
+  assert.match(genesysHtml, /href="\/marketing#measurement">Open measurement/);
   assert.doesNotMatch(genesysHtml, /id="workstream-secondary"/);
+  assert.match(genesysHtml, /Not in this event plan[\s\S]*Secondary events[\s\S]*None/);
 
   const contact = await render("/events/contact-io");
   assert.equal(contact.status, 200);
@@ -503,6 +507,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /25% complete on Aug 6/);
   assert.match(customerConnectHtml, /Exhibitor portal/);
   assert.match(customerConnectHtml, /Complimentary tickets/);
+  assert.match(customerConnectHtml, /6(?:<!-- -->)? of nine workstreams are in play/);
+  assert.match(customerConnectHtml, /id="workstream-marketing"/);
+  assert.match(customerConnectHtml, /id="workstream-budget"/);
   assert.doesNotMatch(customerConnectHtml, /id="workstream-swag"/);
 
   const icmi = await render("/events/icmi-contact-center-expo");

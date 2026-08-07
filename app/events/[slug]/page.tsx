@@ -58,7 +58,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ["Demos booked", event.demosBooked],
     ["Closed", event.closed],
   ] as const;
-  const workstreamKeys = (Object.keys(workstreamLabels) as WorkstreamKey[]).filter((key) => key !== "marketing" && key !== "budget");
+  const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
   const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
   const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
@@ -214,13 +214,13 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <BackToTop />
         </aside>
         <div className="workstreams">
-          <div className="section-intro"><p className="eyebrow">Field checklist</p><h2>What the event team needs to know and do.</h2></div>
+          <div className="section-intro"><p className="eyebrow">Field checklist</p><h2>What the event team needs to know and do.</h2><p>{activeWorkstreamKeys.length} of nine workstreams are in play. Relevant sections are open below; everything else stays in the explicit not-in-plan summary.</p></div>
           {activeWorkstreamKeys.map((key, index) => {
             const items = workstreams[key];
             return <article className="workstream" id={`workstream-${key}`} key={key}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
-                <div className="workstream-title-row"><h3>{workstreamLabels[key]}</h3></div>
+                <div className="workstream-title-row"><h3>{workstreamLabels[key]}</h3>{key === "marketing" ? <Link href={`/marketing?event=${event.slug}#event-tasks`}>Open workspace →</Link> : key === "budget" ? <Link href="/marketing#measurement">Open measurement →</Link> : null}</div>
                 <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop />
               </div>
             </article>;

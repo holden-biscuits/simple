@@ -777,6 +777,7 @@ button, input, select { font: inherit; }
 .detail-links { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; font: 700 12px/1.45 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .detail-links span { color: var(--muted); }
 .workstreams .section-intro { margin-bottom: 25px; }
+.workstreams .section-intro > p:not(.eyebrow) { max-width: 680px; margin: 16px 0 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
 .workstream { display: grid; grid-template-columns: 70px 1fr; gap: 20px; padding: 28px 0; border-top: 1px solid var(--line); }
 .workstream > span { width: 36px; height: 36px; display: grid; place-items: center; color: var(--paper); background: var(--green); border-radius: 50%; font: 700 10px var(--font-geist-mono), monospace; }
 .workstream h3 { margin: 0 0 15px; font: 400 27px Georgia, serif; }
