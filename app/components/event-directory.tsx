@@ -4,12 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
 import { attendanceFilters, filterEventDirectory, matchesAttendance, matchesProgramYear, type AttendanceFilter } from "../data/event-filters";
-
-function guaranteedMeetingSignal(event: EventRecord) {
-  if (!event.guaranteedMeetings.startsWith("Yes")) return "0 Guaranteed Meetings";
-  const range = event.guaranteedMeetings.match(/\d+[–-]\d+/)?.[0];
-  return range ? `${range} Guaranteed Meetings` : "Guaranteed Meetings · Count TBD";
-}
+import { getGuaranteedMeetingSignal } from "../data/event-signals";
 
 function EventCard({ event }: { event: EventRecord }) {
   const verification = getEventVerification(event);
@@ -30,7 +25,7 @@ function EventCard({ event }: { event: EventRecord }) {
       <p className="event-location">{event.location}</p>
       <div className="event-signals">
         <span>{speakingOpps} Speaking Opp</span>
-        <span>{guaranteedMeetingSignal(event)}</span>
+        <span>{getGuaranteedMeetingSignal(event)}</span>
         <span>{attending} Attending</span>
       </div>
       <div className="event-card-freshness">

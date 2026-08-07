@@ -51,6 +51,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /CCW Orlando 2027/);
   assert.match(html, /CCW UK Executive Exchange 2027/);
   assert.match(html, /CCW Vegas 2027/);
+  assert.match(html, /6 Guaranteed Meetings/);
+  assert.match(html, /10\+ Guaranteed Meetings/);
   assert.match(html, /29(?:<!-- -->)?<\/strong><span>events on the map/);
   assert.match(html, /Checked <time dateTime="2026-08-06">Aug 6<\/time>/);
   assert.match(html, /Conference tracker \+ 4/);
