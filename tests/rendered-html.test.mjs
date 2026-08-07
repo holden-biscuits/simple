@@ -227,7 +227,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /ICMI participation[\s\S]*Status: Tentative[\s\S]*Status: Confirmed/);
   assert.match(html, /Genesys Xperience roster[\s\S]*Cat, Matt, Taylor and Josh[\s\S]*Holden[\s\S]*Richard and Lars/);
   assert.match(html, /CCW Vegas 2027 workshop date[\s\S]*June 15, 2027 is Tuesday/);
-  assert.match(html, /replace Monaco with HubSpot/);
+  assert.match(html, /Replace Monaco with HubSpot/);
+  assert.match(html, /Genesys Wish Line activation[\s\S]*quarter-mile taxi geofence/);
   assert.match(html, /Meeting attribution and outcome QA/);
   assert.match(html, /Normalized event-cost ledger[\s\S]*Add a Costs tab keyed by Event key/);
   assert.match(html, /2 say Scheduled and 2 have no outcome/);
@@ -738,7 +739,10 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /id="event-writebacks"/);
   assert.match(genesysHtml, /Source records still need to catch up\./);
   assert.match(genesysHtml, /Genesys Xperience roster[\s\S]*Current source[\s\S]*Proposed source/);
-  assert.match(genesysHtml, /Genesys Xperience execution page/);
+  assert.match(genesysHtml, /Genesys roster reference/);
+  assert.match(genesysHtml, /Genesys Wish Line activation/);
+  assert.match(genesysHtml, /Genesys speaking plan/);
+  assert.match(genesysHtml, /Genesys CRM logging route/);
   assert.match(genesysHtml, /gid=0&amp;range=A16:W16/);
   assert.match(genesysHtml, /Open event row(?:<!-- -->)? ↗/);
   assert.match(genesysHtml, /Canonical Event key/);

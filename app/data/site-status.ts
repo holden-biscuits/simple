@@ -230,6 +230,12 @@ export const siteStatus = {
     ] as SourceChange[],
     latestChecks: [
       {
+        system: "Direct update",
+        checkedAt: "Aug 07 · 2026",
+        scope: "Task review · Genesys Wish Line activation · 9:50 AM PT",
+        result: "Holden confirmed the condensed taxi route, quarter-mile geofence, estimated loop timing, bonus spot-based placement, conditional airport inventory, live driver tracking, Michael as the single contact and AP confirmation pending. The event brief and marketing workspace were updated; four exact Notion write-back candidates now preserve field ownership. No external write or production deployment was made.",
+      },
+      {
         system: "Scheduled heartbeat · Notion · Gmail · Slack · HubSpot",
         checkedAt: "Aug 07 · 2026",
         scope: "Scheduled source scan · 9:00 AM PT",

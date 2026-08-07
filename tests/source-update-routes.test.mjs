@@ -35,7 +35,14 @@ test("event-specific write-backs resolve to published event pages", () => {
   const tagged = writebackQueue.filter((item) => item.eventSlug);
   assert.ok(tagged.length >= 9);
   assert.ok(tagged.every((item) => publishedSlugs.has(item.eventSlug)));
-  assert.deepEqual(getEventWritebackQueue("genesys-xperience").map((item) => item.system), ["Conference tracker", "Notion"]);
+  const genesys = getEventWritebackQueue("genesys-xperience");
+  assert.deepEqual(genesys.map((item) => item.system), ["Conference tracker", "Notion", "Notion", "Notion", "Notion"]);
+  assert.deepEqual(genesys.slice(1).map((item) => item.scope), [
+    "Genesys roster reference",
+    "Genesys Wish Line activation",
+    "Genesys speaking plan",
+    "Genesys CRM logging route",
+  ]);
   const customerConnect = getEventWritebackQueue("customer-connect-expo");
   assert.deepEqual(customerConnect.map((item) => item.system), ["Conference tracker", "Notion", "Notion", "Notion"]);
   assert.deepEqual(customerConnect.slice(1).map((item) => item.scope), [
