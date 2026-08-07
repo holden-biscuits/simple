@@ -81,6 +81,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
   const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
+  const workstreamContents = activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] }));
   const firstActiveWorkstreamHref = activeWorkstreamKeys.length ? `#workstream-${activeWorkstreamKeys[0]}` : "#event-crew";
   const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
   const footprint = getEventFootprint(event);
@@ -122,7 +123,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>
         </div>
       </section>
-      <PageContents items={isNotAttending ? [
+      <div className="event-page-layout shell">
+      <PageContents variant="side" secondaryItems={isNotAttending ? [] : workstreamContents} secondaryLabel="Plan sections" items={isNotAttending ? [
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
         { id: "event-prospecting", label: "Prospecting" },
@@ -137,12 +139,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
         ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
         { id: "event-crew", label: "Crew" },
-        ...activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] })),
         ...(showResults ? [{ id: "event-results", label: "Results" }] : []),
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
         { id: "event-update-route", label: "Update this event" },
       ]} />
+      <div className="event-page-main">
 
       <section className="event-tldr shell" id="event-tldr">
         <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>{eventPhase === "past" ? "What happened and what happens next." : "Know this before you go."}</h2></div>
@@ -375,6 +377,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           </div> : null}
         </details>
       </section>
+      </div>
+      </div>
 
       <Footer />
     </main>

@@ -819,6 +819,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Travel and hotels should already be booked/);
   assert.match(genesysHtml, /Marketing tasks/);
   assert.match(genesysHtml, /8(?:<!-- -->)? of nine workstreams are in play/);
+  assert.match(genesysHtml, /<strong>Navigate<\/strong>/);
+  assert.match(genesysHtml, /<b>Plan sections<\/b>[\s\S]*href="#workstream-marketing"/);
+  assert.match(genesysHtml, /<summary>Navigate this event <span>[^<]+<\/span><\/summary>/);
   assert.match(genesysHtml, /id="workstream-marketing"/);
   assert.match(genesysHtml, /id="workstream-budget"/);
   assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks">Open workspace/);
