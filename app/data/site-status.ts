@@ -9,13 +9,19 @@ export const siteStatus = {
     delivery: "Roundup posted in this Codex task",
     connectionCheckedAt: "2026-08-06",
     connectionCheckedLabel: "Aug 06 · 2026",
-    lastSuccessfulScan: null as null | string,
+    lastSuccessfulScan: "Aug 06, 2026 · 6:26 PM PT · manual baseline",
     latestChecks: [
+      {
+        system: "Google Sheets · Notion · Gmail · Slack · Google Drive · HubSpot",
+        checkedAt: "Aug 06 · 2026",
+        scope: "First end-to-end source baseline",
+        result: "The scan reviewed 27 tracker rows, five active Notion projects, organizer mail received after Aug 5, matching Slack messages, the Events Drive folder and exact HubSpot event-source fields. Gmail supplied an Aug 13 Genesys email deadline and Customer Connect onboarding actions. Slack had no new matching event messages. Events Drive contained only the restricted Genesys rules brief. HubSpot contained 29 event-sourced deals, all explicitly attributed to CCW Vegas; none were attributable to Genesys Xperience, Customer Connect Expo or CCW Exchange Chicago.",
+      },
       {
         system: "Notion · Slack · Gmail",
         checkedAt: "Aug 06 · 2026",
         scope: "Customer Connect Expo focused scan",
-        result: "The participation decision remains confirmed. Gmail shows an executed exhibition-space contract, an active exhibitor portal, a 25%-complete company profile and an Aug 10 organizer onboarding call. The invoice was forwarded to AP, but payment status is not confirmed. Notion still lists four unnamed SDR attendees, and the booth number remains open.",
+        result: "The participation decision remains confirmed. Gmail shows an executed exhibition-space contract, an active exhibitor portal, a 25%-complete company profile, an Aug 10 organizer onboarding call and a first-week request to publish the event/free-ticket link. Portal deadlines need reconciliation; the space-only date is Aug 17. The invoice was forwarded to AP, but payment status is not confirmed. Notion still lists four unnamed SDR attendees, and the booth number remains open.",
       },
       {
         system: "Google Sheets · Notion · Gmail · organizer site",
@@ -30,10 +36,10 @@ export const siteStatus = {
         result: "The tracker keeps Taylor confirmed and Josh available; Notion and the calendar record list Taylor + Josh. The tracker value remains on the site and the conflict is in the approval queue. A separate internal ICP sheet contains 28 researched accounts but is not the organizer’s meeting schedule. HubSpot returned no explicitly Chicago-attributed deal record, so no CRM outcome is published.",
       },
       {
-        system: "Direct update · confidential agreement · HubSpot",
+        system: "Direct update · confidential agreement · Gmail · HubSpot",
         checkedAt: "Aug 06 · 2026",
         scope: "Genesys Xperience field brief and CRM check",
-        result: "Holden confirmed the Wish Line media buy is approved, the phone number is purchased, the landing page and HubSpot campaign are live, the talk title/abstract/speaker are locked, and the final deck is due Aug 10. The executed referral agreement was translated into an internal sales brief in Events Drive. HubSpot returned zero meeting-event records for both ‘Genesys’ and ‘Xperience’ and no matching marketing-event record, so the event page does not publish a decorative scheduled-meeting count.",
+        result: "Holden confirmed the Wish Line media buy is approved, the phone number is purchased, the landing page and HubSpot campaign are live, the talk title/abstract/speaker are locked, and the final deck is due Aug 10. Organizer mail extended the contracted pre-event email deadline to Aug 13. The confidential referral agreement is represented only as operational guardrails and a link to the restricted brief; its commercial terms are not published. Exact HubSpot event-source fields contain no Genesys-attributed deal, and no matching meeting- or marketing-event record was found, so the event page does not publish a decorative outcome count.",
       },
       {
         system: "Direct decision",

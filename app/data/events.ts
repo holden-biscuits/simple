@@ -450,7 +450,7 @@ export const events: EventRecord[] = [
     venue: "Wynn Las Vegas · Orchestrators Hall",
     credentials: "9 booth passes",
     priorityActions: [
-      "Submit the contracted pre-event email copy for Cat’s review, then send it through the sponsor portal.",
+      "Submit the contracted pre-event email copy by Aug 13: Cat reviews, then Holden sends it through the sponsor portal.",
       "Complete the final QA pass on usesimple.ai/xperience; the HubSpot form, campaign attribution, and 15-minute demo CTA are already in place.",
       "Move the approved Wish Line activation into production after the Aug 7 creative-agency handoff; the phone number is already purchased.",
       "Deliver Cat’s final solution-talk deck by Aug 10, then schedule rehearsal and confirm AV.",
@@ -458,7 +458,7 @@ export const events: EventRecord[] = [
       "Lock the post-event lead list, tiering, ownership, and follow-up workflow before the team arrives.",
     ],
     marketingTasks: [
-      { title: "Submit the contracted pre-event email copy", status: "In progress", due: "Aug 7", owner: "Holden + Cat", note: "Cat reviews; Holden submits through the sponsor portal.", url: "https://www.notion.so/3b46fee642fe80c5b96bd1b82743a8c0" },
+      { title: "Submit the contracted pre-event email copy", status: "In progress", due: "Aug 13", owner: "Holden + Cat", note: "The organizer extended the deadline and the portal task is live. Cat reviews; Holden submits.", url: "https://www.notion.so/3b46fee642fe80c5b96bd1b82743a8c0" },
       { title: "Final QA for the Xperience landing page", status: "Ready for review", owner: "Marketing", note: "HubSpot form, campaign attribution, and 15-minute demo CTA are already live.", url: "https://usesimple.ai/xperience" },
       { title: "Move Wish Line into creative production", status: "In progress", due: "Starts week of Aug 10", owner: "Holden", note: "$15K media buy is approved; phone number is purchased; creative-agency handoff is Aug 7.", url: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c" },
       { title: "Deliver the final solution-talk deck", status: "In progress", due: "Aug 10", owner: "Cat + Holden", note: "Title, abstract, and speaker are locked. Cat has the source material; Holden will remind and unblock.", url: "https://usesimple.ai/xperience" },
@@ -477,12 +477,13 @@ export const events: EventRecord[] = [
       "Simple AI is the only external voice-AI partner in the current sponsor plan besides Genesys’ own product. Use that as an event differentiator, then recheck the final sponsor roster before making the claim publicly.",
       "Target Genesys accounts. Ask which Genesys product they run, which call types matter, monthly volume, current failure points, and who owns the contact-center roadmap.",
       "There are no guaranteed meetings. Every attendee should download the Cvent Events app now, source named contacts, introduce themselves, and pre-book directly.",
-      "For a promising Genesys-account conversation, add the meeting and context to HubSpot, then route it to Holden or the partner owner. Read the confidential sales rules before referring an account or making any partner commitment.",
+      "For a promising Genesys-account conversation, add the meeting and context to HubSpot, then route it to Holden or the partner owner. A conversation is not a registered referral: check account eligibility and permission to share, submit the Lead Registration Form, and wait for acceptance before treating it as registered.",
+      "Use only approved Genesys marks and partner language. The full commercial and compliance rules stay in the restricted brief linked below; do not copy the agreement into outreach or public materials.",
     ],
     workstreams: {
       speaking: ["20-minute solution talk on Sep 3 at 1:10 PM", "Title, abstract, and speaker are locked", "Final deck is due Aug 10; rehearse and confirm AV after the handoff"],
-      sponsorship: ["Booth confirmed in Orchestrators Hall", "Use the live Xperience page for the 15-minute demo CTA and HubSpot capture", "Wish Line media buy is approved and the phone number is purchased; production is owned on the marketing page"],
-      meetings: ["No guaranteed meetings", "Download the Cvent Events app now and use attendee names to target Genesys accounts", "Introduce yourself in the app, move promising contacts into direct outreach, and add every booked meeting to HubSpot with the required context"],
+      sponsorship: ["Booth confirmed in Orchestrators Hall", "Contracted pre-event email copy is due Aug 13; Cat reviews, then Holden submits through the sponsor portal", "Use the live Xperience page for the 15-minute demo CTA and HubSpot capture", "Wish Line media buy is approved and the phone number is purchased; production is owned on the marketing page"],
+      meetings: ["No guaranteed meetings", "Download the Cvent Events app now and use attendee names to target Genesys accounts", "Introduce yourself in the app, move promising contacts into direct outreach, and add every booked meeting to HubSpot with the required context", "Before referring an account, check the restricted Genesys rules and submit a Lead Registration Form; do not call it registered until Genesys accepts it"],
       swag: ["Stanleys", "Stick cards", "Printed handouts", "Karaoke machines", "Materials ship to MNHC and San Francisco, then travel with the team in large bags"],
       secondary: ["None"],
       travel: ["Event venue: Wynn Las Vegas", "Travel and hotels should already be booked for all nine attendees", "Do not over-engineer booth shifts: avoid crowding the space, keep enough coverage, and send teammates into the event to bring priority contacts back to the booth"],
@@ -560,6 +561,7 @@ export const events: EventRecord[] = [
     venue: "Georgia World Congress Center",
     relatedLinks: [
       { label: "Exhibitor portal", url: "https://customerconnectexpo.com/exhibitor-portal/login" },
+      { label: "Complimentary tickets", url: "https://www.customerconnectexpo.com/" },
     ],
     priorityActions: [
       "Name the four attendees and assign booth coverage, lead-capture, travel, and follow-up owners. Notion currently says only “SDRs TBD.”",
@@ -567,6 +569,14 @@ export const events: EventRecord[] = [
       "Complete the exhibitor portal company profile and add the event/free-ticket link to the Simple website within the organizer’s first-week window.",
       "Save the executed contract and exhibitor guide in the Events Drive, then confirm invoice and payment status with AP.",
       "Get the event app onto every attendee’s phone, build the target list, and start pre-booking directly.",
+    ],
+    marketingTasks: [
+      { title: "Complete the exhibitor company profile", status: "In progress", due: "Aug 13", owner: "Marketing", note: "The portal showed 25% complete on Aug 6. Finish the public company details and assets." },
+      { title: "Add the event and complimentary-ticket link to usesimple.ai", status: "Open", due: "Aug 13", owner: "Marketing + Web", note: "The organizer asked for the event and free-ticket link during the first onboarding week.", url: "https://www.customerconnectexpo.com/" },
+      { title: "Use the organizer onboarding call to close booth logistics", status: "Open", due: "Aug 10 · 9:00 AM PT", owner: "Holden", note: "Confirm booth number, package, lead retrieval, power, furniture, signage, and shipping." },
+      { title: "Reconcile portal deadlines and booth assets", status: "Open", due: "Aug 17", owner: "Marketing", note: "Several portal dates already show Aug 5. Confirm which deliverables apply, request recovery where needed, and close the Aug 17 space-only deadline." },
+      { title: "File the contract and exhibitor guide in Events Drive", status: "Open", owner: "Marketing + Operations", note: "The event folder does not yet contain these files. Save them without copying portal credentials." },
+      { title: "Confirm invoice payment status with AP", status: "In progress", due: "ASAP", owner: "Holden + AP", note: "The invoice was forwarded to AP; payment is not yet confirmed." },
     ],
     workstreams: {
       speaking: ["None"],

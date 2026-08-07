@@ -41,8 +41,10 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Conference tracker/);
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
-  assert.match(html, /first run pending/);
-  assert.match(html, /checks above were completed manually/);
+  assert.doesNotMatch(html, /first run pending/);
+  assert.match(html, /Last completed scan: Aug 06, 2026 · 6:26 PM PT · manual baseline/);
+  assert.match(html, /First end-to-end source baseline/);
+  assert.match(html, /all explicitly attributed to CCW Vegas/);
   assert.match(html, /Approval queue/);
   assert.match(html, /CCW Exchange Chicago/);
   assert.match(html, /tracker names Taylor and marks Josh available/);
@@ -54,7 +56,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /27 event rows reviewed/);
   assert.match(html, /Genesys Xperience field brief and CRM check/);
   assert.match(html, /Wish Line media buy is approved/);
-  assert.match(html, /zero meeting-event records/);
+  assert.match(html, /no Genesys-attributed deal/);
   assert.match(html, /CCW Exchange Chicago focused scan/);
   assert.match(html, /28 researched accounts/);
   assert.match(html, /IQPC CX Travel &amp; Hospitality focused scan/);
@@ -97,6 +99,13 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /aria-selected="true"[^>]*id="event-task-tab-genesys-xperience"/);
   assert.match(html, /id="event-task-tab-genesys-xperience"[^>]*tabindex="0"/);
   assert.doesNotMatch(html, /Confirm the next owner and deadline/);
+
+  const customerConnect = await render("/marketing?event=customer-connect-expo");
+  assert.equal(customerConnect.status, 200);
+  const customerConnectHtml = await customerConnect.text();
+  assert.match(customerConnectHtml, /Reconcile portal deadlines and booth assets/);
+  assert.match(customerConnectHtml, /Complete the exhibitor company profile/);
+  assert.match(customerConnectHtml, /Aug 17/);
 });
 
 test("search routes marketing tasks to the selected event workspace", async () => {
@@ -142,6 +151,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Stanleys/);
   assert.match(genesysHtml, /Karaoke machines/);
   assert.match(genesysHtml, /Genesys sales rules \(confidential\)/);
+  assert.match(genesysHtml, /Lead Registration Form/);
+  assert.match(genesysHtml, /Aug 13/);
   assert.match(genesysHtml, /Travel and hotels should already be booked/);
   assert.match(genesysHtml, /Marketing tasks/);
   assert.doesNotMatch(genesysHtml, /id="workstream-marketing"/);
@@ -167,6 +178,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Aug 10 at 9:00 AM PT/);
   assert.match(customerConnectHtml, /25% complete on Aug 6/);
   assert.match(customerConnectHtml, /Exhibitor portal/);
+  assert.match(customerConnectHtml, /Complimentary tickets/);
   assert.doesNotMatch(customerConnectHtml, /id="workstream-swag"/);
 
   const icmi = await render("/events/icmi-contact-center-expo");
