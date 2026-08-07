@@ -21,6 +21,15 @@ test("server-renders the event directory", async () => {
   assert.match(html, /aria-label="TeamSimple Event Basecamp home"/);
   assert.match(html, /TeamSimple/);
   assert.match(html, /Know the route before you hit the floor\./);
+  assert.match(html, /What do you need to do\?/);
+  assert.match(html, /Get the plan for one event\./);
+  assert.match(html, /Prepare and run the conversation\./);
+  assert.match(html, /Target, qualify, and route\./);
+  assert.match(html, /See the support plan and open work\./);
+  assert.match(html, /Check the standard rules\./);
+  assert.match(html, /See what changed and what conflicts\./);
+  assert.match(html, /href="#events"/);
+  assert.match(html, /href="\/sources"/);
   assert.match(html, /surfaces the workstreams in play/);
   assert.doesNotMatch(html, /page says “None/);
   assert.match(html, /ranger-raccoon-clean-hat\.png/);
@@ -110,6 +119,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const sourceSearchHtml = await sourceSearch.text();
   assert.match(sourceSearchHtml, /Genesys Xperience/);
   assert.match(sourceSearchHtml, /Source check · Aug 6, 2026 · Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
+
+  const startSearch = await render("/search?q=where%20should%20I%20go&type=Guide");
+  assert.equal(startSearch.status, 200);
+  const startSearchHtml = await startSearch.text();
+  assert.match(startSearchHtml, /Start with the task/);
+  assert.match(startSearchHtml, /\/#start-map/);
 });
 
 test("server-renders a searchable marketing support board", async () => {

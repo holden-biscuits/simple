@@ -45,9 +45,57 @@ export default function Home() {
         </div>
       </section>
       <PageContents items={[
+        { id: "start-map", label: "Start here" },
         { id: "program-summary", label: "Program summary" },
         { id: "events", label: "Event directory" },
       ]} />
+
+      <section className="start-map shell" id="start-map">
+        <div className="section-intro">
+          <p className="eyebrow">Start with the task</p>
+          <h2>What do you need to do?</h2>
+          <p>Open an event brief for event-specific facts. Use the role and process pages for work that repeats across the program.</p>
+        </div>
+        <div className="start-map-grid">
+          <Link href="#events">
+            <header><span>01</span><small>Event brief</small></header>
+            <h3>Get the plan for one event.</h3>
+            <p>Dates, location, roster, sponsorship, speaking, meetings, open work, and organizer links.</p>
+            <b>Open the directory →</b>
+          </Link>
+          <Link href="/ae">
+            <header><span>02</span><small>AE</small></header>
+            <h3>Prepare and run the conversation.</h3>
+            <p>Account context, discovery, demos, HubSpot notes, and the next-step handoff.</p>
+            <b>Open the AE guide →</b>
+          </Link>
+          <Link href="/sdr">
+            <header><span>03</span><small>SDR</small></header>
+            <h3>Target, qualify, and route.</h3>
+            <p>Event outreach, booth conduct, fast qualification, AE handoffs, and follow-up.</p>
+            <b>Open the SDR guide →</b>
+          </Link>
+          <Link href="/marketing">
+            <header><span>04</span><small>Marketing</small></header>
+            <h3>See the support plan and open work.</h3>
+            <p>Event-by-event deliverables, owners, due dates, production gaps, capture, and reporting.</p>
+            <b>Open marketing →</b>
+          </Link>
+          <Link href="/guides">
+            <header><span>05</span><small>Process</small></header>
+            <h3>Check the standard rules.</h3>
+            <p>Planning workstreams, timing, ZoomInfo, booth etiquette, lead tiers, and role guides.</p>
+            <b>Open the process guide →</b>
+          </Link>
+          <Link href="/sources">
+            <header><span>06</span><small>Source truth</small></header>
+            <h3>See what changed and what conflicts.</h3>
+            <p>Source coverage, scan receipts, applied updates, unresolved conflicts, and working files.</p>
+            <b>Open the source record →</b>
+          </Link>
+        </div>
+        <BackToTop />
+      </section>
 
       <section className="stats shell" id="program-summary" aria-label="Program summary">
         <div><strong>{events.length}</strong><span>events on the map</span></div>
