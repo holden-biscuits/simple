@@ -384,14 +384,15 @@ test("server-renders owning-record routes for open marketing work", async () => 
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
-  const response = await render("/search?q=names%20open&type=Event");
+  const response = await render("/search?q=passes%20unassigned&type=Event");
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Find the detail, not the page\./);
-  assert.match(html, /value="names open"/);
+  assert.match(html, /value="passes unassigned"/);
   assert.match(html, /Results open the exact section or working system you need/);
   assert.match(html, /Useful starting points/);
-  assert.match(html, /Staffing · names open/);
+  assert.match(html, /Staffing · 0 Attending \/ 11 Passes/);
+  assert.match(html, /Roster gap · 11 passes unassigned/);
   assert.match(html, /Meeting package · count TBD/);
   assert.match(html, /16 meetings · 7 demos recorded/);
   assert.match(html, /<span>All<\/span><b>\d+<\/b>/);
@@ -533,6 +534,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.equal(rosterGapSearch.status, 200);
   const rosterGapSearchHtml = await rosterGapSearch.text();
   assert.match(rosterGapSearchHtml, /Events with rosters still open/);
+  assert.match(rosterGapSearchHtml, /fewer people are attending than the current pass allocation/);
   assert.match(rosterGapSearchHtml, /href="\/\?attendance=going&amp;attention=roster#events"/);
   assert.match(rosterGapSearchHtml, /Saved event view/);
 

@@ -34,6 +34,8 @@ test("staffing signals distinguish named attendees from an unassigned plan", () 
   assert.equal(getStaffingSignal(event("ccw-exchange-chicago")).card, "1 Attending");
   assert.equal(getStaffingSignal(event("contact-io")).card, "0 Attending");
   assert.equal(getStaffingSignal(event("ccw-orlando")).card, "2 Attending / 2 Passes");
+  assert.equal(getStaffingSignal(event("iqpc-cx-travel-hospitality")).assignmentGap, 2);
+  assert.equal(getStaffingSignal(event("genesys-xperience")).assignmentGap, 0);
 });
 
 test("activation signals distinguish attendance from activation certainty", () => {

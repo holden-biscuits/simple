@@ -57,42 +57,55 @@ export function getStaffingSignal(event: StaffingSource) {
   const recordedPasses = event.credentials?.match(/\b(\d+)\s+(?:[a-z]+\s+)?passes?\b/i);
   const passes = recordedPasses ? Number(recordedPasses[1]) : planned;
   const card = passes ? `${named} Attending / ${passes} Pass${passes === 1 ? "" : "es"}` : `${named} Attending`;
+  const assignmentGap = passes ? Math.max(passes - named, 0) : 0;
 
   if (event.status === "No") return {
     card: "0 Attending",
     summary: "No team assigned",
     detail: "No team assigned",
     state: "not-attending" as const,
+    passCount: 0,
+    assignmentGap: 0,
   };
   if (planned && named === planned) return {
     card,
     summary: `${planned} attending`,
     detail: event.team.join(", "),
     state: "named" as const,
+    passCount: passes,
+    assignmentGap,
   };
   if (planned && named > 0) return {
     card,
     summary: `${named} named · ${planned} planned`,
     detail: `${event.team.join(", ")} · ${named} of ${planned} named`,
     state: "open" as const,
+    passCount: passes,
+    assignmentGap,
   };
   if (planned) return {
     card,
     summary: `${planned} planned · names open`,
     detail: `0 of ${planned} named`,
     state: "open" as const,
+    passCount: passes,
+    assignmentGap,
   };
   if (named) return {
     card,
     summary: `${named} named`,
     detail: event.team.join(", "),
     state: "named" as const,
+    passCount: passes,
+    assignmentGap,
   };
   return {
     card: "Team TBD",
     summary: "Not assigned",
     detail: "No team named",
     state: "open" as const,
+    passCount: passes,
+    assignmentGap,
   };
 }
 
