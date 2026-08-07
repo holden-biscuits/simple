@@ -8,8 +8,8 @@ import { BackToTop, PageContents } from "./components/page-contents";
 import { events, getEventPhase, getProgramDate } from "./data/events";
 
 export const metadata: Metadata = {
-  title: "Event Basecamp · 2026",
-  description: "Dates, owners, plans, and follow-up for the 2026 event program.",
+  title: "Event Basecamp · 2026–2027",
+  description: "Dates, owners, plans, and follow-up for the 2026–2027 event program.",
 };
 
 export const dynamic = "force-dynamic";
@@ -23,7 +23,7 @@ export default function Home() {
       <SiteHeader />
       <section className="home-hero">
         <div className="hero-copy">
-          <p className="eyebrow">TeamSimple · 2026 event plan</p>
+          <p className="eyebrow">TeamSimple · 2026–2027 event plan</p>
           <h1>Know the route before you hit the floor.</h1>
           <p className="hero-note">Dates, staffing, meeting targets, event plans, and follow-up live here.</p>
           <div className="ranger-card">
@@ -36,7 +36,7 @@ export default function Home() {
         </div>
         <div className="hero-tools">
           <div className="route-board" aria-label="Basecamp quick guide">
-            <div className="route-board-head"><span>Basecamp notes</span><span>2026</span></div>
+            <div className="route-board-head"><span>Basecamp notes</span><span>2026–27</span></div>
             <div className="route-line"><span>01</span><p>Check the event page before booking or shipping anything.</p></div>
             <div className="route-line"><span>02</span><p>Know your accounts, your owner, and the next-step ask.</p></div>
             <div className="route-line"><span>03</span><p>Log the conversation before the day ends.</p></div>
@@ -59,7 +59,7 @@ export default function Home() {
 
       <section className="directory shell" id="events">
         <div className="section-intro">
-          <p className="eyebrow">2026 event program</p>
+          <p className="eyebrow">2026–2027 event program</p>
           <h2>Pick an event. See the whole plan.</h2>
           <p>The conference tracker supplies the event list. Active Notion projects add the working details. Each page surfaces the workstreams in play and tucks everything else under “Not in this event plan.”</p>
         </div>

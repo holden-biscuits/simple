@@ -17,7 +17,7 @@ test("server-renders the event directory", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
-  assert.match(html, /<title>Event Basecamp · 2026<\/title>/i);
+  assert.match(html, /<title>Event Basecamp · 2026–2027<\/title>/i);
   assert.match(html, /aria-label="TeamSimple Event Basecamp home"/);
   assert.match(html, /TeamSimple/);
   assert.match(html, /Know the route before you hit the floor\./);
@@ -28,6 +28,10 @@ test("server-renders the event directory", async () => {
   assert.doesNotMatch(html, /ranger-raccoon-v2/);
   assert.match(html, /TeamSimple attendance/);
   assert.match(html, /Genesys Xperience/);
+  assert.match(html, /CCW Orlando 2027/);
+  assert.match(html, /CCW UK Executive Exchange 2027/);
+  assert.match(html, /CCW Vegas 2027/);
+  assert.match(html, /29(?:<!-- -->)?<\/strong><span>events on the map/);
   assert.match(html, /Checked <time dateTime="2026-08-06">Aug 6<\/time>/);
   assert.match(html, /Conference tracker \+ 4/);
   assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
@@ -43,7 +47,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Source monitor/);
   assert.match(html, /Monday, Wednesday and Friday/);
   assert.match(html, /Conference tracker/);
-  assert.match(html, /27 event rows checked · Aug 6/);
+  assert.match(html, /30 event rows checked · 2026 \+ 2027 · Aug 6/);
   assert.match(html, /2 organizer updates applied · Aug 6/);
   assert.match(html, /29 attributed deals · all CCW Vegas · Aug 6/);
   assert.match(html, /No direct scan available/);
@@ -71,6 +75,9 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /invitation-only format/);
   assert.match(html, /Customer Connect Expo focused scan/);
   assert.match(html, /25%-complete company profile/);
+  assert.match(html, /2027 conference tracker/);
+  assert.match(html, /Three confirmed 2027 events were added/);
+  assert.match(html, /“Mon Jun 15” workshop label conflicts/);
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
@@ -254,6 +261,31 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const denver = await render("/events/ccw-exchange-denver");
   const denverHtml = await denver.text();
   assert.match(denverHtml, /Matt, Carter/);
+
+  const orlando2027 = await render("/events/ccw-orlando-2027");
+  assert.equal(orlando2027.status, 200);
+  const orlando2027Html = await orlando2027.text();
+  assert.match(orlando2027Html, /Jan 25–27, 2027/);
+  assert.match(orlando2027Html, /11 planned · names open/);
+  assert.match(orlando2027Html, /6 Executive Leadership Exchange meetings/);
+  assert.match(orlando2027Html, /JW Marriott Bonnet Creek/);
+  assert.match(orlando2027Html, /2027 conference tracker · Organizer site/);
+
+  const uk2027 = await render("/events/ccw-uk-executive-exchange-2027");
+  assert.equal(uk2027.status, 200);
+  const uk2027Html = await uk2027.text();
+  assert.match(uk2027Html, /March 2027 · exact dates TBD/);
+  assert.match(uk2027Html, /minimum 10 30-minute meetings/);
+  assert.match(uk2027Html, /3 sponsor passes · 2 attendees planned/);
+
+  const vegas2027 = await render("/events/ccw-vegas-2027");
+  assert.equal(vegas2027.status, 200);
+  const vegas2027Html = await vegas2027.text();
+  assert.match(vegas2027Html, /Source check needed/);
+  assert.match(vegas2027Html, /June 15, 2027 is Tuesday/);
+  assert.match(vegas2027Html, /15 planned · names open/);
+  assert.match(vegas2027Html, /9 sponsor passes · 15 attendees planned/);
+  assert.match(vegas2027Html, /Caesars Forum/);
 
   const chicago = await render("/events/ccw-exchange-chicago");
   const chicagoHtml = await chicago.text();

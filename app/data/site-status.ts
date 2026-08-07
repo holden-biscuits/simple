@@ -12,6 +12,12 @@ export const siteStatus = {
     lastSuccessfulScan: "Aug 06, 2026 · 6:26 PM PT · manual baseline",
     latestChecks: [
       {
+        system: "Google Sheets · organizer sites",
+        checkedAt: "Aug 06 · 2026",
+        scope: "2027 conference tracker · '2027'!A1:R4",
+        result: "Three confirmed 2027 events were added: CCW Orlando, CCW UK Executive Exchange and CCW Vegas. The tracker supplies sponsorship, speaking, meeting-package and headcount details but no named attendees. Official organizer pages confirm Orlando on Jan 25–27 at JW Marriott Bonnet Creek and Las Vegas on Jun 14–17 at Caesars Forum. The UK Exchange exact March dates and venue remain open. The Vegas tracker’s “Mon Jun 15” workshop label conflicts with the 2027 calendar and is flagged for reconciliation.",
+      },
+      {
         system: "Google Sheets · Notion · Gmail · Slack · Google Drive · HubSpot",
         checkedAt: "Aug 06 · 2026",
         scope: "First end-to-end source baseline",
@@ -61,7 +67,7 @@ export const siteStatus = {
       },
     ],
     sources: [
-      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "27 event rows checked · Aug 6" },
+      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "30 event rows checked · 2026 + 2027 · Aug 6" },
       { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "5 active projects checked · Aug 6" },
       { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "1 restricted brief found · Aug 6" },
       { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "No new matching messages · Aug 6" },

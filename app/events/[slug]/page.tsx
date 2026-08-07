@@ -66,6 +66,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     ["Speaking", event.speaking],
     ["Guaranteed meetings", meetingPackage],
     ...(!isNotAttending && (bookedMeetingCount > 0 || event.meetingCountLabel) ? [["Meetings recorded", bookedMeetingLabel]] : []),
+    ...(event.credentials ? [["Passes / credentials", event.credentials]] : []),
     ["Team", teamSummary],
   ];
   const showResults = eventPhase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);

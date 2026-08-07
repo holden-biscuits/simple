@@ -49,7 +49,7 @@ function EventCard({ event }: { event: EventRecord }) {
         <span>{attending} Attending</span>
       </div>
       <div className="event-card-freshness">
-        <span>Checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt.replace(", 2026", "")}</time></span>
+        <span>Checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt.replace(/,\s\d{4}$/, "")}</time></span>
         <span>{verification.sources.length === 1 ? verification.sources[0] : `${verification.sources[0]} + ${verification.sources.length - 1}`}</span>
       </div>
     </Link>

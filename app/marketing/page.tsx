@@ -77,7 +77,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
       ]} />
 
       <section className="shell marketing-lessons" id="lessons">
-        <div className="section-intro"><p className="eyebrow">Lessons from this schedule</p><h2>Fix the handoffs that keep repeating.</h2><p>These are the patterns already visible across the 2026 tracker and event plans.</p></div>
+        <div className="section-intro"><p className="eyebrow">Lessons from this schedule</p><h2>Fix the handoffs that keep repeating.</h2><p>These are the patterns already visible across the 2026–2027 tracker and event plans.</p></div>
         <div className="lesson-grid">{operatingLessons.map(([title, copy], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{copy}</p></article>)}</div>
         <BackToTop />
       </section>
