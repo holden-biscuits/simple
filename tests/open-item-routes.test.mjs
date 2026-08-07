@@ -25,6 +25,13 @@ test("CRM and attribution items open the keyed HubSpot Marketing Event", () => {
   assert.equal(route.setupNeeded, false);
 });
 
+test("lead follow-up work opens the keyed HubSpot Marketing Event", () => {
+  const genesys = event("genesys-xperience");
+  const route = getOpenItemRoute(genesys, "Build the post-event lead and follow-up workspace");
+  assert.equal(route.system, "HubSpot Marketing Event");
+  assert.match(route.href, /record\/0-54\/827998353134/);
+});
+
 test("events without a Notion project link route setup work to the Events directory", () => {
   const reuters = event("reuters-customer-service-east");
   const route = getOpenItemRoute(reuters, reuters.priorityActions[0]);

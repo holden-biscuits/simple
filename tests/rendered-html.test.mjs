@@ -372,6 +372,17 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /<a[^>]*href="\/leadership"[^>]*>Leaders<\/a>/);
 });
 
+test("server-renders owning-record routes for open marketing work", async () => {
+  const response = await render("/marketing?event=genesys-xperience");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /class="task-update-route"[^>]*href="https:\/\/www\.notion\.so\/3aa6fee642fe81c88a89de617863507c"/);
+  assert.match(html, /Document the update in Notion/);
+  assert.match(html, /class="task-update-route"[^>]*href="https:\/\/app\.hubspot\.com\/contacts\/245561359\/record\/0-54\/827998353134/);
+  assert.match(html, /Update the HubSpot event/);
+  assert.match(html, /class="matrix-open-plan"[^>]*href="https:\/\/www\.notion\.so\/3aa6fee642fe81c88a89de617863507c"/);
+});
+
 test("server-renders searchable event outcomes and filter counts", async () => {
   const response = await render("/search?q=names%20open&type=Event");
   assert.equal(response.status, 200);
@@ -773,8 +784,8 @@ test("server-renders field-role CRM rules and the updated guide model", async ()
   const sdrHtml = await sdr.text();
   assert.match(sdrHtml, /role-hero-sdr/);
   assert.match(sdrHtml, /Turn event conversations into qualified meetings\./);
-  assert.match(sdrHtml, /src="\/ranger-sdr-listening\.webp"/);
-  assert.match(sdrHtml, /The TeamSimple ranger raccoon listening closely/);
+  assert.match(sdrHtml, /src="\/ranger-sdr-running\.png"/);
+  assert.match(sdrHtml, /The TeamSimple ranger raccoon hustling forward at a run/);
   assert.match(sdrHtml, /How to work the event/);
   assert.match(sdrHtml, /Protect the AEs’ time/);
   assert.match(sdrHtml, /keeping the booth from going quiet/);

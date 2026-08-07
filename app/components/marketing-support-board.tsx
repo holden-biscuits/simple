@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react"
 import Link from "next/link";
 import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord, type MarketingTask } from "../data/events";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../data/event-signals";
+import { getOpenItemRoute } from "../data/open-item-routes";
 
 type BoardFilter = "all" | "support" | "no-support" | "team-open" | "task-setup" | "speaking";
 
@@ -151,12 +152,14 @@ export function EventMarketingWorkspace({ events, initialSlug, programDate }: { 
           {tasks.length ? <ol>{tasks.map((task, index) => {
             const timing = dueState(task, programDate);
             const taskMeta = task.status === "Done" ? [task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null] : [task.owner ? `Owner: ${task.owner}` : "Owner: Open", task.due ? `Due: ${task.due}` : "Due: Open"];
+            const updateRoute = task.status !== "Done" ? getOpenItemRoute(selected, task.title) : null;
             return <li key={`${task.title}-${index}`}>
             <span className={`task-state task-state-${task.status.toLowerCase().replaceAll(" ", "-")}`}>{task.status}</span>
             <div>
               <h5>{task.url ? <a href={task.url} target="_blank" rel="noreferrer">{task.title} ↗</a> : task.title}</h5>
               {(taskMeta.some(Boolean) || timing) ? <p className="task-meta">{timing ? <span className={`task-due-state task-due-${timing.className}`}>{timing.label}</span> : null}{taskMeta.filter(Boolean).join(" · ")}</p> : null}
               {task.note ? <p>{task.note}</p> : null}
+              {updateRoute ? <a className={updateRoute.setupNeeded ? "task-update-route task-update-route-setup" : "task-update-route"} href={updateRoute.href} target="_blank" rel="noreferrer"><b>{updateRoute.system}</b><span>{updateRoute.label} ↗</span></a> : null}
             </div>
           </li>;})}</ol> : <p className="event-task-empty">No marketing action has been entered for this event.</p>}
         </div>
@@ -232,6 +235,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
             ? `${staffing.detail} · ${event.available.join(", ")} marked available`
             : staffing.detail;
           const openTask = orderedEventTasks(event).find((task) => task.status !== "Done");
+          const updateRoute = openTask ? getOpenItemRoute(event, openTask.title) : null;
           const openItem = openTask?.title ?? (support.length ? "No open item recorded" : "Marketing support is not listed");
           const eventPlanHref = event.priorityActions?.length ? `/events/${event.slug}#event-priorities` : `/events/${event.slug}`;
           return <tr key={event.slug}>
@@ -243,7 +247,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
             <td data-label="Activation"><div className="matrix-signals">{signals.length ? signals.map((signal) => <span key={signal}>{signal}</span>) : <span>Attendance only</span>}</div></td>
             <td data-label="Marketing support">{support.length ? <ul>{support.map((item) => <li key={item}>{item}</li>)}</ul> : <span className="matrix-empty">None listed</span>}</td>
             <td data-label="Event team"><span className={`matrix-staffing matrix-staffing-${staffing.state}`}>{staffing.state === "named" ? "Named" : staffing.state === "not-attending" ? "None" : "Open"}</span><p>{staffingDetail}</p></td>
-            <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p><div className="matrix-open-meta"><span>{openTask?.owner ? `Owner · ${openTask.owner}` : "Owner · Open"}</span><span>{openTask?.due ? `Due · ${openTask.due}` : "Due · Open"}</span>{!planStatus.tracked ? <span className="matrix-task-gap">Task setup open</span> : null}</div><Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link></td>
+            <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p><div className="matrix-open-meta"><span>{openTask?.owner ? `Owner · ${openTask.owner}` : "Owner · Open"}</span><span>{openTask?.due ? `Due · ${openTask.due}` : "Due · Open"}</span>{!planStatus.tracked ? <span className="matrix-task-gap">Task setup open</span> : null}</div>{updateRoute ? <a className="matrix-open-plan" href={updateRoute.href} target="_blank" rel="noreferrer">{updateRoute.label} ↗</a> : <Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link>}</td>
           </tr>;
         })}</tbody>
       </table>

@@ -10,8 +10,8 @@ const mascots = {
     alt: "The TeamSimple ranger raccoon looking through a spyglass",
   },
   sdr: {
-    src: "/ranger-sdr-listening.webp",
-    alt: "The TeamSimple ranger raccoon listening closely with a paw to his ear",
+    src: "/ranger-sdr-running.png",
+    alt: "The TeamSimple ranger raccoon hustling forward at a run",
   },
   leadership: {
     src: "/ranger-leadership-rock.webp",

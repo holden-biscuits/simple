@@ -258,11 +258,11 @@ button, input, select { font: inherit; }
 .page-mascot { width: 100%; margin: 0 8px 8px 0; aspect-ratio: 4 / 5; align-self: end; position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--paper); box-shadow: 9px 9px 0 var(--signal); transform: rotate(1deg); }
 .page-mascot::after { content: ''; position: absolute; inset: auto 0 0; height: 7px; background: var(--green); border-top: 1px solid var(--line); }
 .page-mascot > img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.page-mascot-logo { position: absolute; z-index: 2; width: 4.8%; aspect-ratio: 18.45 / 23.318; transform: translate(-50%, -50%); }
-.page-mascot-logo img { width: 100%; height: 100%; display: block; filter: drop-shadow(0 1px 0 rgba(24,33,25,.16)); }
+.page-mascot-logo { position: absolute; z-index: 2; width: 7.2%; aspect-ratio: 1; display: grid; place-items: center; background: #f7f0e2; border: 1px solid rgba(24,33,25,.28); border-radius: 50%; box-shadow: 0 1px 0 rgba(24,33,25,.25), inset 0 0 0 2px rgba(255,255,255,.42); transform: translate(-50%, -50%); }
+.page-mascot-logo img { width: 47%; height: 61%; display: block; filter: drop-shadow(0 1px 0 rgba(24,33,25,.12)); }
 .page-mascot-guides .page-mascot-logo { left: 55.7%; top: 12.4%; }
 .page-mascot-ae .page-mascot-logo { left: 41%; top: 12.7%; }
-.page-mascot-sdr .page-mascot-logo { left: 51.7%; top: 13.2%; }
+.page-mascot-sdr .page-mascot-logo { left: 59.7%; top: 12.1%; transform: translate(-50%, -50%) rotate(1deg); }
 .page-mascot-leadership .page-mascot-logo { left: 39.6%; top: 11.8%; }
 .page-mascot-marketing .page-mascot-logo { left: 49%; top: 15.8%; }
 .role-grid { padding-block: 90px; }
@@ -717,6 +717,11 @@ button, input, select { font: inherit; }
 .event-task-list h5 a { color: var(--green); text-decoration: underline; text-underline-offset: 4px; }
 .event-task-list p { margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
 .event-task-list .task-meta { color: var(--signal-dark); font: 800 10.5px/1.45 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.task-update-route { width: fit-content; margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; color: var(--green); border-bottom: 1px solid currentColor; font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.task-update-route b { padding: 4px 6px; color: var(--paper); background: var(--green); }
+.task-update-route:hover, .task-update-route:focus-visible { color: var(--signal-dark); outline: 0; }
+.task-update-route-setup { border-bottom-style: dashed; }
+.task-update-route-setup b { background: var(--signal-dark); }
 .task-due-state { display: inline-block; margin: 0 8px 4px 0; padding: 4px 6px; color: var(--paper); background: var(--signal-dark); }
 .task-due-overdue { background: #8f2f18; }
 .task-due-today { color: var(--green); background: #ffd08c; }
@@ -1598,6 +1603,7 @@ button, input, select { font: inherit; }
   .event-task-panel > header { align-items: flex-start; flex-direction: column; }
   .event-task-list, .event-task-grid aside { padding: 24px 20px; }
   .event-task-list li { grid-template-columns: 1fr; gap: 12px; }
+  .task-update-route { width: 100%; align-items: flex-start; flex-direction: column; gap: 5px; }
   .marketing-board-filters > div { grid-template-columns: 1fr 1fr; }
   .marketing-board-filters button, .marketing-board-filters button:nth-child(3) { border-right: 1px solid rgba(255,255,255,.34); border-bottom: 1px solid rgba(255,255,255,.34); }
   .marketing-board-filters button:nth-child(2n) { border-right: 0; }
@@ -1732,4 +1738,4 @@ button, input, select { font: inherit; }
 .event-measurement-checkpoint > footer a, .priority-item-route b, .priority-item-route span, .workstream-title-row a,
 .not-in-plan summary, .event-next-move > a, .crm-snapshot-head a, .leadership-alerts b, .leadership-risk-grid a,
 .leadership-operating-note a, .leadership-caveat a, .leadership-links a,
-.audience-segment-boundary a, .audience-segment-table td a { font-size: 12px; }
+.audience-segment-boundary a, .audience-segment-table td a, .task-update-route b, .task-update-route span { font-size: 12px; }

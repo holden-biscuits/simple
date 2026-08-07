@@ -8,7 +8,7 @@ export type OpenItemRoute = {
   setupNeeded: boolean;
 };
 
-const crmRecordPattern = /\b(?:hubspot|crm|campaign attribution|lead list|participant state|deal|pipeline|opportunit(?:y|ies)|meeting outcome|demo outcome|follow-up meeting)\b/i;
+const crmRecordPattern = /\b(?:hubspot|crm|campaign attribution|lead(?: list| capture| and follow-up)|participant state|deal|pipeline|opportunit(?:y|ies)|meeting outcome|demo outcome|follow-up meeting)\b/i;
 
 export function getOpenItemRoute(event: EventRecord, item: string): OpenItemRoute {
   if (crmRecordPattern.test(item)) {
