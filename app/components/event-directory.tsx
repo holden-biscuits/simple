@@ -3,22 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
-
-type AttendanceFilter = "all" | "going" | "deciding" | "not-going";
-
-const attendanceFilters: { value: AttendanceFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "going", label: "Going" },
-  { value: "deciding", label: "Deciding" },
-  { value: "not-going", label: "Not attending" },
-];
-
-function matchesAttendance(event: EventRecord, filter: AttendanceFilter) {
-  if (filter === "going") return event.status === "Confirmed";
-  if (filter === "deciding") return event.status === "TBD" || event.status === "Tentative";
-  if (filter === "not-going") return event.status === "No";
-  return true;
-}
+import { attendanceFilters, filterEventDirectory, matchesAttendance, matchesProgramYear, type AttendanceFilter } from "../data/event-filters";
 
 function guaranteedMeetingSignal(event: EventRecord) {
   if (!event.guaranteedMeetings.startsWith("Yes")) return "0 Guaranteed Meetings";
@@ -59,43 +44,24 @@ function EventCard({ event }: { event: EventRecord }) {
 export function EventDirectory({ events, programDate }: { events: EventRecord[]; programDate: string }) {
   const [query, setQuery] = useState("");
   const [attendance, setAttendance] = useState<AttendanceFilter>("all");
-  const filtered = useMemo(() => {
-    const q = query.toLowerCase().trim();
-    return events.filter((event) => {
-      const searchable = [
-        event.name,
-        event.location,
-        event.dates,
-        event.status,
-        event.team.join(" "),
-        event.available.join(" "),
-        event.speaking,
-        event.sponsorship,
-        event.guaranteedMeetings,
-        event.notes,
-        event.venue ?? "",
-        event.credentials ?? "",
-        ...(event.specialConsiderations ?? []),
-        ...(event.priorityActions ?? []),
-        ...(event.relatedLinks ?? []).map((link) => link.label),
-        ...(event.outcomeNotes ?? []),
-        ...event.meetingsBooked,
-        ...event.demosBooked,
-        ...event.closed,
-        event.crmSnapshot?.attribution ?? "",
-        event.crmSnapshot?.dataQualityNote ?? "",
-        ...(event.crmSnapshot?.stages.map((stage) => `${stage.label} ${stage.count}`) ?? []),
-        ...Object.values(event.workstreams ?? {}).flat(),
-      ].join(" ").toLowerCase();
-      return (!q || searchable.includes(q)) && matchesAttendance(event, attendance);
-    });
-  }, [events, query, attendance]);
+  const [year, setYear] = useState("all");
+  const years = useMemo(() => [...new Set(events.map((event) => event.dateSort.slice(0, 4)))].sort(), [events]);
+  const filtered = useMemo(() => filterEventDirectory(events, { query, attendance, year }), [events, query, attendance, year]);
 
-  const counts = useMemo(() => Object.fromEntries(attendanceFilters.map((filter) => [
+  const attendanceCounts = useMemo(() => Object.fromEntries(attendanceFilters.map((filter) => [
     filter.value,
-    events.filter((event) => matchesAttendance(event, filter.value)).length,
-  ])) as Record<AttendanceFilter, number>, [events]);
-  const filtersActive = query.trim().length > 0 || attendance !== "all";
+    events.filter((event) => matchesProgramYear(event, year) && matchesAttendance(event, filter.value)).length,
+  ])) as Record<AttendanceFilter, number>, [events, year]);
+  const yearCounts = useMemo(() => Object.fromEntries([
+    ["all", events.filter((event) => matchesAttendance(event, attendance)).length],
+    ...years.map((programYear) => [programYear, events.filter((event) => matchesAttendance(event, attendance) && matchesProgramYear(event, programYear)).length]),
+  ]) as Record<string, number>, [attendance, events, years]);
+  const filtersActive = query.trim().length > 0 || attendance !== "all" || year !== "all";
+  const activeFilterSummary = [
+    year !== "all" ? year : null,
+    attendance !== "all" ? attendanceFilters.find((filter) => filter.value === attendance)?.label : null,
+    query.trim() ? `Search: ${query.trim()}` : null,
+  ].filter(Boolean).join(" · ");
 
   const groups: { phase: EventPhase; label: string; kicker: string }[] = [
     { phase: "now", label: "Happening now", kicker: "Current stop" },
@@ -110,7 +76,7 @@ export function EventDirectory({ events, programDate }: { events: EventRecord[];
           <span>Find an event</span>
           <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search event, city, teammate, program or detail" />
         </label>
-        <fieldset className="attendance-filters">
+        <fieldset className="directory-filter-set attendance-filters">
           <legend>TeamSimple attendance</legend>
           <div>
             {attendanceFilters.map((filter) => (
@@ -120,15 +86,30 @@ export function EventDirectory({ events, programDate }: { events: EventRecord[];
                 aria-pressed={attendance === filter.value}
                 onClick={() => setAttendance(filter.value)}
               >
-                <span>{filter.label}</span><b>{counts[filter.value]}</b>
+                <span>{filter.label}</span><b>{attendanceCounts[filter.value]}</b>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset className="directory-filter-set year-filters">
+          <legend>Program year</legend>
+          <div>
+            {["all", ...years].map((programYear) => (
+              <button
+                type="button"
+                key={programYear}
+                aria-pressed={year === programYear}
+                onClick={() => setYear(programYear)}
+              >
+                <span>{programYear === "all" ? "All years" : programYear}</span><b>{yearCounts[programYear]}</b>
               </button>
             ))}
           </div>
         </fieldset>
       </div>
       <div className="directory-result-summary" aria-live="polite">
-        <span>Showing <strong>{filtered.length}</strong> of {events.length} events</span>
-        {filtersActive ? <button type="button" onClick={() => { setQuery(""); setAttendance("all"); }}>Clear filters</button> : null}
+        <span>Showing <strong>{filtered.length}</strong> of {events.length} events{activeFilterSummary ? ` · ${activeFilterSummary}` : ""}</span>
+        {filtersActive ? <button type="button" onClick={() => { setQuery(""); setAttendance("all"); setYear("all"); }}>Clear filters</button> : null}
       </div>
 
       {groups.map((group) => {

@@ -27,6 +27,10 @@ test("server-renders the event directory", async () => {
   assert.match(html, /class="ranger-hat-logo"/);
   assert.doesNotMatch(html, /ranger-raccoon-v2/);
   assert.match(html, /TeamSimple attendance/);
+  assert.match(html, /Program year/);
+  assert.match(html, /<span>All years<\/span><b>29<\/b>/);
+  assert.match(html, /<span>2026<\/span><b>26<\/b>/);
+  assert.match(html, /<span>2027<\/span><b>3<\/b>/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /CCW Orlando 2027/);
   assert.match(html, /CCW UK Executive Exchange 2027/);
