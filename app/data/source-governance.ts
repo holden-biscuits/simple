@@ -22,6 +22,13 @@ export type DataStream = {
   writeback: string;
 };
 
+export type ConnectorCapability = {
+  system: string;
+  access: string;
+  detail: string;
+  boundary: string;
+};
+
 export type EventKeyRolloutItem = {
   system: string;
   field: string;
@@ -152,6 +159,39 @@ export const dataStreams: DataStream[] = [
     refresh: "A reconciled review build is created after supported changes; production waits for approval.",
     feeds: "One readable view for event teams, GTM operators and leadership.",
     writeback: "Never the system of record. Site corrections are routed upstream to the field owner.",
+  },
+];
+
+export const connectorCapabilities: ConnectorCapability[] = [
+  {
+    system: "Google Workspace",
+    access: "Read + controlled write",
+    detail: "The tracker, Drive folders and native Google files can be read and updated through exact row, range, file or folder operations.",
+    boundary: "Write only an approved diff to the named source artifact; never replace a whole file from the fieldbook.",
+  },
+  {
+    system: "Notion",
+    access: "Read + controlled write",
+    detail: "Event projects can be found, read and updated at the page or property level.",
+    boundary: "Execution decisions belong in the event project with an owner, deadline and supporting link.",
+  },
+  {
+    system: "HubSpot",
+    access: "Deals + meetings writable",
+    detail: "Deals, meetings, contacts and companies are readable and writable. Marketing Event writes still require reauthorization.",
+    boundary: "Show the exact record-and-property diff first. Never write inferred attribution or turn a scheduled meeting into a held meeting.",
+  },
+  {
+    system: "Slack + Gmail",
+    access: "Connected signal sources",
+    detail: "Messages can be searched for organizer changes, decisions, deadlines and supporting evidence.",
+    boundary: "Do not back-write event facts into a thread. Promote a confirmed fact to Sheets, Notion, Drive or HubSpot.",
+  },
+  {
+    system: "Granola + Monaco",
+    access: "Indirect only",
+    detail: "There is no dependable direct event feed in the current task environment.",
+    boundary: "Move useful notes or legacy evidence into Notion or HubSpot before the fieldbook relies on it.",
   },
 ];
 

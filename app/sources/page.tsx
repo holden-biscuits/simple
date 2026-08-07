@@ -6,7 +6,7 @@ import { BackToTop, PageContents } from "../components/page-contents";
 import { events, getProgramDate, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
 import { crmAttributionAudit } from "../data/crm-attribution";
-import { audienceViews, dataStreams, eventKeyRollout, fieldOwners, operatingRoadmap, sourceFlow, stewardshipRoles, writebackQueue } from "../data/source-governance";
+import { audienceViews, connectorCapabilities, dataStreams, eventKeyRollout, fieldOwners, operatingRoadmap, sourceFlow, stewardshipRoles, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
 import { getProgramSystemLinkage } from "../data/system-linkage";
@@ -171,6 +171,15 @@ export default function SourcesPage() {
           <p className="eyebrow">Feeds and write-back</p>
           <h2>Connected does not mean live.</h2>
           <p>No source pushes directly into the production site today. The fieldbook is a versioned read model: a scheduled job reads available sources, reconciles them, saves a review build and waits for deployment approval.</p>
+        </div>
+        <div className="connector-capabilities" aria-label="Verified connector access and operating boundaries">
+          <header><span>Verified access · Aug 7</span><p>Technical access and operating permission are separate. A connector may support a write that this workflow still requires a person to approve.</p></header>
+          <div>{connectorCapabilities.map((item) => <article key={item.system}>
+            <span>{item.access}</span>
+            <h3>{item.system}</h3>
+            <p>{item.detail}</p>
+            <small><strong>Boundary</strong>{item.boundary}</small>
+          </article>)}</div>
         </div>
         <div className="source-route-table-wrap">
           <table className="source-route-table data-stream-table">

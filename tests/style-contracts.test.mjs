@@ -13,6 +13,7 @@ test("anchored navigation clears sticky chrome at each breakpoint", () => {
   assert.match(css, /\.event-recent-changes\[id\]/);
   assert.match(css, /\.event-role-routes\[id\]/);
   assert.match(css, /\.leadership-changes\[id\]/);
+  assert.match(css, /\.event-lifecycle\[id\]/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*--anchor-offset:\s*96px[\s\S]*\.page-contents\s*\{\s*top:\s*0;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*--anchor-offset:\s*24px/);
 });
@@ -24,6 +25,12 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.pulse-metrics\s*\{\s*grid-template-columns:\s*1fr\s+1fr;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.next-stops > div:last-child\s*\{\s*grid-template-columns:\s*1fr;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.pulse-readiness\s*\{\s*grid-template-columns:\s*1fr;/);
+  assert.match(css, /\.event-lifecycle-steps\s*\{[^}]*grid-template-columns:\s*repeat\(6,/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.event-lifecycle-steps\s*\{\s*grid-template-columns:\s*repeat\(3,/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-lifecycle-steps\s*\{\s*grid-template-columns:\s*1fr;/);
+  assert.match(css, /\.connector-capabilities\s*>\s*div\s*\{[^}]*grid-template-columns:\s*repeat\(5,/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.connector-capabilities\s*>\s*div\s*\{\s*grid-template-columns:\s*repeat\(2,/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.connector-capabilities\s*>\s*div\s*\{\s*grid-template-columns:\s*1fr;/);
   assert.match(css, /\.attendance-filters > div\s*\{[^}]*grid-template-columns:\s*repeat\(4,/);
   assert.match(css, /\.attention-filters > div\s*\{[^}]*grid-template-columns:\s*repeat\(5,/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.attendance-filters > div, \.attention-filters > div\s*\{\s*grid-template-columns:\s*1fr 1fr;/);

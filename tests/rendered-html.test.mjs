@@ -65,6 +65,13 @@ test("server-renders the event directory", async () => {
   assert.match(html, /1(?:<!-- -->)? Named · 2(?:<!-- -->)? Planned/);
   assert.match(html, /Speaking TBD/);
   assert.match(html, /Program pulse/);
+  assert.match(html, /id="event-lifecycle"/);
+  assert.match(html, /Event operating loop/);
+  assert.match(html, /Use the right workspace for the stage you are in\./);
+  for (const stage of ["Decide", "Plan", "Promote", "Prepare", "Run", "Close"]) assert.match(html, new RegExp(`>${stage}<`));
+  assert.match(html, /Tracker \+ leadership/);
+  assert.match(html, /Event brief \+ HubSpot/);
+  assert.match(html, /href="\/marketing#measurement"/);
   assert.match(html, /What’s next—and what still needs attention\./);
   assert.match(html, /happening now/);
   assert.match(html, /starting within 60 days/);
@@ -96,6 +103,11 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Source monitor/);
   assert.match(html, /The closer the event, the tighter the check\./);
   assert.match(html, /Connected does not mean live\./);
+  assert.match(html, /Verified access · Aug 7/);
+  assert.match(html, /Technical access and operating permission are separate/);
+  assert.match(html, /Deals \+ meetings writable/);
+  assert.match(html, /Marketing Event writes still require reauthorization/);
+  assert.match(html, /Connected signal sources/);
   assert.match(html, /Google Sheets · conference tracker/);
   assert.match(html, /Can we write back\?/);
   assert.match(html, /One event brief/);
@@ -318,6 +330,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const scanContractSearchHtml = await scanContractSearch.text();
   assert.match(scanContractSearchHtml, /Source scan automation contract/);
   assert.match(scanContractSearchHtml, /\/sources#scan-contract/);
+
+  const lifecycleSearch = await render("/search?q=what%20do%20I%20do%20after%20an%20event&type=Guide");
+  assert.equal(lifecycleSearch.status, 200);
+  const lifecycleSearchHtml = await lifecycleSearch.text();
+  assert.match(lifecycleSearchHtml, /Event operating loop/);
+  assert.match(lifecycleSearchHtml, /href="\/#event-lifecycle"/);
 
   const rosterGapSearch = await render("/search?q=roster%20missing&type=Operations");
   assert.equal(rosterGapSearch.status, 200);
