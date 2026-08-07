@@ -42,6 +42,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /See what changed and what conflicts\./);
   assert.match(html, /href="#events"/);
   assert.match(html, /href="\/sources"/);
+  assert.match(html, /class="footer-back-to-top" href="#page-top"[^>]*>[\s\S]*Back to top/);
   assert.match(html, /surfaces the workstreams in play/);
   assert.doesNotMatch(html, /page says “None/);
   assert.match(html, /ranger-raccoon-clean-hat\.png/);
@@ -163,7 +164,12 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /A scheduled snapshot, not a live database\./);
   assert.match(html, /Every scan becomes one auditable batch\./);
   assert.match(html, /Apply to review|apply to review/);
-  assert.match(html, /No-change and rejected findings remain counted/);
+  assert.match(html, /Checked, unavailable and not-due sources stay visible/);
+  assert.match(html, /No silent omissions\./);
+  assert.match(html, /A review build cannot clear the scan gate unless the batch records what it checked/);
+  assert.match(html, /Checked[\s\S]*The source was read for the named scope/);
+  assert.match(html, /Unavailable[\s\S]*missing access or artifact/);
+  assert.match(html, /Not due[\s\S]*freshness window/);
   assert.match(html, /no upstream write runs without exact approval/);
   assert.match(html, /The missing join:/);
   assert.match(html, /Sheets, Notion and HubSpot do not yet share it/);

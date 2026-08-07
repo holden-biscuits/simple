@@ -374,6 +374,14 @@ button, input, select { font: inherit; }
 .scan-contract-output div { padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .scan-contract-output span { color: var(--green); font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .scan-contract-output p { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.source-receipt-contract { margin-top: 24px; display: grid; grid-template-columns: minmax(260px, .85fr) 2fr; border: 1px solid var(--ink); background: var(--canvas); }
+.source-receipt-contract > header { padding: 28px; color: var(--paper); background: var(--green); }
+.source-receipt-contract > header span, .source-receipt-contract article strong { color: #ff9a7d; font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.source-receipt-contract > header h3 { margin: 35px 0 12px; font: 400 31px/1.08 Georgia, serif; }
+.source-receipt-contract > header p { margin: 0; color: rgba(255,255,255,.78); font-size: 14px; line-height: 1.55; }
+.source-receipt-contract > div { display: grid; grid-template-columns: repeat(3, 1fr); }
+.source-receipt-contract article { min-height: 245px; padding: 27px 24px; border-left: 1px solid var(--line); }
+.source-receipt-contract article p { margin: 58px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
 .catalog-health { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 18px; border: 1px solid rgba(255,255,255,.24); }
 .catalog-health article { min-height: 190px; padding: 23px; border-right: 1px solid rgba(255,255,255,.24); }
 .catalog-health article:last-child { border-right: 0; }
@@ -1056,7 +1064,9 @@ button, input, select { font: inherit; }
 
 .footer { padding: 55px max(30px, calc((100vw - 1180px)/2)); background: var(--green); color: var(--paper); display: flex; justify-content: space-between; gap: 40px; align-items: end; border-top: 8px solid var(--signal); }
 .footer > div:first-child { display: flex; gap: 18px; align-items: center; }
-.footer-mark { color: var(--signal); font-size: 38px; }
+.footer-back-to-top { min-width: 78px; min-height: 72px; padding: 8px 10px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--signal); border: 1px solid rgba(255,255,255,.42); font: 800 9px/1.2 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.footer-back-to-top:hover, .footer-back-to-top:focus-visible { color: var(--paper); border-color: var(--signal); background: var(--signal-dark); }
+.footer-mark { font-size: 30px; line-height: .8; }
 .footer p { max-width: 520px; margin: 0; font: 400 25px/1.25 Georgia, serif; }
 
 @media (max-width: 1180px) {
@@ -1099,6 +1109,7 @@ button, input, select { font: inherit; }
   .quick-update-grid { grid-template-columns: 1fr 1fr; }
   .operating-roadmap-grid { grid-template-columns: 1fr; }
   .scan-contract-grid, .scan-contract-output { grid-template-columns: 1fr 1fr; }
+  .source-receipt-contract { grid-template-columns: 1fr; }
   .freshness-policy-grid { grid-template-columns: 1fr 1fr; }
   .audience-views { grid-template-columns: 1fr; }
   .source-flow-grid article:nth-child(2n)::after { display: none; }
@@ -1295,6 +1306,9 @@ button, input, select { font: inherit; }
   .marketing-result-summary { align-items: flex-start; flex-direction: column; padding-block: 16px; }
   .scan-contract-grid, .scan-contract-output { grid-template-columns: 1fr; }
   .scan-contract-grid article { min-height: 0; }
+  .source-receipt-contract > div { grid-template-columns: 1fr; }
+  .source-receipt-contract article { min-height: 0; border-top: 1px solid var(--line); border-left: 0; }
+  .source-receipt-contract article p { margin-top: 18px; }
   .crm-activation-status { grid-template-columns: auto 1fr; }
   .crm-activation-status p { grid-column: 1 / -1; text-align: left; }
   .crm-activation-grid { grid-template-columns: 1fr; }

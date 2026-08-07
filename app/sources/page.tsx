@@ -10,7 +10,7 @@ import { audienceViews, connectorCapabilities, dataStreams, eventKeyRollout, eve
 import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
 import { getProgramSystemLinkage } from "../data/system-linkage";
-import { sourceScanContract } from "../data/source-scan";
+import { sourceReceiptStates, sourceScanContract } from "../data/source-scan";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -179,8 +179,12 @@ export default function SourcesPage() {
         <div className="scan-contract-output">
           <div><span>Review build</span><p>Only “apply to review” records may change the saved site version.</p></div>
           <div><span>Human queue</span><p>Conflicts, message-only findings and protected decisions stay visible with evidence.</p></div>
-          <div><span>Run receipt</span><p>No-change and rejected findings remain counted instead of disappearing from the audit.</p></div>
+          <div><span>Run receipt</span><p>Checked, unavailable and not-due sources stay visible alongside no-change and rejected findings.</p></div>
           <div><span>Write-back plan</span><p>Every valid correction is grouped by its owning destination; no upstream write runs without exact approval.</p></div>
+        </div>
+        <div className="source-receipt-contract">
+          <header><span>Required source receipts</span><h3>No silent omissions.</h3><p>A review build cannot clear the scan gate unless the batch records what it checked, what it could not reach, and what was not due under the freshness policy.</p></header>
+          <div>{sourceReceiptStates.map((receipt) => <article key={receipt.state}><strong>{receipt.state}</strong><p>{receipt.detail}</p></article>)}</div>
         </div>
         <BackToTop />
       </section>
