@@ -10,6 +10,7 @@ import { getEventRoleRoutes } from "../data/event-role-routes";
 import { connectorCapabilities, dataStreams, fieldOwners, writebackQueue } from "../data/source-governance";
 import { matchesAttendance, matchesAttention } from "../data/event-filters";
 import { getEventProspectingBrief } from "../data/event-prospecting";
+import { getAudienceSegmentRegistry } from "../data/audience-segment-registry";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -42,11 +43,13 @@ const referenceRecords: SearchRecord[] = [
   { type: "Operations", title: "Where to update event data", href: "/sources#quick-update-routes", description: "Open the owning system for a date, participation, roster, task, decision, file, meeting, demo, or pipeline update.", keywords: "system of record field ownership tracker notion hubspot drive slack gmail dates staffing roster participation tasks contracts creative files meetings demos deals pipeline fix correction update" },
   { type: "Operations", title: "Who updates event data", href: "/sources#stewardship", description: "Role-by-role ownership and timing for field teams, event leads, Marketing Ops, creative, RevOps, and leadership.", keywords: "who updates responsibility SLA same day end of day AE SDR event lead marketing operations creative revops leadership escalation source owner" },
   { type: "Operations", title: "CRM attribution health", href: "/sources#crm-attribution", description: "Exact event deals, meeting records that still need QA, Marketing Event coverage, and the rules for what leadership reporting may count.", keywords: "hubspot event key exact attribution deals meetings demos outcomes marketing events leadership reporting ccw vegas qa" },
+  { type: "Operations", title: "HubSpot event audience registry", href: "/sources#audience-segments", description: "The governed names, evidence gates, membership rules and refresh rules for event prospecting segments.", keywords: "hubspot segment list audience prospecting active segment static list attendee target universe organizer matched accounts event key zoominfo maintain sync" },
   { type: "Operations", title: "Source write-back queue", href: "/sources#writeback-queue", description: "Known upstream corrections and integration setup work that still needs approval or a decision.", keywords: "write back upstream mismatch drift protected decision tracker notion genesys hubspot event attribution event key folder structure roundup" },
   { type: "Operations", title: "Event data reconciliation rules", href: "/sources#update-rules", description: "How the source scan handles direct corrections, source ownership, message signals, conflicts, and publication approval.", keywords: "reconciliation scanner rules protected override direct confirmation source owner apply review no change reject approval" },
 ];
 
 const searchProgramDate = getProgramDate();
+const audienceSegmentRegistry = getAudienceSegmentRegistry(events, searchProgramDate);
 
 const attentionViewRecords: SearchRecord[] = [
   {
@@ -137,6 +140,18 @@ const writebackRecords: SearchRecord[] = writebackQueue.map((item) => {
     hiddenUntilQuery: true,
   };
 });
+
+const audienceSegmentRecords: SearchRecord[] = audienceSegmentRegistry.items.map((item) => ({
+  type: "Operations",
+  context: "HubSpot audience segment",
+  status: item.state,
+  title: `${item.eventName} · audience segment`,
+  href: "/sources#audience-segments",
+  description: `${item.segmentName} · ${item.nextAction}`,
+  keywords: [item.eventName, item.eventKey, item.segmentName, item.state, item.objectType, item.membershipRule, item.sourceGate, item.refreshRule, item.nextAction, "HubSpot segment list audience prospecting maintain sync"].join(" "),
+  details: [`Membership · ${item.membershipRule}`, `Evidence gate · ${item.sourceGate}`, `Refresh · ${item.refreshRule}`],
+  hiddenUntilQuery: true,
+}));
 
 const eventRecords: SearchRecord[] = events.map((event) => {
   const prospecting = getEventProspectingBrief(event);
@@ -255,5 +270,5 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const initialQuery = typeof params.q === "string" ? params.q : "";
   const requestedType = typeof params.type === "string" ? params.type : "All";
   const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, ...eventChangeRecords, ...marketingTaskRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, audience segments, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, ...eventChangeRecords, ...marketingTaskRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...audienceSegmentRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }

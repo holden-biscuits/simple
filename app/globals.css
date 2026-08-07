@@ -437,6 +437,40 @@ button, input, select { font: inherit; }
 .crm-operating-model p { margin-top: 12px; color: rgba(255,255,255,.82); }
 .crm-attribution .inline-link { color: var(--paper); }
 .crm-attribution .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.65); }
+.audience-segments { padding-block: 100px; background: var(--canvas); border-bottom: 1px solid var(--line); }
+.audience-segment-summary { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+.audience-segment-summary article { min-height: 210px; padding: 22px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.audience-segment-summary article:nth-child(2) { background: var(--green-light); }
+.audience-segment-summary article:nth-child(3) { background: #f2d9c9; }
+.audience-segment-summary article:nth-child(4) { color: var(--paper); background: var(--green); }
+.audience-segment-summary strong { display: block; font: 400 52px/1 Georgia, serif; }
+.audience-segment-summary span { display: block; margin-top: 38px; color: var(--signal-dark); font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.audience-segment-summary article:nth-child(4) span { color: #ffad94; }
+.audience-segment-summary p { margin: 10px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+.audience-segment-summary article:nth-child(4) p { color: rgba(255,255,255,.72); }
+.audience-segment-boundary { margin: 18px 0 44px; padding: 24px; display: grid; grid-template-columns: minmax(260px, .75fr) minmax(360px, 1.45fr) auto; gap: 28px; align-items: center; border: 1px solid var(--signal); box-shadow: 6px 6px 0 var(--paper-deep); }
+.audience-segment-boundary span { color: var(--signal-dark); font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.audience-segment-boundary h3 { margin: 8px 0 0; font: 400 27px/1.08 Georgia, serif; }
+.audience-segment-boundary p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.audience-segment-boundary a { color: var(--green); font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; white-space: nowrap; }
+.audience-segment-contract { display: grid; grid-template-columns: repeat(4, 1fr); margin-bottom: 44px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.audience-segment-contract article { min-height: 260px; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.audience-segment-contract article > span { color: var(--signal-dark); font: 800 11px var(--font-geist-mono), monospace; }
+.audience-segment-contract h3 { margin: 48px 0 12px; font: 400 25px/1.08 Georgia, serif; }
+.audience-segment-contract p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+.audience-segment-table { min-width: 1180px; }
+.audience-segment-table th:nth-child(1) { width: 24%; }
+.audience-segment-table th:nth-child(2) { width: 16%; }
+.audience-segment-table th:nth-child(3) { width: 32%; }
+.audience-segment-table tbody th a { display: block; color: var(--green); }
+.audience-segment-table tbody th small, .audience-segment-table td small { display: block; margin-top: 8px; color: var(--muted); font: 600 11px/1.45 var(--font-geist-mono), monospace; }
+.audience-segment-table td strong { display: block; color: var(--ink); font-weight: 650; }
+.audience-segment-table td p { margin: 0 0 10px; }
+.audience-segment-table td a { color: var(--green); font-weight: 800; }
+.audience-segment-state { display: inline-block; padding: 7px 8px; color: var(--paper); background: var(--green); font: 800 9.5px/1.3 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.audience-segment-state-waiting-for-organizer-audience { color: #4d382e; background: #efc5b0; }
+.audience-segment-state-research-only { color: #4d493f; background: #d8d8cf; }
+.audience-segment-state-verified-static-snapshot { color: var(--green); background: var(--green-light); border: 1px solid var(--green); }
 .writeback-section { padding-block: 100px; background: var(--paper-deep); border-block: 1px solid var(--line); }
 .writeback-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .writeback-grid > article { min-height: 390px; padding: 25px; display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--canvas); }
@@ -1390,6 +1424,21 @@ button, input, select { font: inherit; }
   .ranger-figure > img { height: 112px; }
 }
 
+@media (max-width: 900px) {
+  .audience-segment-summary, .audience-segment-contract { grid-template-columns: 1fr 1fr; }
+  .audience-segment-boundary { grid-template-columns: 1fr; gap: 14px; }
+  .audience-segment-boundary a { justify-self: start; }
+}
+
+@media (max-width: 640px) {
+  .audience-segment-summary, .audience-segment-contract { grid-template-columns: 1fr; }
+  .audience-segment-summary article, .audience-segment-contract article { min-height: 0; }
+  .audience-segment-summary span, .audience-segment-contract h3 { margin-top: 22px; }
+  .audience-segment-boundary { padding: 20px; box-shadow: 5px 5px 0 var(--paper-deep); }
+  .audience-segment-table { min-width: 0; }
+  .audience-segment-table th:nth-child(n) { width: auto; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .brand-mark, .route-board, .updated-stamp, .event-card, .not-found-code { transform: none !important; }
@@ -1417,7 +1466,8 @@ button, input, select { font: inherit; }
 .leadership-metrics span, .leadership-alerts span, .leadership-table thead th,
 .leadership-table tbody th time, .leadership-table tbody th small, .leadership-table td small, .leadership-status,
 .leadership-risk-grid span, .leadership-queue-grid span, .leadership-operating-note strong,
-.leadership-outcome-grid span, .leadership-trust-grid span { font-size: 11.5px; }
+.leadership-outcome-grid span, .leadership-trust-grid span, .audience-segment-summary span,
+.audience-segment-boundary span, .audience-segment-contract article > span, .audience-segment-state { font-size: 11.5px; }
 
 .page-contents > strong, .page-contents a, .back-to-top, .start-map-grid b, .attention-source-link,
 .pulse-leadership-link, .directory-filter-set button, .directory-filter-set button b, .directory-result-summary,
@@ -1429,4 +1479,5 @@ button, input, select { font: inherit; }
 .event-update-route summary > b, .event-update-route-grid b, .event-linkage-strip p,
 .event-measurement-checkpoint > footer a, .event-priorities .priority-link, .workstream-title-row a,
 .not-in-plan summary, .crm-snapshot-head a, .leadership-alerts b, .leadership-risk-grid a,
-.leadership-operating-note a, .leadership-caveat a, .leadership-links a { font-size: 12px; }
+.leadership-operating-note a, .leadership-caveat a, .leadership-links a,
+.audience-segment-boundary a, .audience-segment-table td a { font-size: 12px; }

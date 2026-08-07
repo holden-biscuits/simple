@@ -141,7 +141,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Connected does not mean live\./);
   assert.match(html, /Verified access · Aug 7/);
   assert.match(html, /Technical access and operating permission are separate/);
-  assert.match(html, /Deals \+ meetings writable/);
+  assert.match(html, /CRM records writable · segments read-only/);
+  assert.match(html, /Existing segments can be audited, but segment creation is not available/);
   assert.match(html, /Marketing Event writes still require reauthorization/);
   assert.match(html, /Connected signal sources/);
   assert.match(html, /Google Sheets · conference tracker/);
@@ -187,6 +188,17 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Marketing Events[\s\S]*0/);
   assert.match(html, /Do not count date proximity, a vendor mention/);
   assert.match(html, /Tracker outcome columns should become rollups or references/);
+  assert.match(html, /One maintained segment per active event—once the evidence exists\./);
+  assert.match(html, /Active events[\s\S]*14/);
+  assert.match(html, /Segment specs ready[\s\S]*7/);
+  assert.match(html, /Waiting on organizer files[\s\S]*7/);
+  assert.match(html, /Automatically maintained[\s\S]*0/);
+  assert.match(html, /The specifications are ready\. The active segments are not\./);
+  assert.match(html, /targeting—not proof of attendance/i);
+  assert.match(html, /Genesys Xperience[\s\S]*Specification ready/);
+  assert.match(html, /CCW Exchange Chicago[\s\S]*Waiting for organizer audience/);
+  assert.match(html, /Enriched ZI List — matched CCW attendees/);
+  assert.match(html, /NiCE World 2026 — Tommy Prospects/);
   assert.match(html, /Keep the work with the person closest to it\./);
   assert.match(html, /AEs and SDRs[\s\S]*Before the event day ends/);
   assert.match(html, /Event lead[\s\S]*The same business day/);
@@ -204,6 +216,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Normalized event-cost ledger[\s\S]*Add a Costs tab keyed by Event key/);
   assert.match(html, /2 say Scheduled and 2 have no outcome/);
   assert.match(html, /Reauthorize Marketing Event writes/);
+  assert.match(html, /Active event audience segments[\s\S]*0 active-event segments are automatically maintained/);
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
   assert.match(html, /<span>Applied<\/span><strong>5<\/strong>/);
@@ -296,7 +309,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Leadership gets decisions, not data-entry work\./);
   assert.match(html, /Needs judgment[\s\S]*1/);
   assert.match(html, /Ready to approve[\s\S]*7/);
-  assert.match(html, /Foundation work[\s\S]*8/);
+  assert.match(html, /Foundation work[\s\S]*9/);
   assert.match(html, /Pipeline value is not supported\./);
   assert.match(html, /All 29 attributed deals currently have a \$0 amount/);
   assert.match(html, /<a[^>]*href="\/leadership"[^>]*>Leaders<\/a>/);
@@ -392,7 +405,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.equal(hubspotWriteSearch.status, 200);
   const hubspotWriteHtml = await hubspotWriteSearch.text();
   assert.match(hubspotWriteHtml, /HubSpot connector access/);
-  assert.match(hubspotWriteHtml, /Deals \+ meetings writable/);
+  assert.match(hubspotWriteHtml, /CRM records writable · segments read-only/);
   assert.match(hubspotWriteHtml, /href="\/sources#data-streams"/);
 
   const slackWriteSearch = await render("/search?q=can%20I%20write%20event%20facts%20to%20Slack&type=Operations");

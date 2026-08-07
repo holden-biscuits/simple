@@ -11,6 +11,7 @@ import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
 import { getProgramSystemLinkage } from "../data/system-linkage";
 import { sourceReceiptStates, sourceScanContract } from "../data/source-scan";
+import { audienceSegmentContract, getAudienceSegmentRegistry } from "../data/audience-segment-registry";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -22,6 +23,7 @@ export default function SourcesPage() {
   const catalogHealth = getEventCatalogHealth(events);
   const monitor = siteStatus.sourceMonitor;
   const linkage = getProgramSystemLinkage(events, getProgramDate());
+  const audienceSegments = getAudienceSegmentRegistry(events, getProgramDate());
   const changeStates = (["Applied", "Needs review", "No change"] as const).map((state) => ({
     state,
     count: monitor.changeLog.filter((change) => change.state === state).length,
@@ -47,6 +49,7 @@ export default function SourcesPage() {
         { id: "field-ownership", label: "Where to update" },
         { id: "stewardship", label: "Who updates it" },
         { id: "crm-attribution", label: "CRM attribution" },
+        { id: "audience-segments", label: "Audience segments" },
         { id: "writeback-queue", label: "Write-back queue" },
         { id: "protected-decisions", label: "Direct decisions" },
         { id: "change-log", label: "Change log" },
@@ -319,6 +322,42 @@ export default function SourcesPage() {
             <div><span>Report</span><p>Leadership sees meetings held, demos, qualified pipeline and revenue—not calendar records that happen to fall during event week.</p></div>
           </div>
           <a className="inline-link" href={crmAttributionAudit.hubspotUrl} target="_blank" rel="noreferrer">Open the audited HubSpot deal view ↗</a>
+          <BackToTop />
+        </div>
+      </section>
+
+      <section className="audience-segments" id="audience-segments">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">HubSpot audience registry</p>
+            <h2>One maintained segment per active event—once the evidence exists.</h2>
+            <p>The event brief defines who to target in ZoomInfo. HubSpot should hold only the contacts tied to a named event signal. This registry keeps a broad target universe from being mislabeled as likely attendance.</p>
+          </div>
+          <div className="audience-segment-summary" aria-label="HubSpot event audience coverage">
+            <article><strong>{audienceSegments.activeEvents}</strong><span>Active events</span><p>Confirmed or in-flight programs that need a governed audience route.</p></article>
+            <article><strong>{audienceSegments.specificationsReady}</strong><span>Segment specs ready</span><p>Exact names, gates, membership rules and refresh rules are defined.</p></article>
+            <article><strong>{audienceSegments.waitingForOrganizerAudience}</strong><span>Waiting on organizer files</span><p>Matched-account events must use the organizer audience—not a guessed roster.</p></article>
+            <article><strong>{audienceSegments.automaticallyMaintained}</strong><span>Automatically maintained</span><p>The connector can read existing segments but cannot create or update them.</p></article>
+          </div>
+          <aside className="audience-segment-boundary">
+            <div><span>Current CRM boundary</span><h3>The specifications are ready. The active segments are not.</h3></div>
+            <p>HubSpot segment access is read-only in the connected workflow. Two historical static snapshots are verified; neither is presented as a live audience. Creating the active segments requires one list-write route and the canonical Event key on contacts.</p>
+            <a href="https://app.hubspot.com/contacts/245561359/objectLists" target="_blank" rel="noreferrer">Open HubSpot segments ↗</a>
+          </aside>
+          <div className="audience-segment-contract">
+            {audienceSegmentContract.map((item) => <article key={item.step}><span>{item.step}</span><h3>{item.title}</h3><p>{item.detail}</p></article>)}
+          </div>
+          <div className="source-route-table-wrap audience-segment-table-wrap">
+            <table className="source-route-table audience-segment-table">
+              <thead><tr><th>Event / segment</th><th>State</th><th>Membership and evidence gate</th><th>Refresh / next move</th></tr></thead>
+              <tbody>{audienceSegments.items.map((item) => <tr key={item.eventKey}>
+                <th scope="row"><Link href={item.eventHref}>{item.eventName}</Link><small>{item.segmentName}</small></th>
+                <td data-label="State"><span className={`audience-segment-state audience-segment-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</span></td>
+                <td data-label="Membership and evidence gate"><strong>{item.membershipRule}</strong><small>{item.sourceGate}</small></td>
+                <td data-label="Refresh / next move"><p>{item.refreshRule}</p>{item.hubspotUrl ? <a href={item.hubspotUrl} target="_blank" rel="noreferrer">Open verified snapshot ↗</a> : <Link href={item.eventHref}>{item.nextAction} →</Link>}</td>
+              </tr>)}</tbody>
+            </table>
+          </div>
           <BackToTop />
         </div>
       </section>

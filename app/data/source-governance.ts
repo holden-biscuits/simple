@@ -226,9 +226,9 @@ export const connectorCapabilities: ConnectorCapability[] = [
   },
   {
     system: "HubSpot",
-    access: "Deals + meetings writable",
-    detail: "Deals, meetings, contacts and companies are readable and writable. Marketing Event writes still require reauthorization.",
-    boundary: "Show the exact record-and-property diff first. Never write inferred attribution or turn a scheduled meeting into a held meeting.",
+    access: "CRM records writable · segments read-only",
+    detail: "Deals, meetings, contacts and companies are readable and writable. Existing segments can be audited, but segment creation is not available through the current connector; Marketing Event writes still require reauthorization.",
+    boundary: "Show the exact record-and-property diff first. Never write inferred attribution, label a static list as active, or turn a scheduled meeting into a held meeting.",
   },
   {
     system: "Slack + Gmail",
@@ -527,6 +527,16 @@ export const writebackQueue: WritebackItem[] = [
     evidenceUrl: "/sources#crm-attribution",
     state: "Setup needed",
     url: "https://app.hubspot.com/contacts/245561359/objects/0-54/views/all/list",
+  },
+  {
+    system: "HubSpot",
+    scope: "Active event audience segments",
+    current: "2 verified historical lists are static snapshots · 0 active-event segments are automatically maintained · segment writes are unavailable through the connected workflow",
+    proposed: "Add the canonical Event key to contacts, enable one approved list-write route, then create the governed active segment specifications in the audience registry",
+    evidence: "HubSpot OBJECT_LIST access audit + event audience registry · Aug 7",
+    evidenceUrl: "/sources#audience-segments",
+    state: "Setup needed",
+    url: "https://app.hubspot.com/contacts/245561359/objectLists",
   },
   {
     system: "Events Drive",
