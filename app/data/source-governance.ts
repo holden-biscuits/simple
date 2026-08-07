@@ -85,7 +85,7 @@ export type EventUpdateRoute = {
 
 export const eventFieldRoutes: EventFieldRoute[] = [
   ...["slug", "name", "dates", "dateSort", "dateEndSort", "location", "status", "speaking", "speakingStatus", "sponsorship", "sponsorshipStatus", "guaranteedMeetings", "attendeeCount", "team", "available", "rating"].map((field) => ({ field, owner: "sheet" as const, destination: "Conference tracker" })),
-  ...["notionUrl", "credentials", "specialConsiderations", "priorityActions", "marketingTasks", "notes", "workstreams"].map((field) => ({ field, owner: "notion" as const, destination: "Conference project in Notion" })),
+  ...["notionUrl", "credentials", "tldrCallout", "specialConsiderations", "priorityActions", "marketingTasks", "notes", "workstreams"].map((field) => ({ field, owner: "notion" as const, destination: "Conference project in Notion" })),
   ...["meetingsBooked", "meetingCountLabel", "demosBooked", "closed", "outcomeNotes", "crmSnapshot"].map((field) => ({ field, owner: "hubspot" as const, destination: "HubSpot" })),
   ...["organizerUrl", "venue"].map((field) => ({ field, owner: "organizer" as const, destination: "Organizer source, then the conference tracker or Notion" })),
   { field: "relatedLinks", owner: "drive", destination: "Events Drive, then the conference project in Notion" },

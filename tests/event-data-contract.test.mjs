@@ -31,3 +31,18 @@ test("source conflicts and unnamed rosters remain visible as review warnings", (
   assert.ok(health.sourceConflicts > 0);
   assert.ok(health.unnamedRosters > 0);
 });
+
+test("event TLDR callouts are optional, concise, and route to local detail", () => {
+  const genesys = events.find((event) => event.slug === "genesys-xperience");
+  const contact = events.find((event) => event.slug === "contact-io");
+
+  assert.deepEqual(genesys?.tldrCallout, {
+    label: "Featured activation",
+    title: "Wish Line taxi campaign",
+    detail: "0.25-mile geofence · Bellagio to Fontainebleau · ~10-minute loop",
+    status: "AP confirmation pending",
+    href: "#workstream-marketing",
+    action: "Open route and viewing plan",
+  });
+  assert.equal(contact?.tldrCallout, undefined);
+});

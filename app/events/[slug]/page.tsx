@@ -144,6 +144,11 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       <section className="event-tldr shell" id="event-tldr">
         <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>Know this before you go.</h2></div>
         <div className={`tldr-grid tldr-grid-${tldr.length}`}>{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
+        {event.tldrCallout ? <aside className="event-tldr-callout" aria-label={event.tldrCallout.title}>
+          <div><span>{event.tldrCallout.label}</span><h3>{event.tldrCallout.title}</h3></div>
+          <p>{event.tldrCallout.detail}</p>
+          <div className="event-tldr-callout-action"><strong>{event.tldrCallout.status}</strong>{event.tldrCallout.href ? <a href={event.tldrCallout.href}>{event.tldrCallout.action ?? "Open plan"} ↓</a> : null}</div>
+        </aside> : null}
         {nextMove ? <div className={`event-next-move event-next-move-${nextMove.urgency}`}>
           <div><span>Next move</span><h3>{nextMove.title}</h3></div>
           <dl>

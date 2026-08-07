@@ -204,6 +204,11 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     staffingOpen ? `Staffing · names open · ${staffing.detail}` : "",
     event.notes ? `Plan note · ${event.notes}` : "",
     event.credentials ? `Credentials · ${event.credentials}` : "",
+    ...(event.tldrCallout ? [
+      `${event.tldrCallout.label} · ${event.tldrCallout.title}`,
+      `Activation route · ${event.tldrCallout.detail}`,
+      `Activation status · ${event.tldrCallout.status}`,
+    ] : []),
     `Source check · ${verification.checkedAt} · ${verification.sources.join(" · ")}`,
     `Brief readiness · ${briefReadiness.label} · ${briefReadiness.timing}`,
     ...briefReadiness.issues.map((issue) => `Open readiness input · ${issue.label} · ${issue.destination}`),

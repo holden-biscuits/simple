@@ -360,6 +360,13 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(sourceSearchHtml, /Genesys Xperience/);
   assert.match(sourceSearchHtml, /Source check · Aug 7, 2026 · Direct update · OOH meeting notes · Notion · Gmail · HubSpot · Restricted Genesys brief/);
 
+  const activationSearch = await render("/search?q=Wish%20Line%20route&type=Event");
+  assert.equal(activationSearch.status, 200);
+  const activationSearchHtml = await activationSearch.text();
+  assert.match(activationSearchHtml, /Genesys Xperience/);
+  assert.match(activationSearchHtml, /Activation route · 0\.25-mile geofence · Bellagio to Fontainebleau · ~10-minute loop/);
+  assert.match(activationSearchHtml, /Activation status · AP confirmation pending/);
+
   const startSearch = await render("/search?q=where%20should%20I%20go&type=Guide");
   assert.equal(startSearch.status, 200);
   const startSearchHtml = await startSearch.text();
@@ -777,6 +784,11 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Deliver Cat’s final solution-talk deck by Aug 10/);
   assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
   assert.match(genesysHtml, /Wish Line/);
+  assert.match(genesysHtml, /Featured activation/);
+  assert.match(genesysHtml, /Wish Line taxi campaign/);
+  assert.match(genesysHtml, /0\.25-mile geofence · Bellagio to Fontainebleau · ~10-minute loop/);
+  assert.match(genesysHtml, /AP confirmation pending/);
+  assert.match(genesysHtml, /href="#workstream-marketing">Open route and viewing plan(?:<!-- -->)? ↓/);
   assert.match(genesysHtml, /shortest no-U-turn loop available/);
   assert.match(genesysHtml, /quarter-mile taxi geofence/);
   assert.match(genesysHtml, /Bellagio to Fontainebleau/);
@@ -821,6 +833,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.doesNotMatch(contactHtml, /id="event-changes"/);
   assert.doesNotMatch(contactHtml, /id="event-priorities"/);
   assert.doesNotMatch(contactHtml, /class="event-next-move/);
+  assert.doesNotMatch(contactHtml, /class="event-tldr-callout/);
   assert.doesNotMatch(contactHtml, /What needs to happen\./);
   assert.doesNotMatch(contactHtml, /Who’s going/);
   assert.doesNotMatch(contactHtml, /Measurement checkpoint/);

@@ -30,6 +30,15 @@ export type MarketingTask = {
   url?: string;
 };
 
+export type EventTldrCallout = {
+  label: string;
+  title: string;
+  detail: string;
+  status: string;
+  href?: string;
+  action?: string;
+};
+
 export type EventRecord = {
   slug: string;
   name: string;
@@ -55,6 +64,7 @@ export type EventRecord = {
   notionUrl?: string;
   venue?: string;
   credentials?: string;
+  tldrCallout?: EventTldrCallout;
   specialConsiderations?: string[];
   priorityActions?: string[];
   marketingTasks?: MarketingTask[];
@@ -464,6 +474,14 @@ export const events: EventRecord[] = [
     notionUrl: "https://www.notion.so/3aa6fee642fe81c88a89de617863507c",
     venue: "Wynn Las Vegas · Orchestrators Hall",
     credentials: "9 booth passes",
+    tldrCallout: {
+      label: "Featured activation",
+      title: "Wish Line taxi campaign",
+      detail: "0.25-mile geofence · Bellagio to Fontainebleau · ~10-minute loop",
+      status: "AP confirmation pending",
+      href: "#workstream-marketing",
+      action: "Open route and viewing plan",
+    },
     priorityActions: [
       "Deliver Cat’s final solution-talk deck by Aug 10, then schedule rehearsal and confirm AV.",
       "Submit the contracted pre-event email copy by Aug 13: Cat reviews, then Holden sends it through the sponsor portal.",
