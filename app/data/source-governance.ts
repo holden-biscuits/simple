@@ -40,6 +40,15 @@ export type WritebackItem = {
   url: string;
 };
 
+export type StewardshipRole = {
+  role: string;
+  owns: string;
+  destination: string;
+  timing: string;
+  rule: string;
+  url: string;
+};
+
 export type SourceSystem = "direct" | "sheet" | "notion" | "drive" | "hubspot" | "organizer" | "gmail" | "slack" | "granola" | "monaco";
 
 export type EventFieldRoute = {
@@ -196,6 +205,57 @@ export const fieldOwners: FieldOwner[] = [
     intake: "Only notes, exports or references shared into a connected source are available today.",
     correction: "Move useful notes to HubSpot or Notion. Do not create new Monaco-only event records.",
     automation: "No direct feed. Missing access is reported rather than filled with guesses.",
+  },
+];
+
+export const stewardshipRoles: StewardshipRole[] = [
+  {
+    role: "AEs and SDRs",
+    owns: "Booked meetings, meaningful conversations, demos, next steps and outcomes",
+    destination: "HubSpot",
+    timing: "Before the event day ends",
+    rule: "Use the canonical Event key when the property exists. Until then, include the event token shown on the event page and never mark a scheduled meeting as held.",
+    url: "https://app.hubspot.com/contacts/245561359/objects/0-47/views/all/list",
+  },
+  {
+    role: "Event lead",
+    owns: "Execution decisions, owners, deadlines, run of show and unresolved work",
+    destination: "Event project in Notion",
+    timing: "The same business day",
+    rule: "A decision is not operational until the project names the owner, deadline and current status. Link the supporting source instead of pasting a second copy.",
+    url: sourceLinks.notion,
+  },
+  {
+    role: "Marketing Ops",
+    owns: "Participation, dates, roster, sponsorship scope and program-level status",
+    destination: "Conference tracker",
+    timing: "Before the next fieldbook review build",
+    rule: "Correct the tracker row first, preserve direct decisions and use the permanent Event key. The fieldbook remains the read view, not the master record.",
+    url: sourceLinks.sheet,
+  },
+  {
+    role: "Marketing and creative",
+    owns: "Contracts, approved creative, attendee files and post-event artifacts",
+    destination: "Events Drive",
+    timing: "As soon as the artifact is final",
+    rule: "Store one governed file, use the Event key folder convention and link it from the event project. Keep restricted terms out of the fieldbook.",
+    url: sourceLinks.eventsDrive,
+  },
+  {
+    role: "RevOps",
+    owns: "CRM schema, exact event associations, attribution QA and outcome rollups",
+    destination: "HubSpot",
+    timing: "During setup and the T+1 / T+7 reviews",
+    rule: "Maintain Event key properties and Marketing Event records. Count only records with an exact association and a usable outcome.",
+    url: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list",
+  },
+  {
+    role: "Leadership",
+    owns: "Participation, investment, customer commitments and exceptions with material GTM impact",
+    destination: "Decision queue",
+    timing: "When explicitly escalated",
+    rule: "Leadership resolves judgment calls. Routine roster, task, file and CRM hygiene stays with the operating owner.",
+    url: "/sources#approval-queue",
   },
 ];
 

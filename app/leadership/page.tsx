@@ -35,6 +35,7 @@ export default function LeadershipPage() {
         { id: "leadership-snapshot", label: "Snapshot" },
         { id: "leadership-portfolio", label: "Portfolio" },
         { id: "leadership-decisions", label: "Decisions" },
+        { id: "leadership-operating-model", label: "Operating model" },
         { id: "leadership-outcomes", label: "Outcomes" },
         { id: "leadership-trust", label: "What to trust" },
       ]} />
@@ -97,6 +98,23 @@ export default function LeadershipPage() {
           <article><span>04 · Reporting foundation</span><h3>{brief.linkage.activeCrmEvents} of {brief.linkage.activeEvents} active events have an exact CRM join.</h3><p>{brief.linkage.activeNotionProjects} active event workspaces are linked, but event-specific Drive folders and canonical HubSpot associations still need setup. Portfolio pipeline is not yet a trustworthy leadership metric.</p><Link href="/sources#canonical-event-key">Open linkage coverage →</Link></article>
         </div>
         <BackToTop />
+      </section>
+
+      <section className="leadership-operating-model" id="leadership-operating-model">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Operating model</p>
+            <h2>Leadership gets decisions, not data-entry work.</h2>
+            <p>The upstream queue separates judgment from routine corrections and systems setup, so the escalation surface stays small.</p>
+          </div>
+          <div className="leadership-queue-grid">
+            <article><span>Needs judgment</span><strong>{brief.writebacks.decisions}</strong><h3>Resolve the material ambiguity.</h3><p>Participation, investment, customer commitments or contradictory program facts belong here.</p></article>
+            <article><span>Ready to approve</span><strong>{brief.writebacks.ready}</strong><h3>Let the source owner correct it.</h3><p>The evidence and proposed value are already documented. Approval authorizes the exact upstream change.</p></article>
+            <article><span>Foundation work</span><strong>{brief.writebacks.setup}</strong><h3>Assign the operating owner.</h3><p>Event keys, Drive folders and CRM objects are systems work—not strategic decisions.</p></article>
+          </div>
+          <div className="leadership-operating-note"><strong>The rule</strong><p>A field rep records the interaction, the event lead maintains the plan, Marketing Ops maintains program facts, and RevOps maintains attribution. Leadership intervenes only when the correct value depends on a business decision.</p><Link href="/sources#stewardship">See ownership and timing →</Link></div>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="leadership-outcomes" id="leadership-outcomes">

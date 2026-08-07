@@ -9,12 +9,16 @@ export type SystemLinkage = {
 };
 
 export function getEventSystemLinkage(event: EventRecord): SystemLinkage[] {
+  const tracker: SystemLinkage = {
+    system: "Conference tracker",
+    state: "Located",
+    detail: "The source row is in the catalog. Its permanent Event key column still needs to be added upstream.",
+  };
+
+  if (event.status === "No") return [tracker];
+
   return [
-    {
-      system: "Conference tracker",
-      state: "Located",
-      detail: "The source row is in the catalog. Its permanent Event key column still needs to be added upstream.",
-    },
+    tracker,
     {
       system: "Notion",
       state: event.notionUrl ? "Located" : "Setup needed",

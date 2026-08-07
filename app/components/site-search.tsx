@@ -21,6 +21,7 @@ const quickSearches = [
   { label: "Staffing gaps", query: "names open" },
   { label: "Meeting count TBD", query: "meeting package count TBD" },
   { label: "Open event tasks", query: "open event task" },
+  { label: "Where to update", query: "who updates event data" },
   { label: "HubSpot", query: "HubSpot" },
   { label: "Booth etiquette", query: "Booth etiquette" },
 ] as const;

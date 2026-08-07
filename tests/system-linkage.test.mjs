@@ -19,9 +19,12 @@ test("program linkage reports only connections supported by governed records", (
 test("event linkage distinguishes a linked workspace from missing upstream setup", () => {
   const genesys = events.find((event) => event.slug === "genesys-xperience");
   const orlando = events.find((event) => event.slug === "ccw-orlando-2027");
+  const contact = events.find((event) => event.slug === "contact-io");
   assert.ok(genesys);
   assert.ok(orlando);
+  assert.ok(contact);
   assert.equal(getEventSystemLinkage(genesys).find((item) => item.system === "Notion")?.state, "Located");
   assert.equal(getEventSystemLinkage(orlando).find((item) => item.system === "Notion")?.state, "Setup needed");
   assert.equal(getEventSystemLinkage(genesys).find((item) => item.system === "HubSpot")?.state, "Setup needed");
+  assert.deepEqual(getEventSystemLinkage(contact).map((item) => item.system), ["Conference tracker"]);
 });

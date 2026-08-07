@@ -6,7 +6,7 @@ import { BackToTop, PageContents } from "../components/page-contents";
 import { events, getProgramDate, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
 import { crmAttributionAudit } from "../data/crm-attribution";
-import { audienceViews, dataStreams, eventKeyRollout, fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
+import { audienceViews, dataStreams, eventKeyRollout, fieldOwners, sourceFlow, stewardshipRoles, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
 import { getProgramSystemLinkage } from "../data/system-linkage";
@@ -41,6 +41,7 @@ export default function SourcesPage() {
         { id: "data-flow", label: "How data moves" },
         { id: "data-streams", label: "Feeds and write-back" },
         { id: "field-ownership", label: "Where to update" },
+        { id: "stewardship", label: "Who updates it" },
         { id: "crm-attribution", label: "CRM attribution" },
         { id: "writeback-queue", label: "Write-back queue" },
         { id: "protected-decisions", label: "Direct decisions" },
@@ -186,6 +187,31 @@ export default function SourcesPage() {
           </table>
         </div>
         <BackToTop />
+      </section>
+
+      <section className="stewardship" id="stewardship">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Operating responsibility</p>
+            <h2>Keep the work with the person closest to it.</h2>
+            <p>Field teams record the interaction. Event owners maintain the plan. Operations maintains the joins. Leadership sees only the decisions that require judgment.</p>
+          </div>
+          <div className="stewardship-grid">
+            {stewardshipRoles.map((item, index) => <article key={item.role}>
+              <header><span>{String(index + 1).padStart(2, "0")}</span><time>{item.timing}</time></header>
+              <h3>{item.role}</h3>
+              <p className="stewardship-owns">{item.owns}</p>
+              <dl><div><dt>Update</dt><dd>{item.destination}</dd></div><div><dt>Rule</dt><dd>{item.rule}</dd></div></dl>
+              <a href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noreferrer" : undefined}>Open destination ↗</a>
+            </article>)}
+          </div>
+          <div className="stewardship-boundary" aria-label="Operating boundary">
+            <div><span>Routine correction</span><p>The source owner fixes it without escalating a normal data-entry task.</p></div>
+            <div><span>Material decision</span><p>Participation, investment or customer commitments move to leadership.</p></div>
+            <div><span>Published receipt</span><p>The scan records what changed, the evidence and the review version.</p></div>
+          </div>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="crm-attribution" id="crm-attribution">

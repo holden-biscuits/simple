@@ -126,10 +126,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
               <p>Use this exact value across the tracker, Notion and HubSpot. Until the CRM properties exist, include <code>[evt:{event.slug}]</code> in an event-sourced activity.</p>
             </aside>
             <div className="event-update-route-grid">
-              <a href={sourceLinks.sheet} target="_blank" rel="noreferrer"><span>Dates · participation · roster</span><strong>Conference tracker</strong><p>Correct the event row first. The fieldbook will reconcile the next review build.</p><b>Open Sheets ↗</b></a>
-              <a href={event.notionUrl ?? sourceLinks.notion} target="_blank" rel="noreferrer"><span>Tasks · owners · decisions</span><strong>{event.notionUrl ? "Event project" : "Notion setup needed"}</strong><p>{event.notionUrl ? "Update the execution plan and its owner, deadline or status." : "Create or locate the event project before execution work starts."}</p><b>Open Notion ↗</b></a>
-              <a href={sourceLinks.eventsDrive} target="_blank" rel="noreferrer"><span>Contracts · creative · files</span><strong>Events Drive</strong><p>Store the actual artifact, then link it from the event project.</p><b>Open Drive ↗</b></a>
-              <a href="https://app.hubspot.com/contacts/245561359/objects/0-47/views/all/list" target="_blank" rel="noreferrer"><span>Meetings · demos · pipeline</span><strong>HubSpot</strong><p>Add or correct the CRM record. Do not record an inferred outcome on the site.</p><b>Open HubSpot ↗</b></a>
+              <a href={sourceLinks.sheet} target="_blank" rel="noreferrer"><span>Dates · participation · roster</span><strong>Conference tracker</strong><p>Correct the event row first. Update participation and roster changes as soon as they are confirmed.</p><b>Open Sheets ↗</b></a>
+              {!isNotAttending ? <>
+                <a href={event.notionUrl ?? sourceLinks.notion} target="_blank" rel="noreferrer"><span>Tasks · owners · decisions</span><strong>{event.notionUrl ? "Event project" : "Notion setup needed"}</strong><p>{event.notionUrl ? "Update the owner, deadline or status the same business day." : "Create or locate the event project before execution work starts."}</p><b>Open Notion ↗</b></a>
+                <a href={sourceLinks.eventsDrive} target="_blank" rel="noreferrer"><span>Contracts · creative · files</span><strong>Events Drive</strong><p>Upload the approved artifact once, then link it from the event project.</p><b>Open Drive ↗</b></a>
+                <a href="https://app.hubspot.com/contacts/245561359/objects/0-47/views/all/list" target="_blank" rel="noreferrer"><span>Meetings · demos · pipeline</span><strong>HubSpot</strong><p>Log booked meetings before the event day ends. Record outcomes separately; never infer one here.</p><b>Open HubSpot ↗</b></a>
+              </> : null}
             </div>
           </div>
           <div className="event-linkage-strip" aria-label="Event system coverage">

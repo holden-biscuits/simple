@@ -121,6 +121,12 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Marketing Events[\s\S]*0/);
   assert.match(html, /Do not count date proximity, a vendor mention/);
   assert.match(html, /Tracker outcome columns should become rollups or references/);
+  assert.match(html, /Keep the work with the person closest to it\./);
+  assert.match(html, /AEs and SDRs[\s\S]*Before the event day ends/);
+  assert.match(html, /Event lead[\s\S]*The same business day/);
+  assert.match(html, /Marketing Ops[\s\S]*Before the next fieldbook review build/);
+  assert.match(html, /Leadership[\s\S]*When explicitly escalated/);
+  assert.match(html, /Routine correction[\s\S]*Material decision[\s\S]*Published receipt/);
   assert.match(html, /Changes that belong upstream\./);
   assert.match(html, /Contact\.io participation[\s\S]*Status: TBD[\s\S]*Status: No/);
   assert.match(html, /Customer Connect Expo participation[\s\S]*Status blank[\s\S]*Status: Confirmed/);
@@ -197,6 +203,10 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /No normalized event-cost dataset exists yet\./);
   assert.match(html, /0(?:<!-- -->)? of (?:<!-- -->)?14(?:<!-- -->)? active events have an exact CRM join\./);
   assert.match(html, /10(?:<!-- -->)? active event workspaces are linked/);
+  assert.match(html, /Leadership gets decisions, not data-entry work\./);
+  assert.match(html, /Needs judgment[\s\S]*1/);
+  assert.match(html, /Ready to approve[\s\S]*6/);
+  assert.match(html, /Foundation work[\s\S]*7/);
   assert.match(html, /Pipeline value is not supported\./);
   assert.match(html, /All 29 attributed deals currently have a \$0 amount/);
   assert.match(html, /href="\/leadership">Leaders<\/a>/);
@@ -239,6 +249,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const writebackSearchHtml = await writebackSearch.text();
   assert.match(writebackSearchHtml, /Source write-back queue/);
   assert.match(writebackSearchHtml, /\/sources#writeback-queue/);
+
+  const stewardshipSearch = await render("/search?q=who%20updates%20event%20data&type=Operations");
+  assert.equal(stewardshipSearch.status, 200);
+  const stewardshipSearchHtml = await stewardshipSearch.text();
+  assert.match(stewardshipSearchHtml, /Who updates event data/);
+  assert.match(stewardshipSearchHtml, /\/sources#stewardship/);
 });
 
 test("directory filters survive an event-page round trip", async () => {
