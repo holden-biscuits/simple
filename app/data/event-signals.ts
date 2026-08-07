@@ -3,6 +3,7 @@ type StaffingSource = {
   status: "Confirmed" | "TBD" | "Tentative" | "No";
   attendeeCount: number | null;
   team: string[];
+  credentials?: string;
 };
 type ActivationStatus = "Confirmed" | "Under review" | "None";
 type ActivationSource = {
@@ -53,6 +54,9 @@ export function getGuaranteedMeetingSignal(event: GuaranteedMeetingSource) {
 export function getStaffingSignal(event: StaffingSource) {
   const named = event.team.length;
   const planned = event.attendeeCount;
+  const recordedPasses = event.credentials?.match(/\b(\d+)\s+(?:[a-z]+\s+)?passes?\b/i);
+  const passes = recordedPasses ? Number(recordedPasses[1]) : planned;
+  const card = passes ? `${named} Attending / ${passes} Pass${passes === 1 ? "" : "es"}` : `${named} Attending`;
 
   if (event.status === "No") return {
     card: "0 Attending",
@@ -61,25 +65,25 @@ export function getStaffingSignal(event: StaffingSource) {
     state: "not-attending" as const,
   };
   if (planned && named === planned) return {
-    card: `${planned} Attending`,
+    card,
     summary: `${planned} attending`,
     detail: event.team.join(", "),
     state: "named" as const,
   };
   if (planned && named > 0) return {
-    card: `${named} Named · ${planned} Planned`,
+    card,
     summary: `${named} named · ${planned} planned`,
     detail: `${event.team.join(", ")} · ${named} of ${planned} named`,
     state: "open" as const,
   };
   if (planned) return {
-    card: `${planned} Planned`,
+    card,
     summary: `${planned} planned · names open`,
     detail: `0 of ${planned} named`,
     state: "open" as const,
   };
   if (named) return {
-    card: `${named} Attending`,
+    card,
     summary: `${named} named`,
     detail: event.team.join(", "),
     state: "named" as const,

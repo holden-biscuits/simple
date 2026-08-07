@@ -73,8 +73,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /CCW Vegas 2027/);
   assert.match(html, /6 Guaranteed Meetings/);
   assert.match(html, /10\+ Guaranteed Meetings/);
-  assert.match(html, /11(?:<!-- -->)? Planned/);
-  assert.match(html, /15(?:<!-- -->)? Planned/);
+  assert.match(html, /0(?:<!-- -->)? Attending \/ 11(?:<!-- -->)? Passes/);
+  assert.match(html, /0(?:<!-- -->)? Attending \/ 9(?:<!-- -->)? Passes/);
   assert.match(html, /Negative Feedback/);
   assert.match(html, /2(?:<!-- -->)? Follow-up Meetings/);
   assert.match(html, /16(?:<!-- -->)? Meetings Recorded/);

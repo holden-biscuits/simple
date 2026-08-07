@@ -26,11 +26,14 @@ test("meeting-package status distinguishes known counts from unresolved counts",
 });
 
 test("staffing signals distinguish named attendees from an unassigned plan", () => {
-  assert.equal(getStaffingSignal(event("genesys-xperience")).card, "9 Attending");
-  assert.equal(getStaffingSignal(event("ccw-orlando-2027")).card, "11 Planned");
+  assert.equal(getStaffingSignal(event("genesys-xperience")).card, "9 Attending / 9 Passes");
+  assert.equal(getStaffingSignal(event("iqpc-cx-travel-hospitality")).card, "1 Attending / 3 Passes");
+  assert.equal(getStaffingSignal(event("ccw-orlando-2027")).card, "0 Attending / 11 Passes");
+  assert.equal(getStaffingSignal(event("ccw-uk-executive-exchange-2027")).card, "0 Attending / 3 Passes");
+  assert.equal(getStaffingSignal(event("ccw-vegas-2027")).card, "0 Attending / 9 Passes");
   assert.equal(getStaffingSignal(event("ccw-exchange-chicago")).card, "1 Attending");
   assert.equal(getStaffingSignal(event("contact-io")).card, "0 Attending");
-  assert.equal(getStaffingSignal(event("ccw-orlando")).card, "2 Attending");
+  assert.equal(getStaffingSignal(event("ccw-orlando")).card, "2 Attending / 2 Passes");
 });
 
 test("activation signals distinguish attendance from activation certainty", () => {
