@@ -29,6 +29,7 @@ export default function SourcesPage() {
       </section>
       <PageContents items={[
         { id: "source-monitor", label: "Source monitor" },
+        { id: "protected-decisions", label: "Direct decisions" },
         { id: "change-log", label: "Change log" },
         { id: "approval-queue", label: "Approval queue" },
         { id: "source-hierarchy", label: "Source hierarchy" },
@@ -65,6 +66,23 @@ export default function SourcesPage() {
           </article>)}
         </div>
         <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Last completed scan: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed manually while building the fieldbook; the first successful recurring run will add its own receipt here."}</p>
+        <BackToTop />
+      </section>
+
+      <section className="shell protected-decisions" id="protected-decisions">
+        <div className="section-intro">
+          <p className="eyebrow">Direct decisions</p>
+          <h2>Do not let stale sources undo these.</h2>
+          <p>These values were confirmed directly in this task. The recurring scan keeps them in place until a newer direct correction or clearly superseding source update is recorded.</p>
+        </div>
+        <div className="protected-decision-grid">
+          {monitor.protectedOverrides.map((override) => <Link href={`/events/${override.eventSlug}`} key={override.id}>
+            <header><span>{override.field}</span><time>{override.confirmedAt}</time></header>
+            <h3>{override.eventName}</h3>
+            <p>{override.value}</p>
+            <b>Open event →</b>
+          </Link>)}
+        </div>
         <BackToTop />
       </section>
 
@@ -119,6 +137,7 @@ export default function SourcesPage() {
           <p className="eyebrow">Source hierarchy</p>
           <h2>Use the right source.</h2>
           <ol>
+            <li><strong>Direct confirmation</strong><span>Controls explicit participation decisions, roster corrections and factual clarifications made by Holden in this task until a newer decision supersedes them.</span></li>
             <li><strong>Conference tracker</strong><span>Controls the event roster, dates, status and topline staffing.</span></li>
             <li><strong>Events in Notion</strong><span>Controls execution detail for active event projects.</span></li>
             <li><strong>Events Drive</strong><span>Stores contracts, creative, attendee files and post-event artifacts.</span></li>
@@ -127,9 +146,11 @@ export default function SourcesPage() {
             <li><strong>Event page</strong><span>Publishes the reconciled view and links back to the working sources.</span></li>
           </ol>
           <div className="update-rules" id="update-rules">
+            <div><span>Protected override</span><p>A direct correction stays in force when a tracker, Notion page, email or Slack message still contains the older value. The scan reports the disagreement instead of reverting the site.</p></div>
             <div><span>Applied automatically</span><p>Direct, high-confidence changes supported by the controlling source: dates, venue details, confirmed deliverables, named owners and clearly attributed outcomes.</p></div>
             <div><span>Held for review</span><p>Conflicting participation status, ambiguous staffing, unattributed CRM activity, uncertain meeting counts, or a decision found only in conversation.</p></div>
             <div><span>Run receipt</span><p>Each scan reports the sources checked, the old and new values for applied changes, links to supporting evidence, and the items still waiting for a decision.</p></div>
+            <div><span>Publication gate</span><p>A successful scan may save a review version, but it does not change the live fieldbook until Holden explicitly approves deployment.</p></div>
           </div>
           <div className="source-links vertical" id="source-files">
             <a href={sourceLinks.sheet} target="_blank" rel="noreferrer">Open tracker ↗</a>

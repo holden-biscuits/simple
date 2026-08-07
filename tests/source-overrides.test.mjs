@@ -1,0 +1,26 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { events } from "../app/data/events.ts";
+import { siteStatus } from "../app/data/site-status.ts";
+
+function event(slug) {
+  const match = events.find((item) => item.slug === slug);
+  assert.ok(match, `Missing event fixture: ${slug}`);
+  return match;
+}
+
+test("protected direct decisions still match the published event data", () => {
+  const overrides = siteStatus.sourceMonitor.protectedOverrides;
+  assert.equal(new Set(overrides.map((override) => override.id)).size, overrides.length);
+  for (const override of overrides) event(override.eventSlug);
+
+  assert.equal(event("contact-io").status, "No");
+  assert.equal(event("customer-connect-expo").status, "Confirmed");
+  assert.equal(event("icmi-contact-center-expo").status, "Confirmed");
+  assert.deepEqual(event("genesys-xperience").team, ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]);
+  assert.equal(event("genesys-xperience").guaranteedMeetings, "No");
+
+  const vegasSpeaking = event("ccw-vegas-2027").speaking.toLowerCase();
+  const vegasDirectorySignal = vegasSpeaking === "none" || vegasSpeaking.includes("no slot confirmed") ? 0 : 1;
+  assert.equal(vegasDirectorySignal, 1);
+});

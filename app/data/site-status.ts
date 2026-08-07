@@ -12,6 +12,14 @@ export type SourceChange = {
   sourceUrl?: string;
   eventSlug?: string;
 };
+export type SourceOverride = {
+  id: string;
+  eventSlug: string;
+  eventName: string;
+  field: string;
+  value: string;
+  confirmedAt: string;
+};
 
 export const siteStatus = {
   contentUpdatedAt: "2026-08-06",
@@ -23,6 +31,14 @@ export const siteStatus = {
     connectionCheckedAt: "2026-08-06",
     connectionCheckedLabel: "Aug 06 · 2026",
     lastSuccessfulScan: "Aug 06, 2026 · 6:26 PM PT · manual baseline",
+    protectedOverrides: [
+      { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
+      { id: "customer-connect-participation", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
+      { id: "icmi-participation", eventSlug: "icmi-contact-center-expo", eventName: "ICMI Contact Center Expo", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
+      { id: "genesys-roster", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", field: "Attendees", value: "Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars", confirmedAt: "Aug 06 · 2026" },
+      { id: "genesys-meetings", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", field: "Guaranteed meetings", value: "None", confirmedAt: "Aug 06 · 2026" },
+      { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
+    ] as SourceOverride[],
     changeLog: [
       {
         id: "2027-program-added",

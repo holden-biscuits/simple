@@ -75,6 +75,12 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /26 events · 2026 only/);
   assert.match(html, /29 events · 2026–2027/);
   assert.match(html, /Monday, Wednesday and Friday/);
+  assert.match(html, /Do not let stale sources undo these\./);
+  assert.match(html, /Contact\.io[\s\S]*Not attending/);
+  assert.match(html, /Genesys Xperience[\s\S]*Guaranteed meetings[\s\S]*None/);
+  assert.match(html, /CCW Vegas 2027[\s\S]*1 speaking opportunity/);
+  assert.match(html, /Direct confirmation/);
+  assert.match(html, /A successful scan may save a review version/);
   assert.match(html, /Conference tracker/);
   assert.match(html, /30 event rows checked · 2026 \+ 2027 · Aug 6/);
   assert.match(html, /2 organizer updates applied · Aug 6/);

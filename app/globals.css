@@ -54,7 +54,7 @@ button, input, select { font: inherit; }
 .section-return { margin-top: -42px; margin-bottom: 45px; }
 .handoff .back-to-top, .tiering .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.7); }
 .handoff .back-to-top:hover, .handoff .back-to-top:focus-visible, .tiering .back-to-top:hover, .tiering .back-to-top:focus-visible { color: #ffb49c; }
-.start-map[id], .stats[id], .directory[id], .role-block[id], .handoff[id], .guide-panel[id], .timeline[id], .tiering[id], .role-links[id], .event-tldr[id], .event-no-plan[id], .event-priorities[id], .event-considerations[id], .fact-strip[id], .event-body[id], .event-body aside[id], .workstream[id], .outcomes[id], .source-monitor[id], .change-log[id], .approval-queue[id], .update-rules[id], .source-links[id], .marketing-lessons[id], .event-task-section[id], .marketing-matrix-section[id], .measurement[id] { scroll-margin-top: 175px; }
+.start-map[id], .stats[id], .directory[id], .role-block[id], .handoff[id], .guide-panel[id], .timeline[id], .tiering[id], .role-links[id], .event-tldr[id], .event-no-plan[id], .event-priorities[id], .event-considerations[id], .fact-strip[id], .event-body[id], .event-body aside[id], .workstream[id], .outcomes[id], .source-monitor[id], .protected-decisions[id], .change-log[id], .approval-queue[id], .update-rules[id], .source-links[id], .marketing-lessons[id], .event-task-section[id], .marketing-matrix-section[id], .measurement[id] { scroll-margin-top: 175px; }
 
 .home-hero { min-height: 700px; padding: 88px max(30px, calc((100vw - 1180px)/2)); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, .65fr); align-items: end; gap: 80px; position: relative; overflow: hidden; background-color: var(--canvas); }
 .home-hero::before, .role-hero::before, .event-hero::before { content: ''; position: absolute; inset: -25% -15% -20% 44%; pointer-events: none; opacity: .32; background: repeating-radial-gradient(ellipse at center, transparent 0 28px, rgba(22,75,56,.28) 29px 30px, transparent 31px 50px); transform: rotate(-12deg) scaleY(.7); }
@@ -246,6 +246,15 @@ button, input, select { font: inherit; }
 .source-order ol { list-style: none; padding: 0; margin: 40px 0; }
 .source-order li { display: grid; grid-template-columns: 170px 1fr; gap: 25px; padding: 18px 0; border-top: 1px solid var(--line); }
 .source-order li span { color: var(--muted); line-height: 1.45; }
+.protected-decisions { padding-block: 25px 85px; }
+.protected-decision-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.protected-decision-grid > a { min-height: 225px; padding: 22px; display: flex; flex-direction: column; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--canvas); }
+.protected-decision-grid > a:hover, .protected-decision-grid > a:focus-visible { background: var(--green-light); outline: 0; box-shadow: inset 0 -5px 0 var(--signal); }
+.protected-decision-grid header { display: flex; justify-content: space-between; gap: 16px; color: var(--signal-dark); font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.protected-decision-grid time { color: var(--muted); }
+.protected-decision-grid h3 { margin: 35px 0 8px; font: 400 27px/1.08 Georgia, serif; }
+.protected-decision-grid p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.protected-decision-grid b { margin-top: auto; padding-top: 24px; color: var(--signal-dark); font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .update-rules { margin: 55px 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .update-rules > div { min-height: 230px; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .update-rules span { color: var(--signal-dark); font: 800 11px var(--font-geist-mono), monospace; text-transform: uppercase; }
@@ -568,7 +577,7 @@ button, input, select { font: inherit; }
   .role-block ul { grid-template-columns: 1fr; }
   .handoff, .guide-panel, .tiering { padding: 35px 25px; }
   .source-order li { grid-template-columns: 1fr; gap: 5px; }
-  .monitor-summary, .source-coverage, .update-rules, .change-log-summary, .change-log-list { grid-template-columns: 1fr; }
+  .monitor-summary, .source-coverage, .protected-decision-grid, .update-rules, .change-log-summary, .change-log-list { grid-template-columns: 1fr; }
   .change-record dl { grid-template-columns: 1fr; }
   .conflict-list a { grid-template-columns: 38px 1fr 20px; gap: 12px; }
   .event-title-row { grid-template-columns: 1fr; }
