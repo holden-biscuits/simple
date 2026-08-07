@@ -81,7 +81,7 @@ export function SiteSearch({ records, initialQuery = "", initialType = "All" }: 
 
   return (
     <section className="shell search-tool" aria-label="Search the fieldbook">
-      <label><span>Search the fieldbook</span><input autoFocus type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Genesys, booth, HubSpot, travel, or ZoomInfo" /></label>
+      <label><span>Search the fieldbook</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Genesys, booth, HubSpot, travel, or ZoomInfo" /></label>
       <div className="search-quick">
         <span>Useful starting points</span>
         <div>{quickSearches.map((item) => <button type="button" key={item.query} onClick={() => { setQuery(item.query); setType("All"); }}>{item.label}</button>)}</div>
@@ -89,7 +89,7 @@ export function SiteSearch({ records, initialQuery = "", initialType = "All" }: 
       <div className="search-types" role="group" aria-label="Result type">
         {searchTypes.map((item) => <button type="button" key={item} aria-pressed={type === item} onClick={() => setType(item)}><span>{item}</span><b>{typeCounts[item]}</b></button>)}
       </div>
-      <div className="search-result-heading"><strong>{results.length}</strong><span>{normalized ? `results for “${query.trim()}”` : "pages and event records"}</span></div>
+      <div className="search-result-heading" aria-live="polite" aria-atomic="true"><strong>{results.length}</strong><span>{normalized ? `results for “${query.trim()}”` : "pages and event records"}</span></div>
       <div className="search-results">
         {results.map((record) => {
           const detail = matchDetail(record, normalized);
