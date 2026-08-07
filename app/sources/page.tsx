@@ -15,6 +15,7 @@ import { audienceSegmentContract, getAudienceSegmentRegistry } from "../data/aud
 import { latestSourceScan } from "../data/latest-source-scan";
 import { eventPipelineSnapshot } from "../data/event-pipeline";
 import { marketingEventCoverage } from "../data/marketing-events";
+import { getActionBriefing, isExternalAction } from "../data/action-briefing";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -28,29 +29,8 @@ export default function SourcesPage() {
   const programDate = getProgramDate();
   const linkage = getProgramSystemLinkage(events, programDate);
   const audienceSegments = getAudienceSegmentRegistry(events, programDate);
-  const decisionChanges = monitor.changeLog.filter((change) => change.state === "Needs review");
-  const readyWritebacks = writebackQueue.filter((item) => item.state === "Ready for approval");
-  const dueTasks = events.flatMap((event) => (event.marketingTasks ?? [])
-    .filter((task) => task.status !== "Done" && task.dueSort && task.dueSort <= programDate)
-    .map((task) => ({ event, task })))
-    .sort((a, b) => (a.task.dueSort ?? "").localeCompare(b.task.dueSort ?? ""));
   const autoUpdates = monitor.changeLog.filter((change) => change.state === "Applied" && change.checkedAt === siteStatus.contentUpdatedLabel);
-  const briefingActions = [
-    ...decisionChanges.map((change) => ({
-      event: change.eventSlug ? events.find((event) => event.slug === change.eventSlug)?.name ?? "Program-wide" : "Program-wide",
-      label: "Decision",
-      title: change.title,
-      detail: change.after,
-      href: change.eventSlug ? `/events/${change.eventSlug}#event-changes` : "/sources#approval-queue",
-    })),
-    ...dueTasks.map(({ event, task }) => ({
-      event: event.name,
-      label: task.dueSort && task.dueSort < programDate ? "Overdue" : "Due today",
-      title: task.title,
-      detail: `${task.owner ? `Owner: ${task.owner}` : "Owner missing"}${task.due ? ` · ${task.due}` : ""}`,
-      href: `/marketing?event=${event.slug}#event-tasks`,
-    })),
-  ].slice(0, 3);
+  const briefing = getActionBriefing({ events, changes: monitor.changeLog, writebacks: writebackQueue, programDate, limit: 3 });
   const changeStates = (["Applied", "Needs review", "No change"] as const).map((state) => ({
     state,
     count: monitor.changeLog.filter((change) => change.state === state).length,
@@ -128,16 +108,20 @@ export default function SourcesPage() {
             <article><span>Reply loop</span><strong>Answer in the DM</strong><p>Reply with the item number and answer. The next scan captures the decision and routes the owning-system correction.</p></article>
           </div>
           <div className="briefing-metrics" aria-label="Current briefing queue">
-            <article><span>Decisions</span><strong>{decisionChanges.length}</strong><p>Conflicts or missing facts that need judgment.</p></article>
-            <article><span>Due now</span><strong>{dueTasks.length}</strong><p>Open structured tasks due today or earlier.</p></article>
-            <article><span>Write approvals</span><strong>{readyWritebacks.length}</strong><p>Exact upstream corrections waiting for approval.</p></article>
+            <article><span>Decisions</span><strong>{briefing.counts.decisions}</strong><p>Conflicts or missing facts that need judgment.</p></article>
+            <article><span>Due now</span><strong>{briefing.counts.dueNow}</strong><p>Open structured tasks due today or earlier.</p></article>
+            <article><span>Write approvals</span><strong>{briefing.counts.approvals}</strong><p>Exact upstream corrections waiting for approval.</p></article>
             <article><span>Auto-updated</span><strong>{autoUpdates.length}</strong><p>Accepted facts already included in the current review build.</p></article>
           </div>
           <div className="briefing-actions">
             <header><span>What the next briefing would ask</span><small>Highest-priority three · full queues stay on this page</small></header>
-            {briefingActions.length ? briefingActions.map((item, index) => <Link href={item.href} key={`${item.label}-${item.event}-${item.title}`}>
+            {briefing.items.length ? briefing.items.map((item, index) => isExternalAction(item) ? <a href={item.href} target="_blank" rel="noreferrer" key={item.id}>
               <span>{String(index + 1).padStart(2, "0")}</span>
-              <div><small>{item.label} · {item.event}</small><strong>{item.title}</strong><p>{item.detail}</p></div>
+              <div><small>{item.label} · {item.event}</small><strong>{item.title}</strong><p>{item.detail}</p><em>Open {item.destination} ↗</em></div>
+              <b>↗</b>
+            </a> : <Link href={item.href} key={item.id}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div><small>{item.label} · {item.event}</small><strong>{item.title}</strong><p>{item.detail}</p><em>Open {item.destination} →</em></div>
               <b>→</b>
             </Link>) : <p className="briefing-clear">Nothing needs your answer right now. The scan will keep checking quietly.</p>}
           </div>

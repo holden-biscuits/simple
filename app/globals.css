@@ -324,6 +324,7 @@ button, input, select { font: inherit; }
 .briefing-actions small { color: #ffb29a; font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .briefing-actions strong { display: block; margin-top: 7px; font: 400 25px/1.12 Georgia, serif; }
 .briefing-actions p { margin: 8px 0 0; color: rgba(255,255,255,.7); font-size: 14px; line-height: 1.5; }
+.briefing-actions em { display: block; margin-top: 12px; color: #ffb29a; font: 800 10px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; font-style: normal; }
 .briefing-actions b { font-size: 20px; }
 .briefing-clear { padding: 28px 0; border-top: 1px solid rgba(255,255,255,.28); color: rgba(255,255,255,.72); }
 .briefing-boundary { max-width: 900px; margin: 26px 0 0; color: rgba(255,255,255,.7); font-size: 13px; line-height: 1.55; }
