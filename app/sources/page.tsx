@@ -6,7 +6,7 @@ import { BackToTop, PageContents } from "../components/page-contents";
 import { events, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
 import { crmAttributionAudit } from "../data/crm-attribution";
-import { audienceViews, dataStreams, fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
+import { audienceViews, dataStreams, eventKeyRollout, fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
 
@@ -35,6 +35,7 @@ export default function SourcesPage() {
       <PageContents items={[
         { id: "source-monitor", label: "Source monitor" },
         { id: "freshness-policy", label: "Freshness policy" },
+        { id: "canonical-event-key", label: "Canonical Event key" },
         { id: "data-flow", label: "How data moves" },
         { id: "data-streams", label: "Feeds and write-back" },
         { id: "field-ownership", label: "Where to update" },
@@ -82,6 +83,29 @@ export default function SourcesPage() {
           <div className="freshness-policy-grid">{freshnessPolicies.map((policy) => <article key={policy.window}><span>{policy.window}</span><strong>{policy.cadence}</strong><p>{policy.detail}</p></article>)}</div>
         </div>
         <BackToTop />
+      </section>
+
+      <section className="canonical-event-key" id="canonical-event-key">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Canonical Event key</p>
+            <h2>One durable join across every system.</h2>
+            <p>The event URL already supplies the key. Carrying that exact value upstream replaces fragile name-and-date matching and makes approved write-back, attribution and leadership rollups dependable.</p>
+          </div>
+          <div className="event-key-example"><span>Example</span><code>genesys-xperience</code><p>Stable even if the display name, dates or venue change.</p></div>
+          <div className="source-route-table-wrap">
+            <table className="source-route-table event-key-table">
+              <thead><tr><th>System</th><th>Field or convention</th><th>Status</th><th>Implementation rule</th></tr></thead>
+              <tbody>{eventKeyRollout.map((item) => <tr key={item.system}>
+                <th scope="row">{item.system}</th>
+                <td data-label="Field or convention">{item.field}</td>
+                <td data-label="Status"><span className={`event-key-state event-key-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</span></td>
+                <td data-label="Implementation rule">{item.rule}</td>
+              </tr>)}</tbody>
+            </table>
+          </div>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="source-governance" id="data-flow">

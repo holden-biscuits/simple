@@ -94,6 +94,9 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Can we write back\?/);
   assert.match(html, /One event brief/);
   assert.match(html, /Portfolio and outcomes/);
+  assert.match(html, /One durable join across every system\./);
+  assert.match(html, /genesys-xperience/);
+  assert.match(html, /HubSpot meetings/);
   assert.match(html, /Happening now[\s\S]*Daily/);
   assert.match(html, /Starts within 14 days[\s\S]*Every 3 days/);
   assert.match(html, /More than 60 days away[\s\S]*Monthly/);
@@ -341,6 +344,11 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /No guaranteed meetings/);
   assert.match(genesysHtml, /Current(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
   assert.match(genesysHtml, /Next check Aug 13/);
+  assert.match(genesysHtml, /Update the source that owns it\./);
+  assert.match(genesysHtml, /Canonical Event key/);
+  assert.match(genesysHtml, /\[evt:(?:<!-- -->)?genesys-xperience(?:<!-- -->)?\]/);
+  assert.match(genesysHtml, /Dates · participation · roster/);
+  assert.match(genesysHtml, /Meetings · demos · pipeline/);
   assert.match(genesysHtml, /Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
   assert.match(genesysHtml, /href="\/sources">See source record/);
   assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
@@ -391,6 +399,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const trackerBaselineHtml = await trackerBaselineEvent.text();
   assert.match(trackerBaselineHtml, /Archived(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
   assert.match(trackerBaselineHtml, /<p>Conference tracker<small>/);
+  assert.match(trackerBaselineHtml, /Notion setup needed/);
 
   const customerConnect = await render("/events/customer-connect-expo");
   assert.equal(customerConnect.status, 200);

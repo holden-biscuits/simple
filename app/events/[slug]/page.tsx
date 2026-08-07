@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, sourceLinks, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
@@ -88,9 +88,11 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section>
       <PageContents items={isNotAttending ? [
         { id: "event-tldr", label: "TL;DR" },
+        { id: "event-update-route", label: "Update this event" },
         { id: "event-no-plan", label: "Event status" },
       ] : [
         { id: "event-tldr", label: "TL;DR" },
+        { id: "event-update-route", label: "Update this event" },
         ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
         { id: "event-crew", label: "Crew" },
         ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
@@ -110,6 +112,25 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <p>{verification.sources.join(" · ")}<small>{freshness.nextCheckLabel ? `Next check ${freshness.nextCheckLabel}. ` : ""}{freshness.reason}</small></p>
           <Link href="/sources">See source record →</Link>
         </div>
+      </section>
+
+      <section className="event-update-route shell" id="event-update-route">
+        <details>
+          <summary><span><small>Something changed?</small><strong>Update the source that owns it.</strong></span><b>Open routes <i aria-hidden="true">+</i></b></summary>
+          <div className="event-update-route-body">
+            <aside>
+              <span>Canonical Event key</span>
+              <code>{event.slug}</code>
+              <p>Use this exact value across the tracker, Notion and HubSpot. Until the CRM properties exist, include <code>[evt:{event.slug}]</code> in an event-sourced activity.</p>
+            </aside>
+            <div className="event-update-route-grid">
+              <a href={sourceLinks.sheet} target="_blank" rel="noreferrer"><span>Dates · participation · roster</span><strong>Conference tracker</strong><p>Correct the event row first. The fieldbook will reconcile the next review build.</p><b>Open Sheets ↗</b></a>
+              <a href={event.notionUrl ?? sourceLinks.notion} target="_blank" rel="noreferrer"><span>Tasks · owners · decisions</span><strong>{event.notionUrl ? "Event project" : "Notion setup needed"}</strong><p>{event.notionUrl ? "Update the execution plan and its owner, deadline or status." : "Create or locate the event project before execution work starts."}</p><b>Open Notion ↗</b></a>
+              <a href={sourceLinks.eventsDrive} target="_blank" rel="noreferrer"><span>Contracts · creative · files</span><strong>Events Drive</strong><p>Store the actual artifact, then link it from the event project.</p><b>Open Drive ↗</b></a>
+              <a href="https://app.hubspot.com/contacts/245561359/objects/0-47/views/all/list" target="_blank" rel="noreferrer"><span>Meetings · demos · pipeline</span><strong>HubSpot</strong><p>Add or correct the CRM record. Do not record an inferred outcome on the site.</p><b>Open HubSpot ↗</b></a>
+            </div>
+          </div>
+        </details>
       </section>
 
       {showPriorities ? (

@@ -22,6 +22,13 @@ export type DataStream = {
   writeback: string;
 };
 
+export type EventKeyRolloutItem = {
+  system: string;
+  field: string;
+  state: "In use" | "Setup needed" | "Convention needed";
+  rule: string;
+};
+
 export type WritebackItem = {
   system: string;
   scope: string;
@@ -135,6 +142,16 @@ export const audienceViews = [
   { audience: "Event team", view: "One event brief", detail: "The TL;DR, roster, rules, logistics, meetings, open work and links needed before and during the event." },
   { audience: "GTM operators", view: "Program control", detail: "Readiness, owner and deadline gaps, source freshness, conflicts and the exact write-back queue." },
   { audience: "Leadership", view: "Portfolio and outcomes", detail: "Upcoming commitments, material risks and CRM-proven meetings, pipeline and revenue—without inferred or decorative counts." },
+] as const;
+
+export const eventKeyRollout: EventKeyRolloutItem[] = [
+  { system: "Event Basecamp", field: "Event key · URL slug", state: "In use", rule: "The published event URL is the canonical key. Example: genesys-xperience." },
+  { system: "Google Sheets", field: "Event key · text column", state: "Setup needed", rule: "Add one immutable key per tracker row. Do not rebuild it from the event name after creation." },
+  { system: "Notion", field: "Event key · text property", state: "Setup needed", rule: "Set the same key on each event project and use it when linking tasks, files and CRM records." },
+  { system: "HubSpot deals", field: "Event key · custom property", state: "Setup needed", rule: "Populate only after explicit attribution. Keep Deal Source and Deal Source Detail for reporting continuity." },
+  { system: "HubSpot meetings", field: "Event key · custom property", state: "Setup needed", rule: "Set it when a meeting is booked or confirmed as event-sourced; record the outcome separately." },
+  { system: "HubSpot Marketing Events", field: "Canonical event record", state: "Setup needed", rule: "Create one record per attended event and associate its contacts, meetings and deals." },
+  { system: "Google Drive", field: "Event folder prefix", state: "Convention needed", rule: "Prefix the event folder with the key so contracts and artifacts remain traceable after names change." },
 ] as const;
 
 export const fieldOwners: FieldOwner[] = [
