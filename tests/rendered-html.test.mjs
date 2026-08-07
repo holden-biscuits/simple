@@ -43,7 +43,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /href="#events"/);
   assert.match(html, /href="\/sources"/);
   assert.match(html, /class="footer-back-to-top" href="#page-top"[^>]*>[\s\S]*Back to top/);
-  assert.match(html, /surfaces the workstreams in play/);
+  assert.match(html, /Open your event before you travel, promote it, or work the floor/);
+  assert.match(html, /prospecting targets, onsite rules, and the programs actually in play/);
   assert.doesNotMatch(html, /page says “None/);
   assert.match(html, /ranger-raccoon-clean-hat\.png/);
   assert.match(html, /class="ranger-hat-logo"/);

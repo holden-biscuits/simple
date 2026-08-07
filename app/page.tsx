@@ -185,7 +185,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         <div className="section-intro">
           <p className="eyebrow">2026–2027 event program</p>
           <h2>Pick an event. See the whole plan.</h2>
-          <p>The conference tracker supplies the event list. Active Notion projects add the working details. Each page surfaces the workstreams in play and tucks everything else under “Not in this event plan.”</p>
+          <p>Open your event before you travel, promote it, or work the floor. You’ll find the TL;DR, team, open items, prospecting targets, onsite rules, and the programs actually in play.</p>
         </div>
         <EventDirectory events={events} programDate={programDate} initialState={initialDirectoryState} />
         <BackToTop />
