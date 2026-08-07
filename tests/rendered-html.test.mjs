@@ -235,7 +235,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Active event audience segments[\s\S]*0 active-event segments are automatically maintained/);
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
-  assert.match(html, /<span>Applied<\/span><strong>5<\/strong>/);
+  assert.match(html, /<span>Applied<\/span><strong>6<\/strong>/);
   assert.match(html, /<span>Needs review<\/span><strong>5<\/strong>/);
   assert.match(html, /<span>No change<\/span><strong>5<\/strong>/);
   assert.match(html, /Route new Customer Connect organizer details to Notion/);
@@ -316,7 +316,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /2(?:<!-- -->)? \/ (?:<!-- -->)?14/);
   assert.match(html, /Planning gaps open/);
   assert.match(html, /What changed—and what still needs a decision\./);
-  assert.match(html, /5<\/strong><span>Applied updates/);
+  assert.match(html, /6<\/strong><span>Applied updates/);
   assert.match(html, /5<\/strong><span>Needs review/);
   assert.match(html, /Customer Connect Expo[\s\S]*Route new Customer Connect organizer details to Notion/);
   assert.match(html, /Genesys Xperience[\s\S]*Confirmed the Genesys Xperience roster/);
@@ -357,7 +357,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.equal(sourceSearch.status, 200);
   const sourceSearchHtml = await sourceSearch.text();
   assert.match(sourceSearchHtml, /Genesys Xperience/);
-  assert.match(sourceSearchHtml, /Source check · Aug 6, 2026 · Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
+  assert.match(sourceSearchHtml, /Source check · Aug 7, 2026 · Direct update · OOH meeting notes · Notion · Gmail · HubSpot · Restricted Genesys brief/);
 
   const startSearch = await render("/search?q=where%20should%20I%20go&type=Guide");
   assert.equal(startSearch.status, 200);
@@ -597,6 +597,8 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /Submit the contracted pre-event email copy/);
   assert.match(html, /Produce the booth-monitor product video/);
+  assert.match(html, /AP submitted payment and Michael is waiting for confirmation/);
+  assert.match(html, /no-U-turn loop, quarter-mile taxi geofence, and bonus spot-based placement are set/);
   assert.ok(html.indexOf("Deliver the final solution-talk deck") < html.indexOf("Submit the contracted pre-event email copy"));
   assert.match(html, /HubSpot form, campaign attribution, and 15-minute demo CTA are already live/);
   assert.match(html, /Task details tracked/);
@@ -727,10 +729,11 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.doesNotMatch(genesysHtml, /already in this review build/);
   assert.match(genesysHtml, /Confirmed the Genesys Xperience roster/);
   assert.match(genesysHtml, /Updated the Genesys sponsor-email deadline/);
+  assert.match(genesysHtml, /Recorded the Wish Line route and operating plan/);
   assert.match(genesysHtml, /Genesys guaranteed meetings already match/);
   assert.match(genesysHtml, /href="\/sources#change-log">Open full log →/);
-  assert.match(genesysHtml, /Current(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
-  assert.match(genesysHtml, /Next check Aug 13/);
+  assert.match(genesysHtml, /Current(?:<!-- -->)? · checked <time dateTime="2026-08-07">Aug 7, 2026<\/time>/);
+  assert.match(genesysHtml, /Next check Aug 14/);
   assert.match(genesysHtml, /Update the source that owns it\./);
   assert.match(genesysHtml, /id="event-writebacks"/);
   assert.match(genesysHtml, /Source records still need to catch up\./);
@@ -750,7 +753,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Fully loaded cost[\s\S]*No normalized cost record/);
   assert.match(genesysHtml, /CRM association[\s\S]*Exact Event key join missing/);
   assert.match(genesysHtml, /Open measurement contract/);
-  assert.match(genesysHtml, /Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
+  assert.match(genesysHtml, /Direct update · OOH meeting notes · Notion · Gmail · HubSpot · Restricted Genesys brief/);
   assert.match(genesysHtml, /href="\/sources">See source record/);
   assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
   assert.match(genesysHtml, /Onsite footprint<\/span><strong>Booth confirmed/);
@@ -770,6 +773,13 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Deliver Cat’s final solution-talk deck by Aug 10/);
   assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
   assert.match(genesysHtml, /Wish Line/);
+  assert.match(genesysHtml, /shortest no-U-turn loop available/);
+  assert.match(genesysHtml, /quarter-mile taxi geofence/);
+  assert.match(genesysHtml, /Bellagio to Fontainebleau/);
+  assert.match(genesysHtml, /estimated 10-minute loop/);
+  assert.match(genesysHtml, /track a driver live/);
+  assert.match(genesysHtml, /airport placement happens only if inventory is available/);
+  assert.match(genesysHtml, /AP submitted payment/);
   for (const person of ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]) assert.match(genesysHtml, new RegExp(`>${person}<`));
   assert.doesNotMatch(genesysHtml, />Available</);
   assert.doesNotMatch(genesysHtml, /Final roster still needs to be reconciled/);

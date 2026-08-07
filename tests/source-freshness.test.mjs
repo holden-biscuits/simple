@@ -17,7 +17,7 @@ test("current events use a daily source-check window", () => {
 });
 
 test("upcoming events tighten from weekly to every three days", () => {
-  const weekly = getSourceFreshness(find("genesys-xperience"), "2026-08-13");
+  const weekly = getSourceFreshness(find("genesys-xperience"), "2026-08-14");
   const finalWindow = getSourceFreshness(find("genesys-xperience"), "2026-08-20");
   assert.equal(weekly.state, "due");
   assert.equal(weekly.maxAgeDays, 7);

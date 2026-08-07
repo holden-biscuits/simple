@@ -42,9 +42,21 @@ export const siteStatus = {
       { id: "icmi-participation", eventSlug: "icmi-contact-center-expo", eventName: "ICMI Contact Center Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
       { id: "genesys-roster", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", fieldKey: "team", field: "Attendees", value: "Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars", confirmedAt: "Aug 06 · 2026" },
       { id: "genesys-meetings", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", fieldKey: "guaranteedMeetings", field: "Guaranteed meetings", value: "None", confirmedAt: "Aug 06 · 2026" },
+      { id: "genesys-wish-line-route", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", fieldKey: "workstreams", field: "Wish Line activation", value: "Quarter-mile taxi geofence · condensed Bellagio-to-Fontainebleau loop · spot-based bonus · airport inventory unconfirmed · AP confirmation pending", confirmedAt: "Aug 07 · 2026" },
       { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", fieldKey: "speaking", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
     ] as SourceOverride[],
     changeLog: [
+      {
+        id: "genesys-wish-line-route-confirmed",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Recorded the Wish Line route and operating plan",
+        field: "Secondary activation and payment state",
+        before: "Approved media buy · phone number purchased · route and bonus inventory not recorded",
+        after: "Quarter-mile taxi geofence · condensed Bellagio-to-Fontainebleau loop · spot-based bonus · airport inventory unconfirmed · AP confirmation pending",
+        source: "Direct update · OOH meeting notes",
+        eventSlug: "genesys-xperience",
+      },
       {
         id: "customer-connect-onboarding-signal",
         state: "Needs review" as SourceChangeState,

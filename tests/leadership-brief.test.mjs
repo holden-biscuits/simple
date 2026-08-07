@@ -38,9 +38,10 @@ test("leadership outcomes preserve CRM limits", () => {
 
 test("leadership change digest separates applied facts from unresolved claims", () => {
   const digest = getLeadershipChangeDigest(events, siteStatus.sourceMonitor.changeLog);
-  assert.equal(digest.applied.length, 5);
+  assert.equal(digest.applied.length, 6);
   assert.equal(digest.needsReview.length, 5);
   assert.equal(digest.applied.find((change) => change.id === "genesys-roster-confirmed")?.href, "/events/genesys-xperience#event-changes");
+  assert.equal(digest.applied.find((change) => change.id === "genesys-wish-line-route-confirmed")?.href, "/events/genesys-xperience#event-changes");
   assert.equal(digest.applied.find((change) => change.id === "2027-program-added")?.href, "/sources#change-log");
   assert.equal(digest.needsReview.find((change) => change.id === "chicago-staffing-conflict")?.eventName, "CCW Exchange Chicago");
   assert.equal(digest.needsReview.find((change) => change.id === "hubspot-ccw-source-mismatch")?.eventName, "CCW Vegas");

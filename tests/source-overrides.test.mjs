@@ -20,6 +20,8 @@ test("protected direct decisions still match the published event data", () => {
   assert.equal(event("icmi-contact-center-expo").status, "Confirmed");
   assert.deepEqual(event("genesys-xperience").team, ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]);
   assert.equal(event("genesys-xperience").guaranteedMeetings, "No");
+  assert.ok(event("genesys-xperience").workstreams.marketing.some((item) => item.includes("quarter-mile taxi geofence")));
+  assert.ok(event("genesys-xperience").workstreams.marketing.some((item) => item.includes("airport placement")));
 
   assert.equal(getSpeakingOpportunitySignal(event("ccw-vegas-2027")), "1 Speaking Opp");
 });
