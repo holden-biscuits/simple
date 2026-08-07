@@ -268,6 +268,11 @@ export default function SourcesPage() {
             <article><span>Meeting records to QA</span><strong>{crmAttributionAudit.meetingWindow.possibleEventMeetings}</strong><p>{crmAttributionAudit.meetingWindow.outcomeNote}</p></article>
             <article><span>Marketing Events</span><strong>{crmAttributionAudit.marketingEvents}</strong><p>No canonical event objects are available yet; writes require HubSpot reauthorization.</p></article>
           </div>
+          <aside className="crm-audit-alert">
+            <span>Needs RevOps review · {crmAttributionAudit.sourceMismatch.count} record</span>
+            <p>{crmAttributionAudit.sourceMismatch.note}</p>
+            <a href={crmAttributionAudit.sourceMismatch.url} target="_blank" rel="noreferrer">Open {crmAttributionAudit.sourceMismatch.dealName} in HubSpot ↗</a>
+          </aside>
           <div className="crm-rule-grid">
             {crmAttributionAudit.rules.map((rule) => <article key={rule.label}>
               <span>{rule.label}</span>

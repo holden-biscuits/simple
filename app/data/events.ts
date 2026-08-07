@@ -275,7 +275,7 @@ export const events: EventRecord[] = [
     organizerUrl: "https://www.customercontactweek.com/ccw-lasvegas/schedule",
     crmSnapshot: {
       system: "HubSpot",
-      checkedAt: "Aug 6, 2026",
+      checkedAt: "Aug 7, 2026",
       attribution: "Deal Source: Event / Conference · Deal Source Detail: CCW Vegas follow-up",
       totalDeals: 29,
       stages: [
@@ -286,7 +286,7 @@ export const events: EventRecord[] = [
         { label: "Closed lost", count: 4 },
         { label: "Disqualified", count: 4 },
       ],
-      dataQualityNote: "All 29 attributed deals currently have $0 amount, so the CRM does not yet support a pipeline-value claim. No attributed deal is marked Closed Won.",
+      dataQualityNote: "All 29 exactly attributed deals currently have $0 amount, so the CRM does not yet support a pipeline-value claim. No attributed deal is marked Closed Won. One additional deal has the CCW follow-up detail but an outbound source and remains excluded pending RevOps review.",
       url: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
     },
     workstreams: {
@@ -1051,8 +1051,8 @@ const trackerBaseline: EventVerification = {
 
 const eventVerificationOverrides: Record<string, EventVerification> = {
   "ccw-vegas": {
-    checkedAt: "Aug 6, 2026",
-    checkedAtISO: "2026-08-06",
+    checkedAt: "Aug 7, 2026",
+    checkedAtISO: "2026-08-07",
     sources: ["Conference tracker", "CCW Vegas plan", "HubSpot"],
   },
   "ccw-exchange-chicago": {

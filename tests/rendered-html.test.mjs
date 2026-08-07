@@ -127,6 +127,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Update the system that owns the fact\./);
   assert.match(html, /Only publish outcomes the CRM can prove\./);
   assert.match(html, /Exact event deals[\s\S]*29/);
+  assert.match(html, /Needs RevOps review[\s\S]*One additional deal carries the CCW follow-up detail but not an event source/);
+  assert.match(html, /Open (?:<!-- -->)?Memorial Hermann Health System(?:<!-- -->)? in HubSpot/);
   assert.match(html, /Meeting records to QA[\s\S]*4/);
   assert.match(html, /Marketing Events[\s\S]*0/);
   assert.match(html, /Do not count date proximity, a vendor mention/);
@@ -151,8 +153,10 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
   assert.match(html, /<span>Applied<\/span><strong>5<\/strong>/);
-  assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
-  assert.match(html, /<span>No change<\/span><strong>3<\/strong>/);
+  assert.match(html, /<span>Needs review<\/span><strong>4<\/strong>/);
+  assert.match(html, /<span>No change<\/span><strong>4<\/strong>/);
+  assert.match(html, /Reconcile one CCW deal-source mismatch/);
+  assert.match(html, /Exact CCW attribution baseline still holds/);
   assert.match(html, /Upstream write-back verification/);
   assert.match(html, /Four corrections remain/);
   assert.match(html, /Genesys guaranteed meetings already match/);
@@ -169,12 +173,12 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Conference tracker/);
   assert.match(html, /5 near-term rows rechecked · Aug 6/);
   assert.match(html, /2 event threads rechecked · 1 update · Aug 6/);
-  assert.match(html, /29 attributed deals · all CCW Vegas · Aug 6/);
+  assert.match(html, /29 exact deals · 1 source mismatch · Aug 7/);
   assert.match(html, /No direct scan available/);
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
   assert.doesNotMatch(html, /first run pending/);
-  assert.match(html, /Last completed scan: Aug 06, 2026 · 11:16 PM PT · five-event freshness scan/);
+  assert.match(html, /Last completed scan: Aug 07, 2026 · 12:32 AM PT · HubSpot attribution refresh/);
   assert.match(html, /four systems are read on a schedule/);
   assert.match(html, /zero sources push directly into production/);
   assert.match(html, /Make the joins trustworthy before adding more dashboards\./);
@@ -217,7 +221,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Planning gaps open/);
   assert.match(html, /What changed—and what still needs a decision\./);
   assert.match(html, /5<\/strong><span>Applied updates/);
-  assert.match(html, /3<\/strong><span>Needs review/);
+  assert.match(html, /4<\/strong><span>Needs review/);
   assert.match(html, /Genesys Xperience[\s\S]*Confirmed the Genesys Xperience roster/);
   assert.match(html, /href="\/events\/genesys-xperience#event-changes"/);
   assert.match(html, /Program-wide[\s\S]*Added the 2027 event program/);
@@ -625,7 +629,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(vegasHtml, /HubSpot/);
   assert.match(vegasHtml, /explicitly attributed deals/);
   assert.match(vegasHtml, /Demo completed/);
-  assert.match(vegasHtml, /All 29 attributed deals currently have \$0 amount/);
+  assert.match(vegasHtml, /All 29 exactly attributed deals currently have \$0 amount/);
+  assert.match(vegasHtml, /one additional deal has the CCW follow-up detail but an outbound source/i);
 
   const lead = await render("/events/the-lead-summit");
   const leadHtml = await lead.text();

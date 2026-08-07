@@ -31,7 +31,7 @@ export const siteStatus = {
     delivery: "Roundup posted in this Codex task",
     connectionCheckedAt: "2026-08-06",
     connectionCheckedLabel: "Aug 06 · 2026",
-    lastSuccessfulScan: "Aug 06, 2026 · 11:16 PM PT · five-event freshness scan",
+    lastSuccessfulScan: "Aug 07, 2026 · 12:32 AM PT · HubSpot attribution refresh",
     protectedOverrides: [
       { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", fieldKey: "status", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
       { id: "customer-connect-participation", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
@@ -41,6 +41,30 @@ export const siteStatus = {
       { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", fieldKey: "speaking", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
     ] as SourceOverride[],
     changeLog: [
+      {
+        id: "hubspot-ccw-source-mismatch",
+        state: "Needs review" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Reconcile one CCW deal-source mismatch",
+        field: "Deal Source and Deal Source Detail",
+        before: "30 deals carry the CCW Vegas follow-up detail",
+        after: "29 also carry Event / Conference · Memorial Hermann carries Outbound — SDR and remains excluded",
+        source: "HubSpot",
+        sourceUrl: "https://app.hubspot.com/contacts/245561359/record/0-3/338921491147?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+        eventSlug: "ccw-vegas",
+      },
+      {
+        id: "hubspot-attribution-refresh-no-change",
+        state: "No change" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Exact CCW attribution baseline still holds",
+        field: "Deals, meeting outcomes and Marketing Events",
+        before: "29 exact deals · 4 possible event meetings · 0 completed outcomes · 0 Marketing Events",
+        after: "No change to the publishable totals or stage distribution",
+        source: "HubSpot",
+        sourceUrl: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+        eventSlug: "ccw-vegas",
+      },
       {
         id: "customer-connect-portal-registration",
         state: "Applied" as SourceChangeState,
@@ -166,6 +190,12 @@ export const siteStatus = {
     ] as SourceChange[],
     latestChecks: [
       {
+        system: "HubSpot",
+        checkedAt: "Aug 07 · 2026",
+        scope: "CCW Vegas attribution refresh · 12:32 AM PT",
+        result: "All 29 deals with the strict Event / Conference + CCW Vegas follow-up pair were re-read; the stage mix remains 5 meeting booked, 6 qualification, 8 demo completed, 2 validation, 4 closed lost and 4 disqualified. All 29 still have $0 amount and none is Closed Won. One additional deal carries the CCW detail with an Outbound — SDR source and stays excluded pending RevOps review. The full Jun 22–26 meeting window still contains eight records: four possible event meetings with no completed outcome and four unrelated calls. Marketing Events remains empty.",
+      },
+      {
         system: "Google Sheets · Notion · Gmail · Slack · Google Drive · HubSpot",
         checkedAt: "Aug 06 · 2026",
         scope: "Five-event freshness scan · 11:16 PM PT",
@@ -238,7 +268,7 @@ export const siteStatus = {
       { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "1 restricted brief · no new file · Aug 6" },
       { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "5 event searches · no match · Aug 6" },
       { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "2 event threads rechecked · 1 update · Aug 6" },
-      { name: "Event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "Meetings, demos, deals and pipeline only when event attribution is clear", receipt: "29 attributed deals · all CCW Vegas · Aug 6" },
+      { name: "Event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "Meetings, demos, deals and pipeline only when event attribution is clear", receipt: "29 exact deals · 1 source mismatch · Aug 7" },
       { name: "Conversation notes", system: "Granola", state: "Indirect" as SourceConnectionState, use: "Available only when a note is shared into a connected source", receipt: "No direct scan available" },
       { name: "Legacy event reporting", system: "Monaco", state: "Indirect" as SourceConnectionState, use: "Available only through exports or references shared into a connected source", receipt: "No direct scan available" },
     ],

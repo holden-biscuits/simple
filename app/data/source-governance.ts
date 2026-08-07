@@ -404,9 +404,9 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "HubSpot",
     scope: "Deal attribution schema",
-    current: "29 exact event-sourced deals · all use CCW Vegas follow-up · the controlled detail list has no other named event",
-    proposed: "Create a Deal property named Event key and set the 29 reviewed records to ccw-vegas; keep Deal Source and Deal Source Detail unchanged",
-    evidence: "HubSpot property and record audit · Aug 6",
+    current: "29 exact event-sourced deals · all use CCW Vegas follow-up · 1 additional deal has the same detail but an Outbound — SDR source",
+    proposed: "Reconcile the mismatched source/detail pair, then create a Deal property named Event key and set only the confirmed records to ccw-vegas",
+    evidence: "HubSpot property and record audit · Aug 7",
     state: "Setup needed",
     url: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list",
   },

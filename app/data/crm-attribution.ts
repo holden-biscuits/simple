@@ -63,13 +63,21 @@ export function classifyCrmAttribution(input: CrmAttributionInput): CrmAttributi
 }
 
 export const crmAttributionAudit = {
-  checkedAt: "Aug 6, 2026",
+  checkedAt: "Aug 7, 2026",
   accountId: "245561359",
   hubspotUrl: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
   exactDeals: 29,
   representedEvents: 1,
   representedEventLabel: "CCW Vegas",
   marketingEvents: 0,
+  sourceMismatch: {
+    count: 1,
+    dealName: "Memorial Hermann Health System",
+    currentSource: "Outbound — SDR",
+    currentDetail: "CCW Vegas follow-up",
+    note: "One additional deal carries the CCW follow-up detail but not an event source. It stays out of the 29 exact deals until RevOps reconciles the two controlled fields.",
+    url: "https://app.hubspot.com/contacts/245561359/record/0-3/338921491147?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+  },
   meetingWindow: {
     eventKey: "ccw-vegas",
     eventLabel: "CCW Vegas",
