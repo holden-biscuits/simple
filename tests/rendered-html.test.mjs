@@ -66,6 +66,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Needs attention/);
   assert.match(html, /Source issue<\/span><b>2<\/b>/);
   assert.match(html, /Roster open<\/span><b>12<\/b>/);
+  assert.match(html, /Program open<\/span><b>9<\/b>/);
   assert.match(html, /Plan setup<\/span><b>8<\/b>/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /CCW Orlando 2027/);
@@ -543,6 +544,24 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const meetingCountSearchHtml = await meetingCountSearch.text();
   assert.match(meetingCountSearchHtml, /Guaranteed-meeting counts still open/);
   assert.match(meetingCountSearchHtml, /href="\/\?attendance=going&amp;attention=meetings#events"/);
+
+  const programConfirmationSearch = await render("/search?q=programs%20need%20confirmation&type=Operations");
+  assert.equal(programConfirmationSearch.status, 200);
+  const programConfirmationSearchHtml = await programConfirmationSearch.text();
+  assert.match(programConfirmationSearchHtml, /Programs that need confirmation/);
+  assert.match(programConfirmationSearchHtml, /href="\/\?attention=program#events"/);
+  assert.match(programConfirmationSearchHtml, /9(?:<!-- -->)? events/);
+
+  const icmiProgramSearch = await render("/search?q=ICMI%20speaking%20confirmation&type=Event");
+  assert.equal(icmiProgramSearch.status, 200);
+  const icmiProgramSearchHtml = await icmiProgramSearch.text();
+  assert.match(icmiProgramSearchHtml, /ICMI Contact Center Expo · Speaking prep/);
+  assert.match(icmiProgramSearchHtml, /href="\/events\/icmi-contact-center-expo#workstream-speaking"/);
+  assert.match(icmiProgramSearchHtml, /Needs confirmation/);
+
+  const inactiveWorkstreamSearch = await render("/search?q=Genesys%20secondary%20events&type=Event");
+  assert.equal(inactiveWorkstreamSearch.status, 200);
+  assert.doesNotMatch(await inactiveWorkstreamSearch.text(), /href="\/events\/genesys-xperience#workstream-secondary"/);
 
   const liveFeedSearch = await render("/search?q=which%20data%20feeds%20are%20live&type=Operations");
   assert.equal(liveFeedSearch.status, 200);

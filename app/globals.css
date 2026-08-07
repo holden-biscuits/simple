@@ -190,7 +190,7 @@ button, input, select { font: inherit; }
 .directory-filter-set legend { margin-bottom: 9px; color: var(--muted); font: 700 12px var(--font-geist-mono), monospace; text-transform: uppercase; letter-spacing: .045em; }
 .directory-filter-set > div { display: grid; border: 1px solid var(--ink); }
 .attendance-filters > div { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.attention-filters > div { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.attention-filters > div { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .year-filters > div { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .directory-filter-set button { min-width: 0; min-height: 50px; padding: 9px 11px; display: flex; justify-content: space-between; align-items: center; gap: 7px; color: var(--ink); background: var(--canvas); border: 0; border-right: 1px solid var(--ink); cursor: pointer; font: 700 11px/1.25 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .directory-filter-set button:last-child { border-right: 0; }
@@ -1516,7 +1516,7 @@ button, input, select { font: inherit; }
   .attendance-filters > div, .attention-filters > div { grid-template-columns: 1fr 1fr; }
   .attendance-filters button:nth-child(2), .attention-filters button:nth-child(2n) { border-right: 0; }
   .attendance-filters button:nth-child(-n+2), .attention-filters button:nth-child(-n+4) { border-bottom: 1px solid var(--ink); }
-  .attention-filters button:last-child { grid-column: 1 / -1; }
+  .attention-filters button:last-child { grid-column: auto; }
   .event-card, .event-card:nth-child(n) { border-left: 1px solid var(--line); }
   .role-block { grid-template-columns: 45px 1fr; gap: 10px; }
   .role-block ul { grid-template-columns: 1fr; }

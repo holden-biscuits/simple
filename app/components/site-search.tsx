@@ -21,6 +21,7 @@ export type SearchType = (typeof searchTypes)[number];
 const quickSearches = [
   { label: "Who’s going?", query: "who is attending" },
   { label: "What needs attention?", query: "what needs attention" },
+  { label: "Programs to confirm", query: "programs need confirmation" },
   { label: "Open event work", query: "open event task" },
   { label: "Where do I update it?", query: "where should I update event data" },
   { label: "What can write back?", query: "what can write back to source systems" },
@@ -65,6 +66,11 @@ const searchAliases: Record<string, string[]> = {
   rules: ["rules", "rule", "considerations", "engagement", "guardrails"],
   cost: ["cost", "spend", "budget", "investment"],
   costs: ["costs", "spend", "budget", "investment"],
+  program: ["program", "programs", "activation", "workstream"],
+  programs: ["programs", "program", "activation", "workstream"],
+  confirm: ["confirm", "confirmation", "unresolved", "review", "open"],
+  confirmation: ["confirmation", "confirm", "unresolved", "review", "open"],
+  unresolved: ["unresolved", "confirmation", "confirm", "review", "open"],
 };
 
 function normalizeText(value: string) {

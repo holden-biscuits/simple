@@ -28,6 +28,7 @@ test("attention filters expose the kind of operating gap without including archi
   assert.equal(events.filter((event) => matchesAttention(event, "source", "2026-08-07")).length, 2);
   assert.equal(events.filter((event) => matchesAttention(event, "roster", "2026-08-07")).length, 12);
   assert.equal(events.filter((event) => matchesAttention(event, "meetings", "2026-08-07")).length, 6);
+  assert.equal(events.filter((event) => matchesAttention(event, "program", "2026-08-07")).length, 9);
   assert.equal(events.filter((event) => matchesAttention(event, "plan", "2026-08-07")).length, 8);
 
   const sourceIssues = filterEventDirectory(events, { query: "", attendance: "going", attention: "source", year: "2026" }, "2026-08-07");
@@ -43,4 +44,9 @@ test("attention filters expose the kind of operating gap without including archi
     "ccw-uk-executive-exchange",
     "ccw-executive-exchange-miami",
   ]);
+
+  const openPrograms = filterEventDirectory(events, { query: "", attendance: "going", attention: "program", year: "2026" }, "2026-08-07");
+  assert.ok(openPrograms.some((event) => event.slug === "icmi-contact-center-expo"));
+  assert.ok(openPrograms.every((event) => event.status === "Confirmed"));
+  assert.ok(openPrograms.every((event) => event.dateSort.startsWith("2026")));
 });

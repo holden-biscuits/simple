@@ -20,6 +20,11 @@ export function getEventWorkstreamState(event: EventRecord, key: WorkstreamKey):
   return getWorkstreamState(getWorkstreams(event)[key]);
 }
 
+export function getEventWorkstreamsNeedingConfirmation(event: EventRecord) {
+  const keys = Object.keys(getWorkstreams(event)) as WorkstreamKey[];
+  return keys.filter((key) => getEventWorkstreamState(event, key) === "needs-confirmation");
+}
+
 export function getEventPageModel(event: EventRecord, programDate: string): EventPageModel {
   const phase = getEventPhase(event, programDate);
   const isNotAttending = event.status === "No";

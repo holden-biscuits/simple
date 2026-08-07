@@ -12,6 +12,7 @@ import { matchesAttendance, matchesAttention } from "../data/event-filters";
 import { getEventProspectingBrief } from "../data/event-prospecting";
 import { getAudienceSegmentRegistry } from "../data/audience-segment-registry";
 import { latestSourceScan } from "../data/latest-source-scan";
+import { getEventWorkstreamState, getEventWorkstreamsNeedingConfirmation } from "../data/event-page-model";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -91,6 +92,15 @@ const attentionViewRecords: SearchRecord[] = [
     href: "/?attendance=going&attention=meetings#events",
     description: "Events with a guaranteed-meeting package where the count or format is not yet recorded.",
     keywords: "guaranteed meeting meetings count unknown open TBD package format matched accounts how many",
+  },
+  {
+    type: "Operations",
+    context: "Saved event view",
+    status: `${events.filter((event) => matchesAttention(event, "program", searchProgramDate)).length} events`,
+    title: "Programs that need confirmation",
+    href: "/?attention=program#events",
+    description: "Active events with a speaking, sponsorship, meeting, or side-event workstream that is not yet confirmed.",
+    keywords: "program programs activation workstream open unresolved confirm confirmation under review speaking sponsorship meetings side event attention",
   },
 ];
 
@@ -187,6 +197,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
   const verification = getEventVerification(event);
   const guaranteedCountOpen = hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event);
   const staffing = getStaffingSignal(event);
+  const confirmationWorkstreams = getEventWorkstreamsNeedingConfirmation(event);
   const outcomeCounts = [
     event.meetingsBooked.length ? `${event.meetingsBooked.length} meeting${event.meetingsBooked.length === 1 ? "" : "s"}` : "",
     event.demosBooked.length ? `${event.demosBooked.length} demo${event.demosBooked.length === 1 ? "" : "s"}` : "",
@@ -223,6 +234,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     ...(event.outcomeNotes ?? []).map((item) => `Result · ${item}`),
     ...getEventRoleRoutes(event, getEventPhase(event, searchProgramDate)).map((route) => `${route.role} route · ${route.title} ${route.detail}`),
     ...Object.entries(getWorkstreams(event)).flatMap(([key, items]) => items.map((item) => `${workstreamLabels[key as keyof typeof workstreamLabels]} · ${item}`)),
+    ...confirmationWorkstreams.map((key) => `Needs confirmation · ${workstreamLabels[key]}`),
     ...event.meetingsBooked.map((item) => `Meeting · ${item}`),
     ...event.demosBooked.map((item) => `Demo · ${item}`),
     ...event.closed.map((item) => `Closed · ${item}`),
@@ -301,17 +313,21 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
       details: event.specialConsiderations.map((item) => `Rule · ${item}`),
       hiddenUntilQuery: true,
     }] : []),
-    ...Object.entries(workstreams).flatMap(([key, items]) => items.length ? [{
+    ...Object.entries(workstreams).flatMap(([key, items]) => {
+      const workstreamKey = key as keyof typeof workstreamLabels;
+      const state = getEventWorkstreamState(event, workstreamKey);
+      return state !== "inactive" ? [{
       type: "Event" as const,
       context: "Event section · Workstream",
-      status: phase === "past" ? "Recorded plan" : "In plan",
-      title: `${event.name} · ${workstreamLabels[key as keyof typeof workstreamLabels]}`,
+      status: phase === "past" ? "Recorded plan" : state === "needs-confirmation" ? "Needs confirmation" : "In plan",
+      title: `${event.name} · ${workstreamLabels[workstreamKey]}`,
       href: `/events/${event.slug}#workstream-${key}`,
       description: items[0],
-      keywords: [event.name, event.location, workstreamLabels[key as keyof typeof workstreamLabels], key, "checklist workstream plan", ...items].join(" "),
-      details: items,
+      keywords: [event.name, event.location, workstreamLabels[workstreamKey], key, state, "checklist workstream plan program confirm confirmation unresolved", ...items].join(" "),
+      details: [state === "needs-confirmation" ? "State · Needs confirmation" : phase === "past" ? "State · Recorded plan" : "State · In plan", ...items],
       hiddenUntilQuery: true,
-    }] : []),
+    }] : [];
+    }),
   ];
 
   if (phase === "past" || outcomeDetails.length) {
