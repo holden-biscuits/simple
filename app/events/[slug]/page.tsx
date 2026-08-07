@@ -5,7 +5,7 @@ import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getEventPhase, getEventVerification, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
-import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
+import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 
 export const dynamic = "force-dynamic";
 
@@ -50,9 +50,11 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
   const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
+  const speakingStatus = getSpeakingStatus(event);
+  const sponsorshipStatus = getSponsorshipStatus(event);
   const programMix = isNotAttending ? "No activation planned" : [
-    !event.sponsorship.toLowerCase().startsWith("none") ? "Sponsorship" : null,
-    event.speaking.toLowerCase() !== "none" && !event.speaking.toLowerCase().includes("no slot confirmed") ? "Speaking" : null,
+    sponsorshipStatus === "Confirmed" ? "Sponsorship" : sponsorshipStatus === "Under review" ? "Sponsorship under review" : null,
+    speakingStatus === "Confirmed" ? "Speaking" : speakingStatus === "Under review" ? "Speaking under review" : null,
     isEmptyWorkstream(workstreams.swag) ? null : "Swag / materials",
   ].filter(Boolean).join(" · ") || "Attendance only";
   const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;

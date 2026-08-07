@@ -56,6 +56,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /11(?:<!-- -->)? Planned/);
   assert.match(html, /15(?:<!-- -->)? Planned/);
   assert.match(html, /1(?:<!-- -->)? Named · 2(?:<!-- -->)? Planned/);
+  assert.match(html, /Speaking TBD/);
   assert.match(html, /29(?:<!-- -->)?<\/strong><span>events on the map/);
   assert.match(html, /Checked <time dateTime="2026-08-06">Aug 6<\/time>/);
   assert.match(html, /Conference tracker \+ 4/);
@@ -295,6 +296,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(icmi.status, 200);
   const icmiHtml = await icmi.text();
   assert.match(icmiHtml, /TeamSimple is attending/);
+  assert.match(icmiHtml, /Sponsorship under review · Speaking under review/);
 
   const orlando = await render("/events/ccw-orlando");
   assert.equal(orlando.status, 200);

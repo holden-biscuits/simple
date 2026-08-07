@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord, type MarketingTask } from "../data/events";
-import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../data/event-signals";
+import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../data/event-signals";
 
 type BoardFilter = "all" | "support" | "no-support" | "team-open" | "speaking";
 
@@ -21,14 +21,15 @@ function marketingItems(event: EventRecord) {
 }
 
 function hasSpeaking(event: EventRecord) {
-  const speaking = event.speaking.toLowerCase();
-  return speaking !== "none" && !speaking.includes("no slot confirmed");
+  return getSpeakingStatus(event) !== "None";
 }
 
 function activationSignals(event: EventRecord) {
+  const sponsorship = getSponsorshipStatus(event);
+  const speaking = getSpeakingStatus(event);
   return [
-    !event.sponsorship.toLowerCase().startsWith("none") ? "Sponsor / booth" : null,
-    hasSpeaking(event) ? "Speaking" : null,
+    sponsorship === "Confirmed" ? "Sponsor / booth" : sponsorship === "Under review" ? "Sponsor package TBD" : null,
+    speaking === "Confirmed" ? "Speaking" : speaking === "Under review" ? "Speaking TBD" : null,
     hasGuaranteedMeetingPackage(event) ? "Meeting package" : null,
   ].filter(Boolean) as string[];
 }

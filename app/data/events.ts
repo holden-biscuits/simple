@@ -1,6 +1,7 @@
 import { hasGuaranteedMeetingPackage } from "./event-signals.ts";
 
 export type EventPhase = "past" | "now" | "upcoming";
+export type ActivationStatus = "Confirmed" | "Under review" | "None";
 
 export type EventVerification = {
   checkedAt: string;
@@ -38,7 +39,9 @@ export type EventRecord = {
   location: string;
   status: "Confirmed" | "TBD" | "Tentative" | "No";
   speaking: string;
+  speakingStatus?: ActivationStatus;
   sponsorship: string;
+  sponsorshipStatus?: ActivationStatus;
   guaranteedMeetings: string;
   attendeeCount: number | null;
   team: string[];
@@ -373,6 +376,7 @@ export const events: EventRecord[] = [
     status: "Confirmed",
     speaking: "10-minute quickfire · Taylor",
     sponsorship: "No expo booth; confirm seat drop and materials",
+    sponsorshipStatus: "Under review",
     guaranteedMeetings: "Yes",
     attendeeCount: 2,
     team: ["Taylor"],
@@ -733,6 +737,7 @@ export const events: EventRecord[] = [
     status: "Confirmed",
     speaking: "Panel · Oct 8",
     sponsorship: "Confirm booth, inclusions and CCWomen participation",
+    sponsorshipStatus: "Under review",
     guaranteedMeetings: "Yes",
     attendeeCount: 10,
     team: [],
@@ -774,7 +779,9 @@ export const events: EventRecord[] = [
     location: "Orlando, FL",
     status: "Confirmed",
     speaking: "Lunch & Learn · Wednesday · confirmation needs reconciliation",
+    speakingStatus: "Under review",
     sponsorship: "Under evaluation",
+    sponsorshipStatus: "Under review",
     guaranteedMeetings: "No",
     attendeeCount: 6,
     team: [],

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { events } from "../app/data/events.ts";
-import { getGuaranteedMeetingSignal, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../app/data/event-signals.ts";
+import { getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../app/data/event-signals.ts";
 
 function event(slug) {
   const match = events.find((item) => item.slug === slug);
@@ -31,4 +31,13 @@ test("staffing signals distinguish named attendees from an unassigned plan", () 
   assert.equal(getStaffingSignal(event("ccw-exchange-chicago")).card, "1 Named · 2 Planned");
   assert.equal(getStaffingSignal(event("contact-io")).card, "0 Attending");
   assert.equal(getStaffingSignal(event("ccw-orlando")).card, "2 Attending");
+});
+
+test("activation signals distinguish attendance from activation certainty", () => {
+  assert.equal(getSpeakingStatus(event("icmi-contact-center-expo")), "Under review");
+  assert.equal(getSpeakingOpportunitySignal(event("icmi-contact-center-expo")), "Speaking TBD");
+  assert.equal(getSponsorshipStatus(event("icmi-contact-center-expo")), "Under review");
+  assert.equal(getSponsorshipStatus(event("ccw-nashville")), "Under review");
+  assert.equal(getSpeakingOpportunitySignal(event("ccw-vegas-2027")), "1 Speaking Opp");
+  assert.equal(getSpeakingStatus(event("contact-io")), "None");
 });

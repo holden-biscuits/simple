@@ -4,6 +4,13 @@ type StaffingSource = {
   attendeeCount: number | null;
   team: string[];
 };
+type ActivationStatus = "Confirmed" | "Under review" | "None";
+type ActivationSource = {
+  speaking: string;
+  speakingStatus?: ActivationStatus;
+  sponsorship: string;
+  sponsorshipStatus?: ActivationStatus;
+};
 
 function knownGuaranteedMeetingLabel(event: GuaranteedMeetingSource) {
   const meetings = event.guaranteedMeetings.trim();
@@ -74,4 +81,22 @@ export function getStaffingSignal(event: StaffingSource) {
     detail: "No team named",
     state: "open" as const,
   };
+}
+
+export function getSpeakingStatus(event: Pick<ActivationSource, "speaking" | "speakingStatus">): ActivationStatus {
+  if (event.speakingStatus) return event.speakingStatus;
+  const speaking = event.speaking.trim().toLowerCase();
+  return speaking === "none" || speaking.includes("no slot confirmed") ? "None" : "Confirmed";
+}
+
+export function getSponsorshipStatus(event: Pick<ActivationSource, "sponsorship" | "sponsorshipStatus">): ActivationStatus {
+  if (event.sponsorshipStatus) return event.sponsorshipStatus;
+  return event.sponsorship.trim().toLowerCase().startsWith("none") ? "None" : "Confirmed";
+}
+
+export function getSpeakingOpportunitySignal(event: Pick<ActivationSource, "speaking" | "speakingStatus">) {
+  const status = getSpeakingStatus(event);
+  if (status === "None") return "0 Speaking Opp";
+  if (status === "Under review") return "Speaking TBD";
+  return "1 Speaking Opp";
 }

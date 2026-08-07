@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { events } from "../app/data/events.ts";
+import { getSpeakingOpportunitySignal } from "../app/data/event-signals.ts";
 import { siteStatus } from "../app/data/site-status.ts";
 
 function event(slug) {
@@ -20,7 +21,5 @@ test("protected direct decisions still match the published event data", () => {
   assert.deepEqual(event("genesys-xperience").team, ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]);
   assert.equal(event("genesys-xperience").guaranteedMeetings, "No");
 
-  const vegasSpeaking = event("ccw-vegas-2027").speaking.toLowerCase();
-  const vegasDirectorySignal = vegasSpeaking === "none" || vegasSpeaking.includes("no slot confirmed") ? 0 : 1;
-  assert.equal(vegasDirectorySignal, 1);
+  assert.equal(getSpeakingOpportunitySignal(event("ccw-vegas-2027")), "1 Speaking Opp");
 });

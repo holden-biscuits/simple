@@ -4,14 +4,12 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
 import { attendanceFilters, filterEventDirectory, matchesAttendance, matchesProgramYear, type AttendanceFilter } from "../data/event-filters";
-import { getGuaranteedMeetingSignal, getStaffingSignal } from "../data/event-signals";
+import { getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "../data/event-signals";
 
 function EventCard({ event }: { event: EventRecord }) {
   const verification = getEventVerification(event);
   const signal = event.status === "No" ? "Not attending" : event.status;
   const inactive = event.status === "No";
-  const speakingText = event.speaking.toLowerCase();
-  const speakingOpps = speakingText === "none" || speakingText.includes("no slot confirmed") ? 0 : 1;
   const staffing = getStaffingSignal(event);
   return (
     <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
@@ -24,7 +22,7 @@ function EventCard({ event }: { event: EventRecord }) {
       <p className="event-date">{event.dates}</p>
       <p className="event-location">{event.location}</p>
       <div className="event-signals">
-        <span>{speakingOpps} Speaking Opp</span>
+        <span>{getSpeakingOpportunitySignal(event)}</span>
         <span>{getGuaranteedMeetingSignal(event)}</span>
         <span>{staffing.card}</span>
       </div>
