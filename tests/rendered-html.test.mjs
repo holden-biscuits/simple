@@ -1044,7 +1044,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Exhibitor portal/);
   assert.match(customerConnectHtml, /Complimentary tickets/);
   assert.match(customerConnectHtml, /6(?:<!-- -->)? in plan · (?:<!-- -->)?0(?:<!-- -->)? need confirmation · (?:<!-- -->)?3(?:<!-- -->)? not in plan/);
-  assert.match(customerConnectHtml, /Open tracker(?:<!-- -->)? ↗/);
+  assert.match(customerConnectHtml, /Open event row(?:<!-- -->)? ↗/);
   assert.match(customerConnectHtml, /Open event project(?:<!-- -->)? ↗/);
   assert.match(customerConnectHtml, /Recorded Customer Connect portal progress/);
   assert.match(customerConnectHtml, /Confirmed Customer Connect Expo participation/);
@@ -1061,7 +1061,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(icmiHtml, /Speaking<\/span><strong>Lunch &amp; Learn · Wednesday · confirmation needs reconciliation/);
   assert.match(icmiHtml, /workstream-state-needs-confirmation/);
   assert.match(icmiHtml, /Needs confirmation/);
-  assert.match(icmiHtml, /Open tracker(?:<!-- -->)? ↗/);
+  assert.match(icmiHtml, /Open event row(?:<!-- -->)? ↗/);
 
   const orlando = await render("/events/ccw-orlando");
   assert.equal(orlando.status, 200);
@@ -1117,7 +1117,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(uk2027Html, /minimum 10 30-minute meetings/);
   assert.match(uk2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(uk2027Html, /3 sponsor passes · 2 attendees planned/);
-  assert.match(uk2027Html, /Open tracker(?:<!-- -->)? ↗/);
+  assert.match(uk2027Html, /Open event row(?:<!-- -->)? ↗/);
 
   const vegas2027 = await render("/events/ccw-vegas-2027");
   assert.equal(vegas2027.status, 200);

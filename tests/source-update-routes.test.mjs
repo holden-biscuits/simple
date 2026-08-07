@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { events, getEventTrackerRowUrl, sourceLinks } from "../app/data/events.ts";
+import { getEventUpdateRoutes } from "../app/data/event-update-routes.ts";
+import { getMarketingEventRecord } from "../app/data/marketing-events.ts";
 import { eventUpdateRoutes, getEventWritebackQueue, writebackQueue } from "../app/data/source-governance.ts";
 
 test("shared update routes cover every owning execution system", () => {
@@ -18,6 +20,21 @@ test("update routes keep signals out of the system-of-record list", () => {
   const systems = eventUpdateRoutes.map((route) => route.system).join(" ");
   assert.doesNotMatch(systems, /Slack|Gmail|email/i);
   assert.ok(eventUpdateRoutes.every((route) => /Open /.test(route.action)));
+});
+
+test("event pages route updates to the exact event records", () => {
+  const genesys = events.find((event) => event.slug === "genesys-xperience");
+  assert.ok(genesys);
+  const routes = getEventUpdateRoutes(genesys);
+  assert.equal(routes.find((route) => route.id === "tracker")?.url, getEventTrackerRowUrl(genesys.slug));
+  assert.equal(routes.find((route) => route.id === "notion")?.url, genesys.notionUrl);
+  assert.equal(routes.find((route) => route.id === "hubspot")?.url, getMarketingEventRecord(genesys.slug)?.url);
+  assert.equal(routes.find((route) => route.id === "hubspot")?.system, "HubSpot Marketing Event");
+  assert.equal(routes.find((route) => route.id === "hubspot")?.action, "Open Marketing Event");
+
+  const contact = events.find((event) => event.slug === "contact-io");
+  assert.ok(contact);
+  assert.deepEqual(getEventUpdateRoutes(contact).map((route) => route.id), ["tracker"]);
 });
 
 test("every event routes to its exact conference tracker row", () => {

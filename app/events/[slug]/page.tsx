@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContentsLayout } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getEventTrackerRowUrl, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
@@ -15,11 +15,12 @@ import { getBriefIssueAction, getEventPageBriefReadiness } from "../../data/even
 import { getEventSourceChanges } from "../../data/site-status";
 import { getEventRoleRoutes } from "../../data/event-role-routes";
 import { getEventFootprint } from "../../data/event-footprint";
-import { eventUpdateRoutes, getEventWritebackQueue } from "../../data/source-governance";
+import { getEventWritebackQueue } from "../../data/source-governance";
 import { getEventProspectingBrief } from "../../data/event-prospecting";
 import { getEventReadiness } from "../../data/program-readiness";
 import { getEventPageModel, getEventWorkstreamState } from "../../data/event-page-model";
 import { getOpenItemRoute } from "../../data/open-item-routes";
+import { getEventUpdateRoutes } from "../../data/event-update-routes";
 
 export const dynamic = "force-dynamic";
 
@@ -162,18 +163,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ...(event.credentials ? [["Passes / credentials", event.credentials]] : []),
     ["Team", staffing.summary],
   ];
-  const updateRoutes = eventUpdateRoutes
-    .filter((route) => !route.attendingOnly || !isNotAttending)
-    .map((route) => {
-      if (route.id === "tracker") return { ...route, url: getEventTrackerRowUrl(event.slug), action: "Open event row" };
-      if (route.id === "notion") return {
-        ...route,
-        url: event.notionUrl ?? route.url,
-        system: event.notionUrl ? route.system : "Notion setup needed",
-        detail: event.notionUrl ? route.detail : "Create or locate the event project before execution work starts.",
-      };
-      return route;
-    });
+  const updateRoutes = getEventUpdateRoutes(event);
 
   return (
     <main id="page-top">

@@ -1,4 +1,4 @@
-import { getEventPhase, sourceLinks, type EventRecord } from "./events.ts";
+import { getEventPhase, getEventTrackerRowUrl, sourceLinks, type EventRecord } from "./events.ts";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
 import { getEventReadiness } from "./program-readiness.ts";
 import { getSourceFreshness } from "./source-freshness.ts";
@@ -28,9 +28,9 @@ export type BriefIssueAction = {
 
 export function getBriefIssueAction(
   issue: BriefReadinessIssue,
-  event: Pick<EventRecord, "notionUrl" | "organizerUrl">,
+  event: Pick<EventRecord, "slug" | "notionUrl" | "organizerUrl">,
 ): BriefIssueAction {
-  if (issue.destination === "Conference tracker") return { href: sourceLinks.sheet, label: "Open tracker", external: true };
+  if (issue.destination === "Conference tracker") return { href: getEventTrackerRowUrl(event.slug), label: "Open event row", external: true };
   if (issue.destination === "Organizer source") return { href: event.organizerUrl, label: "Open organizer source", external: true };
   if (issue.destination === "Event project") return event.notionUrl
     ? { href: event.notionUrl, label: "Open event project", external: true }

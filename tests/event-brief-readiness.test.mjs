@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { eventBySlug, events } from "../app/data/events.ts";
+import { eventBySlug, events, getEventTrackerRowUrl } from "../app/data/events.ts";
 import { getBriefIssueAction, getEventBriefReadiness, getEventPageBriefReadiness, getProgramBriefReadiness } from "../app/data/event-brief-readiness.ts";
 
 const programDate = "2026-08-06";
@@ -76,8 +76,8 @@ test("every readiness destination resolves to the system that can fix it", () =>
   const customerConnect = eventBySlug("customer-connect-expo");
   assert.ok(customerConnect);
   assert.deepEqual(getBriefIssueAction({ key: "roster", label: "Name the roster", destination: "Conference tracker" }, customerConnect), {
-    href: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0#gid=0",
-    label: "Open tracker",
+    href: getEventTrackerRowUrl(customerConnect.slug),
+    label: "Open event row",
     external: true,
   });
   assert.equal(getBriefIssueAction({ key: "workspace", label: "Open the project", destination: "Event project" }, customerConnect).href, customerConnect.notionUrl);
