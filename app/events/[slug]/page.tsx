@@ -28,6 +28,13 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
   const bookedMeetingCount = event.meetingsBooked.length;
   const bookedMeetingLabel = event.meetingCountLabel ?? bookedMeetingCount.toString();
+  const meetingProgressLabel = eventPhase === "past" ? "Meetings recorded" : "Meetings booked";
+  const showMeetingProgress = !isNotAttending && (hasGuaranteedMeetings || bookedMeetingCount > 0 || Boolean(event.meetingCountLabel));
+  const meetingProgressValue = bookedMeetingCount > 0 || event.meetingCountLabel
+    ? bookedMeetingLabel
+    : eventPhase === "past"
+      ? "Not recorded"
+      : "None recorded yet";
   const guaranteedPackageSummary = hasGuaranteedMeetings
     ? event.guaranteedMeetings.replace(/^Yes\s*(?:·\s*)?/i, "") || "Included · count TBD"
     : "None";
@@ -46,7 +53,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const note = event.notes.trim();
   const isSourceConflict = note.toLowerCase().startsWith("source conflict:");
   const resultGroups = [
-    ["Meetings recorded", event.meetingsBooked.length ? event.meetingsBooked : event.meetingCountLabel ? [`${event.meetingCountLabel} meetings recorded; account names were not captured`] : []],
+    [meetingProgressLabel, event.meetingsBooked.length ? event.meetingsBooked : event.meetingCountLabel ? [`${event.meetingCountLabel} meetings ${eventPhase === "past" ? "recorded" : "booked"}; account names were not captured`] : []],
     ["Demos booked", event.demosBooked],
     ["Closed", event.closed],
   ] as const;
@@ -66,7 +73,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     ["Activation", programMix],
     ["Speaking", event.speaking],
     ["Guaranteed meetings", meetingPackage],
-    ...(!isNotAttending && (bookedMeetingCount > 0 || event.meetingCountLabel) ? [["Meetings recorded", bookedMeetingLabel]] : []),
+    ...(showMeetingProgress ? [[meetingProgressLabel, meetingProgressValue]] : []),
     ...(event.credentials ? [["Passes / credentials", event.credentials]] : []),
     ["Team", teamSummary],
   ];

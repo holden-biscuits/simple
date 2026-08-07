@@ -316,6 +316,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(orlando2027Html, /Jan 25–27, 2027/);
   assert.match(orlando2027Html, /11 planned · names open/);
   assert.match(orlando2027Html, /6 Executive Leadership Exchange meetings/);
+  assert.match(orlando2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(orlando2027Html, /JW Marriott Bonnet Creek/);
   assert.match(orlando2027Html, /2027 conference tracker · Organizer site/);
 
@@ -324,6 +325,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const uk2027Html = await uk2027.text();
   assert.match(uk2027Html, /March 2027 · exact dates TBD/);
   assert.match(uk2027Html, /minimum 10 30-minute meetings/);
+  assert.match(uk2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(uk2027Html, /3 sponsor passes · 2 attendees planned/);
 
   const vegas2027 = await render("/events/ccw-vegas-2027");
@@ -342,6 +344,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /Source check needed/);
   assert.match(chicagoHtml, /1 named · 2 planned/);
   assert.match(chicagoHtml, /Guaranteed meetings<\/span><strong>Included · count TBD/);
+  assert.match(chicagoHtml, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(chicagoHtml, /internal ICP sheet has 28 researched accounts/);
   assert.match(chicagoHtml, /9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked/);
 
