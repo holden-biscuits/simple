@@ -18,6 +18,8 @@ test("server-renders the event directory", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>Event Basecamp · 2026–2027<\/title>/i);
+  assert.match(html, /property="og:image" content="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/og-2026-2027\.png"/);
+  assert.match(html, /name="twitter:image" content="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/og-2026-2027\.png"/);
   assert.match(html, /aria-label="TeamSimple Event Basecamp home"/);
   assert.match(html, /TeamSimple/);
   assert.match(html, /Know the route before you hit the floor\./);
