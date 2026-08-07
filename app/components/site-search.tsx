@@ -98,7 +98,12 @@ export function SiteSearch({ records, initialQuery = "", initialType = "All" }: 
           </Link>;
         })}
       </div>
-      {!results.length ? <p className="empty-state">No match. Try an event name, city, teammate, tool, workstream, or task.</p> : null}
+      {!results.length ? <div className="empty-state search-empty">
+        <span>No match</span>
+        <h2>Nothing found for “{query.trim()}.”</h2>
+        <p>Try an event name, city, teammate, tool, workstream, or task—or reset the search and start from the full index.</p>
+        <div><button type="button" onClick={() => { setQuery(""); setType("All"); }}>Clear search</button><Link href="/#events">Browse events →</Link><Link href="/guides">Open guides →</Link></div>
+      </div> : null}
     </section>
   );
 }

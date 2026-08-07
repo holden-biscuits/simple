@@ -32,6 +32,9 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.measurement-windows > div:last-child, \.metric-definitions > div:last-child\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /\.event-measurement-checkpoint > div\s*\{[^}]*grid-template-columns:\s*repeat\(4,\s*1fr\)/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-measurement-checkpoint > div\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(css, /\.not-found-hero\s*\{[^}]*grid-template-columns:\s*\.8fr 1\.2fr/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.not-found-hero\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.not-found-routes\s*\{\s*grid-template-columns:\s*1fr/);
 });
 
 test("the CRM attribution audit remains readable below desktop", () => {

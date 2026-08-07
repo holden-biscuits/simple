@@ -262,6 +262,24 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const stewardshipSearchHtml = await stewardshipSearch.text();
   assert.match(stewardshipSearchHtml, /Who updates event data/);
   assert.match(stewardshipSearchHtml, /\/sources#stewardship/);
+
+  const emptySearch = await render("/search?q=definitely-no-such-event-or-guide");
+  assert.equal(emptySearch.status, 200);
+  const emptySearchHtml = await emptySearch.text();
+  assert.match(emptySearchHtml, /Nothing found for “(?:<!-- -->)?definitely-no-such-event-or-guide(?:<!-- -->)?\.”/);
+  assert.match(emptySearchHtml, /<button type="button">Clear search<\/button>/);
+  assert.match(emptySearchHtml, /href="\/#events">Browse events/);
+});
+
+test("an unknown event route renders a useful branded recovery page", async () => {
+  const response = await render("/events/not-a-real-event");
+  assert.equal(response.status, 404);
+  const html = await response.text();
+  assert.match(html, /That page isn’t in the fieldbook\./);
+  assert.match(html, /Search the fieldbook/);
+  assert.match(html, /Browse every event/);
+  assert.match(html, /Find the dates, team, plan, and links\./);
+  assert.match(html, /See what changed and where to update it\./);
 });
 
 test("directory filters survive an event-page round trip", async () => {
