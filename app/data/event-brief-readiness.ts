@@ -85,6 +85,7 @@ export function getEventBriefReadiness(event: EventRecord, programDate: string):
   if (hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event)) add("meeting-count", "Confirm the guaranteed-meeting count and format", "Conference tracker");
   if (event.notes.toLowerCase().startsWith("source conflict:")) add("source-conflict", "Resolve the source conflict recorded on this brief", "Source review");
   if (["due", "overdue"].includes(getSourceFreshness(event, programDate).state)) add("source-check", "Refresh the event’s owning sources", "Source review");
+  if (!event.notionUrl) add("workspace", "Create or link the event project", "Event project");
 
   if (nearTerm) {
     const staffing = getStaffingSignal(event);
@@ -95,8 +96,6 @@ export function getEventBriefReadiness(event: EventRecord, programDate: string):
     }
     if (!event.venue) add("venue", "Confirm the venue", "Organizer source");
     if (!event.credentials) add("credentials", "Confirm passes, registration, and credential limits", "Event project");
-    if (!event.notionUrl) add("workspace", "Create or link the event project", "Event project");
-
     const execution = getEventReadiness(event, programDate);
     if (execution.planState !== "structured") {
       add("execution-plan", "Turn the open priorities into owned, dated tasks", "Event project");

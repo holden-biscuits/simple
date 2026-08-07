@@ -30,9 +30,18 @@ test("brief readiness uses pass allocation instead of a larger planning estimate
 test("early-stage briefs require foundation facts without pretending final logistics are due", () => {
   const uk2027 = getEventBriefReadiness(eventBySlug("ccw-uk-executive-exchange-2027"), programDate);
   assert.equal(uk2027.stage, "foundation");
-  assert.deepEqual(uk2027.issues.map((issue) => issue.key), ["dates"]);
+  assert.deepEqual(uk2027.issues.map((issue) => issue.key), ["dates", "workspace"]);
   assert.ok(!uk2027.issues.some((issue) => issue.key === "roster"));
   assert.ok(!uk2027.issues.some((issue) => issue.key === "venue"));
+});
+
+test("a confirmed foundation-stage event is not on track without an operating workspace", () => {
+  const reuters = getEventBriefReadiness(eventBySlug("reuters-customer-service-east"), programDate);
+  assert.equal(reuters.stage, "foundation");
+  assert.equal(reuters.state, "attention");
+  assert.equal(reuters.label, "Foundation gaps open");
+  assert.deepEqual(reuters.issues.map((issue) => issue.key), ["workspace"]);
+  assert.equal(reuters.issues[0].destination, "Event project");
 });
 
 test("current-event readiness drops roster warnings after a direct closeout correction", () => {

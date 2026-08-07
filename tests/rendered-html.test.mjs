@@ -340,7 +340,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /See the program without losing the source truth\./);
   assert.match(html, /Active program<\/span><p>Confirmed, tentative and TBD events/);
   assert.match(html, /Briefs on track/);
-  assert.match(html, /2(?:<!-- -->)? \/ (?:<!-- -->)?13/);
+  assert.match(html, /0(?:<!-- -->)? \/ (?:<!-- -->)?13/);
   assert.match(html, /Planning gaps open/);
   assert.match(html, /What changed—and what still needs a decision\./);
   assert.match(html, /17<\/strong><span>Applied updates/);
