@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContentsLayout } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
@@ -26,7 +27,34 @@ export function generateStaticParams() { return events.map((event) => ({ slug: e
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const event = eventBySlug(slug);
-  return { title: event ? `${event.name} · Event Basecamp` : "Event not found" };
+  if (!event) return { title: "Event not found" };
+  const incoming = await headers();
+  const host = incoming.get("x-forwarded-host") ?? incoming.get("host") ?? "teamsimple-events-fieldbook.holden165736.chatgpt.site";
+  const protocol = incoming.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
+  const origin = new URL(`${protocol}://${host}`);
+  const canonical = `/events/${event.slug}`;
+  const image = new URL("/og-2026-2027.png", origin).toString();
+  const participation = event.status === "No" ? "TeamSimple is not attending." : "TeamSimple event brief.";
+  const description = `${participation} ${event.dates} · ${event.location}. Open the current plan, links, and source status.`;
+  const title = `${event.name} · Event Basecamp`;
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "TeamSimple Event Basecamp",
+      images: [{ url: image, width: 1731, height: 909, alt: "TeamSimple Event Basecamp · 2026–2027" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
 }
 
 export default async function EventPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ returnTo?: string | string[] }> }) {

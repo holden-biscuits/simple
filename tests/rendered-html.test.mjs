@@ -29,6 +29,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /<title>Event Basecamp · 2026–2027<\/title>/i);
   assert.match(html, /property="og:image" content="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/og-2026-2027\.png"/);
   assert.match(html, /name="twitter:image" content="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/og-2026-2027\.png"/);
+  assert.match(html, /rel="canonical" href="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/"/);
   assert.match(html, /aria-label="TeamSimple Event Basecamp home"/);
   assert.match(html, /dateTime="2026-08-07"[^>]*aria-label="Last updated Aug 07 · 2026"/);
   assert.match(html, /TeamSimple/);
@@ -782,6 +783,10 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const genesys = await render("/events/genesys-xperience");
   assert.equal(genesys.status, 200);
   const genesysHtml = await genesys.text();
+  assert.match(genesysHtml, /<title>Genesys Xperience · Event Basecamp<\/title>/);
+  assert.match(genesysHtml, /name="description" content="TeamSimple event brief\. Sep 1–3, 2026 · Las Vegas, NV\. Open the current plan, links, and source status\."/);
+  assert.match(genesysHtml, /rel="canonical" href="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/events\/genesys-xperience"/);
+  assert.match(genesysHtml, /property="og:url" content="https:\/\/teamsimple-events-fieldbook\.holden165736\.chatgpt\.site\/events\/genesys-xperience"/);
   assertSectionOrder(genesysHtml, [
     "event-tldr",
     "event-role-routes",

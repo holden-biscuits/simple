@@ -18,13 +18,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const incoming = await headers();
   const host = incoming.get("x-forwarded-host") ?? incoming.get("host") ?? "teamsimple-events-fieldbook.holden165736.chatgpt.site";
   const protocol = incoming.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
-  const image = new URL("/og-2026-2027.png", `${protocol}://${host}`).toString();
+  const origin = new URL(`${protocol}://${host}`);
+  const image = new URL("/og-2026-2027.png", origin).toString();
   return {
+    metadataBase: origin,
     title: "TeamSimple Event Basecamp",
     description: "Dates, owners, plans, and follow-up for TeamSimple events.",
+    alternates: { canonical: "/" },
     openGraph: {
       title: "TeamSimple Event Basecamp · 2026–2027",
       description: "Luck is what happens when preparation meets opportunity.",
+      url: "/",
+      siteName: "TeamSimple Event Basecamp",
       images: [image],
     },
     twitter: {
