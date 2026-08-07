@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContentsLayout } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getEventPhase, getEventTrackerRowUrl, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getEventTrackerRowUrl, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
@@ -17,6 +17,7 @@ import { getEventFootprint } from "../../data/event-footprint";
 import { eventUpdateRoutes, getEventWritebackQueue } from "../../data/source-governance";
 import { getEventProspectingBrief } from "../../data/event-prospecting";
 import { getEventReadiness } from "../../data/program-readiness";
+import { getEventPageModel } from "../../data/event-page-model";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   if (!event) notFound();
   const eventDirectoryHref = getSafeEventReturnHref(returnTo);
   const programDate = getProgramDate();
-  const eventPhase = getEventPhase(event, programDate);
+  const pageModel = getEventPageModel(event, programDate);
+  const { phase: eventPhase, isNotAttending, hasRecordedResults, showProspecting, showPlanningBody, showResults } = pageModel;
   const verification = getEventVerification(event);
   const freshness = getSourceFreshness(event, programDate);
   const systemLinkage = getEventSystemLinkage(event);
@@ -54,7 +56,6 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       : prospecting.confidence === "Names required"
         ? "Create a segment only after a credible source supplies attendee or company names."
         : "No defensible event-specific HubSpot segment is linked yet.";
-  const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
   const bookedMeetingCount = event.meetingsBooked.length;
@@ -87,7 +88,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const footprint = getEventFootprint(event);
   const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see field checklist";
   const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;
-  const tldr = [
+  const tldr = isNotAttending ? [
+    ["When", event.dates],
+    ["Where", event.venue ? `${event.location} · ${event.venue}` : event.location],
+    ["Participation", "Not attending"],
+    ["TeamSimple program", "None"],
+  ] : [
     ["When", event.dates],
     ["Where", event.venue ? `${event.location} · ${event.venue}` : event.location],
     ["Onsite footprint", footprint.label],
@@ -96,10 +102,11 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ["Guaranteed meetings", meetingPackage],
     ...(showMeetingProgress ? [[meetingProgressLabel, meetingProgressValue]] : []),
     ...(event.followupMeetingsBooked ? [["Follow-up meetings", `${event.followupMeetingsBooked} booked · HubSpot details pending`]] : []),
+    ...(eventPhase === "past" && event.rating !== "None" ? [["Event rating", event.rating]] : []),
+    ...(eventPhase === "past" ? [["Closeout", hasRecordedResults ? "Results recorded · see below" : "No outcomes recorded yet"]] : []),
     ...(event.credentials ? [["Passes / credentials", event.credentials]] : []),
     ["Team", staffing.summary],
   ];
-  const showResults = eventPhase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
   const updateRoutes = eventUpdateRoutes
     .filter((route) => !route.attendingOnly || !isNotAttending)
     .map((route) => {
@@ -123,10 +130,9 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>
         </div>
       </section>
-      <PageContentsLayout primaryLabel="Event brief" mobileLabel="Navigate this event" secondaryItems={isNotAttending ? [] : workstreamContents} secondaryLabel="Plan sections" items={isNotAttending ? [
+      <PageContentsLayout primaryLabel="Event brief" mobileLabel="Navigate this event" secondaryItems={isNotAttending ? [] : workstreamContents} secondaryLabel={pageModel.secondaryLabel} items={isNotAttending ? [
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
-        { id: "event-prospecting", label: "Prospecting" },
         { id: "event-no-plan", label: "Event status" },
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
@@ -145,7 +151,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       ]}>
 
       <section className="event-tldr shell" id="event-tldr">
-        <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>{eventPhase === "past" ? "What happened and what happens next." : "Know this before you go."}</h2></div>
+        <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>{pageModel.tldrHeading}</h2></div>
         <div className={`tldr-grid tldr-grid-${tldr.length}`}>{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
         {event.tldrCallout ? <aside className="event-tldr-callout" aria-label={event.tldrCallout.title}>
           <div><span>{event.tldrCallout.label}</span><h3>{event.tldrCallout.title}</h3></div>
@@ -191,7 +197,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <BackToTop />
       </section> : null}
 
-      <section className="event-prospecting shell" id="event-prospecting">
+      {showProspecting ? <section className="event-prospecting shell" id="event-prospecting">
         <div className="event-prospecting-head">
           <div className="section-intro">
             <p className="eyebrow">Prospecting brief</p>
@@ -229,7 +235,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         </div>
         <p className="prospecting-boundary"><strong>Do not confuse targeting with attendance.</strong> A company fits the event audience only after the event app, organizer file, matched-meeting schedule, scan, session, or other named signal connects it to the show.</p>
         <BackToTop />
-      </section>
+      </section> : null}
 
       {showPriorities ? (
         <section className="event-priorities shell" id="event-priorities">
@@ -244,7 +250,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         </section>
       ) : null}
 
-      {isNotAttending ? (
+      {!showPlanningBody ? (
         <section className="event-no-plan shell" id="event-no-plan">
           <div className="event-no-mark" aria-hidden="true">×</div>
           <div>
@@ -286,7 +292,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <BackToTop />
         </aside>
         <div className="workstreams">
-          <div className="section-intro"><p className="eyebrow">{eventPhase === "past" ? "Closeout record" : "Field checklist"}</p><h2>{eventPhase === "past" ? "What was planned and what remains to close." : "What the event team needs to know and do."}</h2><p>{eventPhase === "past" ? `${activeWorkstreamKeys.length} of nine workstreams contain closeout details. Empty sections stay in the not-in-plan summary.` : `${activeWorkstreamKeys.length} of nine workstreams are in play. Relevant sections are open below; everything else stays in the explicit not-in-plan summary.`}</p></div>
+          <div className="section-intro"><p className="eyebrow">{pageModel.workstreamEyebrow}</p><h2>{pageModel.workstreamTitle}</h2><p>{eventPhase === "past" ? `${activeWorkstreamKeys.length} of nine workstreams contain recorded detail. Plan language is intent unless the results below confirm the outcome.` : `${activeWorkstreamKeys.length} of nine workstreams are in play. Relevant sections are open below; everything else stays in the explicit not-in-plan summary.`}</p></div>
           {activeWorkstreamKeys.map((key, index) => {
             const items = workstreams[key];
             return <article className="workstream" id={`workstream-${key}`} key={key}>
