@@ -15,6 +15,7 @@ import { getEventSourceChanges } from "../../data/site-status";
 import { getEventRoleRoutes } from "../../data/event-role-routes";
 import { getEventFootprint } from "../../data/event-footprint";
 import { eventUpdateRoutes, getEventWritebackQueue } from "../../data/source-governance";
+import { getEventProspectingBrief } from "../../data/event-prospecting";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,14 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const recentChanges = getEventSourceChanges(event.slug);
   const eventWritebacks = getEventWritebackQueue(event.slug);
   const roleRoutes = getEventRoleRoutes(event, eventPhase);
+  const prospecting = getEventProspectingBrief(event);
+  const zoomInfoOnlyReason = prospecting.confidence === "Matched-account qualification"
+    ? "Use the organizer's matched accounts; do not manufacture an attendee segment."
+    : prospecting.confidence === "No active plan"
+      ? "No event segment is maintained while TeamSimple is not attending."
+      : prospecting.confidence === "Names required"
+        ? "Create a segment only after a credible source supplies attendee or company names."
+        : "No defensible event-specific HubSpot segment is linked yet.";
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
@@ -110,6 +119,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       <PageContents items={isNotAttending ? [
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
+        { id: "event-prospecting", label: "Prospecting" },
         { id: "event-no-plan", label: "Event status" },
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
@@ -117,6 +127,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       ] : [
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
+        { id: "event-prospecting", label: "Prospecting" },
         ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
         ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
         { id: "event-crew", label: "Crew" },
@@ -159,6 +170,46 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         </Link>)}</div>
         <BackToTop />
       </section> : null}
+
+      <section className="event-prospecting shell" id="event-prospecting">
+        <div className="event-prospecting-head">
+          <div className="section-intro">
+            <p className="eyebrow">Prospecting brief</p>
+            <h2>Who is worth finding here.</h2>
+            <p>{prospecting.summary}</p>
+          </div>
+          <div className={`prospecting-confidence prospecting-confidence-${prospecting.confidence.toLowerCase().replaceAll(" ", "-")}`}>
+            <span>Audience basis</span><strong>{prospecting.confidence}</strong>
+          </div>
+        </div>
+        <div className="prospecting-grid">
+          <article>
+            <header><span>01</span><h3>Company search</h3></header>
+            <dl>{prospecting.companyFilters.map((filter) => <div key={`${filter.label}-${filter.value}`}><dt>{filter.label}</dt><dd>{filter.value}</dd></div>)}</dl>
+            <a href={prospecting.zoomInfoCompanyUrl} target="_blank" rel="noreferrer">Open ZoomInfo companies ↗</a>
+          </article>
+          <article>
+            <header><span>02</span><h3>Contact search</h3></header>
+            <dl>{prospecting.contactFilters.map((filter) => <div key={`${filter.label}-${filter.value}`}><dt>{filter.label}</dt><dd>{filter.value}</dd></div>)}</dl>
+            <a href={prospecting.zoomInfoContactUrl} target="_blank" rel="noreferrer">Open ZoomInfo contacts ↗</a>
+          </article>
+          <article className="prospecting-route-card">
+            <header><span>03</span><h3>Working route</h3></header>
+            <p>{prospecting.workflow}</p>
+            {prospecting.hubspotSegment ? <div className="prospecting-segment">
+              <span>Existing HubSpot segment</span>
+              <strong>{prospecting.hubspotSegment.name}</strong>
+              <small>{prospecting.hubspotSegment.size.toLocaleString()} contacts · {prospecting.hubspotSegment.kind.toLowerCase()} · checked {prospecting.hubspotSegment.checkedAt}</small>
+              <a href={prospecting.hubspotSegment.url} target="_blank" rel="noreferrer">Open HubSpot segment ↗</a>
+            </div> : prospecting.hubspotAccountLinks.length ? <div className="prospecting-account-links">
+              <span>Grounded account searches</span>
+              {prospecting.hubspotAccountLinks.map((account) => <a href={account.url} target="_blank" rel="noreferrer" key={account.name}>Open {account.name} contacts ↗</a>)}
+            </div> : <p className="prospecting-zoominfo-only"><strong>ZoomInfo only.</strong> {zoomInfoOnlyReason}</p>}
+          </article>
+        </div>
+        <p className="prospecting-boundary"><strong>Do not confuse targeting with attendance.</strong> A company fits the event audience only after the event app, organizer file, matched-meeting schedule, scan, session, or other named signal connects it to the show.</p>
+        <BackToTop />
+      </section>
 
       {showPriorities ? (
         <section className="event-priorities shell" id="event-priorities">

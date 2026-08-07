@@ -32,7 +32,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /aria-label="TeamSimple Event Basecamp home"/);
   assert.match(html, /dateTime="2026-08-07"[^>]*aria-label="Last updated Aug 07 · 2026"/);
   assert.match(html, /TeamSimple/);
-  assert.match(html, /Know the route before you hit the floor\./);
+  assert.match(html, /Luck is what happens when preparation meets opportunity\./);
   assert.match(html, /What do you need to do\?/);
   assert.match(html, /Get the plan for one event\./);
   assert.match(html, /Prepare and run the conversation\./);
@@ -647,6 +647,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assertSectionOrder(genesysHtml, [
     "event-tldr",
     "event-role-routes",
+    "event-prospecting",
     "event-priorities",
     "event-considerations",
     "event-crew",
@@ -662,6 +663,12 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Open all update routes →/);
   assert.match(genesysHtml, /id="event-role-routes"/);
   assert.match(genesysHtml, /href="#event-role-routes">Your role/);
+  assert.match(genesysHtml, /href="#event-prospecting">Prospecting/);
+  assert.match(genesysHtml, /Who is worth finding here\./);
+  assert.match(genesysHtml, /Technology products[\s\S]*Genesys/);
+  assert.match(genesysHtml, /Open ZoomInfo companies/);
+  assert.match(genesysHtml, /Do not confuse targeting with attendance/);
+  assert.match(genesysHtml, /No defensible event-specific HubSpot segment is linked yet/);
   assert.match(genesysHtml, /Start with what this event changes for you\./);
   assert.match(genesysHtml, /No guaranteed meeting package is listed/);
   assert.match(genesysHtml, /Work the booth and nearby traffic/);

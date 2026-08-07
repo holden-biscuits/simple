@@ -38,8 +38,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
       <section className="home-hero">
         <div className="hero-copy">
           <p className="eyebrow">TeamSimple · 2026–2027 event plan</p>
-          <h1>Know the route before you hit the floor.</h1>
-          <p className="hero-note">Dates, staffing, meeting targets, event plans, and follow-up live here.</p>
+          <h1>Luck is what happens when preparation meets opportunity.</h1>
+          <p className="hero-note">This is where the preparation lives: dates, staffing, meeting targets, event plans, and follow-up.</p>
           <div className="ranger-card">
             <div className="ranger-figure">
               <Image src="/ranger-raccoon-clean-hat.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with the Simple logo" priority unoptimized />

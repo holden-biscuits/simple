@@ -24,13 +24,13 @@ export async function generateMetadata(): Promise<Metadata> {
     description: "Dates, owners, plans, and follow-up for TeamSimple events.",
     openGraph: {
       title: "TeamSimple Event Basecamp · 2026–2027",
-      description: "Know the route before you hit the floor.",
+      description: "Luck is what happens when preparation meets opportunity.",
       images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: "TeamSimple Event Basecamp · 2026–2027",
-      description: "Know the route before you hit the floor.",
+      description: "Luck is what happens when preparation meets opportunity.",
       images: [image],
     },
   };

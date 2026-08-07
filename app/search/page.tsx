@@ -9,6 +9,7 @@ import { siteStatus } from "../data/site-status";
 import { getEventRoleRoutes } from "../data/event-role-routes";
 import { connectorCapabilities, dataStreams, fieldOwners, writebackQueue } from "../data/source-governance";
 import { matchesAttendance, matchesAttention } from "../data/event-filters";
+import { getEventProspectingBrief } from "../data/event-prospecting";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -138,6 +139,7 @@ const writebackRecords: SearchRecord[] = writebackQueue.map((item) => {
 });
 
 const eventRecords: SearchRecord[] = events.map((event) => {
+  const prospecting = getEventProspectingBrief(event);
   const briefReadiness = getEventBriefReadiness(event, searchProgramDate);
   const verification = getEventVerification(event);
   const guaranteedCountOpen = hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event);
@@ -180,6 +182,11 @@ const eventRecords: SearchRecord[] = events.map((event) => {
       ...event.crmSnapshot.stages.map((stage) => `${event.crmSnapshot?.system} stage · ${stage.label}: ${stage.count}`),
       `Data quality · ${event.crmSnapshot.dataQualityNote}`,
     ] : []),
+    `Prospecting audience · ${prospecting.summary}`,
+    ...prospecting.companyFilters.map((filter) => `ZoomInfo company ${filter.label} · ${filter.value}`),
+    ...prospecting.contactFilters.map((filter) => `ZoomInfo contact ${filter.label} · ${filter.value}`),
+    `Prospecting workflow · ${prospecting.workflow}`,
+    ...(prospecting.hubspotSegment ? [`HubSpot segment · ${prospecting.hubspotSegment.name} · ${prospecting.hubspotSegment.size} contacts`] : []),
   ].filter(Boolean);
   return {
     type: "Event",
