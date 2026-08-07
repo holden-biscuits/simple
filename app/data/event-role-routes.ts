@@ -66,9 +66,9 @@ export function getEventRoleRoutes(event: EventRecord, phase: EventPhase): Event
     title: marketingPlanFullyAssigned ? "Run the owned event task list." : event.marketingTasks?.length ? "Finish assigning the tracked task list." : "Turn the open plan into owned work.",
     detail: event.marketingTasks?.length
       ? `${event.marketingTasks.length} task${event.marketingTasks.length === 1 ? " is" : "s are"} tracked for this event. ${marketingOwnerGaps} open task${marketingOwnerGaps === 1 ? " needs" : "s need"} an owner; ${marketingDateGaps} ${marketingDateGaps === 1 ? "needs a dated deadline" : "need dated deadlines"}.`
-      : `${marketingItemCount} event-specific item${marketingItemCount === 1 ? " needs" : "s need"} ownership and timing. Use the event workspace rather than a separate private checklist.`,
+      : `${marketingItemCount} event-specific item${marketingItemCount === 1 ? " needs" : "s need"} ownership and timing. Track the work in the shared event task list rather than a private checklist.`,
     href: `/marketing?event=${event.slug}#event-tasks`,
-    cta: "Open this event’s workspace",
+    cta: "Open this event’s task list",
   });
 
   return routes;

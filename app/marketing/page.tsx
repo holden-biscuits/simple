@@ -128,7 +128,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
             <span>{workload.setupGaps} events still need task setup</span>
             <span>{workload.ownerGaps} open tasks need an owner</span>
             <span>{workload.dateGaps} open tasks need a dated deadline</span>
-            <a href="#event-tasks">Open event workspaces ↓</a>
+            <a href="#event-tasks">Open event task lists ↓</a>
           </div>
         </div>
       </section>

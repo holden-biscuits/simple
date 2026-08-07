@@ -18,7 +18,7 @@ import { getEventFootprint } from "../../data/event-footprint";
 import { eventUpdateRoutes, getEventWritebackQueue } from "../../data/source-governance";
 import { getEventProspectingBrief } from "../../data/event-prospecting";
 import { getEventReadiness } from "../../data/program-readiness";
-import { getEventPageModel } from "../../data/event-page-model";
+import { getEventPageModel, getEventWorkstreamState } from "../../data/event-page-model";
 import { getOpenItemRoute } from "../../data/open-item-routes";
 
 export const dynamic = "force-dynamic";
@@ -109,9 +109,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ["Closed", event.closed],
   ] as const;
   const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
-  const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
-  const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
-  const workstreamContents = activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] }));
+  const workstreamStates = new Map(workstreamKeys.map((key) => [key, getEventWorkstreamState(event, key)]));
+  const activeWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) === "active");
+  const reviewWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) === "needs-confirmation");
+  const displayedWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) !== "inactive");
+  const inactiveWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) === "inactive");
+  const workstreamContents = displayedWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] }));
   const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
   const eventBriefContents = isNotAttending ? [
     { id: "event-tldr", label: "TL;DR" },
@@ -339,13 +342,14 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <BackToTop />
         </aside>
         <div className="workstreams">
-          <div className="section-intro"><p className="eyebrow">{pageModel.workstreamEyebrow}</p><h2>{pageModel.workstreamTitle}</h2><p>{eventPhase === "past" ? `${activeWorkstreamKeys.length} of nine workstreams contain recorded detail. Plan language is intent unless the results below confirm the outcome.` : `${activeWorkstreamKeys.length} of nine workstreams are in play. Relevant sections are open below; everything else stays in the explicit not-in-plan summary.`}</p></div>
-          {activeWorkstreamKeys.map((key, index) => {
+          <div className="section-intro"><p className="eyebrow">{pageModel.workstreamEyebrow}</p><h2>{pageModel.workstreamTitle}</h2><p>{eventPhase === "past" ? `${displayedWorkstreamKeys.length} of nine workstreams contain recorded detail. Plan language is intent unless the results below confirm the outcome.` : `${activeWorkstreamKeys.length} in plan · ${reviewWorkstreamKeys.length} need confirmation · ${inactiveWorkstreamKeys.length} not in plan.`}</p></div>
+          {displayedWorkstreamKeys.map((key, index) => {
             const items = workstreams[key];
-            return <article className="workstream" id={`workstream-${key}`} key={key}>
+            const state = workstreamStates.get(key) ?? "active";
+            return <article className={`workstream workstream-${state}`} id={`workstream-${key}`} key={key}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
-                <div className="workstream-title-row"><h3>{workstreamLabels[key]}</h3>{key === "marketing" && eventPhase !== "past" ? <Link href={`/marketing?event=${event.slug}#event-tasks`}>Open workspace →</Link> : key === "budget" ? <Link href="/marketing#measurement">Open measurement →</Link> : null}</div>
+                <div className="workstream-title-row"><div><h3>{workstreamLabels[key]}</h3><small className={`workstream-state workstream-state-${state}`}>{state === "needs-confirmation" ? "Needs confirmation" : eventPhase === "past" ? "Recorded plan" : "In plan"}</small></div>{key === "marketing" && eventPhase !== "past" ? <Link href={`/marketing?event=${event.slug}#event-tasks`}>Open event tasks →</Link> : key === "budget" ? <Link href="/marketing#measurement">Open measurement →</Link> : null}</div>
                 <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop />
               </div>
             </article>;

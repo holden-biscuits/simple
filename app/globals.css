@@ -1128,7 +1128,11 @@ button, input, select { font: inherit; }
 .workstream > span { width: 36px; height: 36px; display: grid; place-items: center; color: var(--paper); background: var(--green); border-radius: 50%; font: 700 10px var(--font-geist-mono), monospace; }
 .workstream h3 { margin: 0 0 15px; font: 400 27px Georgia, serif; }
 .workstream-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+.workstream-title-row > div { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .workstream-title-row a { flex: none; color: var(--signal-dark); border-bottom: 1px solid currentColor; font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.workstream-state { display: inline-block; padding: 4px 6px; color: var(--green); background: var(--green-light); font: 800 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.workstream-state-needs-confirmation { color: #5e3900; background: #ffd08c; }
+.workstream-needs-confirmation > span { color: #5e3900; background: #ffd08c; }
 .workstream ul { list-style: none; margin: 0; padding: 0; }
 .workstream li { margin: 9px 0; font-size: 16px; line-height: 1.55; color: #46433c; }
 .workstream li::before { content: '— '; color: var(--signal); }

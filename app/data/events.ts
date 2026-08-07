@@ -1302,3 +1302,16 @@ export function getWorkstreams(event: EventRecord): Record<WorkstreamKey, string
 export function isEmptyWorkstream(items: string[]) {
   return items.length === 0 || items.every((item) => /^none(?:\s+(?:planned|listed|confirmed))?[.!]?$/i.test(item.trim()));
 }
+
+export type WorkstreamState = "active" | "needs-confirmation" | "inactive";
+
+export function getWorkstreamState(items: string[]): WorkstreamState {
+  if (isEmptyWorkstream(items)) return "inactive";
+  const needsConfirmation = items.some((item) => {
+    const value = item.trim();
+    return /\b(?:count and format not yet confirmed|confirmation needs reconciliation|schedule needs reconciliation|tracker date needs reconciliation|under review)\b/i.test(value)
+      || /^none listed;\s*confirm whether\b/i.test(value)
+      || /^(?:possible|optional)\b.*\b(?:not confirmed|none confirmed)\b/i.test(value);
+  });
+  return needsConfirmation ? "needs-confirmation" : "active";
+}

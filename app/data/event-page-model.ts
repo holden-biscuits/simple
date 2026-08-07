@@ -1,4 +1,5 @@
-import { getEventPhase, type EventRecord } from "./events.ts";
+import { getEventPhase, getWorkstreams, getWorkstreamState, type EventRecord, type WorkstreamKey, type WorkstreamState } from "./events.ts";
+import { getSpeakingStatus, getSponsorshipStatus } from "./event-signals.ts";
 
 export type EventPageModel = {
   phase: ReturnType<typeof getEventPhase>;
@@ -12,6 +13,12 @@ export type EventPageModel = {
   workstreamEyebrow: string;
   workstreamTitle: string;
 };
+
+export function getEventWorkstreamState(event: EventRecord, key: WorkstreamKey): WorkstreamState {
+  if (key === "speaking" && getSpeakingStatus(event) === "Under review") return "needs-confirmation";
+  if (key === "sponsorship" && getSponsorshipStatus(event) === "Under review") return "needs-confirmation";
+  return getWorkstreamState(getWorkstreams(event)[key]);
+}
 
 export function getEventPageModel(event: EventRecord, programDate: string): EventPageModel {
   const phase = getEventPhase(event, programDate);

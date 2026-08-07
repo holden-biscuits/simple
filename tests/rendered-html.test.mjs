@@ -953,7 +953,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Aug 13/);
   assert.match(genesysHtml, /Travel and hotels should already be booked/);
   assert.match(genesysHtml, /Marketing tasks/);
-  assert.match(genesysHtml, /8(?:<!-- -->)? of nine workstreams are in play/);
+  assert.match(genesysHtml, /8(?:<!-- -->)? in plan · (?:<!-- -->)?0(?:<!-- -->)? need confirmation · (?:<!-- -->)?1(?:<!-- -->)? not in plan/);
   assert.match(genesysHtml, /<strong>Navigate<\/strong>/);
   assert.match(genesysHtml, /<b>Event brief<\/b>[\s\S]*<b>Plan sections<\/b>[\s\S]*href="#workstream-marketing"[\s\S]*<b>Results \+ sources<\/b>/);
   assert.ok(genesysHtml.indexOf('href="#event-crew"') < genesysHtml.indexOf('href="#workstream-speaking"'));
@@ -961,7 +961,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /<summary>Navigate this event(?:<!-- -->)? <span>[^<]+<\/span><\/summary>/);
   assert.match(genesysHtml, /id="workstream-marketing"/);
   assert.match(genesysHtml, /id="workstream-budget"/);
-  assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks">Open workspace/);
+  assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks">Open event tasks/);
   assert.match(genesysHtml, /href="\/marketing#measurement">Open measurement/);
   assert.doesNotMatch(genesysHtml, /id="workstream-secondary"/);
   assert.match(genesysHtml, /Not in this event plan[\s\S]*Secondary events[\s\S]*None/);
@@ -1021,7 +1021,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Open task plan/);
   assert.match(customerConnectHtml, /Exhibitor portal/);
   assert.match(customerConnectHtml, /Complimentary tickets/);
-  assert.match(customerConnectHtml, /6(?:<!-- -->)? of nine workstreams are in play/);
+  assert.match(customerConnectHtml, /6(?:<!-- -->)? in plan · (?:<!-- -->)?0(?:<!-- -->)? need confirmation · (?:<!-- -->)?3(?:<!-- -->)? not in plan/);
   assert.match(customerConnectHtml, /Open tracker(?:<!-- -->)? ↗/);
   assert.match(customerConnectHtml, /Open event project(?:<!-- -->)? ↗/);
   assert.match(customerConnectHtml, /Recorded Customer Connect portal progress/);
@@ -1037,6 +1037,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(icmiHtml, /TeamSimple is attending/);
   assert.match(icmiHtml, /Onsite footprint<\/span><strong>Under review/);
   assert.match(icmiHtml, /Speaking<\/span><strong>Lunch &amp; Learn · Wednesday · confirmation needs reconciliation/);
+  assert.match(icmiHtml, /workstream-state-needs-confirmation/);
+  assert.match(icmiHtml, /Needs confirmation/);
   assert.match(icmiHtml, /Open tracker(?:<!-- -->)? ↗/);
 
   const orlando = await render("/events/ccw-orlando");
