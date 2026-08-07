@@ -347,14 +347,14 @@ export default function SourcesPage() {
             <article><span>Marketing Events</span><strong>{crmAttributionAudit.marketingEvents}</strong><p>No canonical event objects are available yet; writes require HubSpot reauthorization.</p></article>
           </div>
           <aside className="crm-portfolio-rollup">
-            <div><span>Portfolio opportunity view</span><strong>{eventPipelineSnapshot.opportunities} qualifying opportunities</strong></div>
-            <p>The {crmAttributionAudit.exactDeals}-record attribution baseline includes every exactly joined CRM record. The operating view excludes Closed Lost and Disqualified, leaving {eventPipelineSnapshot.opportunities} opportunities. All {eventPipelineSnapshot.dealsWithoutAmount} currently lack a reportable amount, so open pipeline and closed-won revenue both remain $0.</p>
+            <div><span>Portfolio opportunity views</span><strong>{eventPipelineSnapshot.opportunities} source-based · {eventPipelineSnapshot.exactQualifyingOpportunities} exact CCW</strong></div>
+            <p>The Deal Source search returns {eventPipelineSnapshot.sourceEligibleRecords} records and {eventPipelineSnapshot.opportunities} qualifying opportunities after stage exclusions. The exact source + CCW detail intersection contains {crmAttributionAudit.exactDeals} records and {eventPipelineSnapshot.exactQualifyingOpportunities} qualifying opportunities. All {eventPipelineSnapshot.dealsWithoutAmount} source-based opportunities lack a reportable amount, so open pipeline and closed-won revenue both remain $0.</p>
             <Link href="/marketing#event-pipeline">Open pipeline chart →</Link>
           </aside>
           <aside className="crm-audit-alert">
-            <span>Needs RevOps review · {crmAttributionAudit.sourceMismatch.count} record</span>
-            <p>{crmAttributionAudit.sourceMismatch.note}</p>
-            <a href={crmAttributionAudit.sourceMismatch.url} target="_blank" rel="noreferrer">Open {crmAttributionAudit.sourceMismatch.dealName} in HubSpot ↗</a>
+            <span>Needs RevOps review · {crmAttributionAudit.pairMismatch.count} records</span>
+            <p>{crmAttributionAudit.pairMismatch.note}</p>
+            <div><a href={crmAttributionAudit.pairMismatch.sourceOnly.url} target="_blank" rel="noreferrer">Open source-only record ↗</a><a href={crmAttributionAudit.pairMismatch.detailOnly.url} target="_blank" rel="noreferrer">Open detail-only record ↗</a></div>
           </aside>
           <div className="crm-rule-grid">
             {crmAttributionAudit.rules.map((rule) => <article key={rule.label}>

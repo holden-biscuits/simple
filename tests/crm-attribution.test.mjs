@@ -41,6 +41,8 @@ test("the CRM audit keeps possible meetings out of completed results", () => {
   assert.equal(crmAttributionAudit.meetingWindow.possibleEventMeetings, 4);
   assert.equal(crmAttributionAudit.meetingWindow.completedOutcomes, 0);
   assert.equal(crmAttributionAudit.marketingEvents, 0);
-  assert.equal(crmAttributionAudit.sourceMismatch.count, 1);
-  assert.match(crmAttributionAudit.sourceMismatch.note, /stays out of the 29 exact deals/);
+  assert.equal(crmAttributionAudit.pairMismatch.count, 2);
+  assert.equal(crmAttributionAudit.pairMismatch.sourceOnly.count, 1);
+  assert.equal(crmAttributionAudit.pairMismatch.detailOnly.count, 1);
+  assert.match(crmAttributionAudit.pairMismatch.note, /only 29 records intersect/);
 });

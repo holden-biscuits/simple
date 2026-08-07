@@ -158,23 +158,29 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
             <div className="section-intro">
               <p className="eyebrow">HubSpot event outcomes</p>
               <h2>What events have created in the pipeline.</h2>
-              <p>This view counts deals whose Deal Source is Event — Trade Show, Event — Field / Dinner, or Event / Conference. Closed Lost and Disqualified records stay out of the totals.</p>
+              <p>The operating view starts with the three controlled event Deal Source values. The exact-attribution view also requires the matching Event detail. Closed Lost and Disqualified records stay out of opportunity totals.</p>
             </div>
             <a href={eventPipelineSnapshot.hubspotUrl} target="_blank" rel="noreferrer">Open the deals in HubSpot ↗</a>
           </div>
           <div className="event-pipeline-metrics" aria-label="Event-sourced deal totals">
-            <article><span>Opportunities</span><strong>{eventPipelineSnapshot.opportunities}</strong><p>qualifying event-sourced deals</p></article>
+            <article><span>Source-based opportunities</span><strong>{eventPipelineSnapshot.opportunities}</strong><p>qualifying deals in the Deal Source view</p></article>
             <article><span>Open pipeline</span><strong>${eventPipelineSnapshot.openPipeline.toLocaleString()}</strong><p>from recorded deal amounts</p></article>
             <article><span>Closed-won revenue</span><strong>${eventPipelineSnapshot.closedWonRevenue.toLocaleString()}</strong><p>recognized only after a deal is won</p></article>
           </div>
-          <div className="event-stage-chart" role="img" aria-label={`Current stage distribution for ${eventPipelineSnapshot.opportunities} event-sourced opportunities`}>
+          <div className="event-attribution-bridge" aria-label="HubSpot event deal attribution reconciliation">
+            <article><span>Deal Source view</span><strong>{eventPipelineSnapshot.sourceEligibleRecords} records</strong><p>{eventPipelineSnapshot.opportunities} remain after stage exclusions.</p></article>
+            <article><span>Exact CCW join</span><strong>{eventPipelineSnapshot.exactAttributionRecords} records</strong><p>{eventPipelineSnapshot.exactQualifyingOpportunities} remain after the same exclusions.</p></article>
+            <article className="event-attribution-alert"><span>Needs field QA</span><strong>{eventPipelineSnapshot.pairMismatchCount} records</strong><p>{eventPipelineSnapshot.sourceOnlyRecords} source-only · {eventPipelineSnapshot.detailOnlyRecords} detail-only</p></article>
+          </div>
+          <div className="event-stage-chart" role="img" aria-label={`Current stage distribution for ${eventPipelineSnapshot.opportunities} source-based event opportunities`}>
+            <p>Stage mix · source-based opportunities</p>
             {eventPipelineSnapshot.stages.map((stage) => <div className="event-stage-row" key={stage.label}>
               <span>{stage.label}</span>
               <div><i aria-hidden="true" style={{ width: stage.count ? `${Math.max(2, (stage.count / eventPipelineSnapshot.opportunities) * 100)}%` : "0%" }} /></div>
               <strong>{stage.count}</strong>
             </div>)}
           </div>
-          <aside className="event-pipeline-quality"><strong>Pipeline hygiene</strong><p>{eventPipelineSnapshot.dealsWithoutAmount} of {eventPipelineSnapshot.opportunities} qualifying deals currently have no reportable amount, so pipeline and revenue remain $0. The chart shows stage coverage without inventing value.</p><span>Checked {eventPipelineSnapshot.checkedAt} · {eventPipelineSnapshot.refreshRule}</span></aside>
+          <aside className="event-pipeline-quality"><strong>Pipeline hygiene</strong><p>All {eventPipelineSnapshot.dealsWithoutAmount} source-based opportunities lack a reportable amount, so pipeline and revenue remain $0. The exact CCW view contains {eventPipelineSnapshot.exactQualifyingOpportunities} qualifying opportunities; neither view invents value for blank amounts.</p><span>Checked {eventPipelineSnapshot.checkedAt} · {eventPipelineSnapshot.refreshRule}</span></aside>
           <BackToTop />
         </div>
       </section>

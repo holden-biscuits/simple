@@ -300,7 +300,7 @@ export const events: EventRecord[] = [
         { label: "Closed lost", count: 4 },
         { label: "Disqualified", count: 4 },
       ],
-      dataQualityNote: "All 29 exactly attributed deals currently have $0 amount, so the CRM does not yet support a pipeline-value claim. No attributed deal is marked Closed Won. One additional deal has the CCW follow-up detail but an outbound source and remains excluded pending RevOps review.",
+      dataQualityNote: "All 29 exactly attributed deals currently have $0 amount, so the CRM does not yet support a pipeline-value claim. No attributed deal is marked Closed Won. One source-only record and one detail-only record remain outside exact attribution pending RevOps review.",
       url: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
     },
     workstreams: {

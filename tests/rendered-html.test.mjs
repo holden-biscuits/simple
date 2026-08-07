@@ -201,13 +201,16 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Reconcile any related execution text in Notion; the next review build refreshes Event Basecamp/);
   assert.match(html, /Only publish outcomes the CRM can prove\./);
   assert.match(html, /Exact event deals[\s\S]*29/);
-  assert.match(html, /Portfolio opportunity view/);
-  assert.match(html, /22(?:<!-- -->)? qualifying opportunities/);
-  assert.match(html, /29(?:<!-- -->)?-record attribution baseline/);
-  assert.match(html, /All (?:<!-- -->)?22(?:<!-- -->)? currently lack a reportable amount/);
+  assert.match(html, /Portfolio opportunity views/);
+  assert.match(html, /22(?:<!-- -->)? source-based · (?:<!-- -->)?21(?:<!-- -->)? exact CCW/);
+  assert.match(html, /Deal Source search returns (?:<!-- -->)?30(?:<!-- -->)? records and (?:<!-- -->)?22(?:<!-- -->)? qualifying opportunities/);
+  assert.match(html, /exact source \+ CCW detail intersection contains (?:<!-- -->)?29(?:<!-- -->)? records and (?:<!-- -->)?21(?:<!-- -->)? qualifying opportunities/);
+  assert.match(html, /All (?:<!-- -->)?22(?:<!-- -->)? source-based opportunities lack a reportable amount/);
   assert.match(html, /href="\/marketing#event-pipeline"[^>]*>Open pipeline chart/);
-  assert.match(html, /Needs RevOps review[\s\S]*One additional deal carries the CCW follow-up detail but not an event source/);
-  assert.match(html, /Open (?:<!-- -->)?Memorial Hermann Health System(?:<!-- -->)? in HubSpot/);
+  assert.match(html, /Needs RevOps review[\s\S]*2(?:<!-- -->)? records/);
+  assert.match(html, /source and detail searches each return 30 deals, but only 29 records intersect/);
+  assert.match(html, /Open source-only record/);
+  assert.match(html, /Open detail-only record/);
   assert.match(html, /Meeting records to QA[\s\S]*4/);
   assert.match(html, /Marketing Events[\s\S]*0/);
   assert.match(html, /Do not count date proximity, a vendor mention/);
@@ -252,8 +255,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /insurance advised, not mandatory/);
   assert.match(html, /Confirmed Taylor as the sole Chicago attendee/);
   assert.match(html, /Taylor only · Josh did not attend/);
-  assert.match(html, /Reconcile one CCW deal-source mismatch/);
-  assert.match(html, /Exact CCW attribution baseline still holds/);
+  assert.match(html, /Reconcile two CCW controlled-field mismatches/);
+  assert.match(html, /Pre-reconciliation exact CCW baseline still held/);
   assert.match(html, /Upstream write-back verification/);
   assert.match(html, /Four corrections remain/);
   assert.match(html, /Genesys guaranteed meetings already match/);
@@ -273,7 +276,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Conference tracker/);
   assert.match(html, /Not due · no due or overdue events · Aug 7/);
   assert.match(html, /2 near-term searches · no match · Aug 7/);
-  assert.match(html, /Controlled pair · 29 exact \+ 1 excluded · Aug 7/);
+  assert.match(html, /30 source · 30 detail · 29 exact · 2 mismatches · Aug 7/);
   assert.match(html, /No direct scan available/);
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
@@ -343,13 +346,14 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Needs judgment[\s\S]*2/);
   assert.match(html, /Ready to approve[\s\S]*12/);
   assert.match(html, /Foundation work[\s\S]*9/);
-  assert.match(html, /Qualifying opportunities[\s\S]*22/);
+  assert.match(html, /Source-based opportunities[\s\S]*22/);
+  assert.match(html, /Exact CCW opportunities[\s\S]*21/);
   assert.match(html, /Open pipeline[\s\S]*\$0/);
   assert.match(html, /Closed-won revenue[\s\S]*\$0/);
-  assert.match(html, /Exact attribution records[\s\S]*29/);
-  assert.match(html, /Read the two populations correctly\./);
-  assert.match(html, /29(?:<!-- -->)? records meet the exact event-attribution rule/);
-  assert.match(html, /22(?:<!-- -->)? remain after Closed Lost and Disqualified are excluded/);
+  assert.match(html, /Read the populations correctly\./);
+  assert.match(html, /Deal Source search returns (?:<!-- -->)?30(?:<!-- -->)? records and (?:<!-- -->)?22(?:<!-- -->)? qualifying opportunities/);
+  assert.match(html, /exact CCW intersection contains (?:<!-- -->)?29(?:<!-- -->)? records and (?:<!-- -->)?21(?:<!-- -->)? qualifying opportunities/);
+  assert.match(html, /2(?:<!-- -->)? records need field QA: (?:<!-- -->)?1(?:<!-- -->)? source-only and (?:<!-- -->)?1(?:<!-- -->)? detail-only/);
   assert.match(html, /\$0 pipeline and revenue describe CRM completeness—not the business value/);
   assert.match(html, /<a[^>]*href="\/leadership"[^>]*>Leaders<\/a>/);
 });
@@ -511,11 +515,11 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(genesysWritebackSearchHtml, /href="\/events\/genesys-xperience#event-writebacks"/);
   assert.match(genesysWritebackSearchHtml, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars attending/);
 
-  const hubspotMismatchSearch = await render("/search?q=HubSpot%20source%20mismatch%20Memorial%20Hermann&type=Operations");
+  const hubspotMismatchSearch = await render("/search?q=HubSpot%20source%20detail%20mismatch&type=Operations");
   assert.equal(hubspotMismatchSearch.status, 200);
   const hubspotMismatchSearchHtml = await hubspotMismatchSearch.text();
-  assert.match(hubspotMismatchSearchHtml, /CCW Vegas · Reconcile one CCW deal-source mismatch/);
-  assert.match(hubspotMismatchSearchHtml, /Memorial Hermann carries Outbound — SDR and remains excluded/);
+  assert.match(hubspotMismatchSearchHtml, /CCW Vegas · Reconcile two CCW controlled-field mismatches/);
+  assert.match(hubspotMismatchSearchHtml, /29 exact intersections · 1 source-only record · 1 detail-only record/);
   assert.match(hubspotMismatchSearchHtml, /Source change/);
 
   const eventRoleSearch = await render("/search?q=what%20should%20an%20SDR%20do%20at%20Genesys&type=Event");
@@ -641,13 +645,16 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /https:\/\/knowledge\.hubspot\.com\/integrations\/use-marketing-events/);
   assert.match(html, /id="event-pipeline"/);
   assert.match(html, /What events have created in the pipeline\./);
-  assert.match(html, /Opportunities[\s\S]*22/);
+  assert.match(html, /Source-based opportunities[\s\S]*22/);
   assert.match(html, /Open pipeline[\s\S]*\$0/);
   assert.match(html, /Closed-won revenue[\s\S]*\$0/);
-  assert.match(html, /Current stage distribution for 22 event-sourced opportunities/);
+  assert.match(html, /Deal Source view[\s\S]*30(?:<!-- -->)? records/);
+  assert.match(html, /Exact CCW join[\s\S]*29(?:<!-- -->)? records/);
+  assert.match(html, /Needs field QA[\s\S]*2(?:<!-- -->)? records/);
+  assert.match(html, /Current stage distribution for 22 source-based event opportunities/);
   assert.match(html, /Demo completed[\s\S]*8/);
-  assert.match(html, /22(?:<!-- -->)? of (?:<!-- -->)?22(?:<!-- -->)? qualifying deals currently have no reportable amount/);
-  assert.match(html, /Closed Lost and Disqualified records stay out of the totals/);
+  assert.match(html, /All (?:<!-- -->)?22(?:<!-- -->)? source-based opportunities lack a reportable amount/);
+  assert.match(html, /Closed Lost and Disqualified records stay out of opportunity totals/);
   assert.match(html, /Six records make the scorecard usable\./);
   assert.match(html, /Fully loaded cost[\s\S]*Forecast at approval · final by 7 days after/);
   assert.match(html, /30 and 90 days after[\s\S]*sourced pipeline · influenced pipeline · closed revenue/);
@@ -931,7 +938,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(vegasHtml, /explicitly attributed deals/);
   assert.match(vegasHtml, /Demo completed/);
   assert.match(vegasHtml, /All 29 exactly attributed deals currently have \$0 amount/);
-  assert.match(vegasHtml, /one additional deal has the CCW follow-up detail but an outbound source/i);
+  assert.match(vegasHtml, /one source-only record and one detail-only record remain outside exact attribution/i);
 
   const lead = await render("/events/the-lead-summit");
   const leadHtml = await lead.text();

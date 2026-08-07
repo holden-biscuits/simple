@@ -70,13 +70,23 @@ export const crmAttributionAudit = {
   representedEvents: 1,
   representedEventLabel: "CCW Vegas",
   marketingEvents: 0,
-  sourceMismatch: {
-    count: 1,
-    dealName: "Memorial Hermann Health System",
-    currentSource: "Outbound — SDR",
-    currentDetail: "CCW Vegas follow-up",
-    note: "One additional deal carries the CCW follow-up detail but not an event source. It stays out of the 29 exact deals until RevOps reconciles the two controlled fields.",
-    url: "https://app.hubspot.com/contacts/245561359/record/0-3/338921491147?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+  pairMismatch: {
+    count: 2,
+    note: "The source and detail searches each return 30 deals, but only 29 records intersect. One source-only record and one detail-only record stay out of exact attribution until RevOps reconciles both controlled fields.",
+    sourceOnly: {
+      count: 1,
+      dealName: "Home Warranty, Inc. — New Deal",
+      currentSource: "Event — Trade Show",
+      currentDetail: "Field / dinner",
+      url: "https://app.hubspot.com/contacts/245561359/record/0-3/340489431764?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+    },
+    detailOnly: {
+      count: 1,
+      dealName: "Memorial Hermann Health System",
+      currentSource: "Outbound — SDR",
+      currentDetail: "CCW Vegas follow-up",
+      url: "https://app.hubspot.com/contacts/245561359/record/0-3/338921491147?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+    },
   },
   meetingWindow: {
     eventKey: "ccw-vegas",

@@ -45,7 +45,9 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.marketing-pulse-metrics\s*\{\s*grid-template-columns:\s*1fr 1fr;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.marketing-pulse-metrics\s*\{\s*grid-template-columns:\s*1fr;/);
   assert.match(css, /\.event-pipeline-metrics\s*\{[^}]*grid-template-columns:\s*repeat\(3,/);
+  assert.match(css, /\.event-attribution-bridge\s*\{[^}]*grid-template-columns:\s*repeat\(3,/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-pipeline-metrics\s*\{\s*grid-template-columns:\s*1fr;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-attribution-bridge\s*\{\s*grid-template-columns:\s*1fr;/);
   assert.match(css, /\.attendance-filters > div\s*\{[^}]*grid-template-columns:\s*repeat\(4,/);
   assert.match(css, /\.attention-filters > div\s*\{[^}]*grid-template-columns:\s*repeat\(5,/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.attendance-filters > div, \.attention-filters > div\s*\{\s*grid-template-columns:\s*1fr 1fr;/);

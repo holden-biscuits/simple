@@ -1,5 +1,7 @@
 export type HubSpotEventDeal = {
+  id?: string;
   dealSource?: string;
+  dealSourceDetail?: string;
   dealStage?: string;
   amountInHomeCurrency?: string | number | null;
 };
@@ -7,10 +9,27 @@ export type HubSpotEventDeal = {
 export const eventPipelineFilter = {
   sourceValues: ["Event - Trade Show", "Event - Field/Dinner", "Event / Conference"],
   sourceLabels: ["Event — Trade Show", "Event — Field / Dinner", "Event / Conference"],
+  detailValues: ["ccw_vegas_follow_up"],
   excludedStageValues: ["closedlost", "4028516043", "4040945398"],
   excludedStageLabels: ["Closed Lost", "Disqualified"],
   closedWonStageValues: ["closedwon", "4040945397"],
 } as const;
+
+export function reconcileEventAttributionCoverage(deals: HubSpotEventDeal[]) {
+  const uniqueDeals = new Map<string, HubSpotEventDeal>();
+  deals.forEach((deal, index) => uniqueDeals.set(deal.id ?? `record-${index}`, deal));
+
+  const sourceValues = new Set<string>(eventPipelineFilter.sourceValues);
+  const detailValues = new Set<string>(eventPipelineFilter.detailValues);
+  const all = [...uniqueDeals.values()];
+  const sourceEligible = all.filter((deal) => deal.dealSource && sourceValues.has(deal.dealSource));
+  const detailEligible = all.filter((deal) => deal.dealSourceDetail && detailValues.has(deal.dealSourceDetail));
+  const exact = all.filter((deal) => deal.dealSource && sourceValues.has(deal.dealSource) && deal.dealSourceDetail && detailValues.has(deal.dealSourceDetail));
+  const sourceOnly = sourceEligible.filter((deal) => !deal.dealSourceDetail || !detailValues.has(deal.dealSourceDetail));
+  const detailOnly = detailEligible.filter((deal) => !deal.dealSource || !sourceValues.has(deal.dealSource));
+
+  return { sourceEligible, detailEligible, exact, sourceOnly, detailOnly };
+}
 
 const pipelineStageGroups = [
   { label: "Meeting booked", values: ["appointmentscheduled", "4040945392"] },
@@ -61,8 +80,8 @@ export function summarizeEventPipeline(deals: HubSpotEventDeal[]) {
 
 export const eventPipelineRefreshContract = {
   objectType: "DEAL",
-  properties: ["deal_source", "dealstage", "amount_in_home_currency"],
-  rule: "Count the three controlled event Deal Source values; exclude Closed Lost and Disqualified; sum positive amounts on active deals as open pipeline and positive amounts on Closed Won deals as revenue.",
+  properties: ["deal_source", "deal_source_detail_standardized", "dealstage", "amount_in_home_currency"],
+  rule: "Read the three controlled Deal Source values and every controlled Event detail independently, reconcile their union, and publish exact attribution only from the intersection. The source-based operating view excludes Closed Lost and Disqualified; positive active amounts become open pipeline and positive Closed Won amounts become revenue.",
 } as const;
 
 export const eventPipelineSnapshot = {
@@ -71,7 +90,14 @@ export const eventPipelineSnapshot = {
   hubspotUrl: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_basecamp_pipeline",
   sourceValues: eventPipelineFilter.sourceLabels,
   excludedStages: eventPipelineFilter.excludedStageLabels,
+  sourceEligibleRecords: 30,
+  detailEligibleRecords: 30,
   opportunities: 22,
+  exactAttributionRecords: 29,
+  exactQualifyingOpportunities: 21,
+  pairMismatchCount: 2,
+  sourceOnlyRecords: 1,
+  detailOnlyRecords: 1,
   openPipeline: 0,
   closedWonRevenue: 0,
   dealsWithoutAmount: 22,
