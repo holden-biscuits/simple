@@ -1134,16 +1134,46 @@ const trackerSheetByYear = {
   "2027": { gid: "113603184", lastColumn: "R" },
 } as const;
 
+const trackerRowByEventKey: Record<string, number> = {
+  "ccw-orlando": 2,
+  "ccw-exchange-san-diego": 3,
+  "hbs-women-in-business": 4,
+  "ccw-exchange-austin": 5,
+  "shoptalk-spring": 6,
+  "ccw-cxo-exchange-charlotte": 7,
+  "the-lead-summit": 8,
+  "nice-world": 9,
+  "ccw-vegas": 10,
+  "iqpc-cx-retail-uk": 11,
+  "ccw-exchange-denver": 12,
+  "consero-summit": 13,
+  "ccw-exchange-chicago": 14,
+  "contact-io": 15,
+  "genesys-xperience": 16,
+  "iqpc-cx-travel-hospitality": 17,
+  "customer-connect-expo": 18,
+  "iqpc-cx-retail-atlanta": 19,
+  "shoptalk-fall": 20,
+  "consero-cx-forum": 21,
+  "ccw-amsterdam": 22,
+  "ccw-nashville": 23,
+  "icmi-contact-center-expo": 24,
+  "ccw-uk-executive-exchange": 25,
+  "ccw-executive-exchange-miami": 26,
+  "reuters-customer-service-east": 27,
+  "ccw-orlando-2027": 2,
+  "ccw-uk-executive-exchange-2027": 3,
+  "ccw-vegas-2027": 4,
+};
+
 export function getEventTrackerRowUrl(eventSlug: string) {
   const event = eventBySlug(eventSlug);
   if (!event) return sourceLinks.sheet;
   const year = event.dateSort.slice(0, 4) as keyof typeof trackerSheetByYear;
   const sheet = trackerSheetByYear[year];
   if (!sheet) return sourceLinks.sheet;
-  const yearEvents = events.filter((item) => item.dateSort.startsWith(`${year}-`));
-  const rowIndex = yearEvents.findIndex((item) => item.slug === eventSlug);
-  if (rowIndex < 0) return sourceLinks.sheet;
-  const row = rowIndex + 2;
+  const row = trackerRowByEventKey[eventSlug];
+  if (!row) return sourceLinks.sheet;
   return `https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=${sheet.gid}&range=A${row}:${sheet.lastColumn}${row}`;
 }
 

@@ -23,6 +23,7 @@ test("update routes keep signals out of the system-of-record list", () => {
 test("every event routes to its exact conference tracker row", () => {
   const urls = events.map((event) => getEventTrackerRowUrl(event.slug));
   assert.equal(new Set(urls).size, events.length);
+  assert.ok(urls.every((url) => /&range=A\d+:[A-Z]+\d+$/.test(url)));
   assert.match(getEventTrackerRowUrl("ccw-exchange-chicago"), /gid=0&range=A14:W14$/);
   assert.match(getEventTrackerRowUrl("genesys-xperience"), /gid=0&range=A16:W16$/);
   assert.match(getEventTrackerRowUrl("ccw-vegas-2027"), /gid=113603184&range=A4:R4$/);

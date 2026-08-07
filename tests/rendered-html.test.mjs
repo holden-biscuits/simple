@@ -143,6 +143,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Rosters to name[\s\S]*11/);
   assert.match(html, /Source conflicts[\s\S]*3/);
   assert.match(html, /Update the system that owns the fact\./);
+  assert.match(html, /Reconcile any related execution text in Notion; the next review build refreshes the fieldbook/);
   assert.match(html, /Only publish outcomes the CRM can prove\./);
   assert.match(html, /Exact event deals[\s\S]*29/);
   assert.match(html, /Needs RevOps review[\s\S]*One additional deal carries the CCW follow-up detail but not an event source/);
@@ -540,6 +541,9 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Portfolio comparison is blocked today\./);
   assert.match(html, /Cvent’s 2026 event-value guidance/);
   assert.match(html, /HubSpot’s Marketing Events guidance/);
+  assert.match(html, /Close the loop in the system that owns each fact/);
+  assert.match(html, /The fieldbook refreshes from those records after reconciliation/);
+  assert.doesNotMatch(html, /Update this fieldbook, the tracker, the Notion project/);
 
   const customerConnect = await render("/marketing?event=customer-connect-expo");
   assert.equal(customerConnect.status, 200);

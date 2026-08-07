@@ -289,7 +289,7 @@ export const fieldOwners: FieldOwner[] = [
     data: "Event list, dates, participation and topline staffing",
     owner: "Conference tracker · Google Sheets",
     intake: "Scheduled scan plus organizer-site checks when dates or venues need verification.",
-    correction: "Update the tracker first. Mirror the reconciled value into Notion and the fieldbook.",
+    correction: "Update the tracker first. Reconcile any related execution text in Notion; the next review build refreshes the fieldbook.",
     automation: "High-confidence source changes may update a review version. Conflicts and direct overrides wait for approval.",
   },
   {

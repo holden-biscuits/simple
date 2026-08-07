@@ -52,7 +52,7 @@ const playbook = [
       "Personalize follow-up from the captured conversation. Route lower-intent contacts to an appropriate nurture instead of forcing a sales sequence.",
       "Reconcile attendance, scans, qualified conversations, booked meetings, demos, pipeline, spend, content, and partner outcomes.",
       "Run a short debrief: what to repeat, change, stop, and test next time. Add those decisions to the event record, not a private document.",
-      "Update this fieldbook, the tracker, the Notion project, and the Events Drive so the next team sees the same truth.",
+      "Close the loop in the system that owns each fact: outcomes in HubSpot, program status in the tracker, execution decisions in Notion, and final artifacts in the Events Drive. The fieldbook refreshes from those records after reconciliation.",
     ],
   },
 ];
