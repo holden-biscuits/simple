@@ -42,7 +42,7 @@ export function getEventPageModel(event: EventRecord, programDate: string): Even
           ? "What matters onsite today."
           : "Know this before you go.",
     secondaryLabel: phase === "past" ? "Closeout sections" : "Plan sections",
-    workstreamEyebrow: phase === "past" ? "Plan and closeout" : "Field checklist",
+    workstreamEyebrow: phase === "past" ? "Plan and closeout" : "Event plan",
     workstreamTitle: phase === "past"
       ? "What was planned—and what the record still needs."
       : "What the event team needs to know and do.",

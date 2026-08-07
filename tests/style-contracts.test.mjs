@@ -34,6 +34,9 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /\.connector-capabilities\s*>\s*div\s*\{[^}]*grid-template-columns:\s*repeat\(5,/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.connector-capabilities\s*>\s*div\s*\{\s*grid-template-columns:\s*repeat\(2,/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.connector-capabilities\s*>\s*div\s*\{\s*grid-template-columns:\s*1fr;/);
+  assert.match(css, /\.marketing-board-toolbar\s*\{[^}]*grid-template-columns:\s*minmax\(220px,\s*\.62fr\)\s+minmax\(660px,\s*1\.38fr\)[^}]*gap:\s*28px/);
+  assert.match(css, /@media \(max-width: 1180px\)[\s\S]*\.marketing-board-toolbar\s*\{\s*grid-template-columns:\s*1fr;[\s\S]*\.marketing-board-filters\s*>\s*div\s*\{\s*grid-template-columns:\s*repeat\(3,\s*1fr\);/);
+  assert.match(css, /\.measurement\s*>\s*\*\s*\{\s*min-width:\s*0;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.page-contents-links\s*\{[^}]*flex-wrap:\s*nowrap;[^}]*overflow-x:\s*auto;[^}]*scroll-snap-type:\s*inline proximity;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.page-contents a\s*\{[^}]*flex:\s*0 0 auto;[^}]*scroll-snap-align:\s*start;/);
   assert.match(css, /\.page-with-contents\s*\{[^}]*grid-template-columns:\s*210px minmax\(0, 1fr\)/);

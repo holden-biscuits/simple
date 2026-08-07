@@ -12,6 +12,8 @@ test("program linkage reports only connections supported by governed records", (
   assert.equal(linkage.activeNotionProjects, 10);
   assert.equal(linkage.activeNotionMissing.length, 4);
   assert.equal(linkage.activeDriveFolders, 0);
+  assert.equal(linkage.activeMarketingEvents, 14);
+  assert.equal(linkage.keyedMarketingEvents, 29);
   assert.equal(linkage.activeCrmEvents, 0);
   assert.equal(linkage.historicalCrmEvents, 1);
 });
@@ -25,6 +27,7 @@ test("event linkage distinguishes a linked workspace from missing upstream setup
   assert.ok(contact);
   assert.equal(getEventSystemLinkage(genesys).find((item) => item.system === "Notion")?.state, "Located");
   assert.equal(getEventSystemLinkage(orlando).find((item) => item.system === "Notion")?.state, "Setup needed");
-  assert.equal(getEventSystemLinkage(genesys).find((item) => item.system === "HubSpot")?.state, "Setup needed");
-  assert.deepEqual(getEventSystemLinkage(contact).map((item) => item.system), ["Conference tracker"]);
+  assert.equal(getEventSystemLinkage(genesys).find((item) => item.system === "HubSpot")?.state, "Located");
+  assert.match(getEventSystemLinkage(genesys).find((item) => item.system === "HubSpot")?.url ?? "", /record\/0-54/);
+  assert.deepEqual(getEventSystemLinkage(contact).map((item) => item.system), ["Conference tracker", "HubSpot"]);
 });

@@ -175,11 +175,11 @@ export const dataStreams: DataStream[] = [
     writeback: "Yes for approved folder and file organization. Inferred content is never used to rewrite a source file.",
   },
   {
-    system: "HubSpot",
+    system: "HubSpot · Marketing Events and CRM outcomes",
     state: "Scheduled read",
     refresh: "Event-attributed records are checked with active-event and post-event reviews.",
-    feeds: "Meetings, demos, deals, pipeline and revenue only when a canonical event association is present.",
-    writeback: "Yes, with an exact approved record set. The Event key properties and Marketing Event objects still need setup.",
+    feeds: "The Marketing Event is the CRM event spine: canonical Event key, participant states, campaign/list associations and event-level rollups. Meetings and deals still control their own outcomes and value.",
+    writeback: "Yes, with an exact approved record set. All 29 Marketing Events now exist with keys; participant, campaign, meeting and deal associations remain separately governed.",
   },
   {
     system: "Gmail and Slack",
@@ -226,9 +226,9 @@ export const connectorCapabilities: ConnectorCapability[] = [
   },
   {
     system: "HubSpot",
-    access: "CRM records writable · segments read-only",
-    detail: "Deals, meetings, contacts and companies are readable and writable. Existing segments can be audited, but segment creation is not available through the current connector; Marketing Event writes still require reauthorization.",
-    boundary: "Show the exact record-and-property diff first. Never write inferred attribution, label a static list as active, or turn a scheduled meeting into a held meeting.",
+    access: "Marketing Events + CRM records writable · segments read-only",
+    detail: "Marketing Events, deals, meetings, contacts and companies are readable and writable. All 29 event records carry the canonical key; existing segments can be audited, but segment creation is not available through the current connector.",
+    boundary: "Show the exact record-and-property diff first. A Marketing Event may mirror tracker or Notion facts, but it does not overrule them. Never infer attribution or turn a scheduled meeting into a held meeting.",
   },
   {
     system: "Slack + Gmail",
@@ -261,7 +261,7 @@ export const operatingRoadmap: OperatingRoadmapItem[] = [
   {
     phase: "02 · Capture outcomes",
     title: "Make event attribution part of the CRM workflow",
-    work: "Add Event key properties to meetings and deals, create one HubSpot Marketing Event per attended event, and require outcome plus next step before the event day ends.",
+    work: "Use the 29 keyed Marketing Events as the CRM spine. Associate the right campaign and participant states, add Event key properties to meetings and deals, and require outcome plus next step before the event day ends.",
     unlocks: "Meeting, demo, pipeline and revenue rollups that leadership can trust without manual title searches.",
     doneWhen: "Every published event outcome resolves through an exact CRM association and a usable outcome state.",
   },
@@ -280,7 +280,7 @@ export const eventKeyRollout: EventKeyRolloutItem[] = [
   { system: "Notion", field: "Event key · text property", state: "Setup needed", rule: "Set the same key on each event project and use it when linking tasks, files and CRM records." },
   { system: "HubSpot deals", field: "Event key · custom property", state: "Setup needed", rule: "Populate only after explicit attribution. Keep Deal Source and Deal Source Detail for reporting continuity." },
   { system: "HubSpot meetings", field: "Event key · custom property", state: "Setup needed", rule: "Set it when a meeting is booked or confirmed as event-sourced; record the outcome separately." },
-  { system: "HubSpot Marketing Events", field: "Canonical event record", state: "Setup needed", rule: "Create one record per attended event and associate its contacts, meetings and deals." },
+  { system: "HubSpot Marketing Events", field: "Event key · custom property", state: "In use", rule: "All 29 records carry the canonical Event key. Use the record for CRM participant state and associations; do not let mirrored planning fields overrule Sheets or Notion." },
   { system: "Google Drive", field: "Event folder prefix", state: "Convention needed", rule: "Prefix the event folder with the key so contracts and artifacts remain traceable after names change." },
 ] as const;
 
@@ -307,8 +307,15 @@ export const fieldOwners: FieldOwner[] = [
     automation: "Links and file receipts may update automatically. Files are never rewritten from an inferred site value.",
   },
   {
+    data: "CRM event identity, participant states and campaign associations",
+    owner: "HubSpot Marketing Event",
+    intake: "One keyed record per published event, plus registered, attended, canceled and no-show contact participation from imports, forms, workflows or connected event apps.",
+    correction: "Correct participant state or CRM associations on the Marketing Event. Correct dates, participation decisions and execution plans in their owning source first, then mirror the accepted value into HubSpot.",
+    automation: "The keyed record may drive segments and event-level rollups. It may not convert a registration into attendance or overwrite tracker and Notion ownership.",
+  },
+  {
     data: "Meetings, demos, deals, pipeline and closed revenue",
-    owner: "HubSpot",
+    owner: "HubSpot meetings and deals",
     intake: "Records with explicit event attribution and usable associations.",
     correction: "Create or correct the HubSpot record. Tracker outcome columns should become rollups or references, not a second manual ledger.",
     automation: "Read-only outcome rollups may publish automatically. Creating or editing CRM records requires an exact reviewed change set.",
@@ -367,7 +374,7 @@ export const stewardshipRoles: StewardshipRole[] = [
     owns: "CRM schema, exact event associations, attribution QA and outcome rollups",
     destination: "HubSpot",
     timing: "During setup and the T+1 / T+7 reviews",
-    rule: "Maintain Event key properties and Marketing Event records. Count only records with an exact association and a usable outcome.",
+    rule: "Maintain the keyed Marketing Event spine and the meeting/deal Event key properties. Count only participant states and commercial outcomes supported by exact associations and usable outcome fields.",
     url: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list",
   },
   {
@@ -674,9 +681,9 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "HubSpot",
     scope: "Marketing Event records",
-    current: "0 Marketing Event records available to the audit",
-    proposed: "Reauthorize Marketing Event writes, then create one record per attended event using the canonical Event key, dates and organizer URL",
-    evidence: "HubSpot object audit · Aug 6",
+    current: "29 Marketing Event records · 29 canonical Event keys · read and write access available · campaign, participant, meeting and deal associations not yet audited",
+    proposed: "Adopt the Marketing Event as the CRM event spine; associate the correct campaign and participant states, then link meetings and deals through the Event key without treating mirrored planning fields as authoritative",
+    evidence: "Full HubSpot Marketing Event object and property audit · Aug 7",
     evidenceUrl: "/sources#crm-attribution",
     state: "Setup needed",
     url: "https://app.hubspot.com/contacts/245561359/objects/0-54/views/all/list",

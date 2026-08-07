@@ -78,12 +78,16 @@ export const metricDefinitions: MetricDefinition[] = [
 
 export const measurementReadiness = {
   normalizedCostEvents: 0,
-  marketingEventRecords: 0,
+  marketingEventRecords: marketingEventCoverage.totalRecords,
+  keyedMarketingEventRecords: marketingEventCoverage.keyedRecords,
+  marketingEventKeyCoverageReady: true,
+  commercialAssociationReady: false,
   eventKeyCoverageReady: false,
   portfolioRoiReady: false,
 } as const;
 
 type MeasurementEvent = {
+  slug: string;
   meetingsBooked: string[];
   meetingCountLabel?: string;
   meetingRecordSummary?: string;
@@ -91,6 +95,7 @@ type MeasurementEvent = {
 };
 
 export function getEventMeasurementCheckpoint(event: MeasurementEvent, phase: "past" | "now" | "upcoming") {
+  const marketingEvent = getMarketingEventRecord(event.slug);
   const meetingEvidence = event.meetingsBooked.length
     ? `${event.meetingsBooked.length} account${event.meetingsBooked.length === 1 ? "" : "s"} recorded`
     : event.meetingCountLabel
@@ -106,8 +111,13 @@ export function getEventMeasurementCheckpoint(event: MeasurementEvent, phase: "p
     state: "Setup needed" as const,
     objective: "Not recorded as a governed field",
     cost: "No normalized cost record",
-    crm: event.crmSnapshot ? "Controlled legacy join" : "Exact Event key join missing",
+    crm: marketingEvent
+      ? event.crmSnapshot
+        ? "Keyed Marketing Event · controlled legacy commercial join"
+        : "Keyed Marketing Event · activity and deal joins pending"
+      : event.crmSnapshot ? "Controlled legacy join" : "Exact Event key join missing",
     meetings: meetingEvidence,
     nextAction,
   };
 }
+import { getMarketingEventRecord, marketingEventCoverage } from "./marketing-events.ts";

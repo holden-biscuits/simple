@@ -18,6 +18,7 @@ test("leadership brief derives the active portfolio from governed event data", (
   assert.equal(brief.linkage.activeEvents, 14);
   assert.equal(brief.linkage.activeNotionProjects, 10);
   assert.equal(brief.linkage.activeDriveFolders, 0);
+  assert.equal(brief.linkage.activeMarketingEvents, 14);
   assert.equal(brief.linkage.activeCrmEvents, 0);
   assert.equal(brief.portfolio[0].eventKey, "ccw-exchange-chicago");
   assert.equal(brief.portfolio.at(-1).eventKey, "ccw-vegas-2027");
@@ -39,7 +40,7 @@ test("leadership outcomes preserve CRM limits", () => {
     representedEvents: 1,
     meetingRecordsToQa: 4,
     completedMeetingOutcomes: 0,
-    marketingEvents: 0,
+    marketingEvents: 29,
     pipelineClaimSupported: false,
   });
   assert.deepEqual(brief.writebacks, { ready: 19, decisions: 2, setup: 10 });
@@ -47,7 +48,7 @@ test("leadership outcomes preserve CRM limits", () => {
 
 test("leadership change digest separates applied facts from unresolved claims", () => {
   const digest = getLeadershipChangeDigest(events, siteStatus.sourceMonitor.changeLog);
-  assert.equal(digest.applied.length, 11);
+  assert.equal(digest.applied.length, 12);
   assert.equal(digest.needsReview.length, 3);
   assert.equal(digest.applied.find((change) => change.id === "genesys-roster-confirmed")?.href, "/events/genesys-xperience#event-changes");
   assert.equal(digest.applied.find((change) => change.id === "genesys-wish-line-route-confirmed")?.href, "/events/genesys-xperience#event-changes");

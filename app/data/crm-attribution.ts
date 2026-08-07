@@ -69,7 +69,9 @@ export const crmAttributionAudit = {
   exactDeals: 29,
   representedEvents: 1,
   representedEventLabel: "CCW Vegas",
-  marketingEvents: 0,
+  marketingEvents: marketingEventCoverage.totalRecords,
+  keyedMarketingEvents: marketingEventCoverage.keyedRecords,
+  marketingEventUrl: marketingEventCoverage.indexUrl,
   pairMismatch: {
     count: 2,
     note: "The source and detail searches each return 30 deals, but only 29 records intersect. One source-only record and one detail-only record stay out of exact attribution until RevOps reconciles both controlled fields.",
@@ -114,3 +116,4 @@ export const crmAttributionAudit = {
     },
   ],
 } as const;
+import { marketingEventCoverage } from "./marketing-events.ts";

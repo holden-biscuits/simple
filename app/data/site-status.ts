@@ -57,6 +57,17 @@ export const siteStatus = {
     ] as SourceOverride[],
     changeLog: [
       {
+        id: "hubspot-marketing-event-spine-confirmed",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Added the keyed HubSpot Marketing Event layer",
+        field: "CRM event identity and association route",
+        before: "0 Marketing Events detected in the prior audit",
+        after: "29 Marketing Events · 29 canonical Event keys · read and write access available · association audit still pending",
+        source: "HubSpot Marketing Events task review",
+        sourceUrl: "https://app.hubspot.com/contacts/245561359/objects/0-54/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+      },
+      {
         id: "ccw-vegas-meeting-tracker-confirmed",
         state: "Applied" as SourceChangeState,
         checkedAt: "Aug 07 · 2026",
@@ -274,6 +285,12 @@ export const siteStatus = {
     ] as SourceChange[],
     latestChecks: [
       {
+        system: "HubSpot Marketing Events",
+        checkedAt: "Aug 07 · 2026",
+        scope: "Task review · CRM event object, schema and key coverage",
+        result: "All 29 Marketing Event records and their available properties were reviewed. Every record carries the canonical Event key, and read/write access is available. The site now treats this object as the CRM event spine for participant state and associations while keeping tracker, Notion, meeting and deal field ownership intact. Campaign, participant, meeting and deal associations remain a separate audit. No HubSpot write or production deployment was made.",
+      },
+      {
         system: "Google Sheets · direct confirmation",
         checkedAt: "Aug 07 · 2026",
         scope: "Task review · CCW Vegas Meetings 6/22 - 8/12 tab",
@@ -394,7 +411,7 @@ export const siteStatus = {
       { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "Not due · Aug 7" },
       { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "2 near-term searches · no match · Aug 7" },
       { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "Customer Connect change detected · Aug 7" },
-      { name: "Event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "Meetings, demos, deals and pipeline only when event attribution is clear", receipt: "30 source · 30 detail · 29 exact · 2 mismatches · Aug 7" },
+      { name: "Marketing Events + event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "CRM event identity, participant state, associations, meetings, demos, deals and pipeline when attribution is clear", receipt: "29 keyed Marketing Events · 30 source · 30 detail · 29 exact deals · 2 mismatches · Aug 7" },
       { name: "Conversation notes", system: "Granola", state: "Indirect" as SourceConnectionState, use: "Available only when a note is shared into a connected source", receipt: "No direct scan available" },
       { name: "Legacy event reporting", system: "Monaco", state: "Indirect" as SourceConnectionState, use: "Available only through exports or references shared into a connected source", receipt: "No direct scan available" },
     ],

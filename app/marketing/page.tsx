@@ -62,8 +62,8 @@ const playbook = [
 
 const crmActivationSteps = [
   {
-    title: "Create one event record",
-    copy: "Create a HubSpot Marketing Event for every event TeamSimple is attending. Use the event name, dates, organizer URL, and canonical Event key shown on its Event Basecamp page.",
+    title: "Verify the event record",
+    copy: "Open the keyed HubSpot Marketing Event before activation starts. Confirm it mirrors the accepted event name, dates, organizer URL, participation state, and Event Basecamp link without treating those mirrors as the planning source.",
   },
   {
     title: "Attach the campaign",
@@ -191,16 +191,16 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
 
       <section className="crm-activation" id="crm-setup">
         <div className="shell">
-          <div className="section-intro"><p className="eyebrow">HubSpot activation</p><h2>Build attribution before the first scan.</h2><p>The event plan is not measurement-ready until the event, campaign, participants, meetings, and deals can be joined without guessing.</p></div>
+          <div className="section-intro"><p className="eyebrow">HubSpot activation</p><h2>Use the event record as the CRM spine.</h2><p>The identity layer exists. Measurement becomes trustworthy when the campaign, participants, meetings, and deals are associated to it without guessing.</p></div>
           <div className="crm-activation-status">
             <strong>{measurementReadiness.marketingEventRecords}</strong>
-            <span>Marketing Event records detected</span>
-            <p>{activeEvents.length} active events need canonical HubSpot event coverage.</p>
+            <span>Keyed Marketing Events</span>
+            <p>{activeEvents.length} of {activeEvents.length} active events have a keyed HubSpot event record. Association coverage is the next gate.</p>
           </div>
           <div className="crm-activation-grid">
             {crmActivationSteps.map((step, index) => <article key={step.title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{step.title}</h3><p>{step.copy}</p></article>)}
           </div>
-          <aside className="crm-activation-note"><strong>Start with the event record, not a reporting spreadsheet.</strong><p>HubSpot supports manually created Marketing Events for in-person programs, campaign association, participant statuses, segments, and event reporting. The canonical Event key supplies the missing join from that attendance record to meetings, deals, and cost.</p><a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">Open HubSpot’s Marketing Events guidance ↗</a></aside>
+          <aside className="crm-activation-note"><strong>Start with the event record, not a reporting spreadsheet.</strong><p>HubSpot Marketing Events hold CRM event identity, campaign association, and participant status. Meetings and deals keep their own outcomes and value; the canonical Event key connects those records without creating a second manual ledger.</p><a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">Open HubSpot’s Marketing Events guidance ↗</a></aside>
           <BackToTop />
         </div>
       </section>
@@ -228,7 +228,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
           <div className="section-intro"><p className="eyebrow">Metric definitions</p><h3>Use the same denominator every time.</h3><p>These definitions prevent a scheduled calendar entry, a badge scan, and a qualified opportunity from collapsing into one flattering number.</p></div>
           <div>{metricDefinitions.map((item) => <article key={item.metric}><span>{item.metric}</span><p>{item.definition}</p>{item.formula ? <code>{item.formula}</code> : null}</article>)}</div>
         </div>
-        <aside className="measurement-gate"><strong>Portfolio comparison is blocked today.</strong><p>No normalized event-cost ledger exists, active events do not have exact CRM joins, and HubSpot has no Marketing Event records. Until those three foundations are complete, report coverage and follow-up—not event ROI rankings.</p><Link href="/sources#writeback-queue">Open the setup queue →</Link></aside>
+        <aside className="measurement-gate"><strong>Portfolio comparison is blocked today.</strong><p>The Marketing Event identity layer exists, but no normalized event-cost ledger or complete commercial association set does. Until costs, meetings, and deals are joined and outcome-complete, report coverage and follow-up—not event ROI rankings.</p><Link href="/sources#writeback-queue">Open the setup queue →</Link></aside>
         <p className="practice-sources">Practice references: <a href="https://www.cvent.com/en/blog/events/how-to-prove-event-roi" target="_blank" rel="noreferrer">Cvent’s 2026 event-value guidance ↗</a>, <a href="https://www.bizzabo.com/blog/trade-show-roi" target="_blank" rel="noreferrer">Bizzabo’s trade-show measurement model ↗</a>, and <a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">HubSpot’s Marketing Events guidance ↗</a>.</p>
         <BackToTop />
       </section>

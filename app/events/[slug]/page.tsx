@@ -109,7 +109,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   ];
   const firstActiveWorkstreamHref = activeWorkstreamKeys.length ? `#workstream-${activeWorkstreamKeys[0]}` : "#event-crew";
   const footprint = getEventFootprint(event);
-  const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see field checklist";
+  const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see event materials";
+  const partnerGuidelines = event.relatedLinks?.find((link) => link.label.includes("Genesys sales rules"));
   const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;
   const tldr = isNotAttending ? [
     ["When", event.dates],
@@ -177,7 +178,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           {briefReadiness.issues.length ? <ul>{briefReadiness.issues.map((issue) => {
             const action = getBriefIssueAction(issue, event);
             return <li key={issue.key}><div><p>{issue.label}</p><span>{issue.destination}</span></div>{action.external ? <a href={action.href} target="_blank" rel="noreferrer">{action.label} ↗</a> : <Link href={action.href}>{action.label} →</Link>}</li>;
-          })}</ul> : <p>{briefReadiness.stage === "onsite" ? "No decision-critical onsite details are missing. Use the field checklist and log each meaningful conversation before the day ends." : "No decision-critical inputs are missing for this planning stage. Check the open work below before treating the plan as complete."}</p>}
+          })}</ul> : <p>{briefReadiness.stage === "onsite" ? "No decision-critical onsite details are missing. Review the event plan and log each meaningful conversation before the day ends." : "No decision-critical inputs are missing for this planning stage. Check the open work below before treating the plan as complete."}</p>}
           <footer><span>{briefReadiness.issues.length ? `${briefReadiness.issues.length} ${briefReadiness.stage === "onsite" ? `onsite fact${briefReadiness.issues.length === 1 ? "" : "s"} unresolved` : `open input${briefReadiness.issues.length === 1 ? "" : "s"}`}` : briefReadiness.stage === "onsite" ? "Onsite facts present" : "Required inputs present"}</span><a href="#event-update-route">Open all update routes →</a></footer>
         </div> : null}
         {note ? <p className={`tldr-note${isSourceConflict ? " source-conflict" : ""}`}>
@@ -248,7 +249,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <p className="eyebrow">{eventPhase === "now" ? "Onsite focus" : "Before the event"}</p>
             <h2>{eventPhase === "now" ? "Do these next." : "Still needs attention."}</h2>
             <p>{event.priorityActions!.length} event-specific {eventPhase === "now" ? `priorit${event.priorityActions!.length === 1 ? "y is" : "ies are"} live today` : `${event.priorityActions!.length === 1 ? "item is" : "items are"} still open in the current plan`}.</p>
-            <Link className="priority-link" href={eventPhase === "now" ? firstActiveWorkstreamHref : `/marketing?event=${event.slug}#event-tasks`}>{eventPhase === "now" ? "Open field checklist" : "Open marketing workspace"} →</Link>
+            <Link className="priority-link" href={eventPhase === "now" ? firstActiveWorkstreamHref : `/marketing?event=${event.slug}#event-tasks`}>{eventPhase === "now" ? "Open event plan" : "Open marketing workspace"} →</Link>
           </div>
           <ol>{event.priorityActions!.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
           <BackToTop />
@@ -275,6 +276,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <section className="event-considerations shell" id="event-considerations">
           <div><p className="eyebrow">Rules of engagement</p><h2>What is different about this event.</h2></div>
           <ol>{event.specialConsiderations.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
+          {partnerGuidelines ? <a className="text-link" href={partnerGuidelines.url} target="_blank" rel="noreferrer">Open the restricted partner guidelines ↗</a> : null}
           <BackToTop />
         </section>
       ) : null}
@@ -372,7 +374,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             </div>
           </div>
           <div className="event-linkage-strip" aria-label="Event system coverage">
-            {systemLinkage.map((item) => <div key={item.system}><span>{item.system}</span><strong className={`linkage-state linkage-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</strong><p>{item.detail}</p></div>)}
+            {systemLinkage.map((item) => <div key={item.system}><span>{item.system}</span><strong className={`linkage-state linkage-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</strong><p>{item.detail}</p>{item.url ? <a href={item.url} target="_blank" rel="noreferrer">Open Marketing Event ↗</a> : null}</div>)}
           </div>
           {!isNotAttending ? <div className="event-measurement-checkpoint">
             <header><span>Measurement checkpoint</span><strong>{measurementCheckpoint.state}</strong></header>

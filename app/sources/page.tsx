@@ -14,6 +14,7 @@ import { sourceReceiptStates, sourceScanContract } from "../data/source-scan";
 import { audienceSegmentContract, getAudienceSegmentRegistry } from "../data/audience-segment-registry";
 import { latestSourceScan } from "../data/latest-source-scan";
 import { eventPipelineSnapshot } from "../data/event-pipeline";
+import { marketingEventCoverage } from "../data/marketing-events";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -81,6 +82,7 @@ export default function SourcesPage() {
         { label: "Governance", items: [
           { id: "field-ownership", label: "Where to update" },
           { id: "stewardship", label: "Who updates it" },
+          { id: "marketing-event-role", label: "Marketing Event role" },
           { id: "crm-attribution", label: "CRM attribution" },
           { id: "audience-segments", label: "Audience segments" },
           { id: "writeback-queue", label: "Write-back queue" },
@@ -233,7 +235,7 @@ export default function SourcesPage() {
             <article><span>Published event keys</span><strong>{linkage.stableFieldbookKeys} / {linkage.totalEvents}</strong><p>Every published event has a stable key.</p></article>
             <article><span>Active Notion projects</span><strong>{linkage.activeNotionProjects} / {linkage.activeEvents}</strong><p>{linkage.activeNotionMissing.length} active event workspaces still need a link.</p></article>
             <article><span>Active Drive folders</span><strong>{linkage.activeDriveFolders} / {linkage.activeEvents}</strong><p>No event-specific folder is stored in the governed record yet.</p></article>
-            <article><span>Active CRM joins</span><strong>{linkage.activeCrmEvents} / {linkage.activeEvents}</strong><p>One past event has a controlled legacy join; active-event attribution still needs setup.</p></article>
+            <article><span>Active Marketing Events</span><strong>{linkage.activeMarketingEvents} / {linkage.activeEvents}</strong><p>The CRM identity layer is complete; commercial associations are a separate gate.</p></article>
           </div>
           {linkage.activeNotionMissing.length ? <div className="linkage-gap-list"><span>Active workspaces still missing</span><p>{linkage.activeNotionMissing.map((event) => event.name).join(" · ")}</p></div> : null}
           <div className="source-route-table-wrap">
@@ -265,7 +267,7 @@ export default function SourcesPage() {
               <p>{step.detail}</p>
             </article>)}
           </div>
-          <p className="source-governance-note"><strong>The missing join:</strong> each system needs the same stable Event key. Every Event Basecamp URL already has one; Sheets, Notion and HubSpot do not yet share it.</p>
+          <p className="source-governance-note"><strong>The remaining joins:</strong> every published page and HubSpot Marketing Event now shares the stable Event key. Sheets, Notion, Drive folders, meetings, and deals still need the same key or an exact governed association.</p>
           <div className="catalog-health" aria-label="Event data publish checks">
             <article><span>Stable event keys</span><strong>{catalogHealth.eventKeys}</strong><p>Unique IDs ready to carry into Sheets, Notion and HubSpot.</p></article>
             <article><span>Blocking errors</span><strong>{catalogHealth.errors.length}</strong><p>Duplicate keys, broken dates or invalid source links stop a build.</p></article>
@@ -328,7 +330,7 @@ export default function SourcesPage() {
         <div className="audience-views" aria-label="Event Basecamp views by audience">
           {audienceViews.map((item) => <article key={item.audience}><span>{item.audience}</span><h3>{item.view}</h3><p>{item.detail}</p></article>)}
         </div>
-        <p className="source-governance-note"><strong>Best next infrastructure move:</strong> add the existing Event key to the tracker, Notion projects and HubSpot records. That turns fragile name-and-date matching into a dependable join and makes safe rollups and approved write-back possible.</p>
+        <p className="source-governance-note"><strong>Best next infrastructure move:</strong> carry the existing Marketing Event key into the tracker, Notion projects, Drive folders, meetings, and deals. That extends the dependable CRM identity layer into execution, cost, and commercial outcomes.</p>
         <BackToTop />
       </section>
 
@@ -397,18 +399,36 @@ export default function SourcesPage() {
         </div>
       </section>
 
+      <section className="crm-attribution" id="marketing-event-role">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">HubSpot Marketing Events</p>
+            <h2>The CRM spine—not the planning source.</h2>
+            <p>All {marketingEventCoverage.keyedRecords} event records now carry the canonical Event key. The Marketing Event connects people, campaigns, meetings, and deals inside HubSpot without taking ownership away from the tracker, Notion, or the underlying CRM records.</p>
+          </div>
+          <div className="crm-rule-grid">
+            <article><span>Owns</span><h3>CRM event identity</h3><p>Participant state, campaign association, and the HubSpot relationships that connect an event to contacts and commercial records.</p></article>
+            <article><span>Mirrors</span><h3>Accepted planning facts</h3><p>Name, dates, participation, staffing, and plan summaries may mirror the tracker or Notion. Correct the owning source first; HubSpot never silently overrules it.</p></article>
+            <article><span>Rolls up</span><h3>Associated outcomes</h3><p>Meetings and deals keep their own outcome, amount, and stage. The Marketing Event provides the join; it does not become a second hand-entered outcome ledger.</p></article>
+            <article><span>Unlocks</span><h3>CRM activation</h3><p>Campaign reporting, registered/attended/canceled states, maintained audience segments, contact journeys, and event-attributed pipeline once the associations are verified.</p></article>
+          </div>
+          <aside className="crm-audit-alert"><span>Identity layer complete · association audit next</span><p>{marketingEventCoverage.keyedRecords} of {marketingEventCoverage.totalRecords} Marketing Events have an Event key. Read and write access are available; campaign, participant, meeting, and deal associations still need an exact-record review.</p><div><a href={marketingEventCoverage.indexUrl} target="_blank" rel="noreferrer">Open HubSpot Marketing Events ↗</a></div></aside>
+          <BackToTop />
+        </div>
+      </section>
+
       <section className="crm-attribution" id="crm-attribution">
         <div className="shell">
           <div className="section-intro">
             <p className="eyebrow">CRM attribution</p>
             <h2>Only publish outcomes the CRM can prove.</h2>
-            <p>HubSpot is the outcome system of record. Today, the deal data supports one event-level result; meeting activity needs a cleaner join and an outcome pass before it can support leadership reporting.</p>
+            <p>HubSpot is the outcome system of record. The keyed Marketing Events now provide event identity; meetings and deals still need exact associations and usable outcomes before they can support leadership reporting.</p>
           </div>
           <div className="crm-health-grid" aria-label="HubSpot event attribution health">
             <article><span>Exact event deals</span><strong>{crmAttributionAudit.exactDeals}</strong><p>All resolve to {crmAttributionAudit.representedEventLabel} through controlled deal-source fields.</p></article>
             <article><span>Events represented</span><strong>{crmAttributionAudit.representedEvents}</strong><p>The controlled Deal Source Detail list names only one event.</p></article>
             <article><span>Meeting records to QA</span><strong>{crmAttributionAudit.meetingWindow.possibleEventMeetings}</strong><p>{crmAttributionAudit.meetingWindow.outcomeNote}</p></article>
-            <article><span>Marketing Events</span><strong>{crmAttributionAudit.marketingEvents}</strong><p>No canonical event objects are available yet; writes require HubSpot reauthorization.</p></article>
+            <article><span>Keyed Marketing Events</span><strong>{crmAttributionAudit.keyedMarketingEvents}</strong><p>All {crmAttributionAudit.marketingEvents} records carry the canonical Event key; associations remain separately governed.</p></article>
           </div>
           <aside className="crm-portfolio-rollup">
             <div><span>Portfolio opportunity views</span><strong>{eventPipelineSnapshot.opportunities} source-based · {eventPipelineSnapshot.exactQualifyingOpportunities} exact CCW</strong></div>
@@ -432,7 +452,7 @@ export default function SourcesPage() {
             <div><span>Roll up</span><p>Deals and meetings with an exact Event key feed the event page. Text-only matches stay in the review queue.</p></div>
             <div><span>Report</span><p>Leadership sees meetings held, demos, qualified pipeline and revenue—not calendar records that happen to fall during event week.</p></div>
           </div>
-          <a className="inline-link" href={crmAttributionAudit.hubspotUrl} target="_blank" rel="noreferrer">Open the audited HubSpot deal view ↗</a>
+          <div className="detail-links"><a className="inline-link" href={crmAttributionAudit.marketingEventUrl} target="_blank" rel="noreferrer">Open HubSpot Marketing Events ↗</a><a className="inline-link" href={crmAttributionAudit.hubspotUrl} target="_blank" rel="noreferrer">Open the audited HubSpot deal view ↗</a></div>
           <BackToTop />
         </div>
       </section>
@@ -565,7 +585,8 @@ export default function SourcesPage() {
             <li><strong>Conference tracker</strong><span>Controls the event roster, dates, status and topline staffing.</span></li>
             <li><strong>Events in Notion</strong><span>Controls execution detail for active event projects.</span></li>
             <li><strong>Events Drive</strong><span>Stores contracts, creative, attendee files and post-event artifacts.</span></li>
-            <li><strong>HubSpot</strong><span>Controls event-attributed meetings, demos, deals and pipeline when the source fields are complete.</span></li>
+            <li><strong>HubSpot Marketing Event</strong><span>Controls CRM event identity, participant states, campaign association and the relationships to contacts and commercial records. It mirrors accepted planning facts but does not overrule Sheets or Notion.</span></li>
+            <li><strong>HubSpot meetings and deals</strong><span>Control activity outcomes, stage, amount, pipeline and revenue. The Marketing Event supplies the join—not a replacement value.</span></li>
             <li><strong>Slack and Gmail</strong><span>Supply new signals. A message does not override the tracker or Notion until the decision is confirmed.</span></li>
             <li><strong>Event page</strong><span>Publishes the reconciled view and links back to the working sources.</span></li>
           </ol>
@@ -580,6 +601,7 @@ export default function SourcesPage() {
             <a href={sourceLinks.sheet} target="_blank" rel="noreferrer">Open tracker ↗</a>
             <a href={sourceLinks.notion} target="_blank" rel="noreferrer">Open Notion ↗</a>
             <a href={sourceLinks.eventsDrive} target="_blank" rel="noreferrer">Open Events Drive ↗</a>
+            <a href={marketingEventCoverage.indexUrl} target="_blank" rel="noreferrer">Open HubSpot Marketing Events ↗</a>
             <a href={sourceLinks.ccwPlan} target="_blank" rel="noreferrer">Open Vegas reference ↗</a>
           </div>
           <BackToTop />
