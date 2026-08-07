@@ -5,7 +5,7 @@ import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, sourceLinks, workstreamLabels, type WorkstreamKey } from "../../data/events";
-import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
+import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
 import { getEventSystemLinkage } from "../../data/system-linkage";
@@ -13,6 +13,7 @@ import { getEventMeasurementCheckpoint } from "../../data/event-measurement";
 import { getBriefIssueAction, getEventBriefReadiness } from "../../data/event-brief-readiness";
 import { getEventSourceChanges } from "../../data/site-status";
 import { getEventRoleRoutes } from "../../data/event-role-routes";
+import { getEventFootprint } from "../../data/event-footprint";
 
 export const dynamic = "force-dynamic";
 
@@ -66,19 +67,15 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
   const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
-  const speakingStatus = getSpeakingStatus(event);
-  const sponsorshipStatus = getSponsorshipStatus(event);
-  const programMix = isNotAttending ? "No activation planned" : [
-    sponsorshipStatus === "Confirmed" ? "Sponsorship" : sponsorshipStatus === "Under review" ? "Sponsorship under review" : null,
-    speakingStatus === "Confirmed" ? "Speaking" : speakingStatus === "Under review" ? "Speaking under review" : null,
-    isEmptyWorkstream(workstreams.swag) ? null : "Swag / materials",
-  ].filter(Boolean).join(" · ") || "Attendance only";
+  const footprint = getEventFootprint(event);
+  const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see field checklist";
   const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;
   const tldr = [
     ["When", event.dates],
     ["Where", event.venue ? `${event.location} · ${event.venue}` : event.location],
-    ["Activation", programMix],
+    ["Onsite footprint", footprint.label],
     ["Speaking", event.speaking],
+    ["Swag / materials", swagSummary],
     ["Guaranteed meetings", meetingPackage],
     ...(showMeetingProgress ? [[meetingProgressLabel, meetingProgressValue]] : []),
     ...(event.credentials ? [["Passes / credentials", event.credentials]] : []),
@@ -104,6 +101,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         { id: "event-no-plan", label: "Event status" },
       ] : [
         { id: "event-tldr", label: "TL;DR" },
+        ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         { id: "event-update-route", label: "Update this event" },
         ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
@@ -115,7 +113,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
 
       <section className="event-tldr shell" id="event-tldr">
         <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>Know this before you go.</h2></div>
-        <div className="tldr-grid">{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
+        <div className={`tldr-grid tldr-grid-${tldr.length}`}>{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
         {!isNotAttending && eventPhase !== "past" ? <div className={`event-brief-readiness event-brief-readiness-${briefReadiness.state}`}>
           <header><div><span>Brief readiness</span><strong>{briefReadiness.label}</strong></div><b>{briefReadiness.timing}</b></header>
           {briefReadiness.issues.length ? <ul>{briefReadiness.issues.map((issue) => {

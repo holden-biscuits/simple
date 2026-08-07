@@ -1,5 +1,6 @@
 import { getSpeakingStatus, getSponsorshipStatus, hasGuaranteedMeetingPackage } from "./event-signals.ts";
 import { getWorkstreams, isEmptyWorkstream, type EventPhase, type EventRecord } from "./events.ts";
+import { getEventFootprint } from "./event-footprint.ts";
 
 export type EventRoleRoute = {
   role: "AE" | "SDR" | "Marketing / event lead";
@@ -14,6 +15,7 @@ export function getEventRoleRoutes(event: EventRecord, phase: EventPhase): Event
 
   const sponsorship = getSponsorshipStatus(event);
   const speaking = getSpeakingStatus(event);
+  const footprint = getEventFootprint(event);
   const workstreams = getWorkstreams(event);
   const hasMarketingWork = !isEmptyWorkstream(workstreams.marketing) || Boolean(event.marketingTasks?.length || event.priorityActions?.length);
   const marketingItemCount = event.priorityActions?.length || workstreams.marketing.length;
@@ -28,9 +30,13 @@ export function getEventRoleRoutes(event: EventRecord, phase: EventPhase): Event
         ? "No guaranteed meeting package is listed. Use the event program to create qualified conversations, then record the context and next action in HubSpot."
         : "No meeting package or confirmed activation is listed. Prepare priority accounts and a direct meeting ask before relying on onsite traffic.";
 
-  const sdrDetail = sponsorship === "Confirmed"
+  const sdrDetail = footprint.kind === "booth"
     ? `Work the booth and nearby traffic, use the event app to find priority people, and protect AE time with fast qualification.${speaking === "Confirmed" ? " Use the speaking program as context—not as permission to improvise product claims." : ""}`
-    : sponsorship === "Under review"
+    : footprint.kind === "meeting-area"
+      ? `Keep the meeting area ready for scheduled conversations, use the event app and networking program to find priority people, and protect AE time with fast qualification.${speaking === "Confirmed" ? " Use the speaking program as context—not as permission to improvise product claims." : ""}`
+      : footprint.kind === "sponsor-activation"
+        ? `Use the sponsor activation as an introduction point, then work the event app and nearby traffic. Qualify quickly before routing someone to an AE.${speaking === "Confirmed" ? " Use the speaking program as context—not as permission to improvise product claims." : ""}`
+        : footprint.kind === "unresolved"
       ? "Confirm the onsite footprint before promising a booth meeting. Use the event app, sessions, and networking areas while the activation remains unresolved."
       : `No booth is listed. Work the event app, sessions, and networking areas; make direct introductions instead of waiting for traffic.${speaking === "Confirmed" ? " Use the session as a relevant opener and route qualified interest to an AE." : ""}`;
 
@@ -44,7 +50,7 @@ export function getEventRoleRoutes(event: EventRecord, phase: EventPhase): Event
     },
     {
       role: "SDR",
-      title: sponsorship === "Confirmed" ? "Create traffic and qualify quickly." : "Go find the right conversations.",
+      title: ["booth", "meeting-area", "sponsor-activation"].includes(footprint.kind) ? "Create traffic and qualify quickly." : "Go find the right conversations.",
       detail: sdrDetail,
       href: "/sdr#how-to-work-the-event",
       cta: "Open the SDR route",

@@ -706,7 +706,9 @@ button, input, select { font: inherit; }
 .event-role-route-grid h3 { margin: 48px 0 12px; font: 400 29px/1.08 Georgia, serif; }
 .event-role-route-grid p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
 .event-role-route-grid strong { margin-top: auto; padding-top: 26px; color: var(--green); font: 800 12px/1.4 var(--font-geist-mono), monospace; text-transform: uppercase; }
-.tldr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+.tldr-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+.tldr-grid-9 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tldr-grid-7 article:last-child { grid-column: span 2; }
 .tldr-grid article { min-height: 145px; padding: 22px; display: flex; flex-direction: column; gap: 18px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--canvas); }
 .tldr-grid article:nth-child(3n+2) { background: var(--green-light); }
 .tldr-grid article:nth-child(3n) { background: #f3c4af; }
@@ -1035,6 +1037,7 @@ button, input, select { font: inherit; }
   .event-role-route-grid { grid-template-columns: 1fr 1fr; }
   .event-role-route-grid > a:nth-child(3) { grid-column: 1 / -1; }
   .fact-strip, .tldr-grid { grid-template-columns: 1fr 1fr; }
+  .tldr-grid-7 article:last-child, .tldr-grid-9 article:last-child { grid-column: span 2; }
   .crm-stage-grid { grid-template-columns: repeat(3, 1fr); }
   .role-links { grid-template-columns: 1fr; }
   .timeline article { grid-template-columns: 110px 1fr; }
@@ -1073,6 +1076,7 @@ button, input, select { font: inherit; }
   .home-hero h1 { font-size: 58px; }
   .role-hero h1, .event-hero h1 { font-size: 58px; }
   .start-map-grid, .event-grid, .directory-tools, .fact-strip, .tldr-grid, .outcome-grid { grid-template-columns: 1fr; }
+  .tldr-grid-7 article:last-child, .tldr-grid-9 article:last-child { grid-column: auto; }
   .pulse-metrics { grid-template-columns: 1fr 1fr; }
   .pulse-readiness { grid-template-columns: 1fr; }
   .pulse-readiness article { min-height: 0; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.32); }

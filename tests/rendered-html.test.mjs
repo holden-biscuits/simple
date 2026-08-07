@@ -546,6 +546,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, new RegExp(`href="${"https://www.notion.so/3aa6fee642fe81c88a89de617863507c"}"[^>]*>Open event project(?:<!-- -->)? ↗`));
   assert.match(genesysHtml, /Open all update routes →/);
   assert.match(genesysHtml, /id="event-role-routes"/);
+  assert.match(genesysHtml, /href="#event-role-routes">Your role/);
   assert.match(genesysHtml, /Start with what this event changes for you\./);
   assert.match(genesysHtml, /No guaranteed meeting package is listed/);
   assert.match(genesysHtml, /Work the booth and nearby traffic/);
@@ -577,6 +578,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
   assert.match(genesysHtml, /href="\/sources">See source record/);
   assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
+  assert.match(genesysHtml, /Onsite footprint<\/span><strong>Booth confirmed/);
+  assert.match(genesysHtml, /Swag \/ materials<\/span><strong>In plan · see field checklist/);
   assert.doesNotMatch(genesysHtml, /Meetings scheduled/);
   assert.match(genesysHtml, /Team<\/span><strong>9 attending/);
   assert.doesNotMatch(genesysHtml, /Do these next/);
@@ -616,7 +619,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(contact.status, 200);
   const contactHtml = await contact.text();
   assert.match(contactHtml, /Not attending/);
-  assert.match(contactHtml, /No activation planned/);
+  assert.match(contactHtml, /Onsite footprint<\/span><strong>None/);
+  assert.match(contactHtml, /Swag \/ materials<\/span><strong>None/);
   assert.match(contactHtml, /Nothing to prep for this event\./);
   assert.match(contactHtml, /No team assigned/);
   assert.doesNotMatch(contactHtml, /id="event-changes"/);
@@ -637,6 +641,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(customerConnect.status, 200);
   const customerConnectHtml = await customerConnect.text();
   assert.match(customerConnectHtml, /Confirmed/);
+  assert.match(customerConnectHtml, /Onsite footprint<\/span><strong>Booth confirmed/);
+  assert.match(customerConnectHtml, /Swag \/ materials<\/span><strong>None/);
   assert.match(customerConnectHtml, /Four attendees and a 10×10 booth are planned/);
   assert.match(customerConnectHtml, /executed exhibition-space contract/);
   assert.match(customerConnectHtml, /Aug 10 at 9:00 AM PT/);
@@ -656,7 +662,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(icmi.status, 200);
   const icmiHtml = await icmi.text();
   assert.match(icmiHtml, /TeamSimple is attending/);
-  assert.match(icmiHtml, /Sponsorship under review · Speaking under review/);
+  assert.match(icmiHtml, /Onsite footprint<\/span><strong>Under review/);
+  assert.match(icmiHtml, /Speaking<\/span><strong>Lunch &amp; Learn · Wednesday · confirmation needs reconciliation/);
   assert.match(icmiHtml, /Open tracker(?:<!-- -->)? ↗/);
 
   const orlando = await render("/events/ccw-orlando");
@@ -700,6 +707,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(uk2027.status, 200);
   const uk2027Html = await uk2027.text();
   assert.match(uk2027Html, /March 2027 · exact dates TBD/);
+  assert.match(uk2027Html, /Onsite footprint<\/span><strong>Meeting area confirmed/);
+  assert.match(uk2027Html, /Keep the meeting area ready for scheduled conversations/);
+  assert.doesNotMatch(uk2027Html, /Work the booth and nearby traffic/);
   assert.match(uk2027Html, /minimum 10 30-minute meetings/);
   assert.match(uk2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(uk2027Html, /3 sponsor passes · 2 attendees planned/);

@@ -20,6 +20,13 @@ test("current and upcoming event routes reflect the actual activation", () => {
 
   const orlando = getEventRoleRoutes(event("ccw-orlando-2027"), "upcoming");
   assert.match(orlando[0].detail, /6 Executive Leadership Exchange meetings/);
+
+  const uk = getEventRoleRoutes(event("ccw-uk-executive-exchange-2027"), "upcoming");
+  assert.match(uk[1].detail, /Keep the meeting area ready for scheduled conversations/);
+  assert.doesNotMatch(uk[1].detail, /Work the booth/);
+
+  const icmi = getEventRoleRoutes(event("icmi-contact-center-expo"), "upcoming");
+  assert.match(icmi[1].detail, /Confirm the onsite footprint before promising a booth meeting/);
 });
 
 test("events without a booth tell SDRs to work the event instead of waiting for traffic", () => {
