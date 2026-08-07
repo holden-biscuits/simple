@@ -11,6 +11,7 @@ import { getSourceFreshness } from "../../data/source-freshness";
 import { getEventSystemLinkage } from "../../data/system-linkage";
 import { getEventMeasurementCheckpoint } from "../../data/event-measurement";
 import { getBriefIssueAction, getEventBriefReadiness } from "../../data/event-brief-readiness";
+import { getEventSourceChanges } from "../../data/site-status";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const systemLinkage = getEventSystemLinkage(event);
   const measurementCheckpoint = getEventMeasurementCheckpoint(event, eventPhase);
   const briefReadiness = getEventBriefReadiness(event, programDate);
+  const recentChanges = getEventSourceChanges(event.slug);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
@@ -94,10 +96,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section>
       <PageContents items={isNotAttending ? [
         { id: "event-tldr", label: "TL;DR" },
+        ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         { id: "event-update-route", label: "Update this event" },
         { id: "event-no-plan", label: "Event status" },
       ] : [
         { id: "event-tldr", label: "TL;DR" },
+        ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         { id: "event-update-route", label: "Update this event" },
         ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
         { id: "event-crew", label: "Crew" },
@@ -127,6 +131,21 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <Link href="/sources">See source record →</Link>
         </div>
       </section>
+
+      {recentChanges.length ? <section className="event-recent-changes shell" id="event-changes">
+        <div className="section-intro"><p className="eyebrow">Recent source activity</p><h2>What changed for this event.</h2><p>These are event-specific receipts from the source scan. Applied changes are already in this review build; unresolved differences still need a decision.</p></div>
+        <div className="event-change-grid">{recentChanges.map((change) => {
+          const firstLabel = change.state === "Applied" ? "Before" : change.state === "Needs review" ? "Controlling source" : "Checked";
+          const secondLabel = change.state === "Applied" ? "Now" : change.state === "Needs review" ? "Conflicting source" : "Result";
+          return <article className={`event-change event-change-${change.state.toLowerCase().replace(" ", "-")}`} key={change.id}>
+            <header><span>{change.state}</span><time>{change.checkedAt}</time></header>
+            <small>{change.field}</small><h3>{change.title}</h3>
+            <dl><div><dt>{firstLabel}</dt><dd>{change.before}</dd></div><div><dt>{secondLabel}</dt><dd>{change.after}</dd></div></dl>
+            <footer>{change.sourceUrl ? <a href={change.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a> : <span>{change.source}</span>}<Link href="/sources#change-log">Open full log →</Link></footer>
+          </article>;
+        })}</div>
+        <BackToTop />
+      </section> : null}
 
       <section className="event-update-route shell" id="event-update-route">
         <details>

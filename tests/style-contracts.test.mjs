@@ -10,6 +10,7 @@ test("anchored navigation clears sticky chrome at each breakpoint", () => {
   assert.match(css, /\.scan-contract\[id\]/);
   assert.match(css, /\.operating-roadmap\[id\]/);
   assert.match(css, /\.crm-activation\[id\]/);
+  assert.match(css, /\.event-recent-changes\[id\]/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*--anchor-offset:\s*96px[\s\S]*\.page-contents\s*\{\s*top:\s*0;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*--anchor-offset:\s*24px/);
 });
@@ -54,4 +55,6 @@ test("essential interface text has a durable readability floor", () => {
   assert.match(floor, /\.directory-filter-set button[\s\S]*font-size:\s*12px/);
   assert.match(floor, /\.search-quick button[\s\S]*font-size:\s*12px/);
   assert.match(floor, /\.event-update-route-grid b[\s\S]*font-size:\s*12px/);
+  assert.match(css, /\.event-change > header[^}]*11\.5px/);
+  assert.match(css, /\.event-change footer[^}]*11\.5px/);
 });

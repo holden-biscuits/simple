@@ -244,3 +244,7 @@ export const siteStatus = {
     ],
   },
 };
+
+export function getEventSourceChanges(eventSlug: string) {
+  return siteStatus.sourceMonitor.changeLog.filter((change) => change.eventSlug === eventSlug);
+}

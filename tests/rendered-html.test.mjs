@@ -447,6 +447,12 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Open event project(?:<!-- -->)? ↗/);
   assert.match(genesysHtml, new RegExp(`href="${"https://www.notion.so/3aa6fee642fe81c88a89de617863507c"}"[^>]*>Open event project(?:<!-- -->)? ↗`));
   assert.match(genesysHtml, /Open all update routes →/);
+  assert.match(genesysHtml, /id="event-changes"/);
+  assert.match(genesysHtml, /What changed for this event\./);
+  assert.match(genesysHtml, /Confirmed the Genesys Xperience roster/);
+  assert.match(genesysHtml, /Updated the Genesys sponsor-email deadline/);
+  assert.match(genesysHtml, /Genesys guaranteed meetings already match/);
+  assert.match(genesysHtml, /href="\/sources#change-log">Open full log →/);
   assert.match(genesysHtml, /Current(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
   assert.match(genesysHtml, /Next check Aug 13/);
   assert.match(genesysHtml, /Update the source that owns it\./);
@@ -507,6 +513,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(contactHtml, /No activation planned/);
   assert.match(contactHtml, /Nothing to prep for this event\./);
   assert.match(contactHtml, /No team assigned/);
+  assert.doesNotMatch(contactHtml, /id="event-changes"/);
   assert.doesNotMatch(contactHtml, /id="event-priorities"/);
   assert.doesNotMatch(contactHtml, /What needs to happen\./);
   assert.doesNotMatch(contactHtml, /Who’s going/);
@@ -532,6 +539,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /6(?:<!-- -->)? of nine workstreams are in play/);
   assert.match(customerConnectHtml, /Open tracker(?:<!-- -->)? ↗/);
   assert.match(customerConnectHtml, /Open event project(?:<!-- -->)? ↗/);
+  assert.match(customerConnectHtml, /Recorded Customer Connect portal progress/);
+  assert.match(customerConnectHtml, /Confirmed Customer Connect Expo participation/);
   assert.match(customerConnectHtml, /id="workstream-marketing"/);
   assert.match(customerConnectHtml, /id="workstream-budget"/);
   assert.doesNotMatch(customerConnectHtml, /id="workstream-swag"/);
@@ -602,6 +611,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /Source check needed/);
   assert.match(chicagoHtml, /href="\/sources#approval-queue"[^>]*>Open source review(?:<!-- -->)? →/);
   assert.match(chicagoHtml, /Open organizer source(?:<!-- -->)? ↗/);
+  assert.match(chicagoHtml, /Resolve CCW Exchange Chicago staffing/);
+  assert.match(chicagoHtml, /Needs review/);
   assert.match(chicagoHtml, /1 named · 2 planned/);
   assert.match(chicagoHtml, /Guaranteed meetings<\/span><strong>Included · count TBD/);
   assert.match(chicagoHtml, /Meetings booked<\/span><strong>None recorded yet/);
