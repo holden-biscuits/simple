@@ -426,6 +426,32 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const naturalStaffingHtml = await naturalStaffingSearch.text();
   assert.match(naturalStaffingHtml, /Genesys Xperience/);
   assert.match(naturalStaffingHtml, /Team · Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
+  assert.match(naturalStaffingHtml, /href="\/events\/genesys-xperience#event-crew"/);
+
+  const outcomeSearch = await render("/search?q=what%20happened%20at%20Chicago&type=Event");
+  assert.equal(outcomeSearch.status, 200);
+  const outcomeSearchHtml = await outcomeSearch.text();
+  assert.match(outcomeSearchHtml, /CCW Exchange Chicago · results/);
+  assert.match(outcomeSearchHtml, /href="\/events\/ccw-exchange-chicago#event-results"/);
+  assert.match(outcomeSearchHtml, /Event section · Results/);
+
+  const targetSearch = await render("/search?q=who%20should%20we%20target%20at%20Genesys&type=Event");
+  assert.equal(targetSearch.status, 200);
+  const targetSearchHtml = await targetSearch.text();
+  assert.match(targetSearchHtml, /Genesys Xperience · prospecting/);
+  assert.match(targetSearchHtml, /href="\/events\/genesys-xperience#event-prospecting"/);
+
+  const travelSearch = await render("/search?q=Genesys%20travel&type=Event");
+  assert.equal(travelSearch.status, 200);
+  const travelSearchHtml = await travelSearch.text();
+  assert.match(travelSearchHtml, /Genesys Xperience · Travel/);
+  assert.match(travelSearchHtml, /href="\/events\/genesys-xperience#workstream-travel"/);
+
+  const rulesSearch = await render("/search?q=Genesys%20rules&type=Event");
+  assert.equal(rulesSearch.status, 200);
+  const rulesSearchHtml = await rulesSearch.text();
+  assert.match(rulesSearchHtml, /Genesys Xperience · rules of engagement/);
+  assert.match(rulesSearchHtml, /href="\/events\/genesys-xperience#event-considerations"/);
 
   const liveStreamSearch = await render("/search?q=what%27s%20live&type=Operations");
   assert.equal(liveStreamSearch.status, 200);

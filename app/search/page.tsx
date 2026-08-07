@@ -248,6 +248,85 @@ const eventRecords: SearchRecord[] = events.map((event) => {
   };
 });
 
+const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
+  if (event.status === "No") return [];
+  const phase = getEventPhase(event, searchProgramDate);
+  const staffing = getStaffingSignal(event);
+  const prospecting = getEventProspectingBrief(event);
+  const workstreams = getWorkstreams(event);
+  const outcomeDetails = [
+    ...event.meetingsBooked.map((item) => `Meeting · ${item}`),
+    ...(event.followupMeetingsBooked ? [`Follow-up meetings booked · ${event.followupMeetingsBooked}`] : []),
+    ...event.demosBooked.map((item) => `Demo · ${item}`),
+    ...event.closed.map((item) => `Closed · ${item}`),
+    ...(event.outcomeNotes ?? []).map((item) => `Outcome · ${item}`),
+    ...(event.rating !== "None" ? [`Event rating · ${event.rating}`] : []),
+    ...(event.crmSnapshot ? [`HubSpot deals · ${event.crmSnapshot.totalDeals}`, `CRM quality · ${event.crmSnapshot.dataQualityNote}`] : []),
+  ];
+  const sectionRecords: SearchRecord[] = [
+    {
+      type: "Event",
+      context: "Event section · Crew",
+      status: staffing.summary,
+      title: `${event.name} · crew`,
+      href: `/events/${event.slug}#event-crew`,
+      description: event.team.length ? `Attending: ${event.team.join(", ")}.` : staffing.detail,
+      keywords: [event.name, event.location, "who is going attending attendee team roster staffing people crew", event.team.join(" "), event.available.join(" "), staffing.detail].join(" "),
+      details: [event.team.length ? `Attending · ${event.team.join(", ")}` : "Attending · None confirmed", event.available.length ? `Available · ${event.available.join(", ")}` : ""].filter(Boolean),
+      hiddenUntilQuery: true,
+    },
+    {
+      type: "Event",
+      context: "Event section · Prospecting",
+      status: prospecting.confidence,
+      title: `${event.name} · prospecting`,
+      href: `/events/${event.slug}#event-prospecting`,
+      description: prospecting.summary,
+      keywords: [event.name, event.location, "target targeting prospect prospecting audience accounts contacts companies ZoomInfo", prospecting.workflow, ...prospecting.companyFilters.map((filter) => filter.value), ...prospecting.contactFilters.map((filter) => filter.value)].join(" "),
+      details: [`Workflow · ${prospecting.workflow}`, ...prospecting.companyFilters.map((filter) => `Company ${filter.label} · ${filter.value}`), ...prospecting.contactFilters.map((filter) => `Contact ${filter.label} · ${filter.value}`)],
+      hiddenUntilQuery: true,
+    },
+    ...(event.specialConsiderations?.length ? [{
+      type: "Event" as const,
+      context: "Event section · Rules",
+      status: `${event.specialConsiderations.length} event-specific rule${event.specialConsiderations.length === 1 ? "" : "s"}`,
+      title: `${event.name} · rules of engagement`,
+      href: `/events/${event.slug}#event-considerations`,
+      description: "Event-specific operating rules and guardrails.",
+      keywords: [event.name, event.location, "rules rule considerations engagement guardrails what can I say do", ...event.specialConsiderations].join(" "),
+      details: event.specialConsiderations.map((item) => `Rule · ${item}`),
+      hiddenUntilQuery: true,
+    }] : []),
+    ...Object.entries(workstreams).flatMap(([key, items]) => items.length ? [{
+      type: "Event" as const,
+      context: "Event section · Workstream",
+      status: phase === "past" ? "Recorded plan" : "In plan",
+      title: `${event.name} · ${workstreamLabels[key as keyof typeof workstreamLabels]}`,
+      href: `/events/${event.slug}#workstream-${key}`,
+      description: items[0],
+      keywords: [event.name, event.location, workstreamLabels[key as keyof typeof workstreamLabels], key, "checklist workstream plan", ...items].join(" "),
+      details: items,
+      hiddenUntilQuery: true,
+    }] : []),
+  ];
+
+  if (phase === "past" || outcomeDetails.length) {
+    sectionRecords.push({
+      type: "Event",
+      context: "Event section · Results",
+      status: outcomeDetails.length ? "Outcomes recorded" : "Closeout incomplete",
+      title: `${event.name} · results`,
+      href: `/events/${event.slug}#event-results`,
+      description: outcomeDetails.length ? outcomeDetails.slice(0, 2).join(" · ") : "No outcomes have been recorded yet.",
+      keywords: [event.name, event.location, "what happened results result outcomes outcome closeout meetings demos deals revenue rating", ...outcomeDetails].join(" "),
+      details: outcomeDetails.length ? outcomeDetails : ["Closeout · No outcomes recorded yet"],
+      hiddenUntilQuery: true,
+    });
+  }
+
+  return sectionRecords;
+});
+
 const marketingTaskRecords: SearchRecord[] = events.flatMap((event) => {
   const hasStructuredMarketingTasks = Boolean(event.marketingTasks?.length);
   const tasks: MarketingTask[] = hasStructuredMarketingTasks
@@ -303,5 +382,5 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const initialQuery = typeof params.q === "string" ? params.q : "";
   const requestedType = typeof params.type === "string" ? params.type : "All";
   const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Event Basecamp search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, audience segments, and role instructions. Results open the exact section or working system you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, latestScanRecord, ...eventChangeRecords, ...marketingTaskRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...audienceSegmentRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Event Basecamp search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, audience segments, and role instructions. Results open the exact section or working system you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, latestScanRecord, ...eventChangeRecords, ...marketingTaskRecords, ...eventSectionRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...audienceSegmentRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }
