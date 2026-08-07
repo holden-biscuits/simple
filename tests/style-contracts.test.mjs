@@ -27,7 +27,8 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.next-stops > div:last-child\s*\{\s*grid-template-columns:\s*1fr;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.pulse-readiness\s*\{\s*grid-template-columns:\s*1fr;/);
   assert.match(css, /\.event-lifecycle-steps\s*\{[^}]*display:\s*block/);
-  assert.match(css, /\.event-lifecycle-steps a\s*\{[^}]*grid-template-columns:\s*155px\s+minmax\(190px,\s*\.8fr\)\s+minmax\(320px,\s*1\.5fr\)\s+minmax\(190px,\s*\.8fr\)/);
+  assert.match(css, /\.event-lifecycle-steps a\s*\{[^}]*padding:\s*18px\s+28px[^}]*grid-template-columns:\s*130px\s+minmax\(160px,\s*\.8fr\)\s+minmax\(260px,\s*1\.4fr\)\s+minmax\(185px,\s*\.9fr\)/);
+  assert.match(css, /\.event-lifecycle-steps b\s*\{[^}]*padding-right:\s*2px[^}]*font:\s*800\s+10px/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.event-lifecycle-steps a\s*\{\s*grid-template-columns:\s*130px\s+minmax\(170px,\s*\.8fr\)\s+minmax\(260px,\s*1\.3fr\)/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-lifecycle-steps a\s*\{[^}]*grid-template-columns:\s*88px\s+1fr/);
   assert.match(css, /\.connector-capabilities\s*>\s*div\s*\{[^}]*grid-template-columns:\s*repeat\(5,/);
