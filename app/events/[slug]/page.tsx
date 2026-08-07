@@ -5,7 +5,7 @@ import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getEventPhase, getEventVerification, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
-import { hasGuaranteedMeetingPackage } from "../../data/event-signals";
+import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 
 export const dynamic = "force-dynamic";
 
@@ -38,18 +38,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const guaranteedPackageSummary = hasGuaranteedMeetings
     ? event.guaranteedMeetings.replace(/^Yes\s*(?:·\s*)?/i, "") || "Included · count TBD"
     : "None";
-  const namedAttendeeCount = event.team.length;
-  const teamSummary = isNotAttending
-    ? "No team assigned"
-    : event.attendeeCount && namedAttendeeCount === event.attendeeCount
-      ? `${event.attendeeCount} attending`
-      : event.attendeeCount && namedAttendeeCount > 0
-        ? `${namedAttendeeCount} named · ${event.attendeeCount} planned`
-        : event.attendeeCount
-          ? `${event.attendeeCount} planned · names open`
-          : namedAttendeeCount
-            ? `${namedAttendeeCount} named`
-            : "Not assigned";
+  const staffing = getStaffingSignal(event);
   const note = event.notes.trim();
   const isSourceConflict = note.toLowerCase().startsWith("source conflict:");
   const resultGroups = [
@@ -75,7 +64,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     ["Guaranteed meetings", meetingPackage],
     ...(showMeetingProgress ? [[meetingProgressLabel, meetingProgressValue]] : []),
     ...(event.credentials ? [["Passes / credentials", event.credentials]] : []),
-    ["Team", teamSummary],
+    ["Team", staffing.summary],
   ];
   const showResults = eventPhase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
 

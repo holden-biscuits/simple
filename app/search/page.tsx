@@ -3,7 +3,7 @@ import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
 import { SiteSearch, type SearchRecord, type SearchType } from "../components/site-search";
 import { events, getEventVerification, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
-import { hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../data/event-signals";
+import { getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../data/event-signals";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -25,7 +25,8 @@ const referenceRecords: SearchRecord[] = [
 const eventRecords: SearchRecord[] = events.map((event) => {
   const verification = getEventVerification(event);
   const guaranteedCountOpen = hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event);
-  const staffingOpen = Boolean(event.attendeeCount && event.team.length < event.attendeeCount);
+  const staffing = getStaffingSignal(event);
+  const staffingOpen = staffing.state === "open";
   const outcomeCounts = [
     event.meetingsBooked.length ? `${event.meetingsBooked.length} meeting${event.meetingsBooked.length === 1 ? "" : "s"}` : "",
     event.demosBooked.length ? `${event.demosBooked.length} demo${event.demosBooked.length === 1 ? "" : "s"}` : "",
@@ -40,7 +41,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     `Sponsorship · ${event.sponsorship}`,
     `Guaranteed meetings · ${event.guaranteedMeetings}`,
     guaranteedCountOpen ? "Meeting package · count TBD" : "",
-    staffingOpen ? `Staffing · names open · ${event.team.length} named · ${event.attendeeCount} planned` : "",
+    staffingOpen ? `Staffing · names open · ${staffing.detail}` : "",
     event.notes ? `Plan note · ${event.notes}` : "",
     event.credentials ? `Credentials · ${event.credentials}` : "",
     `Source check · ${verification.checkedAt} · ${verification.sources.join(" · ")}`,

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord, type MarketingTask } from "../data/events";
-import { hasGuaranteedMeetingPackage } from "../data/event-signals";
+import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../data/event-signals";
 
 type BoardFilter = "all" | "support" | "no-support" | "team-open" | "speaking";
 
@@ -40,12 +40,6 @@ function matchesFilter(event: EventRecord, filter: BoardFilter) {
   if (filter === "team-open") return event.team.length === 0;
   if (filter === "speaking") return hasSpeaking(event);
   return true;
-}
-
-function staffingSignal(event: EventRecord) {
-  if (event.team.length) return { state: "named", label: event.team.join(", ") };
-  if (event.available.length) return { state: "open", label: `${event.available.join(", ")} marked available` };
-  return { state: "open", label: "No team named" };
 }
 
 function eventTasks(event: EventRecord): MarketingTask[] {
@@ -217,7 +211,10 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
         <tbody>{filtered.map((event) => {
           const support = marketingItems(event);
           const signals = activationSignals(event);
-          const staffing = staffingSignal(event);
+          const staffing = getStaffingSignal(event);
+          const staffingDetail = staffing.state === "open" && event.available.length && !event.team.length
+            ? `${staffing.detail} · ${event.available.join(", ")} marked available`
+            : staffing.detail;
           const openTask = orderedEventTasks(event).find((task) => task.status !== "Done");
           const openItem = openTask?.title ?? (support.length ? "No open item recorded" : "Marketing support is not listed");
           const eventPlanHref = event.priorityActions?.length ? `/events/${event.slug}#event-priorities` : `/events/${event.slug}`;
@@ -229,7 +226,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
             </th>
             <td data-label="Activation"><div className="matrix-signals">{signals.length ? signals.map((signal) => <span key={signal}>{signal}</span>) : <span>Attendance only</span>}</div></td>
             <td data-label="Marketing support">{support.length ? <ul>{support.map((item) => <li key={item}>{item}</li>)}</ul> : <span className="matrix-empty">None listed</span>}</td>
-            <td data-label="Event team"><span className={`matrix-staffing matrix-staffing-${staffing.state}`}>{staffing.state === "named" ? "Named" : "Open"}</span><p>{staffing.label}</p></td>
+            <td data-label="Event team"><span className={`matrix-staffing matrix-staffing-${staffing.state}`}>{staffing.state === "named" ? "Named" : staffing.state === "not-attending" ? "None" : "Open"}</span><p>{staffingDetail}</p></td>
             <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p>{openTask?.due ? <span className="matrix-open-due">Due {openTask.due}</span> : null}<Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link></td>
           </tr>;
         })}</tbody>

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
 import { attendanceFilters, filterEventDirectory, matchesAttendance, matchesProgramYear, type AttendanceFilter } from "../data/event-filters";
-import { getGuaranteedMeetingSignal } from "../data/event-signals";
+import { getGuaranteedMeetingSignal, getStaffingSignal } from "../data/event-signals";
 
 function EventCard({ event }: { event: EventRecord }) {
   const verification = getEventVerification(event);
@@ -12,7 +12,7 @@ function EventCard({ event }: { event: EventRecord }) {
   const inactive = event.status === "No";
   const speakingText = event.speaking.toLowerCase();
   const speakingOpps = speakingText === "none" || speakingText.includes("no slot confirmed") ? 0 : 1;
-  const attending = event.attendeeCount ?? event.team.length;
+  const staffing = getStaffingSignal(event);
   return (
     <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
       {inactive ? <span className="event-card-x" aria-hidden="true" /> : null}
@@ -26,7 +26,7 @@ function EventCard({ event }: { event: EventRecord }) {
       <div className="event-signals">
         <span>{speakingOpps} Speaking Opp</span>
         <span>{getGuaranteedMeetingSignal(event)}</span>
-        <span>{attending} Attending</span>
+        <span>{staffing.card}</span>
       </div>
       <div className="event-card-freshness">
         <span>Checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt.replace(/,\s\d{4}$/, "")}</time></span>

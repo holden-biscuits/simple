@@ -53,6 +53,9 @@ test("server-renders the event directory", async () => {
   assert.match(html, /CCW Vegas 2027/);
   assert.match(html, /6 Guaranteed Meetings/);
   assert.match(html, /10\+ Guaranteed Meetings/);
+  assert.match(html, /11(?:<!-- -->)? Planned/);
+  assert.match(html, /15(?:<!-- -->)? Planned/);
+  assert.match(html, /1(?:<!-- -->)? Named · 2(?:<!-- -->)? Planned/);
   assert.match(html, /29(?:<!-- -->)?<\/strong><span>events on the map/);
   assert.match(html, /Checked <time dateTime="2026-08-06">Aug 6<\/time>/);
   assert.match(html, /Conference tracker \+ 4/);
@@ -154,6 +157,7 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Next open item/);
   assert.doesNotMatch(html, /Most urgent open item/);
   assert.match(html, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
+  assert.match(html, /Taylor · 1 of 2 named/);
   assert.match(html, /Keep each event’s execution list in its own tab/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /Submit the contracted pre-event email copy/);
