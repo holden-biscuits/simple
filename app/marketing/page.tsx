@@ -5,6 +5,7 @@ import { EventMarketingWorkspace, MarketingSupportBoard } from "../components/ma
 import { SiteHeader } from "../components/site-header";
 import { events, getEventPhase, getProgramDate } from "../data/events";
 import { measurementFields, measurementReadiness, measurementWindows, metricDefinitions } from "../data/event-measurement";
+import { getMarketingProgramReadiness } from "../data/marketing-readiness";
 
 export const dynamic = "force-dynamic";
 
@@ -79,6 +80,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
   const { event: selectedEvent } = await searchParams;
   const programDate = getProgramDate();
   const activeEvents = events.filter((event) => getEventPhase(event, programDate) !== "past" && event.status !== "No");
+  const workload = getMarketingProgramReadiness(activeEvents, programDate);
   return (
     <main id="page-top">
       <SiteHeader />
@@ -89,6 +91,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         <Link className="button" href="/#events">Open the event directory <span>↗</span></Link>
       </section>
       <PageContents items={[
+        { id: "marketing-pulse", label: "Workload pulse" },
         { id: "lessons", label: "Operating lessons" },
         { id: "event-tasks", label: "Event tasks" },
         { id: "support-matrix", label: "Support matrix" },
@@ -96,6 +99,27 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         { id: "crm-setup", label: "HubSpot setup" },
         { id: "measurement", label: "Measurement" },
       ]} />
+
+      <section className="marketing-program-pulse" id="marketing-pulse">
+        <div className="shell">
+          <div className="marketing-pulse-head">
+            <div><p className="eyebrow">Marketing workload</p><h2>What needs attention now.</h2></div>
+            <p>These counts use structured event tasks only. Priority bullets remain visible in each event workspace, but they do not become owned or dated work until the event project records those fields.</p>
+          </div>
+          <div className="marketing-pulse-metrics">
+            <article><span>Task-plan coverage</span><strong>{workload.structuredEvents} / {workload.activeEvents}</strong><p>active events have structured marketing tasks</p></article>
+            <article><span>Open structured work</span><strong>{workload.openTasks}</strong><p>tasks are still open or in progress</p></article>
+            <article className={workload.overdueTasks ? "marketing-pulse-alert" : undefined}><span>Overdue</span><strong>{workload.overdueTasks}</strong><p>recorded deadlines have passed</p>{workload.overdue ? <Link href={`/marketing?event=${workload.overdue.eventSlug}#event-tasks`}>Open {workload.overdue.eventName} →</Link> : null}</article>
+            <article><span>Next shared deadline</span><strong>{workload.nextDeadline?.label ?? "None"}</strong><p>{workload.nextDeadline ? `${workload.nextDeadline.taskCount} task${workload.nextDeadline.taskCount === 1 ? "" : "s"} across ${workload.nextDeadline.eventCount} event${workload.nextDeadline.eventCount === 1 ? "" : "s"}` : "No dated task is recorded"}</p>{workload.nextDeadline ? <Link href={`/marketing?event=${workload.nextDeadline.eventSlug}#event-tasks`}>Open {workload.nextDeadline.eventName} →</Link> : null}</article>
+          </div>
+          <div className="marketing-pulse-gaps">
+            <span>{workload.setupGaps} events still need task setup</span>
+            <span>{workload.ownerGaps} open tasks need an owner</span>
+            <span>{workload.dateGaps} open tasks need a dated deadline</span>
+            <a href="#event-tasks">Open event workspaces ↓</a>
+          </div>
+        </div>
+      </section>
 
       <section className="shell marketing-lessons" id="lessons">
         <div className="section-intro"><p className="eyebrow">Lessons from this schedule</p><h2>Fix the handoffs that keep repeating.</h2><p>These are the patterns already visible across the 2026–2027 tracker and event plans.</p></div>

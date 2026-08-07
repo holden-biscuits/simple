@@ -301,6 +301,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(measurementSearchHtml, /Event measurement contract/);
   assert.match(measurementSearchHtml, /\/marketing#measurement/);
 
+  const marketingWorkloadSearch = await render("/search?q=overdue%20marketing%20tasks&type=Operations");
+  assert.equal(marketingWorkloadSearch.status, 200);
+  const marketingWorkloadHtml = await marketingWorkloadSearch.text();
+  assert.match(marketingWorkloadHtml, /Marketing workload pulse/);
+  assert.match(marketingWorkloadHtml, /\/marketing#marketing-pulse/);
+
   const stewardshipSearch = await render("/search?q=who%20updates%20event%20data&type=Operations");
   assert.equal(stewardshipSearch.status, 200);
   const stewardshipSearchHtml = await stewardshipSearch.text();
@@ -470,6 +476,15 @@ test("server-renders a searchable marketing support board", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /See the work and the gaps in one place\./);
+  assert.match(html, /id="marketing-pulse"/);
+  assert.match(html, /What needs attention now\./);
+  assert.match(html, /Task-plan coverage/);
+  assert.match(html, /Open structured work/);
+  assert.match(html, /Next shared deadline/);
+  assert.match(html, /events still need task setup/);
+  assert.match(html, /href="#event-tasks"/);
+  assert.match(html, /href="\/marketing\?event=customer-connect-expo#event-tasks"/);
+  assert.match(html, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
   assert.match(html, /Find an event or task/);
   assert.match(html, /Support listed/);
   assert.match(html, /No support listed/);
