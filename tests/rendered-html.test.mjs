@@ -220,8 +220,11 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
   assert.match(html, /<span>Applied<\/span><strong>5<\/strong>/);
-  assert.match(html, /<span>Needs review<\/span><strong>4<\/strong>/);
+  assert.match(html, /<span>Needs review<\/span><strong>5<\/strong>/);
   assert.match(html, /<span>No change<\/span><strong>5<\/strong>/);
+  assert.match(html, /Route new Customer Connect organizer details to Notion/);
+  assert.match(html, /Aug 11 at 9:30 AM PT/);
+  assert.match(html, /insurance advised, not mandatory/);
   assert.match(html, /Chicago conflict remains unresolved at closeout/);
   assert.match(html, /no Chicago-named HubSpot deal or meeting/);
   assert.match(html, /Reconcile one CCW deal-source mismatch/);
@@ -243,14 +246,14 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Direct confirmation/);
   assert.match(html, /A successful scan may save a review version/);
   assert.match(html, /Conference tracker/);
-  assert.match(html, /Chicago row rechecked · Aug 7/);
-  assert.match(html, /Chicago search · no match · Aug 7/);
-  assert.match(html, /Chicago deals \+ meetings · 0 matches · Aug 7/);
+  assert.match(html, /Not due · no due or overdue events · Aug 7/);
+  assert.match(html, /2 near-term searches · no match · Aug 7/);
+  assert.match(html, /Controlled pair · 29 exact \+ 1 excluded · Aug 7/);
   assert.match(html, /No direct scan available/);
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
   assert.doesNotMatch(html, /first run pending/);
-  assert.match(html, /Latest evidence refresh · Task review: Aug 07, 2026 · 6:42 AM PT · Chicago closeout check/);
+  assert.match(html, /Latest evidence refresh · Scheduled heartbeat: Aug 07, 2026 · 9:00 AM PT · scheduled source scan/);
   assert.match(html, /four systems are read on a schedule/);
   assert.match(html, /zero sources push directly into production/);
   assert.match(html, /Make the joins trustworthy before adding more dashboards\./);
@@ -264,6 +267,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /IQPC CX Travel &amp; Hospitality/);
   assert.match(html, /calendar record lists Zach \+ Taylor/);
   assert.match(html, /Latest source checks/);
+  assert.match(html, /Scheduled source scan · 9:00 AM PT/);
   assert.match(html, /CCW Exchange Chicago closeout check · 6:42 AM PT/);
   assert.match(html, /29 of 29 exact event-sourced deals/);
   assert.match(html, /four are possible on-site meetings/);
@@ -278,6 +282,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /invitation-only format/);
   assert.match(html, /Customer Connect Expo focused scan/);
   assert.match(html, /25%-complete company profile/);
+  assert.match(html, /Customer Connect Expo execution page[\s\S]*Aug 11 onboarding call at 9:30 AM PT/);
   assert.match(html, /2027 conference tracker/);
   assert.match(html, /Three confirmed 2027 events were added/);
   assert.match(html, /“Mon Jun 15” workshop label conflicts/);
@@ -294,7 +299,8 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Planning gaps open/);
   assert.match(html, /What changed—and what still needs a decision\./);
   assert.match(html, /5<\/strong><span>Applied updates/);
-  assert.match(html, /4<\/strong><span>Needs review/);
+  assert.match(html, /5<\/strong><span>Needs review/);
+  assert.match(html, /Customer Connect Expo[\s\S]*Route new Customer Connect organizer details to Notion/);
   assert.match(html, /Genesys Xperience[\s\S]*Confirmed the Genesys Xperience roster/);
   assert.match(html, /href="\/events\/genesys-xperience#event-changes"/);
   assert.match(html, /Program-wide[\s\S]*Added the 2027 event program/);

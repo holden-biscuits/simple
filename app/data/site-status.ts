@@ -34,8 +34,8 @@ export const siteStatus = {
     automationVerifiedAt: "Aug 07 · 2026",
     connectionCheckedAt: "2026-08-07",
     connectionCheckedLabel: "Aug 07 · 2026",
-    lastSuccessfulScan: "Aug 07, 2026 · 6:42 AM PT · Chicago closeout check",
-    lastSuccessfulScanMode: "Task review",
+    lastSuccessfulScan: "Aug 07, 2026 · 9:00 AM PT · scheduled source scan",
+    lastSuccessfulScanMode: "Scheduled heartbeat",
     protectedOverrides: [
       { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", fieldKey: "status", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
       { id: "customer-connect-participation", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
@@ -45,6 +45,18 @@ export const siteStatus = {
       { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", fieldKey: "speaking", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
     ] as SourceOverride[],
     changeLog: [
+      {
+        id: "customer-connect-onboarding-signal",
+        state: "Needs review" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Route new Customer Connect organizer details to Notion",
+        field: "Onboarding call and insurance",
+        before: "Fieldbook and Notion write-back: Aug 10 at 9:00 AM PT · insurance requirement open",
+        after: "Organizer signal: Aug 11 at 9:30 AM PT · insurance advised, not mandatory",
+        source: "Gmail · organizer calendar",
+        sourceUrl: "https://mail.google.com/mail/#all/19fdc431223bee42",
+        eventSlug: "customer-connect-expo",
+      },
       {
         id: "chicago-closeout-no-change",
         state: "No change" as SourceChangeState,
@@ -206,6 +218,12 @@ export const siteStatus = {
     ] as SourceChange[],
     latestChecks: [
       {
+        system: "Scheduled heartbeat · Notion · Gmail · Slack · HubSpot",
+        checkedAt: "Aug 07 · 2026",
+        scope: "Scheduled source scan · 9:00 AM PT",
+        result: "No event was due or overdue under the freshness policy. A targeted signal check found that the Customer Connect organizer call moved to Aug 11 at 9:30 AM PT and that insurance is recommended, not mandatory. Because Gmail is a signal source and the Notion project is still blank, all three affected execution fields are in review rather than published. The Genesys roster and the CCW Vegas CRM snapshot remain unchanged. The controlled HubSpot union is still 29 exact CCW deals plus one excluded detail-only mismatch.",
+      },
+      {
         system: "Google Sheets · Notion · Gmail · Slack · HubSpot",
         checkedAt: "Aug 07 · 2026",
         scope: "CCW Exchange Chicago closeout check · 6:42 AM PT",
@@ -285,12 +303,12 @@ export const siteStatus = {
       },
     ],
     sources: [
-      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "Chicago row rechecked · Aug 7" },
-      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "Chicago project rechecked · Aug 7" },
-      { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "1 restricted brief · no new file · Aug 6" },
-      { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "Chicago search · no match · Aug 7" },
-      { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "Chicago search · no match · Aug 7" },
-      { name: "Event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "Meetings, demos, deals and pipeline only when event attribution is clear", receipt: "Chicago deals + meetings · 0 matches · Aug 7" },
+      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "Not due · no due or overdue events · Aug 7" },
+      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "Customer Connect + Genesys checked · Aug 7" },
+      { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "Not due · Aug 7" },
+      { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "2 near-term searches · no match · Aug 7" },
+      { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "Customer Connect change detected · Aug 7" },
+      { name: "Event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "Meetings, demos, deals and pipeline only when event attribution is clear", receipt: "Controlled pair · 29 exact + 1 excluded · Aug 7" },
       { name: "Conversation notes", system: "Granola", state: "Indirect" as SourceConnectionState, use: "Available only when a note is shared into a connected source", receipt: "No direct scan available" },
       { name: "Legacy event reporting", system: "Monaco", state: "Indirect" as SourceConnectionState, use: "Available only through exports or references shared into a connected source", receipt: "No direct scan available" },
     ],
