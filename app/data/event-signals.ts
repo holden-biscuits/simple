@@ -17,6 +17,7 @@ type CompletedEventSource = {
   meetingCountLabel?: string;
   followupMeetingsBooked?: number;
   demosBooked: string[];
+  demoCountLabel?: string;
   crmSnapshot?: { totalDeals: number };
 };
 
@@ -122,7 +123,9 @@ export function getCompletedEventSignals(event: CompletedEventSource) {
       : "Meetings Not Recorded";
   const downstream = event.followupMeetingsBooked
     ? `${event.followupMeetingsBooked} Follow-up Meeting${event.followupMeetingsBooked === 1 ? "" : "s"}`
-    : event.demosBooked.length
+    : event.demoCountLabel
+      ? `${event.demoCountLabel} Demos Recorded`
+      : event.demosBooked.length
       ? `${event.demosBooked.length} Demo${event.demosBooked.length === 1 ? "" : "s"} Recorded`
       : event.crmSnapshot?.totalDeals
         ? `${event.crmSnapshot.totalDeals} Attributed Deal${event.crmSnapshot.totalDeals === 1 ? "" : "s"}`

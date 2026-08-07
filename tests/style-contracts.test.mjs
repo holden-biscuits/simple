@@ -81,6 +81,13 @@ test("the mobile header preserves every route without consuming the first viewpo
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.site-header nav a\s*\{[^}]*flex:\s*0 0 auto;[^}]*scroll-snap-align:\s*start;/);
 });
 
+test("the footer back-to-top action stays compact and yields space to the message", () => {
+  assert.match(css, /\.footer > div:first-child\s*\{[^}]*min-width:\s*0;[^}]*flex:\s*1 1 auto;/);
+  assert.match(css, /\.footer-back-to-top\s*\{[^}]*min-width:\s*0;[^}]*min-height:\s*44px;[^}]*flex:\s*0 0 auto;[^}]*flex-direction:\s*row;/);
+  assert.match(css, /\.footer-mark\s*\{[^}]*font-size:\s*17px;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.footer > div:first-child\s*\{[^}]*flex-direction:\s*column;/);
+});
+
 test("the CRM attribution audit remains readable below desktop", () => {
   assert.match(css, /\.crm-portfolio-rollup\s*\{[^}]*grid-template-columns:\s*minmax\(180px,\s*\.55fr\)\s+minmax\(340px,\s*1\.45fr\)\s+auto/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.crm-health-grid\s*\{\s*grid-template-columns:\s*1fr 1fr/);

@@ -72,6 +72,8 @@ export type EventRecord = {
   marketingTasks?: MarketingTask[];
   relatedLinks?: { label: string; url: string }[];
   meetingCountLabel?: string;
+  meetingRecordSummary?: string;
+  demoCountLabel?: string;
   outcomeNotes?: string[];
   crmSnapshot?: {
     system: "HubSpot";
@@ -284,9 +286,20 @@ export const events: EventRecord[] = [
     notes: "Reference event for the shared checklist and lead-handling rules.",
     rating: "None",
     meetingsBooked: [],
+    meetingCountLabel: "54",
+    meetingRecordSummary: "54 records in the CCW Vegas Meetings tab · 12 Booth · 20 Demo · 22 Intro",
     demosBooked: [],
+    demoCountLabel: "20",
+    outcomeNotes: [
+      "The Meetings tab records 54 CCW Vegas follow-up activities: 12 Booth, 20 Demo, and 22 Intro.",
+      "One Intro record is marked Canceled. The other 53 status fields are blank, so the sheet does not prove that every scheduled activity happened.",
+      "All 54 outcome fields are blank; five rows are marked as additional touchpoints rather than net-new activity.",
+    ],
     closed: [],
     organizerUrl: "https://www.customercontactweek.com/ccw-lasvegas/schedule",
+    relatedLinks: [
+      { label: "CCW Vegas meetings tracker", url: "https://docs.google.com/spreadsheets/d/1aLsmihcnmB-eKh2y8RjOps4-rFQ0uaJfBCrem3pdiuc/edit?gid=1231160838#gid=1231160838" },
+    ],
     crmSnapshot: {
       system: "HubSpot",
       checkedAt: "Aug 7, 2026",
@@ -607,14 +620,14 @@ export const events: EventRecord[] = [
     ],
     priorityActions: [
       "Name the four attendees and assign booth coverage, lead-capture, travel, and follow-up owners. Notion currently says only “SDRs TBD.”",
-      "Use the organizer onboarding call on Aug 10 at 9:00 AM PT to confirm the booth number, package inclusions, lead retrieval, power, furniture, signage, shipping, proof-of-insurance requirements, and whether the pipe-and-drape setup changes what must be ordered.",
+      "Use the organizer onboarding call on Aug 11 at 9:30 AM PT to confirm the booth number, package inclusions, lead retrieval, power, furniture, signage, shipping, and what the pipe-and-drape setup requires. Insurance is recommended, not mandatory.",
       "Complete the exhibitor portal company profile and add the event/free-ticket link to the Simple website within the organizer’s first-week window.",
       "Save the executed contract and exhibitor guide in the Events Drive, then confirm invoice and payment status with AP.",
       "Get the event app onto every attendee’s phone, build the target list, and start pre-booking directly.",
     ],
     marketingTasks: [
       { title: "Confirm invoice payment status with AP", status: "In progress", due: "Aug 6 · payment not confirmed", dueSort: "2026-08-06", owner: "Holden + AP", note: "The invoice was forwarded to AP; payment is not yet confirmed." },
-      { title: "Use the organizer onboarding call to close booth logistics", status: "Open", due: "Aug 10 · 9:00 AM PT", dueSort: "2026-08-10", owner: "Holden", note: "Portal registration is complete. Confirm booth number, package, lead retrieval, power, furniture, signage, shipping, proof-of-insurance requirements, and whether pipe and drape changes the order." },
+      { title: "Use the organizer onboarding call to close booth logistics", status: "Open", due: "Aug 11 · 9:30 AM PT", dueSort: "2026-08-11", owner: "Holden", note: "Gabby Pring confirmed that insurance is recommended, not mandatory. Confirm booth number, package, lead retrieval, power, furniture, signage, shipping, and what pipe and drape changes in the order." },
       { title: "Complete the exhibitor company profile", status: "In progress", due: "Aug 13", dueSort: "2026-08-13", owner: "Marketing", note: "The portal showed 25% complete on Aug 6. Finish the public company details and assets." },
       { title: "Add the event and complimentary-ticket link to usesimple.ai", status: "Open", due: "Aug 13", dueSort: "2026-08-13", owner: "Marketing + Web", note: "The organizer asked for the event and free-ticket link during the first onboarding week.", url: "https://www.customerconnectexpo.com/" },
       { title: "Reconcile portal deadlines and booth assets", status: "Open", due: "Aug 17", dueSort: "2026-08-17", owner: "Marketing", note: "Several portal dates already show Aug 5. Confirm which deliverables apply, request recovery where needed, and close the Aug 17 space-only deadline." },
@@ -622,7 +635,7 @@ export const events: EventRecord[] = [
     ],
     workstreams: {
       speaking: ["None"],
-      sponsorship: ["10×10 booth with an executed exhibition-space contract", "Portal registration is complete; onboarding call is Aug 10 at 9:00 AM PT", "Confirm booth number, package inclusions, lead retrieval, power, furniture, signage, shipping, insurance requirements, and the pipe-and-drape order"],
+      sponsorship: ["10×10 booth with an executed exhibition-space contract", "Portal registration is complete; onboarding call is Aug 11 at 9:30 AM PT", "Insurance is recommended, not mandatory", "Confirm booth number, package inclusions, lead retrieval, power, furniture, signage, shipping, and the pipe-and-drape order"],
       meetings: ["No guaranteed meetings", "Use the event app and exhibitor list to build a target list and pre-book directly"],
       swag: ["None planned"],
       secondary: ["None"],
@@ -1079,7 +1092,7 @@ const eventVerificationOverrides: Record<string, EventVerification> = {
   "ccw-vegas": {
     checkedAt: "Aug 7, 2026",
     checkedAtISO: "2026-08-07",
-    sources: ["Conference tracker", "CCW Vegas plan", "HubSpot"],
+    sources: ["Conference tracker", "CCW Vegas plan", "Meetings tracker", "HubSpot"],
   },
   "ccw-exchange-chicago": {
     checkedAt: "Aug 7, 2026",
@@ -1102,9 +1115,9 @@ const eventVerificationOverrides: Record<string, EventVerification> = {
     sources: ["Conference tracker", "Notion", "Gmail", "Organizer site"],
   },
   "customer-connect-expo": {
-    checkedAt: "Aug 6, 2026",
-    checkedAtISO: "2026-08-06",
-    sources: ["Direct decision", "Notion", "Gmail", "Slack"],
+    checkedAt: "Aug 7, 2026",
+    checkedAtISO: "2026-08-07",
+    sources: ["Direct confirmation", "Gabby Pring organizer response", "Gmail", "Notion"],
   },
   "icmi-contact-center-expo": {
     checkedAt: "Aug 6, 2026",

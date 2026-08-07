@@ -45,5 +45,5 @@ test("activation signals distinguish attendance from activation certainty", () =
 test("completed event cards replace planning signals with recorded outcomes", () => {
   assert.deepEqual(getCompletedEventSignals(event("ccw-exchange-chicago")), ["Negative Feedback", "Meetings Not Recorded", "2 Follow-up Meetings"]);
   assert.deepEqual(getCompletedEventSignals(event("nice-world")), ["Good Rating", "16 Meetings Recorded", "7 Demos Recorded"]);
-  assert.deepEqual(getCompletedEventSignals(event("ccw-vegas")), ["Rating Not Recorded", "Meetings Not Recorded", "29 Attributed Deals"]);
+  assert.deepEqual(getCompletedEventSignals(event("ccw-vegas")), ["Rating Not Recorded", "54 Meetings Recorded", "20 Demos Recorded"]);
 });

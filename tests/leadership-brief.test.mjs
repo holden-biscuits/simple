@@ -42,20 +42,21 @@ test("leadership outcomes preserve CRM limits", () => {
     marketingEvents: 0,
     pipelineClaimSupported: false,
   });
-  assert.deepEqual(brief.writebacks, { ready: 19, decisions: 2, setup: 9 });
+  assert.deepEqual(brief.writebacks, { ready: 19, decisions: 2, setup: 10 });
 });
 
 test("leadership change digest separates applied facts from unresolved claims", () => {
   const digest = getLeadershipChangeDigest(events, siteStatus.sourceMonitor.changeLog);
-  assert.equal(digest.applied.length, 9);
-  assert.equal(digest.needsReview.length, 4);
+  assert.equal(digest.applied.length, 11);
+  assert.equal(digest.needsReview.length, 3);
   assert.equal(digest.applied.find((change) => change.id === "genesys-roster-confirmed")?.href, "/events/genesys-xperience#event-changes");
   assert.equal(digest.applied.find((change) => change.id === "genesys-wish-line-route-confirmed")?.href, "/events/genesys-xperience#event-changes");
   assert.equal(digest.applied.find((change) => change.id === "chicago-closeout-applied")?.href, "/events/ccw-exchange-chicago#event-changes");
   assert.equal(digest.applied.find((change) => change.id === "2027-program-added")?.href, "/sources#change-log");
   assert.equal(digest.applied.find((change) => change.id === "chicago-roster-confirmed")?.eventName, "CCW Exchange Chicago");
   assert.equal(digest.needsReview.find((change) => change.id === "hubspot-ccw-source-mismatch")?.eventName, "CCW Vegas");
-  assert.equal(digest.needsReview.find((change) => change.id === "customer-connect-onboarding-signal")?.eventName, "Customer Connect Expo");
+  assert.equal(digest.applied.find((change) => change.id === "customer-connect-onboarding-signal")?.eventName, "Customer Connect Expo");
+  assert.equal(digest.applied.find((change) => change.id === "ccw-vegas-meeting-tracker-confirmed")?.eventName, "CCW Vegas");
   assert.equal(digest.applied.some((change) => change.state === "No change"), false);
   assert.equal(digest.needsReview.some((change) => change.state === "No change"), false);
 });

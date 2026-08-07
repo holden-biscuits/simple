@@ -21,6 +21,7 @@ export function getEventPageModel(event: EventRecord, programDate: string): Even
     || event.followupMeetingsBooked
     || event.meetingCountLabel
     || event.demosBooked.length
+    || event.demoCountLabel
     || event.closed.length
     || event.outcomeNotes?.length
     || event.crmSnapshot,

@@ -93,15 +93,19 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         <p className="lede">This page tracks the support promised for each active event and the operating rules that keep contracts, creative, lead capture, follow-up, and reporting connected.</p>
         <Link className="button" href="/#events">Open the event directory <span>↗</span></Link>
       </section>
-      <PageContentsLayout primaryLabel="Marketing sections" items={[
-        { id: "marketing-pulse", label: "Workload pulse" },
-        { id: "lessons", label: "Operating lessons" },
-        { id: "event-tasks", label: "Event tasks" },
-        { id: "support-matrix", label: "Support matrix" },
-        ...playbook.map((section) => ({ id: section.id, label: section.label })),
-        { id: "event-pipeline", label: "Event pipeline" },
-        { id: "crm-setup", label: "HubSpot setup" },
-        { id: "measurement", label: "Measurement" },
+      <PageContentsLayout groups={[
+        { label: "Program now", items: [
+          { id: "marketing-pulse", label: "Workload pulse" },
+          { id: "lessons", label: "Operating lessons" },
+          { id: "event-tasks", label: "Event tasks" },
+          { id: "support-matrix", label: "Support matrix" },
+        ] },
+        { label: "Event playbook", items: playbook.map((section) => ({ id: section.id, label: section.label })) },
+        { label: "Reporting", items: [
+          { id: "event-pipeline", label: "Event pipeline" },
+          { id: "crm-setup", label: "HubSpot setup" },
+          { id: "measurement", label: "Measurement" },
+        ] },
       ]}>
 
       <section className="marketing-program-pulse" id="marketing-pulse">

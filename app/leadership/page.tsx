@@ -33,14 +33,18 @@ export default function LeadershipPage() {
         <h1>See the program without losing the source truth.</h1>
         <p className="lede">A portfolio view of commitments, execution readiness, decisions and attributable outcomes. Missing spend or CRM fields stay visible as gaps—not false certainty.</p>
       </section>
-      <PageContentsLayout primaryLabel="Brief sections" items={[
-        { id: "leadership-snapshot", label: "Snapshot" },
-        { id: "leadership-changes", label: "Recent changes" },
-        { id: "leadership-portfolio", label: "Portfolio" },
-        { id: "leadership-decisions", label: "Decisions" },
-        { id: "leadership-operating-model", label: "Operating model" },
-        { id: "leadership-outcomes", label: "Outcomes" },
-        { id: "leadership-trust", label: "What to trust" },
+      <PageContentsLayout groups={[
+        { label: "Program now", items: [
+          { id: "leadership-snapshot", label: "Snapshot" },
+          { id: "leadership-changes", label: "Recent changes" },
+          { id: "leadership-portfolio", label: "Portfolio" },
+          { id: "leadership-decisions", label: "Decisions" },
+        ] },
+        { label: "Program health", items: [
+          { id: "leadership-operating-model", label: "Operating model" },
+          { id: "leadership-outcomes", label: "Outcomes" },
+          { id: "leadership-trust", label: "What to trust" },
+        ] },
       ]}>
 
       <section className="shell leadership-snapshot" id="leadership-snapshot">

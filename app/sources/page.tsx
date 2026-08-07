@@ -39,27 +39,35 @@ export default function SourcesPage() {
         <h1>Where the event data comes from.</h1>
         <p className="lede">See what controls the site, what the recurring scan checks, and which disagreements still need a decision.</p>
       </section>
-      <PageContentsLayout primaryLabel="Source sections" items={[
-        { id: "quick-update-routes", label: "Make an update" },
-        { id: "source-monitor", label: "Source monitor" },
-        { id: "latest-scan", label: "Latest scan" },
-        { id: "freshness-policy", label: "Freshness policy" },
-        { id: "canonical-event-key", label: "Canonical Event key" },
-        { id: "data-flow", label: "How data moves" },
-        { id: "scan-contract", label: "Scan contract" },
-        { id: "data-streams", label: "Feeds and write-back" },
-        { id: "operating-roadmap", label: "Build order" },
-        { id: "field-ownership", label: "Where to update" },
-        { id: "stewardship", label: "Who updates it" },
-        { id: "crm-attribution", label: "CRM attribution" },
-        { id: "audience-segments", label: "Audience segments" },
-        { id: "writeback-queue", label: "Write-back queue" },
-        { id: "protected-decisions", label: "Direct decisions" },
-        { id: "change-log", label: "Change log" },
-        { id: "approval-queue", label: "Approval queue" },
-        { id: "source-hierarchy", label: "Source hierarchy" },
-        { id: "update-rules", label: "Update rules" },
-        { id: "source-files", label: "Open source files" },
+      <PageContentsLayout groups={[
+        { label: "Start here", items: [
+          { id: "quick-update-routes", label: "Make an update" },
+          { id: "source-monitor", label: "Source monitor" },
+          { id: "latest-scan", label: "Latest scan" },
+          { id: "freshness-policy", label: "Freshness policy" },
+        ] },
+        { label: "Data plumbing", items: [
+          { id: "canonical-event-key", label: "Canonical Event key" },
+          { id: "data-flow", label: "How data moves" },
+          { id: "scan-contract", label: "Scan contract" },
+          { id: "data-streams", label: "Feeds and write-back" },
+          { id: "operating-roadmap", label: "Build order" },
+        ] },
+        { label: "Governance", items: [
+          { id: "field-ownership", label: "Where to update" },
+          { id: "stewardship", label: "Who updates it" },
+          { id: "crm-attribution", label: "CRM attribution" },
+          { id: "audience-segments", label: "Audience segments" },
+          { id: "writeback-queue", label: "Write-back queue" },
+          { id: "protected-decisions", label: "Direct decisions" },
+          { id: "change-log", label: "Change log" },
+          { id: "approval-queue", label: "Approval queue" },
+        ] },
+        { label: "Reference", items: [
+          { id: "source-hierarchy", label: "Source hierarchy" },
+          { id: "update-rules", label: "Update rules" },
+          { id: "source-files", label: "Open source files" },
+        ] },
       ]}>
 
       <section className="shell quick-update-routes" id="quick-update-routes">
@@ -115,7 +123,7 @@ export default function SourcesPage() {
           <div className="section-intro">
             <p className="eyebrow">Latest scheduled run</p>
             <h2>What the 9:00 AM scan actually did.</h2>
-            <p>The audit passed. Three Customer Connect fields need review in Notion; no fact was safe to publish automatically.</p>
+            <p>The audit passed. It held three Customer Connect fields for review; Holden later accepted Gabby Pring’s answers as fact, so Event Basecamp now reflects them and the Notion write-backs remain queued.</p>
           </div>
           <div className="latest-scan-meta">
             <span>{latestSourceScan.runMode}</span>

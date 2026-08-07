@@ -257,7 +257,9 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
   const outcomeDetails = [
     ...event.meetingsBooked.map((item) => `Meeting · ${item}`),
     ...(event.followupMeetingsBooked ? [`Follow-up meetings booked · ${event.followupMeetingsBooked}`] : []),
+    ...(event.meetingCountLabel ? [`Meeting records · ${event.meetingCountLabel}`, ...(event.meetingRecordSummary ? [event.meetingRecordSummary] : [])] : []),
     ...event.demosBooked.map((item) => `Demo · ${item}`),
+    ...(event.demoCountLabel ? [`Demo records · ${event.demoCountLabel}`] : []),
     ...event.closed.map((item) => `Closed · ${item}`),
     ...(event.outcomeNotes ?? []).map((item) => `Outcome · ${item}`),
     ...(event.rating !== "None" ? [`Event rating · ${event.rating}`] : []),

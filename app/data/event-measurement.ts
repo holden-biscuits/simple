@@ -86,6 +86,7 @@ export const measurementReadiness = {
 type MeasurementEvent = {
   meetingsBooked: string[];
   meetingCountLabel?: string;
+  meetingRecordSummary?: string;
   crmSnapshot?: unknown;
 };
 
@@ -93,7 +94,7 @@ export function getEventMeasurementCheckpoint(event: MeasurementEvent, phase: "p
   const meetingEvidence = event.meetingsBooked.length
     ? `${event.meetingsBooked.length} account${event.meetingsBooked.length === 1 ? "" : "s"} recorded`
     : event.meetingCountLabel
-      ? `${event.meetingCountLabel} meeting records · account names missing`
+      ? event.meetingRecordSummary ?? `${event.meetingCountLabel} meeting records · account names missing`
       : "No meeting records yet";
   const nextAction = phase === "now"
     ? "Reconcile booked, held, canceled and no-show outcomes before the team leaves today."

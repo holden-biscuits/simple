@@ -75,7 +75,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Negative Feedback/);
   assert.match(html, /2(?:<!-- -->)? Follow-up Meetings/);
   assert.match(html, /16(?:<!-- -->)? Meetings Recorded/);
-  assert.match(html, /29(?:<!-- -->)? Attributed Deals/);
+  assert.match(html, /54(?:<!-- -->)? Meetings Recorded/);
+  assert.match(html, /20(?:<!-- -->)? Demos Recorded/);
   assert.match(html, /Speaking TBD/);
   assert.match(html, /Program pulse/);
   assert.match(html, /id="event-lifecycle"/);
@@ -247,12 +248,12 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Active event audience segments[\s\S]*0 active-event segments are automatically maintained/);
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
-  assert.match(html, /<span>Applied<\/span><strong>9<\/strong>/);
-  assert.match(html, /<span>Needs review<\/span><strong>4<\/strong>/);
+  assert.match(html, /<span>Applied<\/span><strong>11<\/strong>/);
+  assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
   assert.match(html, /<span>No change<\/span><strong>5<\/strong>/);
-  assert.match(html, /Route new Customer Connect organizer details to Notion/);
+  assert.match(html, /Accepted Gabby Pring’s Customer Connect answers/);
   assert.match(html, /Aug 11 at 9:30 AM PT/);
-  assert.match(html, /insurance advised, not mandatory/);
+  assert.match(html, /insurance recommended, not mandatory/);
   assert.match(html, /Confirmed Taylor as the sole Chicago attendee/);
   assert.match(html, /Taylor only · Josh did not attend/);
   assert.match(html, /Reconcile two CCW controlled-field mismatches/);
@@ -328,9 +329,9 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /2(?:<!-- -->)? \/ (?:<!-- -->)?13/);
   assert.match(html, /Planning gaps open/);
   assert.match(html, /What changed—and what still needs a decision\./);
-  assert.match(html, /9<\/strong><span>Applied updates/);
-  assert.match(html, /4<\/strong><span>Needs review/);
-  assert.match(html, /Customer Connect Expo[\s\S]*Route new Customer Connect organizer details to Notion/);
+  assert.match(html, /11<\/strong><span>Applied updates/);
+  assert.match(html, /3<\/strong><span>Needs review/);
+  assert.match(html, /Customer Connect Expo[\s\S]*Accepted Gabby Pring’s Customer Connect answers/);
   assert.match(html, /Genesys Xperience[\s\S]*Confirmed the Genesys Xperience roster/);
   assert.match(html, /href="\/events\/genesys-xperience#event-changes"/);
   assert.match(html, /Program-wide[\s\S]*Added the 2027 event program/);
@@ -873,7 +874,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Marketing tasks/);
   assert.match(genesysHtml, /8(?:<!-- -->)? of nine workstreams are in play/);
   assert.match(genesysHtml, /<strong>Navigate<\/strong>/);
-  assert.match(genesysHtml, /<b>Plan sections<\/b>[\s\S]*href="#workstream-marketing"/);
+  assert.match(genesysHtml, /<b>Event brief<\/b>[\s\S]*<b>Plan sections<\/b>[\s\S]*href="#workstream-marketing"[\s\S]*<b>Results \+ sources<\/b>/);
+  assert.ok(genesysHtml.indexOf('href="#event-crew"') < genesysHtml.indexOf('href="#workstream-speaking"'));
+  assert.ok(genesysHtml.indexOf('href="#workstream-budget"') < genesysHtml.indexOf('href="#event-changes"'));
   assert.match(genesysHtml, /<summary>Navigate this event(?:<!-- -->)? <span>[^<]+<\/span><\/summary>/);
   assert.match(genesysHtml, /id="workstream-marketing"/);
   assert.match(genesysHtml, /id="workstream-budget"/);
@@ -929,7 +932,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Swag \/ materials<\/span><strong>None/);
   assert.match(customerConnectHtml, /Four attendees and a 10×10 booth are planned/);
   assert.match(customerConnectHtml, /executed exhibition-space contract/);
-  assert.match(customerConnectHtml, /Aug 10 at 9:00 AM PT/);
+  assert.match(customerConnectHtml, /Aug 11 at 9:30 AM PT/);
+  assert.match(customerConnectHtml, /Insurance is recommended, not mandatory/);
   assert.match(customerConnectHtml, /25% complete on Aug 6/);
   assert.match(customerConnectHtml, /Next move[\s\S]*Confirm invoice payment status with AP/);
   assert.match(customerConnectHtml, /Owner[\s\S]*Holden \+ AP/);
@@ -941,6 +945,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Open event project(?:<!-- -->)? ↗/);
   assert.match(customerConnectHtml, /Recorded Customer Connect portal progress/);
   assert.match(customerConnectHtml, /Confirmed Customer Connect Expo participation/);
+  assert.match(customerConnectHtml, /Accepted Gabby Pring’s Customer Connect answers/);
   assert.match(customerConnectHtml, /id="workstream-marketing"/);
   assert.match(customerConnectHtml, /id="workstream-budget"/);
   assert.doesNotMatch(customerConnectHtml, /id="workstream-swag"/);
@@ -969,6 +974,13 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(vegasHtml, /Demo completed/);
   assert.match(vegasHtml, /All 29 exactly attributed deals currently have \$0 amount/);
   assert.match(vegasHtml, /one source-only record and one detail-only record remain outside exact attribution/i);
+  assert.match(vegasHtml, /Meetings recorded<\/span><strong>54/);
+  assert.match(vegasHtml, /54 records in the CCW Vegas Meetings tab · 12 Booth · 20 Demo · 22 Intro/);
+  assert.match(vegasHtml, /Demos recorded[\s\S]*20 rows labeled Demo in the meetings tracker/);
+  assert.match(vegasHtml, /One Intro record is marked Canceled/);
+  assert.match(vegasHtml, /All 54 outcome fields are blank/);
+  assert.match(vegasHtml, /CCW Vegas meetings tracker/);
+  assert.match(vegasHtml, /CCW Vegas meeting tracker reconciliation/);
 
   const lead = await render("/events/the-lead-summit");
   const leadHtml = await lead.text();

@@ -23,13 +23,19 @@ export default function GuidesPage() {
         <h1>How we prepare, work the floor, and follow up.</h1>
         <p className="lede">Event pages show the field workstreams that apply. Empty sections stay out of the way, while marketing production and budget work live in the event tabs on the marketing page.</p>
       </section>
-      <PageContentsLayout primaryLabel="Guide sections" items={[
-        { id: "standard-checklist", label: "Standard checklist" },
-        { id: "planning-sequence", label: "Planning sequence" },
-        { id: "zoominfo", label: "ZoomInfo" },
-        { id: "booth-etiquette", label: "Booth etiquette" },
-        { id: "lead-tiers", label: "Lead tiers" },
-        { id: "role-guides", label: "Role guides" },
+      <PageContentsLayout groups={[
+        { label: "Plan", items: [
+          { id: "standard-checklist", label: "Standard checklist" },
+          { id: "planning-sequence", label: "Planning sequence" },
+        ] },
+        { label: "Work the event", items: [
+          { id: "zoominfo", label: "ZoomInfo" },
+          { id: "booth-etiquette", label: "Booth etiquette" },
+          { id: "lead-tiers", label: "Lead tiers" },
+        ] },
+        { label: "Role guides", items: [
+          { id: "role-guides", label: "Open role guides" },
+        ] },
       ]}>
       <section className="shell guide-layout">
         <article className="guide-panel" id="standard-checklist">

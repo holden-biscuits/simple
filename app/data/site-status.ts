@@ -39,9 +39,11 @@ export const siteStatus = {
     protectedOverrides: [
       { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", fieldKey: "status", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
       { id: "customer-connect-participation", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
+      { id: "customer-connect-gabby-onboarding", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", fieldKey: "workstreams", field: "Organizer onboarding", value: "Gabby Pring controls organizer facts · call Aug 11 at 9:30 AM PT · insurance recommended, not mandatory · portal registration complete", confirmedAt: "Aug 07 · 2026" },
       { id: "icmi-participation", eventSlug: "icmi-contact-center-expo", eventName: "ICMI Contact Center Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
       { id: "genesys-roster", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", fieldKey: "team", field: "Attendees", value: "Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars", confirmedAt: "Aug 06 · 2026" },
       { id: "genesys-meetings", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", fieldKey: "guaranteedMeetings", field: "Guaranteed meetings", value: "None", confirmedAt: "Aug 06 · 2026" },
+      { id: "ccw-vegas-meeting-tracker", eventSlug: "ccw-vegas", eventName: "CCW Vegas", fieldKey: "meetingCountLabel", field: "Meeting records", value: "54 records · 12 Booth · 20 Demo · 22 Intro · 1 canceled · 54 outcomes blank", confirmedAt: "Aug 07 · 2026" },
       { id: "genesys-wish-line-route", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", fieldKey: "workstreams", field: "Wish Line activation", value: "Quarter-mile taxi geofence · condensed Bellagio-to-Fontainebleau loop · spot-based bonus · airport inventory unconfirmed · AP confirmation pending", confirmedAt: "Aug 07 · 2026" },
       { id: "chicago-completed", eventSlug: "ccw-exchange-chicago", eventName: "CCW Exchange Chicago", fieldKey: "completedAt", field: "Completion", value: "Completed Aug 7, 2026", confirmedAt: "Aug 07 · 2026" },
       { id: "chicago-roster", eventSlug: "ccw-exchange-chicago", eventName: "CCW Exchange Chicago", fieldKey: "team", field: "Attendees", value: "Taylor only · Josh did not attend", confirmedAt: "Aug 07 · 2026" },
@@ -54,6 +56,18 @@ export const siteStatus = {
       { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", fieldKey: "speaking", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
     ] as SourceOverride[],
     changeLog: [
+      {
+        id: "ccw-vegas-meeting-tracker-confirmed",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Replaced the zero CCW Vegas meeting result",
+        field: "Meeting and demo records",
+        before: "Event results showed no meetings and no demos",
+        after: "54 records · 12 Booth · 20 Demo · 22 Intro · 1 canceled · status and outcome gaps remain explicit",
+        source: "User-provided CCW Vegas Meetings tab",
+        sourceUrl: "https://docs.google.com/spreadsheets/d/1aLsmihcnmB-eKh2y8RjOps4-rFQ0uaJfBCrem3pdiuc/edit?gid=1231160838#gid=1231160838",
+        eventSlug: "ccw-vegas",
+      },
       {
         id: "chicago-roster-confirmed",
         state: "Applied" as SourceChangeState,
@@ -100,14 +114,14 @@ export const siteStatus = {
       },
       {
         id: "customer-connect-onboarding-signal",
-        state: "Needs review" as SourceChangeState,
+        state: "Applied" as SourceChangeState,
         checkedAt: "Aug 07 · 2026",
-        title: "Route new Customer Connect organizer details to Notion",
+        title: "Accepted Gabby Pring’s Customer Connect answers",
         field: "Onboarding call and insurance",
         before: "Event Basecamp and Notion write-back: Aug 10 at 9:00 AM PT · insurance requirement open",
-        after: "Organizer signal: Aug 11 at 9:30 AM PT · insurance advised, not mandatory",
-        source: "Gmail · organizer calendar",
-        sourceUrl: "https://mail.google.com/mail/#all/19fdc431223bee42",
+        after: "Organizer call: Aug 11 at 9:30 AM PT · insurance recommended, not mandatory · portal registration complete",
+        source: "Gabby Pring organizer email + updated calendar · Holden direct confirmation",
+        sourceUrl: "https://mail.google.com/mail/#all/19fdc442630791ac",
         eventSlug: "customer-connect-expo",
       },
       {
@@ -153,7 +167,7 @@ export const siteStatus = {
         title: "Recorded Customer Connect portal progress",
         field: "Exhibitor setup",
         before: "Portal active · registration status and insurance requirements open",
-        after: "Registration complete · insurance and pipe-and-drape requirements queued for the Aug 10 organizer call",
+        after: "Registration complete · insurance is recommended, not mandatory · pipe-and-drape details remain for the Aug 11 organizer call",
         source: "Organizer email · direct reply",
         sourceUrl: "https://mail.google.com/mail/#all/19fd9f287a45cfbe",
         eventSlug: "customer-connect-expo",
@@ -259,6 +273,18 @@ export const siteStatus = {
       },
     ] as SourceChange[],
     latestChecks: [
+      {
+        system: "Google Sheets · direct confirmation",
+        checkedAt: "Aug 07 · 2026",
+        scope: "Task review · CCW Vegas Meetings 6/22 - 8/12 tab",
+        result: "The user-provided meetings tracker contains 54 records: 12 Booth, 20 Demo, and 22 Intro. One Intro is canceled, 53 status cells are blank, all 54 outcome cells are blank, and five rows are marked as additional touchpoints rather than net new. Event Basecamp now shows the recorded activity without treating blank outcomes as completed meetings, pipeline, or revenue. No Sheet, HubSpot, or production write was made.",
+      },
+      {
+        system: "Direct confirmation · Gmail",
+        checkedAt: "Aug 07 · 2026",
+        scope: "Task review · Customer Connect organizer answers",
+        result: "Holden directed Event Basecamp to treat Gabby Pring’s organizer responses as fact. The brief now records the rescheduled Aug 11 at 9:30 AM PT onboarding call, completed portal registration, and insurance as recommended rather than mandatory. The Customer Connect Notion project remains blank, so three exact upstream write-backs remain queued. No Gmail, Notion, or production write was made.",
+      },
       {
         system: "HubSpot",
         checkedAt: "Aug 07 · 2026",

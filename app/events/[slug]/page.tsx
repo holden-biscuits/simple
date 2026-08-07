@@ -74,17 +74,40 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const note = event.notes.trim();
   const isSourceConflict = note.toLowerCase().startsWith("source conflict:");
   const resultGroups = [
-    [meetingProgressLabel, event.meetingsBooked.length ? event.meetingsBooked : event.meetingCountLabel ? [`${event.meetingCountLabel} meetings ${eventPhase === "past" ? "recorded" : "booked"}; account names were not captured`] : []],
+    [meetingProgressLabel, event.meetingsBooked.length ? event.meetingsBooked : event.meetingCountLabel ? [event.meetingRecordSummary ?? `${event.meetingCountLabel} meetings ${eventPhase === "past" ? "recorded" : "booked"}; account names were not captured`] : []],
     ["Follow-up meetings booked", event.followupMeetingsBooked ? [`${event.followupMeetingsBooked} scheduled · account, contact, date, owner, and outcome pending in HubSpot`] : []],
-    ["Demos booked", event.demosBooked],
+    [eventPhase === "past" ? "Demos recorded" : "Demos booked", event.demosBooked.length ? event.demosBooked : event.demoCountLabel ? [`${event.demoCountLabel} rows labeled Demo in the meetings tracker`] : []],
     ["Closed", event.closed],
   ] as const;
   const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
   const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
   const workstreamContents = activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] }));
-  const firstActiveWorkstreamHref = activeWorkstreamKeys.length ? `#workstream-${activeWorkstreamKeys[0]}` : "#event-crew";
   const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
+  const eventBriefContents = isNotAttending ? [
+    { id: "event-tldr", label: "TL;DR" },
+    ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
+    { id: "event-no-plan", label: "Event status" },
+  ] : [
+    { id: "event-tldr", label: "TL;DR" },
+    ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
+    { id: "event-prospecting", label: "Prospecting" },
+    ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
+    ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
+    { id: "event-crew", label: "Crew" },
+  ];
+  const eventRecordContents = [
+    ...(showResults ? [{ id: "event-results", label: "Results" }] : []),
+    ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
+    ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
+    { id: "event-update-route", label: "Update this event" },
+  ];
+  const eventContentsGroups = [
+    { label: "Event brief", items: eventBriefContents },
+    ...(!isNotAttending && workstreamContents.length ? [{ label: pageModel.secondaryLabel, items: workstreamContents }] : []),
+    { label: isNotAttending ? "Source record" : eventPhase === "past" ? "Closeout + sources" : "Results + sources", items: eventRecordContents },
+  ];
+  const firstActiveWorkstreamHref = activeWorkstreamKeys.length ? `#workstream-${activeWorkstreamKeys[0]}` : "#event-crew";
   const footprint = getEventFootprint(event);
   const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see field checklist";
   const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;
@@ -130,25 +153,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>
         </div>
       </section>
-      <PageContentsLayout primaryLabel="Event brief" mobileLabel="Navigate this event" secondaryItems={isNotAttending ? [] : workstreamContents} secondaryLabel={pageModel.secondaryLabel} items={isNotAttending ? [
-        { id: "event-tldr", label: "TL;DR" },
-        ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
-        { id: "event-no-plan", label: "Event status" },
-        ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
-        ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
-        { id: "event-update-route", label: "Update this event" },
-      ] : [
-        { id: "event-tldr", label: "TL;DR" },
-        ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
-        { id: "event-prospecting", label: "Prospecting" },
-        ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
-        ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
-        { id: "event-crew", label: "Crew" },
-        ...(showResults ? [{ id: "event-results", label: "Results" }] : []),
-        ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
-        ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
-        { id: "event-update-route", label: "Update this event" },
-      ]}>
+      <PageContentsLayout mobileLabel="Navigate this event" groups={eventContentsGroups}>
 
       <section className="event-tldr shell" id="event-tldr">
         <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>{pageModel.tldrHeading}</h2></div>

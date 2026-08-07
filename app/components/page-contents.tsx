@@ -4,31 +4,34 @@ import { PageContentsLinks, type PageContentsGroup } from "./page-contents-links
 export type PageContentsItem = { id: string; label: string };
 
 export function PageContents({
-  items,
+  items = [],
   secondaryItems = [],
   secondaryLabel = "More sections",
   primaryLabel = "Page sections",
   mobileLabel = "Navigate this page",
   variant = "bar",
+  groups,
 }: {
-  items: PageContentsItem[];
+  items?: PageContentsItem[];
   secondaryItems?: PageContentsItem[];
   secondaryLabel?: string;
   primaryLabel?: string;
   mobileLabel?: string;
   variant?: "bar" | "side";
+  groups?: PageContentsGroup[];
 }) {
   if (variant === "side") {
-    const contentsGroups: PageContentsGroup[] = [
+    const contentsGroups: PageContentsGroup[] = groups?.length ? groups : [
       { label: primaryLabel, items },
       ...(secondaryItems.length ? [{ label: secondaryLabel, items: secondaryItems }] : []),
     ];
+    const itemCount = contentsGroups.reduce((total, group) => total + group.items.length, 0);
 
     return (
       <aside className="page-contents-side">
         <PageContentsLinks groups={contentsGroups} showHeading />
         <details className="page-contents-mobile">
-          <summary>{mobileLabel} <span>{items.length + secondaryItems.length}</span></summary>
+          <summary>{mobileLabel} <span>{itemCount}</span></summary>
           <PageContentsLinks groups={contentsGroups} />
         </details>
       </aside>
@@ -51,13 +54,15 @@ export function PageContentsLayout({
   secondaryLabel,
   primaryLabel,
   mobileLabel,
+  groups,
   children,
 }: {
-  items: PageContentsItem[];
+  items?: PageContentsItem[];
   secondaryItems?: PageContentsItem[];
   secondaryLabel?: string;
   primaryLabel?: string;
   mobileLabel?: string;
+  groups?: PageContentsGroup[];
   children: ReactNode;
 }) {
   return (
@@ -69,6 +74,7 @@ export function PageContentsLayout({
         secondaryLabel={secondaryLabel}
         primaryLabel={primaryLabel}
         mobileLabel={mobileLabel}
+        groups={groups}
       />
       <div className="page-with-contents-main">{children}</div>
     </div>
