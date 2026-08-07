@@ -1,4 +1,4 @@
-import { sourceLinks } from "./events";
+import { sourceLinks } from "./events.ts";
 
 export type SourceFlowStep = {
   number: string;
@@ -17,10 +17,29 @@ export type FieldOwner = {
 export type WritebackItem = {
   system: string;
   scope: string;
-  action: string;
+  current: string;
+  proposed: string;
+  evidence: string;
+  evidenceUrl?: string;
   state: "Ready for approval" | "Decision needed" | "Setup needed";
   url: string;
 };
+
+export type SourceSystem = "direct" | "sheet" | "notion" | "drive" | "hubspot" | "organizer" | "gmail" | "slack" | "granola" | "monaco";
+
+export type EventFieldRoute = {
+  field: string;
+  owner: SourceSystem;
+  destination: string;
+};
+
+export const eventFieldRoutes: EventFieldRoute[] = [
+  ...["slug", "name", "dates", "dateSort", "dateEndSort", "location", "status", "speaking", "speakingStatus", "sponsorship", "sponsorshipStatus", "guaranteedMeetings", "attendeeCount", "team", "available", "rating"].map((field) => ({ field, owner: "sheet" as const, destination: "Conference tracker" })),
+  ...["notionUrl", "credentials", "specialConsiderations", "priorityActions", "marketingTasks", "notes", "workstreams"].map((field) => ({ field, owner: "notion" as const, destination: "Conference project in Notion" })),
+  ...["meetingsBooked", "meetingCountLabel", "demosBooked", "closed", "outcomeNotes", "crmSnapshot"].map((field) => ({ field, owner: "hubspot" as const, destination: "HubSpot" })),
+  ...["organizerUrl", "venue"].map((field) => ({ field, owner: "organizer" as const, destination: "Organizer source, then the conference tracker or Notion" })),
+  { field: "relatedLinks", owner: "drive", destination: "Events Drive, then the conference project in Notion" },
+];
 
 export const sourceFlow: SourceFlowStep[] = [
   {
@@ -93,43 +112,97 @@ export const fieldOwners: FieldOwner[] = [
 export const writebackQueue: WritebackItem[] = [
   {
     system: "Conference tracker",
-    scope: "Five protected direct corrections",
-    action: "Mirror the confirmed Contact.io, Customer Connect and ICMI participation decisions plus the nine-person Genesys roster and zero guaranteed meetings into the tracker.",
+    scope: "Contact.io participation",
+    current: "Status: TBD · 5 attendees planned · Carter available",
+    proposed: "Status: No · 0 attendees · clear the available roster",
+    evidence: "Holden direct confirmation · Aug 6",
+    evidenceUrl: "/sources#protected-decisions",
     state: "Ready for approval",
-    url: sourceLinks.sheet,
+    url: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0&range=A15:R15",
   },
   {
     system: "Conference tracker",
-    scope: "CCW Vegas 2027 speaking",
-    action: "Resolve whether the directory should count one contracted speaking opportunity or three separate programs before changing the tracker or the protected site value.",
+    scope: "Customer Connect Expo participation",
+    current: "Status blank · attendee count blank",
+    proposed: "Status: Confirmed · 4 attendees planned · names remain open",
+    evidence: "Holden direct confirmation + executed exhibitor contract · Aug 6",
+    evidenceUrl: "/events/customer-connect-expo",
+    state: "Ready for approval",
+    url: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0&range=A18:R18",
+  },
+  {
+    system: "Conference tracker",
+    scope: "ICMI participation",
+    current: "Status: Tentative · 6 attendees planned",
+    proposed: "Status: Confirmed · keep 6 attendees planned · names remain open",
+    evidence: "Holden direct confirmation · Aug 6",
+    evidenceUrl: "/events/icmi-contact-center-expo",
+    state: "Ready for approval",
+    url: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0&range=A24:R24",
+  },
+  {
+    system: "Conference tracker",
+    scope: "Genesys Xperience roster",
+    current: "Cat, Matt, Taylor and Josh marked yes · Carter marked available",
+    proposed: "Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars attending",
+    evidence: "Holden direct confirmation · 9 attendees · Aug 6",
+    evidenceUrl: "/events/genesys-xperience#event-crew",
+    state: "Ready for approval",
+    url: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0&range=A16:R16",
+  },
+  {
+    system: "Conference tracker",
+    scope: "CCW Vegas 2027 workshop date",
+    current: "Workshop labeled “Mon Jun 15, 3:30–5:00 PM”; June 15, 2027 is Tuesday",
+    proposed: "Confirm the intended date with the organizer, then correct the weekday or calendar date",
+    evidence: "2027 tracker + calendar validation · Aug 6",
+    evidenceUrl: "/events/ccw-vegas-2027",
     state: "Decision needed",
     url: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=113603184#gid=113603184",
   },
   {
     system: "Notion",
-    scope: "Events home and Genesys Xperience",
-    action: "Change the 2026-only source note to 2026–2027, replace Monaco logging with HubSpot, record the named roster, and mark the Wish Line and talk inputs as confirmed.",
+    scope: "Events home source note",
+    current: "Calls the 2026 Sales Conferences sheet the source of truth",
+    proposed: "Name the 2026 and 2027 tracker tabs and link the fieldbook as the reconciled read view",
+    evidence: "Live Notion page checked Aug 6",
     state: "Ready for approval",
     url: sourceLinks.notion,
   },
   {
+    system: "Notion",
+    scope: "Genesys Xperience execution page",
+    current: "Generic roster · Wish Line labeled in evaluation · talk title/abstract open · Monaco logging",
+    proposed: "Name all 9 attendees · mark Wish Line approved and talk inputs locked · replace Monaco with HubSpot",
+    evidence: "Holden confirmations + live Notion page checked Aug 6",
+    evidenceUrl: "/events/genesys-xperience",
+    state: "Ready for approval",
+    url: "https://www.notion.so/3aa6fee642fe81c88a89de617863507c",
+  },
+  {
     system: "HubSpot",
     scope: "Stable event attribution",
-    action: "Add one canonical Event key across deals and meetings, keep Deal Source reportable, and use Deal Source Detail for the specific event. Marketing Event writes need HubSpot reauthorization before that object can be the shared event entity.",
+    current: "Event-specific attribution is free text; 29 explicit records all point to CCW Vegas",
+    proposed: "Add the canonical Event key to deals and meetings; keep Deal Source reportable and use Deal Source Detail for the event. Marketing Event writes need HubSpot reauthorization.",
+    evidence: "HubSpot property and record audit · Aug 6",
     state: "Setup needed",
     url: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list",
   },
   {
     system: "Events Drive",
     scope: "Folder structure",
-    action: "Create one folder per confirmed event with Contracts, Creative, Attendees and Post-event subfolders, then store those folder links on the matching Notion page.",
+    current: "One restricted Genesys rules brief in the Events Drive",
+    proposed: "One folder per confirmed event with Contracts, Creative, Attendees and Post-event subfolders; store each folder link in Notion",
+    evidence: "Events Drive inventory · Aug 6",
     state: "Setup needed",
     url: sourceLinks.eventsDrive,
   },
   {
     system: "Slack or Gmail",
     scope: "Change roundup destination",
-    action: "Keep the Codex roundup as the audit record. Add a leadership-facing Slack channel or email destination only after the audience and level of detail are chosen.",
+    current: "Roundup posts only in this Codex task",
+    proposed: "Keep Codex as the audit record; add one leadership-facing Slack or email destination after the audience and detail level are chosen",
+    evidence: "Current automation configuration",
     state: "Setup needed",
     url: "/sources#source-monitor",
   },

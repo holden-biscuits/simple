@@ -23,6 +23,7 @@ const referenceRecords: SearchRecord[] = [
   { type: "Operations", title: "How event data moves", href: "/sources#data-flow", description: "The scheduled path from source detection through reconciliation, publication approval, and upstream write-back.", keywords: "data pipeline live feed scheduled snapshot detect reconcile publish writeback write-back event key sync integration" },
   { type: "Operations", title: "Where to update event data", href: "/sources#field-ownership", description: "The owning system, intake path, correction destination, and automation rule for every event-data category.", keywords: "system of record field ownership tracker notion hubspot drive slack gmail granola monaco dates staffing tasks contracts meetings demos deals pipeline" },
   { type: "Operations", title: "Source write-back queue", href: "/sources#writeback-queue", description: "Known upstream corrections and integration setup work that still needs approval or a decision.", keywords: "write back upstream mismatch drift protected decision tracker notion genesys hubspot event attribution event key folder structure roundup" },
+  { type: "Operations", title: "Event data reconciliation rules", href: "/sources#update-rules", description: "How the source scan handles direct corrections, source ownership, message signals, conflicts, and publication approval.", keywords: "reconciliation scanner rules protected override direct confirmation source owner apply review no change reject approval" },
 ];
 
 const eventRecords: SearchRecord[] = events.map((event) => {

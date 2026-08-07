@@ -129,12 +129,13 @@ export default function SourcesPage() {
             <p>These are known mismatches or setup jobs. Nothing in this queue writes to an external system until the exact change is approved.</p>
           </div>
           <div className="writeback-grid">
-            {writebackQueue.map((item) => <a href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noreferrer" : undefined} key={`${item.system}-${item.scope}`}>
+            {writebackQueue.map((item) => <article key={`${item.system}-${item.scope}`}>
               <header><span>{item.system}</span><b className={`writeback-state writeback-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</b></header>
               <h3>{item.scope}</h3>
-              <p>{item.action}</p>
-              <strong>Open destination ↗</strong>
-            </a>)}
+              <dl className="writeback-diff"><div><dt>Current</dt><dd>{item.current}</dd></div><div><dt>Proposed</dt><dd>{item.proposed}</dd></div></dl>
+              <p className="writeback-evidence">Evidence · {item.evidence}{item.evidenceUrl ? <Link href={item.evidenceUrl}> View →</Link> : null}</p>
+              <a className="writeback-destination" href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noreferrer" : undefined}>Open destination ↗</a>
+            </article>)}
           </div>
           <BackToTop />
         </div>

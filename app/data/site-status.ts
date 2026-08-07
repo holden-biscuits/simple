@@ -16,6 +16,7 @@ export type SourceOverride = {
   id: string;
   eventSlug: string;
   eventName: string;
+  fieldKey: string;
   field: string;
   value: string;
   confirmedAt: string;
@@ -32,12 +33,12 @@ export const siteStatus = {
     connectionCheckedLabel: "Aug 06 · 2026",
     lastSuccessfulScan: "Aug 06, 2026 · 6:26 PM PT · manual baseline",
     protectedOverrides: [
-      { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
-      { id: "customer-connect-participation", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
-      { id: "icmi-participation", eventSlug: "icmi-contact-center-expo", eventName: "ICMI Contact Center Expo", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
-      { id: "genesys-roster", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", field: "Attendees", value: "Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars", confirmedAt: "Aug 06 · 2026" },
-      { id: "genesys-meetings", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", field: "Guaranteed meetings", value: "None", confirmedAt: "Aug 06 · 2026" },
-      { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
+      { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", fieldKey: "status", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
+      { id: "customer-connect-participation", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
+      { id: "icmi-participation", eventSlug: "icmi-contact-center-expo", eventName: "ICMI Contact Center Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
+      { id: "genesys-roster", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", fieldKey: "team", field: "Attendees", value: "Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars", confirmedAt: "Aug 06 · 2026" },
+      { id: "genesys-meetings", eventSlug: "genesys-xperience", eventName: "Genesys Xperience", fieldKey: "guaranteedMeetings", field: "Guaranteed meetings", value: "None", confirmedAt: "Aug 06 · 2026" },
+      { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", fieldKey: "speaking", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
     ] as SourceOverride[],
     changeLog: [
       {
@@ -138,8 +139,26 @@ export const siteStatus = {
         source: "HubSpot",
         sourceUrl: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list",
       },
+      {
+        id: "genesys-meetings-upstream-aligned",
+        state: "No change" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Genesys guaranteed meetings already match",
+        field: "Guaranteed meetings",
+        before: "Fieldbook: None",
+        after: "Tracker: No · no write-back required",
+        source: "Google Sheets",
+        sourceUrl: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0&range=A16:R16",
+        eventSlug: "genesys-xperience",
+      },
     ] as SourceChange[],
     latestChecks: [
+      {
+        system: "Google Sheets · Notion",
+        checkedAt: "Aug 06 · 2026",
+        scope: "Upstream write-back verification",
+        result: "The tracker was re-read at the exact Contact.io, Genesys Xperience, Customer Connect Expo and ICMI rows. Four corrections remain: Contact.io participation, Customer Connect participation, ICMI participation and the Genesys roster. Genesys guaranteed meetings already says No and was removed from the write-back queue. The Events home and Genesys project in Notion were also re-read; both still contain the older source note or execution language shown in the queue.",
+      },
       {
         system: "Google Sheets · organizer sites",
         checkedAt: "Aug 06 · 2026",
