@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getEventPhase, getEventTrackerRowUrl, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
@@ -14,7 +14,7 @@ import { getBriefIssueAction, getEventBriefReadiness } from "../../data/event-br
 import { getEventSourceChanges } from "../../data/site-status";
 import { getEventRoleRoutes } from "../../data/event-role-routes";
 import { getEventFootprint } from "../../data/event-footprint";
-import { eventUpdateRoutes } from "../../data/source-governance";
+import { eventUpdateRoutes, getEventWritebackQueue } from "../../data/source-governance";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +40,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const measurementCheckpoint = getEventMeasurementCheckpoint(event, eventPhase);
   const briefReadiness = getEventBriefReadiness(event, programDate);
   const recentChanges = getEventSourceChanges(event.slug);
+  const eventWritebacks = getEventWritebackQueue(event.slug);
   const roleRoutes = getEventRoleRoutes(event, eventPhase);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
@@ -85,14 +86,16 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const showResults = eventPhase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
   const updateRoutes = eventUpdateRoutes
     .filter((route) => !route.attendingOnly || !isNotAttending)
-    .map((route) => route.id === "notion"
-      ? {
-          ...route,
-          url: event.notionUrl ?? route.url,
-          system: event.notionUrl ? route.system : "Notion setup needed",
-          detail: event.notionUrl ? route.detail : "Create or locate the event project before execution work starts.",
-        }
-      : route);
+    .map((route) => {
+      if (route.id === "tracker") return { ...route, url: getEventTrackerRowUrl(event.slug), action: "Open event row" };
+      if (route.id === "notion") return {
+        ...route,
+        url: event.notionUrl ?? route.url,
+        system: event.notionUrl ? route.system : "Notion setup needed",
+        detail: event.notionUrl ? route.detail : "Create or locate the event project before execution work starts.",
+      };
+      return route;
+    });
 
   return (
     <main id="page-top">
@@ -108,12 +111,14 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
+        ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
         { id: "event-update-route", label: "Update this event" },
         { id: "event-no-plan", label: "Event status" },
       ] : [
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
+        ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
         { id: "event-update-route", label: "Update this event" },
         ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
         { id: "event-crew", label: "Crew" },
@@ -167,6 +172,20 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <footer>{change.sourceUrl ? <a href={change.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a> : <span>{change.source}</span>}<Link href="/sources#change-log">Open full log →</Link></footer>
           </article>;
         })}</div>
+        <BackToTop />
+      </section> : null}
+
+      {eventWritebacks.length ? <section className="event-writebacks shell" id="event-writebacks">
+        <div className="section-intro"><p className="eyebrow">Source write-backs</p><h2>Source records still need to catch up.</h2><p>The fieldbook and an owning system do not match yet. Each card shows the exact upstream correction and its approval state; update the destination, then remove the item after a fresh source check.</p></div>
+        <div className="writeback-grid event-writeback-grid">
+          {eventWritebacks.map((item) => <article key={`${item.system}-${item.scope}`}>
+            <header><span>{item.system}</span><b className={`writeback-state writeback-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</b></header>
+            <h3>{item.scope}</h3>
+            <dl className="writeback-diff"><div><dt>Current source</dt><dd>{item.current}</dd></div><div><dt>Proposed source</dt><dd>{item.proposed}</dd></div></dl>
+            <p className="writeback-evidence">Evidence · {item.evidence}{item.evidenceUrl ? <Link href={item.evidenceUrl}> View →</Link> : null}</p>
+            <a className="writeback-destination" href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noreferrer" : undefined}>Open {item.system} ↗</a>
+          </article>)}
+        </div>
         <BackToTop />
       </section> : null}
 

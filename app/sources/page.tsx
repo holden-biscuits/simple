@@ -324,7 +324,7 @@ export default function SourcesPage() {
           <div className="section-intro">
             <p className="eyebrow">Write-back queue</p>
             <h2>Changes that belong upstream.</h2>
-            <p>These are known mismatches or setup jobs. Nothing in this queue writes to an external system until the exact change is approved.</p>
+            <p>These are known mismatches or setup jobs. Event-specific items also appear on the relevant event page. Nothing in this queue writes to an external system until the exact change is approved.</p>
           </div>
           <div className="writeback-grid">
             {writebackQueue.map((item) => <article key={`${item.system}-${item.scope}`}>

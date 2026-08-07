@@ -47,7 +47,7 @@ export const sourceScanContract = [
   { step: "01", title: "Normalize", detail: "Every run declares whether it is the scheduled heartbeat or a task review. Every finding becomes one proposal with an Event key, field, proposed value, source, confidence and evidence." },
   { step: "02", title: "Reconcile", detail: "The batch checks field ownership, protected direct decisions, confidence, current values and exact event identity." },
   { step: "03", title: "Partition", detail: "Each proposal lands in exactly one queue: apply to review, needs review, no change or rejected." },
-  { step: "04", title: "Route", detail: "Valid changes name the owning write-back destination. Production and every upstream write still require explicit approval." },
+  { step: "04", title: "Route", detail: "Valid changes name the owning write-back destination. Event-specific queue entries carry the Event key so they also appear on the relevant event page. Production and every upstream write still require explicit approval." },
 ] as const;
 
 function rejection(proposal: EventUpdateProposal, reason: string): SourceScanRecord {

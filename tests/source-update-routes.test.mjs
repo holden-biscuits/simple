@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { sourceLinks } from "../app/data/events.ts";
-import { eventUpdateRoutes } from "../app/data/source-governance.ts";
+import { events, getEventTrackerRowUrl, sourceLinks } from "../app/data/events.ts";
+import { eventUpdateRoutes, getEventWritebackQueue, writebackQueue } from "../app/data/source-governance.ts";
 
 test("shared update routes cover every owning execution system", () => {
   assert.deepEqual(eventUpdateRoutes.map((route) => route.id), ["tracker", "notion", "drive", "hubspot"]);
@@ -18,4 +18,22 @@ test("update routes keep signals out of the system-of-record list", () => {
   const systems = eventUpdateRoutes.map((route) => route.system).join(" ");
   assert.doesNotMatch(systems, /Slack|Gmail|email/i);
   assert.ok(eventUpdateRoutes.every((route) => /Open /.test(route.action)));
+});
+
+test("every event routes to its exact conference tracker row", () => {
+  const urls = events.map((event) => getEventTrackerRowUrl(event.slug));
+  assert.equal(new Set(urls).size, events.length);
+  assert.match(getEventTrackerRowUrl("ccw-exchange-chicago"), /gid=0&range=A14:W14$/);
+  assert.match(getEventTrackerRowUrl("genesys-xperience"), /gid=0&range=A16:W16$/);
+  assert.match(getEventTrackerRowUrl("ccw-vegas-2027"), /gid=113603184&range=A4:R4$/);
+  assert.equal(getEventTrackerRowUrl("missing-event"), sourceLinks.sheet);
+});
+
+test("event-specific write-backs resolve to published event pages", () => {
+  const publishedSlugs = new Set(events.map((event) => event.slug));
+  const tagged = writebackQueue.filter((item) => item.eventSlug);
+  assert.ok(tagged.length >= 9);
+  assert.ok(tagged.every((item) => publishedSlugs.has(item.eventSlug)));
+  assert.deepEqual(getEventWritebackQueue("genesys-xperience").map((item) => item.system), ["Conference tracker", "Notion"]);
+  assert.deepEqual(getEventWritebackQueue("customer-connect-expo").map((item) => item.system), ["Conference tracker", "Notion"]);
 });

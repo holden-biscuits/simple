@@ -618,6 +618,12 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Current(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
   assert.match(genesysHtml, /Next check Aug 13/);
   assert.match(genesysHtml, /Update the source that owns it\./);
+  assert.match(genesysHtml, /id="event-writebacks"/);
+  assert.match(genesysHtml, /Source records still need to catch up\./);
+  assert.match(genesysHtml, /Genesys Xperience roster[\s\S]*Current source[\s\S]*Proposed source/);
+  assert.match(genesysHtml, /Genesys Xperience execution page/);
+  assert.match(genesysHtml, /gid=0&amp;range=A16:W16/);
+  assert.match(genesysHtml, /Open event row(?:<!-- -->)? ↗/);
   assert.match(genesysHtml, /Canonical Event key/);
   assert.match(genesysHtml, /\[evt:(?:<!-- -->)?genesys-xperience(?:<!-- -->)?\]/);
   assert.match(genesysHtml, /Dates · participation · roster/);
@@ -684,6 +690,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.doesNotMatch(contactHtml, /Who’s going/);
   assert.doesNotMatch(contactHtml, /Measurement checkpoint/);
   assert.doesNotMatch(contactHtml, /id="event-role-routes"/);
+  assert.match(contactHtml, /id="event-writebacks"/);
+  assert.match(contactHtml, /Contact\.io participation/);
+  assert.match(contactHtml, /gid=0&amp;range=A15:W15/);
 
   const trackerBaselineEvent = await render("/events/ccw-orlando");
   assert.equal(trackerBaselineEvent.status, 200);
@@ -696,6 +705,10 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(customerConnect.status, 200);
   const customerConnectHtml = await customerConnect.text();
   assert.match(customerConnectHtml, /Confirmed/);
+  assert.match(customerConnectHtml, /id="event-writebacks"/);
+  assert.match(customerConnectHtml, /Customer Connect Expo participation/);
+  assert.match(customerConnectHtml, /Customer Connect Expo execution page/);
+  assert.match(customerConnectHtml, /gid=0&amp;range=A18:W18/);
   assert.match(customerConnectHtml, /Onsite footprint<\/span><strong>Booth confirmed/);
   assert.match(customerConnectHtml, /Swag \/ materials<\/span><strong>None/);
   assert.match(customerConnectHtml, /Four attendees and a 10×10 booth are planned/);

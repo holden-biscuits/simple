@@ -1129,6 +1129,24 @@ export function getEventPhase(event: EventRecord, programDate = getProgramDate()
 
 export const eventBySlug = (slug: string) => events.find((event) => event.slug === slug);
 
+const trackerSheetByYear = {
+  "2026": { gid: "0", lastColumn: "W" },
+  "2027": { gid: "113603184", lastColumn: "R" },
+} as const;
+
+export function getEventTrackerRowUrl(eventSlug: string) {
+  const event = eventBySlug(eventSlug);
+  if (!event) return sourceLinks.sheet;
+  const year = event.dateSort.slice(0, 4) as keyof typeof trackerSheetByYear;
+  const sheet = trackerSheetByYear[year];
+  if (!sheet) return sourceLinks.sheet;
+  const yearEvents = events.filter((item) => item.dateSort.startsWith(`${year}-`));
+  const rowIndex = yearEvents.findIndex((item) => item.slug === eventSlug);
+  if (rowIndex < 0) return sourceLinks.sheet;
+  const row = rowIndex + 2;
+  return `https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=${sheet.gid}&range=A${row}:${sheet.lastColumn}${row}`;
+}
+
 export const workstreamLabels: Record<WorkstreamKey, string> = {
   speaking: "Speaking prep",
   sponsorship: "Booth & sponsorship",

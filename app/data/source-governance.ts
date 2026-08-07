@@ -39,6 +39,7 @@ export type EventKeyRolloutItem = {
 export type WritebackItem = {
   system: string;
   scope: string;
+  eventSlug?: string;
   current: string;
   proposed: string;
   evidence: string;
@@ -413,6 +414,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "Conference tracker",
     scope: "Contact.io participation",
+    eventSlug: "contact-io",
     current: "Status: TBD · 5 attendees planned · Carter available",
     proposed: "Status: No · 0 attendees · clear the available roster",
     evidence: "Holden direct confirmation · Aug 6",
@@ -423,6 +425,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "Conference tracker",
     scope: "Customer Connect Expo participation",
+    eventSlug: "customer-connect-expo",
     current: "Status blank · attendee count blank",
     proposed: "Status: Confirmed · 4 attendees planned · names remain open",
     evidence: "Holden direct confirmation + executed exhibitor contract · Aug 6",
@@ -433,6 +436,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "Conference tracker",
     scope: "ICMI participation",
+    eventSlug: "icmi-contact-center-expo",
     current: "Status: Tentative · 6 attendees planned",
     proposed: "Status: Confirmed · keep 6 attendees planned · names remain open",
     evidence: "Holden direct confirmation · Aug 6",
@@ -443,6 +447,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "Conference tracker",
     scope: "Genesys Xperience roster",
+    eventSlug: "genesys-xperience",
     current: "Cat, Matt, Taylor and Josh marked yes · Carter marked available",
     proposed: "Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars attending",
     evidence: "Holden direct confirmation · 9 attendees · Aug 6",
@@ -453,6 +458,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "Conference tracker",
     scope: "CCW Vegas 2027 workshop date",
+    eventSlug: "ccw-vegas-2027",
     current: "Workshop labeled “Mon Jun 15, 3:30–5:00 PM”; June 15, 2027 is Tuesday",
     proposed: "Confirm the intended date with the organizer, then correct the weekday or calendar date",
     evidence: "2027 tracker + calendar validation · Aug 6",
@@ -472,6 +478,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "Notion",
     scope: "Genesys Xperience execution page",
+    eventSlug: "genesys-xperience",
     current: "Generic roster · Wish Line labeled in evaluation · talk title/abstract open · Monaco logging",
     proposed: "Name all 9 attendees · mark Wish Line approved and talk inputs locked · replace Monaco with HubSpot",
     evidence: "Holden confirmations + live Notion page checked Aug 6",
@@ -482,6 +489,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "Notion",
     scope: "Customer Connect Expo execution page",
+    eventSlug: "customer-connect-expo",
     current: "The event project is blank while the working details live in organizer email and the fieldbook",
     proposed: "Add the four-person roster decision, Aug 10 onboarding call, portal-profile work, website ticket link, and the open insurance, pipe-and-drape, booth-number and payment questions with owners and due dates",
     evidence: "Organizer onboarding email + Holden portal-registration reply · Aug 6",
@@ -492,6 +500,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "HubSpot",
     scope: "Deal attribution schema",
+    eventSlug: "ccw-vegas",
     current: "29 exact event-sourced deals · all use CCW Vegas follow-up · 1 additional deal has the same detail but an Outbound — SDR source",
     proposed: "Reconcile the mismatched source/detail pair, then create a Deal property named Event key and set only the confirmed records to ccw-vegas",
     evidence: "HubSpot property and record audit · Aug 7",
@@ -501,6 +510,7 @@ export const writebackQueue: WritebackItem[] = [
   {
     system: "HubSpot",
     scope: "Meeting attribution and outcome QA",
+    eventSlug: "ccw-vegas",
     current: "No canonical Event key · 4 possible CCW Vegas meeting records · 2 say Scheduled and 2 have no outcome",
     proposed: "Create a Meeting property named Event key; review the 4 records individually, set ccw-vegas only where confirmed, and correct each outcome",
     evidence: "8 meetings reviewed in the Jun 22–26 event window · 4 unrelated account meetings excluded",
@@ -537,3 +547,7 @@ export const writebackQueue: WritebackItem[] = [
     url: "/sources#source-monitor",
   },
 ];
+
+export function getEventWritebackQueue(eventSlug: string) {
+  return writebackQueue.filter((item) => item.eventSlug === eventSlug);
+}
