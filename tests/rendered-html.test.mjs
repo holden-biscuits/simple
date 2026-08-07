@@ -145,6 +145,9 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Private Slack DM/);
   assert.match(html, /No action means no Slack noise\./);
   assert.match(html, /Reply with the item number and answer/);
+  assert.match(html, /At most 3 actions total: decisions first/);
+  assert.match(html, /setup work stays in the full queue and does not create a DM unless it becomes a time-sensitive blocker/);
+  assert.match(html, /Every action links to the owning record where it can be resolved/);
   assert.match(html, /What the next briefing would ask/);
   assert.match(html, /Slack action briefing \+ Codex receipt/);
   assert.match(html, /Dates · participation · roster[\s\S]*Conference tracker/);

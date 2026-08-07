@@ -15,7 +15,7 @@ import { audienceSegmentContract, getAudienceSegmentRegistry } from "../data/aud
 import { latestSourceScan } from "../data/latest-source-scan";
 import { eventPipelineSnapshot } from "../data/event-pipeline";
 import { marketingEventCoverage } from "../data/marketing-events";
-import { getActionBriefing, isExternalAction } from "../data/action-briefing";
+import { actionBriefingPolicy, getActionBriefing, isExternalAction } from "../data/action-briefing";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -30,7 +30,7 @@ export default function SourcesPage() {
   const linkage = getProgramSystemLinkage(events, programDate);
   const audienceSegments = getAudienceSegmentRegistry(events, programDate);
   const autoUpdates = monitor.changeLog.filter((change) => change.state === "Applied" && change.checkedAt === siteStatus.contentUpdatedLabel);
-  const briefing = getActionBriefing({ events, changes: monitor.changeLog, writebacks: writebackQueue, programDate, limit: 3 });
+  const briefing = getActionBriefing({ events, changes: monitor.changeLog, writebacks: writebackQueue, programDate, limit: actionBriefingPolicy.maxActions });
   const changeStates = (["Applied", "Needs review", "No change"] as const).map((state) => ({
     state,
     count: monitor.changeLog.filter((change) => change.state === state).length,
@@ -104,7 +104,7 @@ export default function SourcesPage() {
           </div>
           <div className="briefing-delivery" aria-label="Action briefing delivery rules">
             <article><span>Channel</span><strong>Private Slack DM</strong><p>Email stays off until you choose it as a fallback.</p></article>
-            <article><span>Trigger</span><strong>Action required</strong><p>New facts alone do not create a ping unless you need to decide, approve, or unblock something.</p></article>
+            <article><span>Trigger</span><strong>Action required</strong><p>{actionBriefingPolicy.deliverySummary}</p></article>
             <article><span>Reply loop</span><strong>Answer in the DM</strong><p>Reply with the item number and answer. The next scan captures the decision and routes the owning-system correction.</p></article>
           </div>
           <div className="briefing-metrics" aria-label="Current briefing queue">
@@ -114,7 +114,7 @@ export default function SourcesPage() {
             <article><span>Auto-updated</span><strong>{autoUpdates.length}</strong><p>Accepted facts already included in the current review build.</p></article>
           </div>
           <div className="briefing-actions">
-            <header><span>What the next briefing would ask</span><small>Highest-priority three · full queues stay on this page</small></header>
+            <header><span>What the next briefing would ask</span><small>Highest-priority {actionBriefingPolicy.maxActions} · full queues stay on this page</small></header>
             {briefing.items.length ? briefing.items.map((item, index) => isExternalAction(item) ? <a href={item.href} target="_blank" rel="noreferrer" key={item.id}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div><small>{item.label} · {item.event}</small><strong>{item.title}</strong><p>{item.detail}</p><em>Open {item.destination} ↗</em></div>
@@ -125,6 +125,7 @@ export default function SourcesPage() {
               <b>→</b>
             </Link>) : <p className="briefing-clear">Nothing needs your answer right now. The scan will keep checking quietly.</p>}
           </div>
+          <p className="briefing-boundary"><strong>Noise boundary:</strong> setup work stays in the full queue and does not create a DM unless it becomes a time-sensitive blocker. Every action links to the owning record where it can be resolved.</p>
           <p className="briefing-boundary"><strong>Safety boundary:</strong> the briefing may update a saved review version from strong evidence. It still cannot deploy production or write to Sheets, Notion, HubSpot, Drive, Slack threads, or Gmail without the applicable approval.</p>
           <BackToTop />
         </div>

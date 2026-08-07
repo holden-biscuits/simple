@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getActionBriefing } from "../app/data/action-briefing.ts";
+import { actionBriefingPolicy, getActionBriefing } from "../app/data/action-briefing.ts";
 import { events } from "../app/data/events.ts";
 import { siteStatus } from "../app/data/site-status.ts";
 import { writebackQueue } from "../app/data/source-governance.ts";
@@ -50,4 +50,18 @@ test("the visible preview is capped at three without changing queue totals", () 
   });
   assert.equal(preview.items.length, 3);
   assert.deepEqual(preview.counts, fullBriefing.counts);
+});
+
+test("the delivery policy caps the whole briefing and keeps setup work quiet", () => {
+  assert.equal(actionBriefingPolicy.maxActions, 3);
+  assert.equal(actionBriefingPolicy.setupCreatesPing, false);
+  assert.deepEqual(actionBriefingPolicy.priority, ["Decision", "Due now", "Approval", "Source blocker"]);
+  const delivered = getActionBriefing({
+    events,
+    changes: siteStatus.sourceMonitor.changeLog,
+    writebacks: writebackQueue,
+    programDate: "2026-08-07",
+    limit: actionBriefingPolicy.maxActions,
+  });
+  assert.equal(delivered.items.length, actionBriefingPolicy.maxActions);
 });

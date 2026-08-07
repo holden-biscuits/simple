@@ -24,6 +24,13 @@ export type ActionBriefing = {
   };
 };
 
+export const actionBriefingPolicy = {
+  maxActions: 3,
+  setupCreatesPing: false,
+  priority: ["Decision", "Due now", "Approval", "Source blocker"] as const,
+  deliverySummary: "At most 3 actions total: decisions first, then due work, exact approvals, and time-sensitive blockers.",
+};
+
 type ActionBriefingInput = {
   events: EventRecord[];
   changes: SourceChange[];
