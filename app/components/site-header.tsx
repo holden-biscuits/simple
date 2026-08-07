@@ -16,7 +16,7 @@ export function SiteHeader() {
     <header className="site-header">
       <Link href="/" className="brand" aria-label="TeamSimple Event Basecamp home" title="Go to the Event Basecamp home page">
         <span className="brand-mark" aria-hidden="true"><Image src="/simple-mark.svg" width={19} height={24} alt="" /></span>
-        <span className="brand-copy"><strong>TeamSimple</strong><small>Event Basecamp · 2026</small></span>
+        <span className="brand-copy"><strong>TeamSimple</strong><small>Event Basecamp&nbsp;·&nbsp;2026</small></span>
       </Link>
       <time className="updated-stamp" dateTime={siteStatus.contentUpdatedAt} aria-label={`Last updated ${siteStatus.contentUpdatedLabel}`}>
         <span>Last updated</span>

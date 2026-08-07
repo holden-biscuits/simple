@@ -30,7 +30,7 @@ button, input, select { font: inherit; }
 .brand-mark img { width: 18px; height: 23px; position: relative; z-index: 1; }
 .brand-copy { display: flex; flex-direction: column; gap: 3px; }
 .brand-copy strong { color: var(--green); font: 800 15px/1 var(--font-geist-mono), monospace; letter-spacing: -.025em; }
-.brand-copy small { color: var(--trail); font: 700 9px/1.2 var(--font-geist-mono), monospace; letter-spacing: .07em; text-transform: uppercase; }
+.brand-copy small { color: var(--trail); font: 700 9px/1.2 var(--font-geist-mono), monospace; letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; }
 .brand:hover .brand-mark, .brand:focus-visible .brand-mark { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--signal); }
 .brand:hover .brand-copy strong, .brand:focus-visible .brand-copy strong { color: var(--signal-dark); }
 .brand:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
