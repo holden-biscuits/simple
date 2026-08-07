@@ -92,8 +92,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
             <p>Planning workstreams, timing, ZoomInfo, booth etiquette, lead tiers, and role guides.</p>
             <b>Open the process guide →</b>
           </Link>
-          <Link href="/sources">
-            <header><span>06</span><small>Source truth</small></header>
+          <Link href="/leadership">
+            <header><span>06</span><small>Leadership</small></header>
+            <h3>See the whole event portfolio.</h3>
+            <p>Upcoming commitments, execution coverage, decision gaps, and CRM-proven outcomes.</p>
+            <b>Open the leadership brief →</b>
+          </Link>
+          <Link href="/sources" className="start-map-wide">
+            <header><span>07</span><small>Source truth</small></header>
             <h3>See what changed and what conflicts.</h3>
             <p>Source coverage, scan receipts, applied updates, unresolved conflicts, and working files.</p>
             <b>Open the source record →</b>
@@ -144,6 +150,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
               <Link className="attention-source-link" href="/sources#approval-queue">Open source and approval record →</Link>
             </section>
           </div>
+          <Link className="pulse-leadership-link" href="/leadership">Open the leadership program brief →</Link>
           <BackToTop />
         </div>
       </section>

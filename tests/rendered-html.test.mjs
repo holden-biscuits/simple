@@ -174,6 +174,23 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /“Mon Jun 15” workshop label conflicts/);
 });
 
+test("server-renders the leadership portfolio without unsupported ROI claims", async () => {
+  const response = await render("/leadership");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /See the program without losing the source truth\./);
+  assert.match(html, /Active program<\/span><p>Confirmed, tentative and TBD events/);
+  assert.match(html, /Structured task plans/);
+  assert.match(html, /Every active commitment and its next move\./);
+  assert.match(html, /CCW Exchange Chicago/);
+  assert.match(html, /CCW Vegas 2027/);
+  assert.match(html, /No normalized event-cost dataset exists yet\./);
+  assert.match(html, /Only (?:<!-- -->)?1(?:<!-- -->)? event has exact deal attribution\./);
+  assert.match(html, /Pipeline value is not supported\./);
+  assert.match(html, /All 29 attributed deals currently have a \$0 amount/);
+  assert.match(html, /href="\/leadership">Leaders<\/a>/);
+});
+
 test("server-renders searchable event outcomes and filter counts", async () => {
   const response = await render("/search?q=names%20open&type=Event");
   assert.equal(response.status, 200);

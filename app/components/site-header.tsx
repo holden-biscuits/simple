@@ -8,6 +8,7 @@ const links = [
   ["AEs", "/ae"],
   ["SDRs", "/sdr"],
   ["Marketing", "/marketing"],
+  ["Leaders", "/leadership"],
   ["Search", "/search"],
 ];
 
