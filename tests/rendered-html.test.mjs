@@ -210,6 +210,14 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Briefs on track/);
   assert.match(html, /2(?:<!-- -->)? \/ (?:<!-- -->)?14/);
   assert.match(html, /Planning gaps open/);
+  assert.match(html, /What changed—and what still needs a decision\./);
+  assert.match(html, /5<\/strong><span>Applied updates/);
+  assert.match(html, /3<\/strong><span>Needs review/);
+  assert.match(html, /Genesys Xperience[\s\S]*Confirmed the Genesys Xperience roster/);
+  assert.match(html, /href="\/events\/genesys-xperience#event-changes"/);
+  assert.match(html, /Program-wide[\s\S]*Added the 2027 event program/);
+  assert.match(html, /href="\/sources#change-log"/);
+  assert.match(html, /Resolve CCW Exchange Chicago staffing[\s\S]*Current record[\s\S]*Conflicting source/);
   assert.match(html, /Every active commitment and its next move\./);
   assert.match(html, /CCW Exchange Chicago/);
   assert.match(html, /CCW Vegas 2027/);

@@ -6,6 +6,7 @@ import { crmAttributionAudit } from "./crm-attribution.ts";
 import { writebackQueue } from "./source-governance.ts";
 import { getProgramSystemLinkage } from "./system-linkage.ts";
 import { getEventBriefReadiness, getProgramBriefReadiness } from "./event-brief-readiness.ts";
+import type { SourceChange } from "./site-status.ts";
 
 function activationLabel(event: EventRecord) {
   const speaking = getSpeakingStatus(event);
@@ -15,6 +16,23 @@ function activationLabel(event: EventRecord) {
   if (speaking === "Confirmed") return "Speaking";
   if (speaking === "Under review" || sponsorship === "Under review") return "Activation under review";
   return "Attendance only";
+}
+
+export function getLeadershipChangeDigest(catalog: EventRecord[], changes: SourceChange[]) {
+  const eventNames = new Map(catalog.map((event) => [event.slug, event.name]));
+  const items = changes
+    .filter((change) => change.state === "Applied" || change.state === "Needs review")
+    .map((change) => ({
+      ...change,
+      eventName: change.eventSlug ? eventNames.get(change.eventSlug) ?? "Unmatched event" : "Program-wide",
+      href: change.eventSlug && eventNames.has(change.eventSlug)
+        ? `/events/${change.eventSlug}#event-changes`
+        : "/sources#change-log",
+    }));
+  return {
+    applied: items.filter((change) => change.state === "Applied"),
+    needsReview: items.filter((change) => change.state === "Needs review"),
+  };
 }
 
 export function getLeadershipBrief(catalog: EventRecord[], programDate: string) {

@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { events } from "../app/data/events.ts";
-import { getLeadershipBrief } from "../app/data/leadership-brief.ts";
+import { getLeadershipBrief, getLeadershipChangeDigest } from "../app/data/leadership-brief.ts";
+import { siteStatus } from "../app/data/site-status.ts";
 
 test("leadership brief derives the active portfolio from governed event data", () => {
   const brief = getLeadershipBrief(events, "2026-08-06");
@@ -33,4 +34,15 @@ test("leadership outcomes preserve CRM limits", () => {
     pipelineClaimSupported: false,
   });
   assert.deepEqual(brief.writebacks, { ready: 7, decisions: 1, setup: 8 });
+});
+
+test("leadership change digest separates applied facts from unresolved claims", () => {
+  const digest = getLeadershipChangeDigest(events, siteStatus.sourceMonitor.changeLog);
+  assert.equal(digest.applied.length, 5);
+  assert.equal(digest.needsReview.length, 3);
+  assert.equal(digest.applied.find((change) => change.id === "genesys-roster-confirmed")?.href, "/events/genesys-xperience#event-changes");
+  assert.equal(digest.applied.find((change) => change.id === "2027-program-added")?.href, "/sources#change-log");
+  assert.equal(digest.needsReview.find((change) => change.id === "chicago-staffing-conflict")?.eventName, "CCW Exchange Chicago");
+  assert.equal(digest.applied.some((change) => change.state === "No change"), false);
+  assert.equal(digest.needsReview.some((change) => change.state === "No change"), false);
 });

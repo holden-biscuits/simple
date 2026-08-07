@@ -4,7 +4,7 @@ import { BackToTop, PageContents } from "../components/page-contents";
 import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
 import { events, getProgramDate } from "../data/events";
-import { getLeadershipBrief } from "../data/leadership-brief";
+import { getLeadershipBrief, getLeadershipChangeDigest } from "../data/leadership-brief";
 import { siteStatus } from "../data/site-status";
 import { measurementReadiness } from "../data/event-measurement";
 
@@ -23,6 +23,7 @@ function planLabel(state: "structured" | "priorities-only" | "missing") {
 
 export default function LeadershipPage() {
   const brief = getLeadershipBrief(events, getProgramDate());
+  const changeDigest = getLeadershipChangeDigest(events, siteStatus.sourceMonitor.changeLog);
   const sourceConflicts = brief.pulse.attention.filter((item) => item.issues.includes("Source conflict"));
   return (
     <main id="page-top">
@@ -34,6 +35,7 @@ export default function LeadershipPage() {
       </section>
       <PageContents items={[
         { id: "leadership-snapshot", label: "Snapshot" },
+        { id: "leadership-changes", label: "Recent changes" },
         { id: "leadership-portfolio", label: "Portfolio" },
         { id: "leadership-decisions", label: "Decisions" },
         { id: "leadership-operating-model", label: "Operating model" },
@@ -60,6 +62,41 @@ export default function LeadershipPage() {
           <Link href="/sources#writeback-queue"><span>Upstream queue</span><strong>{brief.writebacks.ready + brief.writebacks.decisions + brief.writebacks.setup}</strong><p>{brief.writebacks.ready} ready · {brief.writebacks.decisions} decision · {brief.writebacks.setup} setup</p><b>Open queue →</b></Link>
         </div>
         <BackToTop />
+      </section>
+
+      <section className="leadership-changes" id="leadership-changes">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Latest source work</p>
+            <h2>What changed—and what still needs a decision.</h2>
+            <p>{siteStatus.sourceMonitor.lastSuccessfulScan}. Applied records already match the fieldbook; review records preserve both claims until the source owner decides.</p>
+          </div>
+          <div className="leadership-change-summary" aria-label="Latest source change summary">
+            <article><strong>{changeDigest.applied.length}</strong><span>Applied updates</span><p>Verified values already reflected in the fieldbook.</p></article>
+            <article><strong>{changeDigest.needsReview.length}</strong><span>Needs review</span><p>Contradictory facts held for an explicit decision.</p></article>
+          </div>
+          <div className="leadership-change-columns">
+            <section aria-labelledby="leadership-applied-heading">
+              <header><div><span>Applied</span><h3 id="leadership-applied-heading">New governed values</h3></div><Link href="/sources#change-log">Full log →</Link></header>
+              <div className="leadership-change-list">{changeDigest.applied.length ? changeDigest.applied.map((change) => <Link href={change.href} key={change.id}>
+                <div><span>{change.eventName}</span><time>{change.checkedAt}</time></div>
+                <h4>{change.title}</h4>
+                <dl><div><dt>{change.field}</dt><dd>{change.after}</dd></div></dl>
+                <p>{change.source}</p>
+              </Link>) : <p className="leadership-change-empty">No applied updates in the latest source record.</p>}</div>
+            </section>
+            <section aria-labelledby="leadership-review-heading">
+              <header><div><span>Needs review</span><h3 id="leadership-review-heading">Claims that still conflict</h3></div><Link href="/sources#approval-queue">Decision queue →</Link></header>
+              <div className="leadership-change-list leadership-change-list-review">{changeDigest.needsReview.length ? changeDigest.needsReview.map((change) => <Link href={change.href} key={change.id}>
+                <div><span>{change.eventName}</span><time>{change.checkedAt}</time></div>
+                <h4>{change.title}</h4>
+                <dl><div><dt>Current record</dt><dd>{change.before}</dd></div><div><dt>Conflicting source</dt><dd>{change.after}</dd></div></dl>
+                <p>{change.source}</p>
+              </Link>) : <p className="leadership-change-empty">No unresolved source conflicts in the latest source record.</p>}</div>
+            </section>
+          </div>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="leadership-portfolio" id="leadership-portfolio">

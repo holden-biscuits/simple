@@ -11,6 +11,7 @@ test("anchored navigation clears sticky chrome at each breakpoint", () => {
   assert.match(css, /\.operating-roadmap\[id\]/);
   assert.match(css, /\.crm-activation\[id\]/);
   assert.match(css, /\.event-recent-changes\[id\]/);
+  assert.match(css, /\.leadership-changes\[id\]/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*--anchor-offset:\s*96px[\s\S]*\.page-contents\s*\{\s*top:\s*0;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*--anchor-offset:\s*24px/);
 });
@@ -27,6 +28,8 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.audience-views\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.leadership-table\s*\{\s*min-width:\s*0;\s*display:\s*block/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.leadership-risk-grid[\s\S]*grid-template-columns:\s*1fr/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.leadership-change-columns\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.leadership-change-summary[\s\S]*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-update-route-grid\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-key-example\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.linkage-coverage, \.event-linkage-strip, \.linkage-gap-list\s*\{\s*grid-template-columns:\s*1fr/);
@@ -57,4 +60,6 @@ test("essential interface text has a durable readability floor", () => {
   assert.match(floor, /\.event-update-route-grid b[\s\S]*font-size:\s*12px/);
   assert.match(css, /\.event-change > header[^}]*11\.5px/);
   assert.match(css, /\.event-change footer[^}]*11\.5px/);
+  assert.match(css, /\.leadership-change-list dt[^}]*11\.5px/);
+  assert.match(css, /\.leadership-change-list dd[^}]*14px/);
 });
