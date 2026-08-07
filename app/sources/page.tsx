@@ -5,6 +5,7 @@ import { Footer } from "../components/footer";
 import { BackToTop, PageContents } from "../components/page-contents";
 import { events, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
+import { crmAttributionAudit } from "../data/crm-attribution";
 import { fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 
@@ -34,6 +35,7 @@ export default function SourcesPage() {
         { id: "source-monitor", label: "Source monitor" },
         { id: "data-flow", label: "How data moves" },
         { id: "field-ownership", label: "Where to update" },
+        { id: "crm-attribution", label: "CRM attribution" },
         { id: "writeback-queue", label: "Write-back queue" },
         { id: "protected-decisions", label: "Direct decisions" },
         { id: "change-log", label: "Change log" },
@@ -119,6 +121,36 @@ export default function SourcesPage() {
           </table>
         </div>
         <BackToTop />
+      </section>
+
+      <section className="crm-attribution" id="crm-attribution">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">CRM attribution</p>
+            <h2>Only publish outcomes the CRM can prove.</h2>
+            <p>HubSpot is the outcome system of record. Today, the deal data supports one event-level result; meeting activity needs a cleaner join and an outcome pass before it can support leadership reporting.</p>
+          </div>
+          <div className="crm-health-grid" aria-label="HubSpot event attribution health">
+            <article><span>Exact event deals</span><strong>{crmAttributionAudit.exactDeals}</strong><p>All resolve to {crmAttributionAudit.representedEventLabel} through controlled deal-source fields.</p></article>
+            <article><span>Events represented</span><strong>{crmAttributionAudit.representedEvents}</strong><p>The controlled Deal Source Detail list names only one event.</p></article>
+            <article><span>Meeting records to QA</span><strong>{crmAttributionAudit.meetingWindow.possibleEventMeetings}</strong><p>{crmAttributionAudit.meetingWindow.outcomeNote}</p></article>
+            <article><span>Marketing Events</span><strong>{crmAttributionAudit.marketingEvents}</strong><p>No canonical event objects are available yet; writes require HubSpot reauthorization.</p></article>
+          </div>
+          <div className="crm-rule-grid">
+            {crmAttributionAudit.rules.map((rule) => <article key={rule.label}>
+              <span>{rule.label}</span>
+              <h3>{rule.title}</h3>
+              <p>{rule.detail}</p>
+            </article>)}
+          </div>
+          <div className="crm-operating-model">
+            <div><span>Book</span><p>Add the meeting in HubSpot before the event day ends. Record owner, account, next action, outcome and the canonical Event key.</p></div>
+            <div><span>Roll up</span><p>Deals and meetings with an exact Event key feed the event page. Text-only matches stay in the review queue.</p></div>
+            <div><span>Report</span><p>Leadership sees meetings held, demos, qualified pipeline and revenue—not calendar records that happen to fall during event week.</p></div>
+          </div>
+          <a className="inline-link" href={crmAttributionAudit.hubspotUrl} target="_blank" rel="noreferrer">Open the audited HubSpot deal view ↗</a>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="writeback-section" id="writeback-queue">

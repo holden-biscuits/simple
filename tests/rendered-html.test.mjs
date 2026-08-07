@@ -89,6 +89,11 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Rosters to name[\s\S]*11/);
   assert.match(html, /Source conflicts[\s\S]*3/);
   assert.match(html, /Update the system that owns the fact\./);
+  assert.match(html, /Only publish outcomes the CRM can prove\./);
+  assert.match(html, /Exact event deals[\s\S]*29/);
+  assert.match(html, /Meeting records to QA[\s\S]*4/);
+  assert.match(html, /Marketing Events[\s\S]*0/);
+  assert.match(html, /Do not count date proximity, a vendor mention/);
   assert.match(html, /Tracker outcome columns should become rollups or references/);
   assert.match(html, /Changes that belong upstream\./);
   assert.match(html, /Contact\.io participation[\s\S]*Status: TBD[\s\S]*Status: No/);
@@ -97,7 +102,9 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Genesys Xperience roster[\s\S]*Cat, Matt, Taylor and Josh[\s\S]*Holden[\s\S]*Richard and Lars/);
   assert.match(html, /CCW Vegas 2027 workshop date[\s\S]*June 15, 2027 is Tuesday/);
   assert.match(html, /replace Monaco with HubSpot/);
-  assert.match(html, /Marketing Event writes need HubSpot reauthorization/);
+  assert.match(html, /Meeting attribution and outcome QA/);
+  assert.match(html, /2 say Scheduled and 2 have no outcome/);
+  assert.match(html, /Reauthorize Marketing Event writes/);
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
   assert.match(html, /<span>Applied<\/span><strong>4<\/strong>/);
@@ -133,7 +140,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /IQPC CX Travel &amp; Hospitality/);
   assert.match(html, /calendar record lists Zach \+ Taylor/);
   assert.match(html, /Latest applied checks/);
-  assert.match(html, /29 of 29 matching records reviewed/);
+  assert.match(html, /29 of 29 exact event-sourced deals/);
+  assert.match(html, /four are possible on-site meetings/);
   assert.match(html, /Google Sheets/);
   assert.match(html, /27 event rows reviewed/);
   assert.match(html, /Genesys Xperience field brief and CRM check/);

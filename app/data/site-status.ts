@@ -204,8 +204,8 @@ export const siteStatus = {
       {
         system: "HubSpot",
         checkedAt: "Aug 06 · 2026",
-        scope: "Deals with Deal Source = Event / Conference and Deal Source Detail = CCW Vegas follow-up",
-        result: "29 of 29 matching records reviewed. Stage counts were added to CCW Vegas; pipeline value remains unpublished because every attributed deal currently has $0 amount.",
+        scope: "Deal, meeting and Marketing Event attribution audit",
+        result: "29 of 29 exact event-sourced deals still resolve to CCW Vegas. HubSpot has no Marketing Event records. Eight meeting activities fell inside the CCW Vegas date window: four are possible on-site meetings and four are unrelated account calls. The four possible records have no completed outcome, so they remain a QA queue rather than a published meeting count.",
       },
       {
         system: "Google Sheets",

@@ -54,7 +54,7 @@ button, input, select { font: inherit; }
 .inline-link { color: var(--signal-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .handoff .back-to-top, .tiering .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.7); }
 .handoff .back-to-top:hover, .handoff .back-to-top:focus-visible, .tiering .back-to-top:hover, .tiering .back-to-top:focus-visible { color: #ffb49c; }
-.start-map[id], .program-pulse[id], .directory[id], .role-block[id], .handoff[id], .guide-panel[id], .timeline[id], .tiering[id], .role-links[id], .event-tldr[id], .event-no-plan[id], .event-priorities[id], .event-considerations[id], .fact-strip[id], .event-body[id], .event-body aside[id], .workstream[id], .outcomes[id], .source-monitor[id], .source-governance[id], .field-ownership[id], .writeback-section[id], .protected-decisions[id], .change-log[id], .approval-queue[id], .update-rules[id], .source-links[id], .marketing-lessons[id], .event-task-section[id], .marketing-matrix-section[id], .measurement[id] { scroll-margin-top: var(--anchor-offset); }
+.start-map[id], .program-pulse[id], .directory[id], .role-block[id], .handoff[id], .guide-panel[id], .timeline[id], .tiering[id], .role-links[id], .event-tldr[id], .event-no-plan[id], .event-priorities[id], .event-considerations[id], .fact-strip[id], .event-body[id], .event-body aside[id], .workstream[id], .outcomes[id], .source-monitor[id], .source-governance[id], .field-ownership[id], .crm-attribution[id], .writeback-section[id], .protected-decisions[id], .change-log[id], .approval-queue[id], .update-rules[id], .source-links[id], .marketing-lessons[id], .event-task-section[id], .marketing-matrix-section[id], .measurement[id] { scroll-margin-top: var(--anchor-offset); }
 
 .home-hero { min-height: 700px; padding: 88px max(30px, calc((100vw - 1180px)/2)); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, .65fr); align-items: end; gap: 80px; position: relative; overflow: hidden; background-color: var(--canvas); }
 .home-hero::before, .role-hero::before, .event-hero::before { content: ''; position: absolute; inset: -25% -15% -20% 44%; pointer-events: none; opacity: .32; background: repeating-radial-gradient(ellipse at center, transparent 0 28px, rgba(22,75,56,.28) 29px 30px, transparent 31px 50px); transform: rotate(-12deg) scaleY(.7); }
@@ -259,6 +259,22 @@ button, input, select { font: inherit; }
 .source-route-table tbody th { width: 21%; color: var(--green); background: var(--paper); font: 700 16px/1.4 var(--font-geist-sans), sans-serif; }
 .source-route-table tbody td { color: #4f4b43; }
 .source-route-table tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--green-light) 52%, var(--canvas)); }
+.crm-attribution { padding-block: 100px; color: var(--paper); background: #21160f; }
+.crm-attribution .eyebrow { color: #ff9a7d; }
+.crm-attribution .section-intro > p:last-child { color: rgba(255,255,255,.72); }
+.crm-health-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid rgba(255,255,255,.3); border-left: 1px solid rgba(255,255,255,.3); }
+.crm-health-grid article { min-height: 245px; padding: 24px; border-right: 1px solid rgba(255,255,255,.3); border-bottom: 1px solid rgba(255,255,255,.3); }
+.crm-health-grid span, .crm-rule-grid span, .crm-operating-model span { color: #ff9a7d; font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.crm-health-grid strong { display: block; margin: 42px 0 14px; font: 400 52px/1 Georgia, serif; }
+.crm-health-grid p, .crm-rule-grid p, .crm-operating-model p { margin: 0; color: rgba(255,255,255,.7); font-size: 14px; line-height: 1.55; }
+.crm-rule-grid { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 42px; border-top: 1px solid rgba(255,255,255,.3); border-left: 1px solid rgba(255,255,255,.3); }
+.crm-rule-grid article { min-height: 230px; padding: 24px; border-right: 1px solid rgba(255,255,255,.3); border-bottom: 1px solid rgba(255,255,255,.3); }
+.crm-rule-grid h3 { margin: 44px 0 12px; font: 400 29px/1.08 Georgia, serif; }
+.crm-operating-model { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 42px 0 30px; }
+.crm-operating-model > div { padding: 20px; border-left: 4px solid var(--signal); background: rgba(255,255,255,.08); }
+.crm-operating-model p { margin-top: 12px; color: rgba(255,255,255,.82); }
+.crm-attribution .inline-link { color: var(--paper); }
+.crm-attribution .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.65); }
 .writeback-section { padding-block: 100px; background: var(--paper-deep); border-block: 1px solid var(--line); }
 .writeback-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .writeback-grid > article { min-height: 390px; padding: 25px; display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--canvas); }
@@ -631,6 +647,8 @@ button, input, select { font: inherit; }
   .role-links { grid-template-columns: 1fr; }
   .timeline article { grid-template-columns: 110px 1fr; }
   .timeline article p { grid-column: 2; }
+  .crm-health-grid { grid-template-columns: 1fr 1fr; }
+  .crm-rule-grid, .crm-operating-model { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 620px) {
@@ -662,6 +680,7 @@ button, input, select { font: inherit; }
   .role-block ul { grid-template-columns: 1fr; }
   .handoff, .guide-panel, .tiering { padding: 35px 25px; }
   .source-order li { grid-template-columns: 1fr; gap: 5px; }
+  .crm-health-grid, .crm-rule-grid, .crm-operating-model { grid-template-columns: 1fr; }
   .monitor-summary, .source-coverage, .protected-decision-grid, .update-rules, .change-log-summary, .change-log-list { grid-template-columns: 1fr; }
   .source-flow-grid, .writeback-grid { grid-template-columns: 1fr; }
   .catalog-health { grid-template-columns: 1fr 1fr; }
