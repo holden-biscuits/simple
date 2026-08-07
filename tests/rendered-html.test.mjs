@@ -173,7 +173,12 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Stanleys/);
   assert.match(genesysHtml, /Karaoke machines/);
   assert.match(genesysHtml, /Genesys sales rules \(confidential\)/);
+  assert.match(genesysHtml, /Genesys trademark usage policy/);
   assert.match(genesysHtml, /Lead Registration Form/);
+  assert.match(genesysHtml, /permission to share the contact’s information/);
+  assert.match(genesysHtml, /no response within 10 business days means it was rejected/);
+  assert.match(genesysHtml, /Do not pursue or register federal, state, local, or foreign government entities/);
+  assert.match(genesysHtml, /Do not promise Genesys pricing, terms, product commitments, or approval/);
   assert.match(genesysHtml, /Aug 13/);
   assert.match(genesysHtml, /Travel and hotels should already be booked/);
   assert.match(genesysHtml, /Marketing tasks/);
