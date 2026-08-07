@@ -39,12 +39,12 @@ function getUrgency(dueSort: string | undefined, programDate: string): ActionUrg
 }
 
 function sortTasks(tasks: MarketingTask[], programDate: string) {
-  const urgencyOrder: Record<ActionUrgency, number> = { overdue: 0, "due-today": 1, "due-soon": 2, scheduled: 3, unscheduled: 4 };
-  return [...tasks].sort((a, b) => {
-    const urgency = urgencyOrder[getUrgency(a.dueSort, programDate)] - urgencyOrder[getUrgency(b.dueSort, programDate)];
+  const urgencyOrder: Record<ActionUrgency, number> = { overdue: 0, "due-today": 1, "due-soon": 2, unscheduled: 3, scheduled: 4 };
+  return tasks.map((task, index) => ({ task, index })).sort((a, b) => {
+    const urgency = urgencyOrder[getUrgency(a.task.dueSort, programDate)] - urgencyOrder[getUrgency(b.task.dueSort, programDate)];
     if (urgency) return urgency;
-    return (a.dueSort ?? "9999-12-31").localeCompare(b.dueSort ?? "9999-12-31") || a.title.localeCompare(b.title);
-  });
+    return (a.task.dueSort ?? "9999-12-31").localeCompare(b.task.dueSort ?? "9999-12-31") || a.index - b.index;
+  }).map(({ task }) => task);
 }
 
 export function getEventReadiness(event: EventRecord, programDate: string): EventReadiness {

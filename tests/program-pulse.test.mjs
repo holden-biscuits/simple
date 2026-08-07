@@ -16,8 +16,8 @@ test("the program pulse prioritizes the active route and real data gaps", () => 
   assert.equal(pulse.rosterGaps.length, 12);
   assert.equal(pulse.sourceConflicts.length, 2);
   assert.equal(pulse.sourceChecksDue.length, 0);
-  assert.equal(pulse.readiness.structuredPlans, 2);
-  assert.equal(pulse.readiness.planSetupNeeded, 12);
+  assert.equal(pulse.readiness.structuredPlans, 3);
+  assert.equal(pulse.readiness.planSetupNeeded, 11);
 });
 
 test("the program pulse raises source checks when a verification window expires", () => {

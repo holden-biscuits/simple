@@ -146,8 +146,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
             <article><strong>{pulse.sourceConflicts.length}</strong><span>source conflicts</span></article>
           </div>
           <div className="pulse-readiness" aria-label="Execution and source coverage">
-            <article><span>Structured task plans</span><strong>{pulse.readiness.structuredPlans} / {pulse.readiness.activeEvents}</strong><p>active events have a task list with statuses; individual owner gaps remain visible.</p></article>
-            <article><span>Plan setup needed</span><strong>{pulse.readiness.planSetupNeeded}</strong><p>events have priorities but still need owners and dates.</p></article>
+            <article><span>Tracked task lists</span><strong>{pulse.readiness.structuredPlans} / {pulse.readiness.activeEvents}</strong><p>active events have searchable tasks; open owners and deadlines stay visible.</p></article>
+            <article><span>Checklist setup needed</span><strong>{pulse.readiness.planSetupNeeded}</strong><p>events still show only high-level priorities instead of a task-by-task checklist.</p></article>
             <article><span>Due or overdue now</span><strong>{pulse.readiness.dueNow.length}</strong><p>next actions need attention today.</p></article>
             <article><span>Source checks due</span><strong>{pulse.sourceChecksDue.length}</strong><p>active event briefs are outside their freshness window.</p></article>
           </div>

@@ -19,6 +19,10 @@ export function getEventRoleRoutes(event: EventRecord, phase: EventPhase): Event
   const workstreams = getWorkstreams(event);
   const hasMarketingWork = !isEmptyWorkstream(workstreams.marketing) || Boolean(event.marketingTasks?.length || event.priorityActions?.length);
   const marketingItemCount = event.priorityActions?.length || workstreams.marketing.length;
+  const openMarketingTasks = (event.marketingTasks ?? []).filter((task) => task.status !== "Done");
+  const marketingOwnerGaps = openMarketingTasks.filter((task) => !task.owner).length;
+  const marketingDateGaps = openMarketingTasks.filter((task) => !task.dueSort).length;
+  const marketingPlanFullyAssigned = Boolean(event.marketingTasks?.length) && marketingOwnerGaps === 0 && marketingDateGaps === 0;
   const bookedMeetingCount = event.meetingsBooked.length;
   const guaranteedMeetingDetail = event.guaranteedMeetings.replace(/^Yes\s*(?:·\s*)?/i, "").trim();
 
@@ -59,9 +63,9 @@ export function getEventRoleRoutes(event: EventRecord, phase: EventPhase): Event
 
   if (hasMarketingWork) routes.push({
     role: "Marketing / event lead",
-    title: event.marketingTasks?.length ? "Run the owned event task list." : "Turn the open plan into owned work.",
+    title: marketingPlanFullyAssigned ? "Run the owned event task list." : event.marketingTasks?.length ? "Finish assigning the tracked task list." : "Turn the open plan into owned work.",
     detail: event.marketingTasks?.length
-      ? `${event.marketingTasks.length} structured task${event.marketingTasks.length === 1 ? " is" : "s are"} tracked for this event. Review status, owner, deadline, and the next blocked handoff.`
+      ? `${event.marketingTasks.length} task${event.marketingTasks.length === 1 ? " is" : "s are"} tracked for this event. ${marketingOwnerGaps} open task${marketingOwnerGaps === 1 ? " needs" : "s need"} an owner; ${marketingDateGaps} ${marketingDateGaps === 1 ? "needs a dated deadline" : "need dated deadlines"}.`
       : `${marketingItemCount} event-specific item${marketingItemCount === 1 ? " needs" : "s need"} ownership and timing. Use the event workspace rather than a separate private checklist.`,
     href: `/marketing?event=${event.slug}#event-tasks`,
     cta: "Open this event’s workspace",

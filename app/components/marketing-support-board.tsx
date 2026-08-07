@@ -72,6 +72,16 @@ function dueState(task: MarketingTask, programDate: string) {
   return null;
 }
 
+function taskPlanStatus(event: EventRecord) {
+  const tasks = event.marketingTasks ?? [];
+  if (!tasks.length) return { tracked: false, label: "Owners & dates open" };
+  const open = tasks.filter((task) => task.status !== "Done");
+  const ownerGaps = open.filter((task) => !task.owner).length;
+  const dateGaps = open.filter((task) => !task.dueSort).length;
+  if (!ownerGaps && !dateGaps) return { tracked: true, label: "Owners & dates tracked" };
+  return { tracked: true, label: `${ownerGaps} owner${ownerGaps === 1 ? "" : "s"} · ${dateGaps} date${dateGaps === 1 ? "" : "s"} open` };
+}
+
 export function EventMarketingWorkspace({ events, initialSlug, programDate }: { events: EventRecord[]; initialSlug?: string; programDate: string }) {
   const firstSlug = events.some((event) => event.slug === initialSlug) ? initialSlug : events[0]?.slug;
   const [selectedSlug, setSelectedSlug] = useState(firstSlug);
@@ -91,7 +101,7 @@ export function EventMarketingWorkspace({ events, initialSlug, programDate }: { 
   const tasks = orderedEventTasks(selected);
   const support = marketingItems(selected);
   const openCount = tasks.filter((task) => task.status !== "Done").length;
-  const hasStructuredTaskPlan = Boolean(selected.marketingTasks?.length);
+  const planStatus = taskPlanStatus(selected);
 
   const selectEvent = (slug: string, focus = false) => {
     setSelectedSlug(slug);
@@ -133,7 +143,7 @@ export function EventMarketingWorkspace({ events, initialSlug, programDate }: { 
     <section className="event-task-panel" id="event-task-panel" role="tabpanel" aria-labelledby={`event-task-tab-${selected.slug}`}>
       <header>
         <div><p className="eyebrow">{selected.dates} · {selected.location}</p><h3>{selected.name}</h3></div>
-        <div className="event-task-count"><strong>{openCount}</strong><span>Open tasks</span><small>{hasStructuredTaskPlan ? "Task details tracked" : "Owners & dates open"}</small></div>
+        <div className="event-task-count"><strong>{openCount}</strong><span>Open tasks</span><small>{planStatus.label}</small></div>
       </header>
       <div className="event-task-grid">
         <div className="event-task-list">
@@ -217,7 +227,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
           const support = marketingItems(event);
           const signals = activationSignals(event);
           const staffing = getStaffingSignal(event);
-          const hasStructuredTaskPlan = Boolean(event.marketingTasks?.length);
+          const planStatus = taskPlanStatus(event);
           const staffingDetail = staffing.state === "open" && event.available.length && !event.team.length
             ? `${staffing.detail} · ${event.available.join(", ")} marked available`
             : staffing.detail;
@@ -233,7 +243,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
             <td data-label="Activation"><div className="matrix-signals">{signals.length ? signals.map((signal) => <span key={signal}>{signal}</span>) : <span>Attendance only</span>}</div></td>
             <td data-label="Marketing support">{support.length ? <ul>{support.map((item) => <li key={item}>{item}</li>)}</ul> : <span className="matrix-empty">None listed</span>}</td>
             <td data-label="Event team"><span className={`matrix-staffing matrix-staffing-${staffing.state}`}>{staffing.state === "named" ? "Named" : staffing.state === "not-attending" ? "None" : "Open"}</span><p>{staffingDetail}</p></td>
-            <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p><div className="matrix-open-meta"><span>{openTask?.owner ? `Owner · ${openTask.owner}` : "Owner · Open"}</span><span>{openTask?.due ? `Due · ${openTask.due}` : "Due · Open"}</span>{!hasStructuredTaskPlan ? <span className="matrix-task-gap">Task setup open</span> : null}</div><Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link></td>
+            <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p><div className="matrix-open-meta"><span>{openTask?.owner ? `Owner · ${openTask.owner}` : "Owner · Open"}</span><span>{openTask?.due ? `Due · ${openTask.due}` : "Due · Open"}</span>{!planStatus.tracked ? <span className="matrix-task-gap">Task setup open</span> : null}</div><Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link></td>
           </tr>;
         })}</tbody>
       </table>

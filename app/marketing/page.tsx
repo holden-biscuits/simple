@@ -116,11 +116,11 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         <div className="shell">
           <div className="marketing-pulse-head">
             <div><p className="eyebrow">Marketing workload</p><h2>What needs attention now.</h2></div>
-            <p>These counts use structured event tasks only. Priority bullets remain visible in each event workspace, but they do not become owned or dated work until the event project records those fields.</p>
+            <p>These counts use task-by-task event checklists. A checklist can be searchable before every owner and deadline is filled in; those gaps are counted separately below.</p>
           </div>
           <div className="marketing-pulse-metrics">
-            <article><span>Task-plan coverage</span><strong>{workload.structuredEvents} / {workload.activeEvents}</strong><p>active events have structured marketing tasks</p></article>
-            <article><span>Open structured work</span><strong>{workload.openTasks}</strong><p>tasks are still open or in progress</p></article>
+            <article><span>Checklist coverage</span><strong>{workload.structuredEvents} / {workload.activeEvents}</strong><p>active events have a searchable task list</p></article>
+            <article><span>Open tracked work</span><strong>{workload.openTasks}</strong><p>tasks are still open or in progress</p></article>
             <article className={workload.overdueTasks ? "marketing-pulse-alert" : undefined}><span>Overdue</span><strong>{workload.overdueTasks}</strong><p>recorded deadlines have passed</p>{workload.overdue ? <Link href={`/marketing?event=${workload.overdue.eventSlug}#event-tasks`}>Open {workload.overdue.eventName} →</Link> : null}</article>
             <article><span>Next shared deadline</span><strong>{workload.nextDeadline?.label ?? "None"}</strong><p>{workload.nextDeadline ? `${workload.nextDeadline.taskCount} task${workload.nextDeadline.taskCount === 1 ? "" : "s"} across ${workload.nextDeadline.eventCount} event${workload.nextDeadline.eventCount === 1 ? "" : "s"}` : "No dated task is recorded"}</p>{workload.nextDeadline ? <Link href={`/marketing?event=${workload.nextDeadline.eventSlug}#event-tasks`}>Open {workload.nextDeadline.eventName} →</Link> : null}</article>
           </div>

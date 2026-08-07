@@ -65,7 +65,7 @@ export default function LeadershipPage() {
         </div>
         <div className="leadership-alerts">
           <Link href="/sources#approval-queue"><span>Source conflicts</span><strong>{brief.pulse.sourceConflicts.length}</strong><p>Conflicting facts are held for a decision.</p><b>Review →</b></Link>
-          <Link href="/marketing#event-tasks"><span>Plan setup needed</span><strong>{brief.pulse.readiness.planSetupNeeded}</strong><p>Events still need structured owners, deadlines and statuses.</p><b>Open work →</b></Link>
+          <Link href="/marketing#event-tasks"><span>Checklist setup needed</span><strong>{brief.pulse.readiness.planSetupNeeded}</strong><p>Events still need their high-level priorities turned into searchable tasks.</p><b>Open work →</b></Link>
           <Link href="/sources#freshness-policy"><span>Source checks due</span><strong>{brief.pulse.sourceChecksDue.length}</strong><p>Active event briefs outside their freshness window.</p><b>See policy →</b></Link>
           <Link href="/sources#writeback-queue"><span>Upstream queue</span><strong>{brief.writebacks.ready + brief.writebacks.decisions + brief.writebacks.setup}</strong><p>{brief.writebacks.ready} ready · {brief.writebacks.decisions} decision · {brief.writebacks.setup} setup</p><b>Open queue →</b></Link>
         </div>
@@ -138,7 +138,7 @@ export default function LeadershipPage() {
           <p>These are decision-quality gaps, not hidden green status. The site will not resolve them from weak evidence.</p>
         </div>
         <div className="leadership-risk-grid">
-          <article><span>01 · Execution coverage</span><h3>{brief.pulse.readiness.planSetupNeeded} active events lack a structured plan.</h3><p>Priorities exist, but complete ownership, due dates and task status do not. This is the largest obstacle to a dependable program forecast.</p><Link href="/marketing#event-tasks">Open event workspaces →</Link></article>
+          <article><span>01 · Execution coverage</span><h3>{brief.pulse.readiness.planSetupNeeded} active events still lack a tracked checklist.</h3><p>High-level priorities exist, but they are not yet captured as searchable tasks. Owner and deadline gaps remain visible separately after a checklist is added.</p><Link href="/marketing#event-tasks">Open event workspaces →</Link></article>
           <article><span>02 · Source conflicts</span><h3>{sourceConflicts.length} event briefs have contradictory facts.</h3><p>{sourceConflicts.length ? sourceConflicts.map((item) => item.name).join(" · ") : "No unresolved source conflicts are recorded."}</p><Link href="/sources#approval-queue">Review decisions →</Link></article>
           <article><span>03 · Spend and ROI</span><h3>{measurementReadiness.normalizedCostEvents} events have a normalized cost record.</h3><p>No normalized event-cost dataset exists yet. The program cannot responsibly rank event ROI until sponsorship, travel, production, paid media, activation and freight share a controlled schema.</p><Link href="/marketing#measurement">Open measurement contract →</Link></article>
           <article><span>04 · Reporting foundation</span><h3>{brief.linkage.activeCrmEvents} of {brief.linkage.activeEvents} active events have an exact CRM join.</h3><p>{brief.linkage.activeNotionProjects} active event workspaces are linked, but event-specific Drive folders and canonical HubSpot associations still need setup. Portfolio pipeline is not yet a trustworthy leadership metric.</p><Link href="/sources#canonical-event-key">Open linkage coverage →</Link></article>

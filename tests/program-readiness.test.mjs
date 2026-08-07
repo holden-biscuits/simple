@@ -6,10 +6,22 @@ import { getEventReadiness, getProgramReadiness } from "../app/data/program-read
 test("program readiness distinguishes structured task plans from unassigned priorities", () => {
   const readiness = getProgramReadiness(events, "2026-08-06");
   assert.equal(readiness.activeEvents, 14);
-  assert.equal(readiness.structuredPlans, 2);
-  assert.equal(readiness.planSetupNeeded, 12);
-  assert.equal(readiness.openStructuredTasks, 13);
+  assert.equal(readiness.structuredPlans, 3);
+  assert.equal(readiness.planSetupNeeded, 11);
+  assert.equal(readiness.openStructuredTasks, 28);
   assert.equal(readiness.dueNow.length, 1);
+});
+
+test("a source-backed checklist is searchable without pretending its owner and date gaps are closed", () => {
+  const travel = events.find((event) => event.slug === "iqpc-cx-travel-hospitality");
+  assert.ok(travel);
+  const readiness = getEventReadiness(travel, "2026-08-07");
+  assert.equal(readiness.planState, "structured");
+  assert.equal(readiness.totalTasks, 15);
+  assert.equal(readiness.ownerGaps, 15);
+  assert.equal(readiness.dateGaps, 14);
+  assert.equal(readiness.nextAction?.title, "Confirm speaker and finalize title/abstract with IQPC");
+  assert.equal(readiness.nextAction?.dueSort, undefined);
 });
 
 test("the next action favors a due task and preserves its owner", () => {

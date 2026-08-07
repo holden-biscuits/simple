@@ -66,7 +66,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Needs attention/);
   assert.match(html, /Source issue<\/span><b>2<\/b>/);
   assert.match(html, /Roster open<\/span><b>12<\/b>/);
-  assert.match(html, /Plan setup<\/span><b>11<\/b>/);
+  assert.match(html, /Plan setup<\/span><b>10<\/b>/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /CCW Orlando 2027/);
   assert.match(html, /CCW UK Executive Exchange 2027/);
@@ -94,8 +94,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /starting within 60 days/);
   assert.match(html, /rosters incomplete/);
   assert.match(html, /source conflicts/);
-  assert.match(html, /Structured task plans[\s\S]*2(?:<!-- -->)? \/ (?:<!-- -->)?13/);
-  assert.match(html, /Plan setup needed[\s\S]*11/);
+  assert.match(html, /Tracked task lists[\s\S]*3(?:<!-- -->)? \/ (?:<!-- -->)?13/);
+  assert.match(html, /Checklist setup needed[\s\S]*10/);
   assert.match(html, /Due or overdue now[\s\S]*1/);
   assert.match(html, /Next action/);
   assert.match(html, /Owner · Holden \+ AP/);
@@ -258,7 +258,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Active event audience segments[\s\S]*0 active-event segments are automatically maintained/);
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
-  assert.match(html, /<span>Applied<\/span><strong>12<\/strong>/);
+  assert.match(html, /<span>Applied<\/span><strong>13<\/strong>/);
   assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
   assert.match(html, /<span>No change<\/span><strong>5<\/strong>/);
   assert.match(html, /Accepted Gabby Pring’s Customer Connect answers/);
@@ -342,7 +342,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /2(?:<!-- -->)? \/ (?:<!-- -->)?13/);
   assert.match(html, /Planning gaps open/);
   assert.match(html, /What changed—and what still needs a decision\./);
-  assert.match(html, /12<\/strong><span>Applied updates/);
+  assert.match(html, /13<\/strong><span>Applied updates/);
   assert.match(html, /3<\/strong><span>Needs review/);
   assert.match(html, /Customer Connect Expo[\s\S]*Accepted Gabby Pring’s Customer Connect answers/);
   assert.match(html, /Genesys Xperience[\s\S]*Confirmed the Genesys Xperience roster/);
@@ -358,8 +358,8 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /9(?:<!-- -->)? active event workspaces are linked/);
   assert.match(html, /Leadership gets decisions, not data-entry work\./);
   assert.match(html, /Needs judgment[\s\S]*2/);
-  assert.match(html, /Ready to approve[\s\S]*12/);
-  assert.match(html, /Foundation work[\s\S]*9/);
+  assert.match(html, /Ready to approve<\/span><strong>20/);
+  assert.match(html, /Foundation work<\/span><strong>10/);
   assert.match(html, /Source-based opportunities[\s\S]*22/);
   assert.match(html, /Exact CCW opportunities[\s\S]*21/);
   assert.match(html, /Open pipeline[\s\S]*\$0/);
@@ -658,8 +658,8 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /approved menu, budget bands, vendors, address and consent checks/);
   assert.match(html, /id="marketing-pulse"/);
   assert.match(html, /What needs attention now\./);
-  assert.match(html, /Task-plan coverage/);
-  assert.match(html, /Open structured work/);
+  assert.match(html, /Checklist coverage/);
+  assert.match(html, /Open tracked work/);
   assert.match(html, /Next shared deadline/);
   assert.match(html, /events still need task setup/);
   assert.match(html, /href="#event-tasks"/);
@@ -682,7 +682,7 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /no-U-turn loop, quarter-mile taxi geofence, and bonus spot-based placement are set/);
   assert.ok(html.indexOf("Deliver the final solution-talk deck") < html.indexOf("Submit the contracted pre-event email copy"));
   assert.match(html, /HubSpot form, campaign attribution, and 15-minute demo CTA are already live/);
-  assert.match(html, /Task details tracked/);
+  assert.match(html, /1 owner · 2 dates open/);
   assert.match(html, /Owner: Open · Due: Date and owner open/);
   assert.match(html, /aria-selected="true"[^>]*id="event-task-tab-genesys-xperience"/);
   assert.match(html, /id="event-task-tab-genesys-xperience"[^>]*tabindex="0"/);
@@ -732,7 +732,9 @@ test("server-renders a searchable marketing support board", async () => {
   const travelHospitality = await render("/marketing?event=iqpc-cx-travel-hospitality");
   assert.equal(travelHospitality.status, 200);
   const travelHospitalityHtml = await travelHospitality.text();
-  assert.match(travelHospitalityHtml, /Owners &amp; dates open/);
+  assert.match(travelHospitalityHtml, /15 owners · 14 dates open/);
+  assert.match(travelHospitalityHtml, /Confirm speaker and finalize title\/abstract with IQPC/);
+  assert.match(travelHospitalityHtml, /Log booked meetings and demos in HubSpot with the required context/);
   assert.match(travelHospitalityHtml, /Owner: Open · Due: Open/);
 });
 
@@ -837,7 +839,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Start with what this event changes for you\./);
   assert.match(genesysHtml, /No guaranteed meeting package is listed/);
   assert.match(genesysHtml, /Work the booth and nearby traffic/);
-  assert.match(genesysHtml, /7 structured task(?:<!-- -->)?s are(?:<!-- -->)? tracked for this event/);
+  assert.match(genesysHtml, /7 task(?:<!-- -->)?s are(?:<!-- -->)? tracked for this event/);
+  assert.match(genesysHtml, /1 open task(?:<!-- -->)? needs an owner; (?:<!-- -->)?2(?:<!-- -->)? need dated deadlines/);
   assert.match(genesysHtml, /href="\/ae#build-the-meeting-hypothesis"/);
   assert.match(genesysHtml, /href="\/sdr#how-to-work-the-event"/);
   assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
