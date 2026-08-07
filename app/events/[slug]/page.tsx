@@ -334,7 +334,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section> : null}
 
       {eventWritebacks.length ? <section className="event-writebacks shell" id="event-writebacks">
-        <div className="section-intro"><p className="eyebrow">Source write-backs</p><h2>Source records still need to catch up.</h2><p>The fieldbook and an owning system do not match yet. Each card shows the exact upstream correction and its approval state; update the destination, then remove the item after a fresh source check.</p></div>
+        <div className="section-intro"><p className="eyebrow">Source write-backs</p><h2>Source records still need to catch up.</h2><p>This event page and an owning system do not match yet. Each card shows the exact upstream correction and its approval state; update the destination, then remove the item after a fresh source check.</p></div>
         <div className="writeback-grid event-writeback-grid">
           {eventWritebacks.map((item) => <article key={`${item.system}-${item.scope}`}>
             <header><span>{item.system}</span><b className={`writeback-state writeback-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</b></header>

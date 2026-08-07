@@ -98,7 +98,7 @@ const findings: LatestScanFinding[] = [
     field: "Priority actions",
     state: "Needs review",
     destination: "Customer Connect project in Notion",
-    result: "Confirm the rescheduled organizer call before the fieldbook changes.",
+    result: "Confirm the rescheduled organizer call before Event Basecamp changes.",
   },
   {
     id: "customer-connect-marketing-tasks",

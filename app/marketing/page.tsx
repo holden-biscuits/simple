@@ -54,7 +54,7 @@ const playbook = [
       "Treat gifting as a measured follow-up motion. Record the account, recipient, reason, delivery status, owner, conversation outcome, and next step in HubSpot.",
       "Reconcile attendance, scans, qualified conversations, booked meetings, demos, pipeline, spend, content, and partner outcomes.",
       "Run a short debrief: what to repeat, change, stop, and test next time. Add those decisions to the event record, not a private document.",
-      "Close the loop in the system that owns each fact: outcomes in HubSpot, program status in the tracker, execution decisions in Notion, and final artifacts in the Events Drive. The fieldbook refreshes from those records after reconciliation.",
+      "Close the loop in the system that owns each fact: outcomes in HubSpot, program status in the tracker, execution decisions in Notion, and final artifacts in the Events Drive. Event Basecamp refreshes from those records after reconciliation.",
     ],
   },
 ];
@@ -62,7 +62,7 @@ const playbook = [
 const crmActivationSteps = [
   {
     title: "Create one event record",
-    copy: "Create a HubSpot Marketing Event for every event TeamSimple is attending. Use the fieldbook event name, dates, organizer URL, and canonical Event key.",
+    copy: "Create a HubSpot Marketing Event for every event TeamSimple is attending. Use the event name, dates, organizer URL, and canonical Event key shown on its Event Basecamp page.",
   },
   {
     title: "Attach the campaign",
@@ -161,7 +161,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
           <div className="crm-activation-grid">
             {crmActivationSteps.map((step, index) => <article key={step.title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{step.title}</h3><p>{step.copy}</p></article>)}
           </div>
-          <aside className="crm-activation-note"><strong>Start with the event record, not a reporting spreadsheet.</strong><p>HubSpot supports manually created Marketing Events for in-person programs, campaign association, participant statuses, segments, and event reporting. The fieldbook’s canonical Event key supplies the missing join from that attendance record to meetings, deals, and cost.</p><a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">Open HubSpot’s Marketing Events guidance ↗</a></aside>
+          <aside className="crm-activation-note"><strong>Start with the event record, not a reporting spreadsheet.</strong><p>HubSpot supports manually created Marketing Events for in-person programs, campaign association, participant statuses, segments, and event reporting. The canonical Event key supplies the missing join from that attendance record to meetings, deals, and cost.</p><a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">Open HubSpot’s Marketing Events guidance ↗</a></aside>
           <BackToTop />
         </div>
       </section>

@@ -171,7 +171,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /One durable join across every system\./);
   assert.match(html, /genesys-xperience/);
   assert.match(html, /HubSpot meetings/);
-  assert.match(html, /Fieldbook keys[\s\S]*29(?:<!-- -->)? \/ (?:<!-- -->)?29/);
+  assert.match(html, /Published event keys[\s\S]*29(?:<!-- -->)? \/ (?:<!-- -->)?29/);
   assert.match(html, /Active Notion projects[\s\S]*9(?:<!-- -->)? \/ (?:<!-- -->)?13/);
   assert.match(html, /Active Drive folders[\s\S]*0(?:<!-- -->)? \/ (?:<!-- -->)?13/);
   assert.match(html, /Active CRM joins[\s\S]*0(?:<!-- -->)? \/ (?:<!-- -->)?13/);
@@ -198,7 +198,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Rosters to name[\s\S]*11/);
   assert.match(html, /Source conflicts[\s\S]*3/);
   assert.match(html, /Update the system that owns the fact\./);
-  assert.match(html, /Reconcile any related execution text in Notion; the next review build refreshes the fieldbook/);
+  assert.match(html, /Reconcile any related execution text in Notion; the next review build refreshes Event Basecamp/);
   assert.match(html, /Only publish outcomes the CRM can prove\./);
   assert.match(html, /Exact event deals[\s\S]*29/);
   assert.match(html, /Needs RevOps review[\s\S]*One additional deal carries the CCW follow-up detail but not an event source/);
@@ -221,7 +221,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Keep the work with the person closest to it\./);
   assert.match(html, /AEs and SDRs[\s\S]*Before the event day ends/);
   assert.match(html, /Event lead[\s\S]*The same business day/);
-  assert.match(html, /Marketing Ops[\s\S]*Before the next fieldbook review build/);
+  assert.match(html, /Marketing Ops[\s\S]*Before the next Event Basecamp review build/);
   assert.match(html, /Leadership[\s\S]*When explicitly escalated/);
   assert.match(html, /Routine correction[\s\S]*Material decision[\s\S]*Published receipt/);
   assert.match(html, /Changes that belong upstream\./);
@@ -349,7 +349,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const html = await response.text();
   assert.match(html, /Find the detail, not the page\./);
   assert.match(html, /value="names open"/);
-  assert.match(html, /Results open the exact section or workspace you need/);
+  assert.match(html, /Results open the exact section or working system you need/);
   assert.match(html, /Useful starting points/);
   assert.match(html, /Staffing · names open/);
   assert.match(html, /Meeting package · count TBD/);
@@ -545,8 +545,8 @@ test("an unknown event route renders a useful branded recovery page", async () =
   const response = await render("/events/not-a-real-event");
   assert.equal(response.status, 404);
   const html = await response.text();
-  assert.match(html, /That page isn’t in the fieldbook\./);
-  assert.match(html, /Search the fieldbook/);
+  assert.match(html, /That page isn’t in Event Basecamp\./);
+  assert.match(html, /Search Event Basecamp/);
   assert.match(html, /Browse every event/);
   assert.match(html, /Find the dates, team, plan, and links\./);
   assert.match(html, /See what changed and where to update it\./);
@@ -637,7 +637,7 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Cvent’s 2026 event-value guidance/);
   assert.match(html, /HubSpot’s Marketing Events guidance/);
   assert.match(html, /Close the loop in the system that owns each fact/);
-  assert.match(html, /The fieldbook refreshes from those records after reconciliation/);
+  assert.match(html, /Event Basecamp refreshes from those records after reconciliation/);
   assert.doesNotMatch(html, /Update this fieldbook, the tracker, the Notion project/);
 
   const customerConnect = await render("/marketing?event=customer-connect-expo");
@@ -662,7 +662,7 @@ test("search routes marketing tasks to the selected event workspace", async () =
   const html = await response.text();
   assert.match(html, /Genesys Xperience · Produce the booth-monitor product video/);
   assert.match(html, /\/marketing\?event=genesys-xperience#event-tasks/);
-  assert.match(html, /Results open the exact section or workspace you need/);
+  assert.match(html, /Results open the exact section or working system you need/);
 
   const eventAction = await render("/search?q=Lunch%20%26%20Learn%20contracted&type=Operations");
   assert.equal(eventAction.status, 200);

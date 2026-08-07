@@ -65,7 +65,7 @@ export default function SourcesPage() {
         <div className="section-intro">
           <p className="eyebrow">Make an update</p>
           <h2>Fix the source that owns the fact.</h2>
-          <p>Choose what changed. The next source scan will reconcile the update into a review build; the live fieldbook changes only after that build is approved.</p>
+          <p>Choose what changed. The next source scan will reconcile the update into a review build; the live site changes only after that build is approved.</p>
         </div>
         <div className="quick-update-grid">
           {eventUpdateRoutes.map((route, index) => <a href={route.url} target="_blank" rel="noreferrer" key={route.id}>
@@ -75,7 +75,7 @@ export default function SourcesPage() {
             <strong>{route.action} ↗</strong>
           </a>)}
         </div>
-        <aside className="quick-update-note"><strong>A Slack message or email is evidence—not the final record.</strong><p>Once a change is confirmed, put it in the tracker, event project, Events Drive, or HubSpot. That keeps decisions searchable and prevents the fieldbook from becoming another manual source of truth.</p></aside>
+        <aside className="quick-update-note"><strong>A Slack message or email is evidence—not the final record.</strong><p>Once a change is confirmed, put it in the tracker, event project, Events Drive, or HubSpot. That keeps decisions searchable and prevents Event Basecamp from becoming another manual source of truth.</p></aside>
         <BackToTop />
       </section>
 
@@ -109,7 +109,7 @@ export default function SourcesPage() {
             <p>{check.result}</p>
           </article>)}
         </div>
-        <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Latest evidence refresh · ${monitor.lastSuccessfulScanMode}: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed in this task while building the fieldbook; the first successful recurring run will add its own labeled receipt here."}</p>
+        <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Latest evidence refresh · ${monitor.lastSuccessfulScanMode}: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed while building Event Basecamp; the first successful recurring run will add its own labeled receipt here."}</p>
         <div className="latest-scan-receipt" id="latest-scan">
           <div className="section-intro">
             <p className="eyebrow">Latest scheduled run</p>
@@ -165,7 +165,7 @@ export default function SourcesPage() {
           </div>
           <div className="event-key-example"><span>Example</span><code>genesys-xperience</code><p>Stable even if the display name, dates or venue change.</p></div>
           <div className="linkage-coverage" aria-label="Cross-system event coverage">
-            <article><span>Fieldbook keys</span><strong>{linkage.stableFieldbookKeys} / {linkage.totalEvents}</strong><p>Every published event has a stable key.</p></article>
+            <article><span>Published event keys</span><strong>{linkage.stableFieldbookKeys} / {linkage.totalEvents}</strong><p>Every published event has a stable key.</p></article>
             <article><span>Active Notion projects</span><strong>{linkage.activeNotionProjects} / {linkage.activeEvents}</strong><p>{linkage.activeNotionMissing.length} active event workspaces still need a link.</p></article>
             <article><span>Active Drive folders</span><strong>{linkage.activeDriveFolders} / {linkage.activeEvents}</strong><p>No event-specific folder is stored in the governed record yet.</p></article>
             <article><span>Active CRM joins</span><strong>{linkage.activeCrmEvents} / {linkage.activeEvents}</strong><p>One past event has a controlled legacy join; active-event attribution still needs setup.</p></article>
@@ -200,7 +200,7 @@ export default function SourcesPage() {
               <p>{step.detail}</p>
             </article>)}
           </div>
-          <p className="source-governance-note"><strong>The missing join:</strong> each system needs the same stable Event key. The fieldbook already has one in every event URL; Sheets, Notion and HubSpot do not yet share it.</p>
+          <p className="source-governance-note"><strong>The missing join:</strong> each system needs the same stable Event key. Every Event Basecamp URL already has one; Sheets, Notion and HubSpot do not yet share it.</p>
           <div className="catalog-health" aria-label="Event data publish checks">
             <article><span>Stable event keys</span><strong>{catalogHealth.eventKeys}</strong><p>Unique IDs ready to carry into Sheets, Notion and HubSpot.</p></article>
             <article><span>Blocking errors</span><strong>{catalogHealth.errors.length}</strong><p>Duplicate keys, broken dates or invalid source links stop a build.</p></article>
@@ -215,7 +215,7 @@ export default function SourcesPage() {
         <div className="section-intro">
           <p className="eyebrow">Automation contract</p>
           <h2>Every scan becomes one auditable batch.</h2>
-          <p>A connector result is not allowed to edit the fieldbook directly. Every finding must pass through the same identity, ownership, evidence and approval gates.</p>
+          <p>A connector result is not allowed to edit Event Basecamp directly. Every finding must pass through the same identity, ownership, evidence and approval gates.</p>
         </div>
         <div className="scan-contract-grid">
           {sourceScanContract.map((item) => <article key={item.step}><span>{item.step}</span><h3>{item.title}</h3><p>{item.detail}</p></article>)}
@@ -237,7 +237,7 @@ export default function SourcesPage() {
         <div className="section-intro">
           <p className="eyebrow">Feeds and write-back</p>
           <h2>Connected does not mean live.</h2>
-          <p>No source pushes directly into the production site today. The fieldbook is a versioned read model: a scheduled job reads available sources, reconciles them, saves a review build and waits for deployment approval.</p>
+          <p>No source pushes directly into production today. Event Basecamp is a versioned read-only view: a scheduled job reads available sources, reconciles them, saves a review build and waits for deployment approval.</p>
         </div>
         <div className="connector-capabilities" aria-label="Verified connector access and operating boundaries">
           <header><span>Verified access · Aug 7</span><p>Technical access and operating permission are separate. A connector may support a write that this workflow still requires a person to approve.</p></header>
@@ -260,7 +260,7 @@ export default function SourcesPage() {
             </tr>)}</tbody>
           </table>
         </div>
-        <div className="audience-views" aria-label="Fieldbook views by audience">
+        <div className="audience-views" aria-label="Event Basecamp views by audience">
           {audienceViews.map((item) => <article key={item.audience}><span>{item.audience}</span><h3>{item.view}</h3><p>{item.detail}</p></article>)}
         </div>
         <p className="source-governance-note"><strong>Best next infrastructure move:</strong> add the existing Event key to the tracker, Notion projects and HubSpot records. That turns fragile name-and-date matching into a dependable join and makes safe rollups and approved write-back possible.</p>
@@ -290,7 +290,7 @@ export default function SourcesPage() {
         <div className="section-intro">
           <p className="eyebrow">Field ownership</p>
           <h2>Update the system that owns the fact.</h2>
-          <p>The fieldbook is the place to read the whole plan. It is not the place to originate every fact.</p>
+          <p>Event Basecamp is where you read the whole plan. Update each fact in the system that owns it.</p>
         </div>
         <div className="source-route-table-wrap">
           <table className="source-route-table">
@@ -504,7 +504,7 @@ export default function SourcesPage() {
             <div><span>Applied automatically</span><p>Direct, high-confidence changes supported by the controlling source: dates, venue details, confirmed deliverables, named owners and clearly attributed outcomes.</p></div>
             <div><span>Held for review</span><p>Conflicting participation status, ambiguous staffing, unattributed CRM activity, uncertain meeting counts, or a decision found only in conversation.</p></div>
             <div><span>Run receipt</span><p>Each scan reports the sources checked, the old and new values for applied changes, links to supporting evidence, and the items still waiting for a decision.</p></div>
-            <div><span>Publication gate</span><p>A successful scan may save a review version, but it does not change the live fieldbook until Holden explicitly approves deployment.</p></div>
+            <div><span>Publication gate</span><p>A successful scan may save a review version, but it does not change the live site until Holden explicitly approves deployment.</p></div>
           </div>
           <div className="source-links vertical" id="source-files">
             <a href={sourceLinks.sheet} target="_blank" rel="noreferrer">Open tracker ↗</a>

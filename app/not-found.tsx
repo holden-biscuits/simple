@@ -10,10 +10,10 @@ export default function NotFoundPage() {
         <div className="not-found-code" aria-hidden="true"><span>4</span><b>0</b><span>4</span></div>
         <div>
           <p className="eyebrow">Page not found</p>
-          <h1>That page isn’t in the fieldbook.</h1>
-          <p className="lede">The link may be old, or the event name may have changed. Search the full fieldbook or return to the event directory.</p>
+          <h1>That page isn’t in Event Basecamp.</h1>
+          <p className="lede">The link may be old, or the event name may have changed. Search Event Basecamp or return to the event directory.</p>
           <div className="not-found-actions">
-            <Link className="button" href="/search">Search the fieldbook <span>↗</span></Link>
+            <Link className="button" href="/search">Search Event Basecamp <span>↗</span></Link>
             <Link className="not-found-secondary" href="/#events">Browse every event →</Link>
           </div>
         </div>

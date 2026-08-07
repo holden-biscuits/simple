@@ -55,7 +55,7 @@ export function reconcileEventUpdate(
   const currentValue = event[proposal.field];
   if (!route) return { ...base, currentValue, decision: "reject", reason: "The field has no declared system of record." };
   if (valuesMatch(currentValue, proposal.proposedValue)) {
-    return { ...base, currentValue, decision: "no-change", reason: "The proposed value already matches the fieldbook.", writebackDestination: route.destination };
+    return { ...base, currentValue, decision: "no-change", reason: "The proposed value already matches Event Basecamp.", writebackDestination: route.destination };
   }
 
   const protectedOverride = protectedOverrides.find((item) => item.eventSlug === proposal.eventKey && item.fieldKey === proposal.field);

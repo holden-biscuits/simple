@@ -28,7 +28,7 @@ export const measurementFields: MeasurementField[] = [
     field: "Canonical Event key",
     owner: "Tracker · Notion · HubSpot",
     timing: "Before outreach or registration starts",
-    rule: "Use the immutable fieldbook slug on the event, campaign, meeting, deal and cost record.",
+    rule: "Use the immutable Event key from the Event Basecamp URL on the event, campaign, meeting, deal and cost record.",
   },
   {
     field: "Fully loaded cost",

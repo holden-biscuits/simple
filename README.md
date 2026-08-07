@@ -1,6 +1,6 @@
 # TeamSimple Event Basecamp
 
-TeamSimple’s internal event fieldbook for the 2026–2027 program. It combines the event directory, role guides, event-specific briefs, marketing execution, leadership reporting, search, and the source-governance record in one deployed Sites project.
+TeamSimple’s internal Event Basecamp for the 2026–2027 program. It combines the event directory, role guides, event-specific briefs, marketing execution, leadership reporting, search, and the source-governance record in one deployed Sites project.
 
 ## Product map
 

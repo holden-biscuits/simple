@@ -124,8 +124,8 @@ export function SiteSearch({ records, initialQuery = "", initialType = "All" }: 
   }, [query, type]);
 
   return (
-    <section className="shell search-tool" aria-label="Search the fieldbook">
-      <label><span>Search the fieldbook</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Genesys, booth, HubSpot, travel, or ZoomInfo" /></label>
+    <section className="shell search-tool" aria-label="Search Event Basecamp">
+      <label><span>Search Event Basecamp</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Genesys, booth, HubSpot, travel, or ZoomInfo" /></label>
       <div className="search-quick">
         <span>Useful starting points</span>
         <div>{quickSearches.map((item) => <button type="button" key={item.query} onClick={() => { setQuery(item.query); setType("All"); }}>{item.label}</button>)}</div>

@@ -69,10 +69,10 @@ export default function LeadershipPage() {
           <div className="section-intro">
             <p className="eyebrow">Latest source work</p>
             <h2>What changed—and what still needs a decision.</h2>
-            <p>{siteStatus.sourceMonitor.lastSuccessfulScan}. Applied records already match the fieldbook; review records preserve both claims until the source owner decides.</p>
+            <p>{siteStatus.sourceMonitor.lastSuccessfulScan}. Applied records already match Event Basecamp; review records preserve both claims until the source owner decides.</p>
           </div>
           <div className="leadership-change-summary" aria-label="Latest source change summary">
-            <article><strong>{changeDigest.applied.length}</strong><span>Applied updates</span><p>Verified values already reflected in the fieldbook.</p></article>
+            <article><strong>{changeDigest.applied.length}</strong><span>Applied updates</span><p>Verified values already reflected in Event Basecamp.</p></article>
             <article><strong>{changeDigest.needsReview.length}</strong><span>Needs review</span><p>Contradictory facts held for an explicit decision.</p></article>
           </div>
           <div className="leadership-change-columns">
@@ -184,7 +184,7 @@ export default function LeadershipPage() {
           <article><span>Use carefully</span><h3>CRM outcomes</h3><p>Only exact event joins. Scheduled or blank-outcome meetings, text matches and date proximity stay out of completed results.</p></article>
           <article><span>Do not claim yet</span><h3>Portfolio ROI</h3><p>There is no normalized spend model or complete event-key coverage in HubSpot. Until both exist, ROI and event-sourced pipeline totals would be misleading.</p></article>
         </div>
-        <div className="leadership-links"><Link href="/sources#data-streams">See the data architecture →</Link><Link href="/sources#writeback-queue">See upstream work →</Link><Link href="/search">Search the fieldbook →</Link></div>
+        <div className="leadership-links"><Link href="/sources#data-streams">See the data architecture →</Link><Link href="/sources#writeback-queue">See upstream work →</Link><Link href="/search">Search Event Basecamp →</Link></div>
         <BackToTop />
       </section>
       <Footer />
