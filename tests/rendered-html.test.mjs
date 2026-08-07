@@ -50,8 +50,9 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /29 of 29 matching records reviewed/);
   assert.match(html, /Google Sheets/);
   assert.match(html, /27 event rows reviewed/);
-  assert.match(html, /Genesys Xperience focused scan/);
-  assert.match(html, /booking the send still needs approval/);
+  assert.match(html, /Genesys Xperience field brief and CRM check/);
+  assert.match(html, /Wish Line media buy is approved/);
+  assert.match(html, /zero meeting-event records/);
   assert.match(html, /CCW Exchange Chicago focused scan/);
   assert.match(html, /28 researched accounts/);
   assert.match(html, /IQPC CX Travel &amp; Hospitality focused scan/);
@@ -76,7 +77,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
 });
 
 test("server-renders a searchable marketing support board", async () => {
-  const response = await render("/marketing");
+  const response = await render("/marketing?event=genesys-xperience");
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /See the work and the gaps in one place\./);
@@ -86,7 +87,29 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Team unassigned/);
   assert.match(html, /Most urgent open item/);
   assert.match(html, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
+  assert.match(html, /Keep each event’s execution list in its own tab/);
+  assert.match(html, /Genesys Xperience/);
+  assert.match(html, /Submit the contracted pre-event email copy/);
+  assert.match(html, /Produce the booth-monitor product video/);
+  assert.match(html, /HubSpot form, campaign attribution, and 15-minute demo CTA are already live/);
+  assert.match(html, /aria-selected="true"[^>]*id="event-task-tab-genesys-xperience"/);
   assert.doesNotMatch(html, /Confirm the next owner and deadline/);
+});
+
+test("server-renders field-role CRM rules and the updated guide model", async () => {
+  const sdr = await render("/sdr");
+  assert.equal(sdr.status, 200);
+  const sdrHtml = await sdr.text();
+  assert.match(sdrHtml, /add every booked meeting to/);
+  assert.match(sdrHtml, /event source, current setup, call volume, qualification outcome, owner, agreed next action, and meeting logistics/);
+  assert.match(sdrHtml, /https:\/\/app\.hubspot\.com/);
+
+  const guides = await render("/guides");
+  assert.equal(guides.status, 200);
+  const guidesHtml = await guides.text();
+  assert.match(guidesHtml, /Empty sections stay out of the way/);
+  assert.match(guidesHtml, /marketing production and budget work live in the event tabs/);
+  assert.doesNotMatch(guidesHtml, /If the team is not doing something, the page says/);
 });
 
 test("server-renders dynamic event facts without empty filler notes", async () => {
@@ -94,17 +117,23 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(genesys.status, 200);
   const genesysHtml = await genesys.text();
   assert.match(genesysHtml, /No guaranteed meetings/);
-  assert.match(genesysHtml, /Meeting package<\/span><strong>None/);
-  assert.match(genesysHtml, /Meetings scheduled<\/span><strong>0/);
+  assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
+  assert.doesNotMatch(genesysHtml, /Meetings scheduled/);
   assert.match(genesysHtml, /Team<\/span><strong>9 attending/);
-  assert.match(genesysHtml, /Do these next/);
+  assert.doesNotMatch(genesysHtml, /Do these next/);
   assert.match(genesysHtml, /Wish Line/);
-  assert.match(genesysHtml, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
-  assert.match(genesysHtml, /Available<\/dt><dd>None listed/);
+  for (const person of ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]) assert.match(genesysHtml, new RegExp(`>${person}<`));
+  assert.doesNotMatch(genesysHtml, />Available</);
   assert.doesNotMatch(genesysHtml, /Final roster still needs to be reconciled/);
-  assert.match(genesysHtml, /Contracted pre-event email add-on/);
-  assert.match(genesysHtml, /sponsor portal by Aug 13/);
-  assert.match(genesysHtml, /flights, hotel blocks, and passes are marked complete in Notion/);
+  assert.match(genesysHtml, /only external voice-AI partner in the current sponsor plan/);
+  assert.match(genesysHtml, /Download the Cvent Events app now/);
+  assert.match(genesysHtml, /Stanleys/);
+  assert.match(genesysHtml, /Karaoke machines/);
+  assert.match(genesysHtml, /Genesys sales rules \(confidential\)/);
+  assert.match(genesysHtml, /Travel and hotels should already be booked/);
+  assert.match(genesysHtml, /Marketing tasks/);
+  assert.doesNotMatch(genesysHtml, /id="workstream-marketing"/);
+  assert.doesNotMatch(genesysHtml, /id="workstream-budget"/);
   assert.doesNotMatch(genesysHtml, /id="workstream-secondary"/);
 
   const contact = await render("/events/contact-io");
@@ -131,7 +160,6 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const icmi = await render("/events/icmi-contact-center-expo");
   assert.equal(icmi.status, 200);
   const icmiHtml = await icmi.text();
-  assert.match(icmiHtml, /Confirmed/);
   assert.match(icmiHtml, /TeamSimple is attending/);
 
   const orlando = await render("/events/ccw-orlando");
@@ -163,8 +191,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /Carter and Josh are marked available/);
   assert.match(chicagoHtml, /Source check needed/);
   assert.match(chicagoHtml, /1 named · 2 planned/);
-  assert.match(chicagoHtml, /Meeting package<\/span><strong>Included · count TBD/);
-  assert.match(chicagoHtml, /internal 28-account ICP sheet/);
+  assert.match(chicagoHtml, /Guaranteed meetings<\/span><strong>Included · count TBD/);
+  assert.match(chicagoHtml, /internal ICP sheet has 28 researched accounts/);
   assert.match(chicagoHtml, /9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked/);
 
   const shoptalkFall = await render("/events/shoptalk-fall");
@@ -180,4 +208,10 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(travelHtml, /invitation-only Exchange/);
   assert.match(travelHtml, /connected guest journeys/);
   assert.match(travelHtml, /calendar record lists Zach \+ Taylor/);
+
+  const retail = await render("/events/iqpc-cx-retail-uk");
+  const retailHtml = await retail.text();
+  assert.match(retailHtml, /Guaranteed meetings<\/span><strong>count not recorded/);
+  assert.match(retailHtml, /Meetings recorded<\/span><strong>10–15/);
+  assert.doesNotMatch(retailHtml, /10–15 Guaranteed Meetings/);
 });

@@ -30,10 +30,10 @@ export const siteStatus = {
         result: "The tracker keeps Taylor confirmed and Josh available; Notion and the calendar record list Taylor + Josh. The tracker value remains on the site and the conflict is in the approval queue. A separate internal ICP sheet contains 28 researched accounts but is not the organizer’s meeting schedule. HubSpot returned no explicitly Chicago-attributed deal record, so no CRM outcome is published.",
       },
       {
-        system: "Notion · Slack · Gmail",
+        system: "Direct update · confidential agreement · HubSpot",
         checkedAt: "Aug 06 · 2026",
-        scope: "Genesys Xperience focused scan",
-        result: "Notion confirms the roster, travel blocks and passes are complete. Gmail confirms the pre-event email add-on is contracted and the sponsor offered an Aug 13 copy deadline. Slack shows that booking the send still needs approval. The Wish Line remains pending because its detailed plan still records an open decision and unresolved IO terms.",
+        scope: "Genesys Xperience field brief and CRM check",
+        result: "Holden confirmed the Wish Line media buy is approved, the phone number is purchased, the landing page and HubSpot campaign are live, the talk title/abstract/speaker are locked, and the final deck is due Aug 10. The executed referral agreement was translated into an internal sales brief in Events Drive. HubSpot returned zero meeting-event records for both ‘Genesys’ and ‘Xperience’ and no matching marketing-event record, so the event page does not publish a decorative scheduled-meeting count.",
       },
       {
         system: "Direct decision",

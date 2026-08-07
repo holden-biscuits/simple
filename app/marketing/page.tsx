@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BackToTop, PageContents } from "../components/page-contents";
 import { Footer } from "../components/footer";
-import { MarketingSupportBoard } from "../components/marketing-support-board";
+import { EventMarketingWorkspace, MarketingSupportBoard } from "../components/marketing-support-board";
 import { SiteHeader } from "../components/site-header";
 import { events, getEventPhase, getProgramDate } from "../data/events";
 
@@ -55,7 +55,8 @@ const playbook = [
   },
 ];
 
-export default function MarketingPage() {
+export default async function MarketingPage({ searchParams }: { searchParams: Promise<{ event?: string }> }) {
+  const { event: selectedEvent } = await searchParams;
   const programDate = getProgramDate();
   const activeEvents = events.filter((event) => getEventPhase(event, programDate) !== "past" && event.status !== "No");
   return (
@@ -69,6 +70,7 @@ export default function MarketingPage() {
       </section>
       <PageContents items={[
         { id: "lessons", label: "Operating lessons" },
+        { id: "event-tasks", label: "Event tasks" },
         { id: "support-matrix", label: "Support matrix" },
         ...playbook.map((section) => ({ id: section.id, label: section.label })),
         { id: "measurement", label: "Measurement" },
@@ -77,6 +79,12 @@ export default function MarketingPage() {
       <section className="shell marketing-lessons" id="lessons">
         <div className="section-intro"><p className="eyebrow">Lessons from this schedule</p><h2>Fix the handoffs that keep repeating.</h2><p>These are the patterns already visible across the 2026 tracker and event plans.</p></div>
         <div className="lesson-grid">{operatingLessons.map(([title, copy], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{copy}</p></article>)}</div>
+        <BackToTop />
+      </section>
+
+      <section className="shell event-task-section" id="event-tasks">
+        <div className="section-intro"><p className="eyebrow">Event workspaces</p><h2>Keep each event’s execution list in its own tab.</h2><p>These are marketing and program-management tasks. The field brief stays focused on what sales, SDRs, and leadership need before and during the event.</p></div>
+        <EventMarketingWorkspace events={activeEvents} initialSlug={selectedEvent} />
         <BackToTop />
       </section>
 

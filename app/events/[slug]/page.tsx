@@ -43,23 +43,12 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             : "Not assigned";
   const note = event.notes.trim();
   const isSourceConflict = note.toLowerCase().startsWith("source conflict:");
-  const facts = [
-    ["Status", event.status === "No" ? "Not attending" : event.status],
-    ["City", event.location],
-    ...(event.venue ? [["Venue", event.venue]] : []),
-    ["Planned headcount", event.attendeeCount?.toString() ?? "None"],
-    ["Guaranteed package", guaranteedPackageSummary],
-    ["Meetings recorded", bookedMeetingLabel],
-    ["Speaking", event.speaking],
-    ["Sponsorship", event.sponsorship],
-    ...(event.credentials ? [["Credentials", event.credentials]] : []),
-  ] as string[][];
   const resultGroups = [
     ["Meetings recorded", event.meetingsBooked.length ? event.meetingsBooked : event.meetingCountLabel ? [`${event.meetingCountLabel} meetings recorded; account names were not captured`] : []],
     ["Demos booked", event.demosBooked],
     ["Closed", event.closed],
   ] as const;
-  const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
+  const workstreamKeys = (Object.keys(workstreamLabels) as WorkstreamKey[]).filter((key) => key !== "marketing" && key !== "budget");
   const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
   const programMix = isNotAttending ? "No activation planned" : [
@@ -68,12 +57,13 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     isEmptyWorkstream(workstreams.swag) ? null : "Swag / materials",
   ].filter(Boolean).join(" · ") || "Attendance only";
   const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;
-  const meetingProgressLabel = eventPhase === "past" ? "Meetings recorded" : "Meetings scheduled";
   const tldr = [
-    ["Participation", event.status === "No" ? "Not attending" : event.status],
-    ["Program mix", programMix],
-    ["Meeting package", meetingPackage],
-    [meetingProgressLabel, isNotAttending ? "0" : bookedMeetingLabel],
+    ["When", event.dates],
+    ["Where", event.venue ? `${event.location} · ${event.venue}` : event.location],
+    ["Activation", programMix],
+    ["Speaking", event.speaking],
+    ["Guaranteed meetings", meetingPackage],
+    ...(!isNotAttending && (bookedMeetingCount > 0 || event.meetingCountLabel) ? [["Meetings recorded", bookedMeetingLabel]] : []),
     ["Team", teamSummary],
   ];
   const showResults = eventPhase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);
@@ -93,8 +83,6 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         { id: "event-no-plan", label: "Event status" },
       ] : [
         { id: "event-tldr", label: "TL;DR" },
-        ...(event.priorityActions?.length ? [{ id: "event-priorities", label: "Open items" }] : []),
-        { id: "event-facts", label: "At a glance" },
         { id: "event-crew", label: "Crew" },
         ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
         ...activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] })),
@@ -126,16 +114,6 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </div>
         </section>
       ) : <>
-      {event.priorityActions?.length ? (
-        <section className="event-priorities shell" id="event-priorities">
-          <div className="section-intro"><p className="eyebrow">Open items</p><h2>Do these next.</h2></div>
-          <ol>{event.priorityActions.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
-          <BackToTop />
-        </section>
-      ) : null}
-
-      <section className="fact-strip shell" id="event-facts">{facts.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</section>
-
       {event.specialConsiderations?.length ? (
         <section className="event-considerations shell" id="event-considerations">
           <div><p className="eyebrow">Rules of engagement</p><h2>What is different about this event.</h2></div>
@@ -148,26 +126,27 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         <aside id="event-crew">
           <p className="eyebrow">Crew</p>
           <h2>Who’s going</h2>
-          <dl>
-            <div><dt>Attending</dt><dd>{event.team.length ? event.team.join(", ") : "None confirmed"}</dd></div>
-            <div><dt>Available</dt><dd>{event.available.length ? event.available.join(", ") : "None listed"}</dd></div>
-            <div><dt>Rating</dt><dd>{event.rating}</dd></div>
-          </dl>
+          <div className="event-crew-groups">
+            <div><h3>Attending</h3>{event.team.length ? <ul className="crew-list">{event.team.map((person) => <li key={person}>{person}</li>)}</ul> : <p>None confirmed</p>}</div>
+            {event.available.length ? <div><h3>Available</h3><ul className="crew-list">{event.available.map((person) => <li key={person}>{person}</li>)}</ul></div> : null}
+            {event.rating !== "None" ? <div><h3>Event rating</h3><p>{event.rating}</p></div> : null}
+          </div>
           <div className="detail-links">
             <a href={event.organizerUrl} target="_blank" rel="noreferrer">Live event site ↗</a>
             {event.notionUrl ? <a href={event.notionUrl} target="_blank" rel="noreferrer">Notion project ↗</a> : <span>Notion project · None</span>}
             {event.relatedLinks?.map((link) => <a href={link.url} target="_blank" rel="noreferrer" key={link.url}>{link.label} ↗</a>)}
+            {event.priorityActions?.length ? <Link href={`/marketing?event=${event.slug}#event-tasks`}>Marketing tasks →</Link> : null}
           </div>
           <BackToTop />
         </aside>
         <div className="workstreams">
-          <div className="section-intro"><p className="eyebrow">Event checklist</p><h2>What needs to happen.</h2></div>
+          <div className="section-intro"><p className="eyebrow">Field checklist</p><h2>What the event team needs to know and do.</h2></div>
           {activeWorkstreamKeys.map((key, index) => {
             const items = workstreams[key];
             return <article className="workstream" id={`workstream-${key}`} key={key}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
-                <div className="workstream-title-row"><h3>{workstreamLabels[key]}</h3>{key === "marketing" ? <Link href="/marketing#support-matrix">Marketing support board →</Link> : null}</div>
+                <div className="workstream-title-row"><h3>{workstreamLabels[key]}</h3></div>
                 <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop />
               </div>
             </article>;

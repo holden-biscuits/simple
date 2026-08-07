@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord } from "../data/events";
+import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord, type MarketingTask } from "../data/events";
 
 type BoardFilter = "all" | "support" | "no-support" | "team-open" | "speaking";
 
@@ -45,6 +45,65 @@ function staffingSignal(event: EventRecord) {
   if (event.team.length) return { state: "named", label: event.team.join(", ") };
   if (event.available.length) return { state: "open", label: `${event.available.join(", ")} marked available` };
   return { state: "open", label: "No team named" };
+}
+
+function eventTasks(event: EventRecord): MarketingTask[] {
+  if (event.marketingTasks?.length) return event.marketingTasks;
+  const items = event.priorityActions?.length ? event.priorityActions : marketingItems(event);
+  return (items ?? []).map((title) => ({ title, status: "Open" }));
+}
+
+export function EventMarketingWorkspace({ events, initialSlug }: { events: EventRecord[]; initialSlug?: string }) {
+  const firstSlug = events.some((event) => event.slug === initialSlug) ? initialSlug : events[0]?.slug;
+  const [selectedSlug, setSelectedSlug] = useState(firstSlug);
+  const selected = events.find((event) => event.slug === selectedSlug) ?? events[0];
+  if (!selected) return null;
+  const tasks = eventTasks(selected);
+  const support = marketingItems(selected);
+  const openCount = tasks.filter((task) => task.status !== "Done").length;
+
+  return <div className="event-task-workspace">
+    <div className="event-task-tabs" role="tablist" aria-label="Marketing tasks by event">
+      {events.map((event) => <button
+        type="button"
+        role="tab"
+        aria-selected={event.slug === selected.slug}
+        aria-controls="event-task-panel"
+        id={`event-task-tab-${event.slug}`}
+        key={event.slug}
+        onClick={() => setSelectedSlug(event.slug)}
+      >
+        <span>{event.name}</span><b>{eventTasks(event).filter((task) => task.status !== "Done").length}</b>
+      </button>)}
+    </div>
+    <section className="event-task-panel" id="event-task-panel" role="tabpanel" aria-labelledby={`event-task-tab-${selected.slug}`}>
+      <header>
+        <div><p className="eyebrow">{selected.dates} · {selected.location}</p><h3>{selected.name}</h3></div>
+        <div className="event-task-count"><strong>{openCount}</strong><span>Open tasks</span></div>
+      </header>
+      <div className="event-task-grid">
+        <div className="event-task-list">
+          <h4>Do these next</h4>
+          {tasks.length ? <ol>{tasks.map((task, index) => <li key={`${task.title}-${index}`}>
+            <span className={`task-state task-state-${task.status.toLowerCase().replaceAll(" ", "-")}`}>{task.status}</span>
+            <div>
+              <h5>{task.url ? <a href={task.url} target="_blank" rel="noreferrer">{task.title} ↗</a> : task.title}</h5>
+              {(task.owner || task.due) ? <p className="task-meta">{[task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null].filter(Boolean).join(" · ")}</p> : null}
+              {task.note ? <p>{task.note}</p> : null}
+            </div>
+          </li>)}</ol> : <p className="event-task-empty">No marketing action has been entered for this event.</p>}
+        </div>
+        <aside>
+          <h4>Current support</h4>
+          {support.length ? <ul>{support.map((item) => <li key={item}>{item}</li>)}</ul> : <p>None listed.</p>}
+          <div className="event-task-links">
+            <Link href={`/events/${selected.slug}`}>Open field brief →</Link>
+            {selected.notionUrl ? <a href={selected.notionUrl} target="_blank" rel="noreferrer">Open Notion →</a> : null}
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>;
 }
 
 export function MarketingSupportBoard({ events, programDate }: { events: EventRecord[]; programDate: string }) {

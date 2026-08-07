@@ -21,7 +21,7 @@ export default function GuidesPage() {
       <section className="role-hero guides-hero">
         <p className="eyebrow">Event process</p>
         <h1>How we prepare, work the floor, and follow up.</h1>
-        <p className="lede">Every event page uses the same nine workstreams. If the team is not doing something, the page says “None.”</p>
+        <p className="lede">Event pages show the field workstreams that apply. Empty sections stay out of the way, while marketing production and budget work live in the event tabs on the marketing page.</p>
       </section>
       <PageContents items={[
         { id: "standard-checklist", label: "Standard checklist" },

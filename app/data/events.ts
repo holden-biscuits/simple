@@ -11,6 +11,15 @@ export type WorkstreamKey =
   | "followup"
   | "budget";
 
+export type MarketingTask = {
+  title: string;
+  status: "Open" | "In progress" | "Ready for review" | "Done";
+  due?: string;
+  owner?: string;
+  note?: string;
+  url?: string;
+};
+
 export type EventRecord = {
   slug: string;
   name: string;
@@ -36,6 +45,7 @@ export type EventRecord = {
   credentials?: string;
   specialConsiderations?: string[];
   priorityActions?: string[];
+  marketingTasks?: MarketingTask[];
   relatedLinks?: { label: string; url: string }[];
   meetingCountLabel?: string;
   outcomeNotes?: string[];
@@ -289,7 +299,7 @@ export const events: EventRecord[] = [
     status: "Confirmed",
     speaking: "30-minute plenary · Zach",
     sponsorship: "None listed",
-    guaranteedMeetings: "Yes · tracker note estimates 10–15",
+    guaranteedMeetings: "Yes · count not recorded",
     attendeeCount: 3,
     team: ["Zach", "Taylor"],
     available: [],
@@ -425,12 +435,12 @@ export const events: EventRecord[] = [
     location: "Las Vegas, NV",
     status: "Confirmed",
     speaking: "20-minute solution talk · Sep 3 at 1:10 PM",
-    sponsorship: "Booth package + contracted pre-event email · Wish Line OOH proposal pending approval",
+    sponsorship: "Booth package + contracted pre-event email + approved $15K Wish Line media buy",
     guaranteedMeetings: "No",
     attendeeCount: 9,
     team: ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"],
     available: [],
-    notes: "Booth, speaking slot, and a nine-person team make this one of the fall’s largest activations.",
+    notes: "The only external voice-AI partner in the current sponsor plan. There are no guaranteed meetings, so the opportunity depends on Genesys-account targeting, the event app, and direct outreach.",
     rating: "None",
     meetingsBooked: [],
     demosBooked: [],
@@ -440,35 +450,45 @@ export const events: EventRecord[] = [
     venue: "Wynn Las Vegas · Orchestrators Hall",
     credentials: "9 booth passes",
     priorityActions: [
-      "Decide whether to green-light the $15K Wish Line media buy and resolve the Firefly impression, creative-swap, and truck share-of-voice terms before countersigning.",
-      "Submit the contracted pre-event email copy in the sponsor portal by Aug 13 and get approval before booking the send.",
-      "If approved: submit 1-855-955-WISH for verification now, wire the number and agent by Aug 12, deliver creative by Aug 20, finish testing by Aug 21, and soft-launch Aug 24.",
-      "Publish booth shifts, talk coverage, meetings, and breaks for the confirmed nine-person team.",
-      "Lock the talk title, room, speaker, deck, and rehearsal; the session is Sep 3 at 1:10 PM.",
-      "Have all nine attendees download the Cvent Events app, then use the attendee list to build target accounts and pre-book meetings.",
-      "Finish the usesimple.ai/xperience page with HubSpot campaign tracking and a 15-minute booth-demo CTA.",
+      "Submit the contracted pre-event email copy for Cat’s review, then send it through the sponsor portal.",
+      "Complete the final QA pass on usesimple.ai/xperience; the HubSpot form, campaign attribution, and 15-minute demo CTA are already in place.",
+      "Move the approved Wish Line activation into production after the Aug 7 creative-agency handoff; the phone number is already purchased.",
+      "Deliver Cat’s final solution-talk deck by Aug 10, then schedule rehearsal and confirm AV.",
+      "Produce the booth-monitor product video, using demo-environment screen recordings if that is the fastest credible route.",
+      "Lock the post-event lead list, tiering, ownership, and follow-up workflow before the team arrives.",
+    ],
+    marketingTasks: [
+      { title: "Submit the contracted pre-event email copy", status: "In progress", due: "Aug 7", owner: "Holden + Cat", note: "Cat reviews; Holden submits through the sponsor portal.", url: "https://www.notion.so/3b46fee642fe80c5b96bd1b82743a8c0" },
+      { title: "Final QA for the Xperience landing page", status: "Ready for review", owner: "Marketing", note: "HubSpot form, campaign attribution, and 15-minute demo CTA are already live.", url: "https://usesimple.ai/xperience" },
+      { title: "Move Wish Line into creative production", status: "In progress", due: "Starts week of Aug 10", owner: "Holden", note: "$15K media buy is approved; phone number is purchased; creative-agency handoff is Aug 7.", url: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c" },
+      { title: "Deliver the final solution-talk deck", status: "In progress", due: "Aug 10", owner: "Cat + Holden", note: "Title, abstract, and speaker are locked. Cat has the source material; Holden will remind and unblock.", url: "https://usesimple.ai/xperience" },
+      { title: "Produce the booth-monitor product video", status: "Open", due: "Date and owner open", note: "Critical onsite asset. Decide whether to build it from demo-environment screen recordings." },
+      { title: "Build the post-event lead and follow-up workspace", status: "Open", due: "Before Sep 1", owner: "Marketing + RevOps", note: "Use the CCW Vegas model: one lead list, tiered follow-up, named owners, and HubSpot QA." },
+      { title: "Reconcile contracted deliverables and spend", status: "In progress", due: "Before Sep 1", owner: "Marketing", note: "Track the booth, email add-on, Wish Line, production, shipping, and materials on the marketing page—not the field brief." },
     ],
     relatedLinks: [
+      { label: "Xperience landing page", url: "https://usesimple.ai/xperience" },
+      { label: "Genesys sales rules (confidential)", url: "https://docs.google.com/document/d/1NIStSPTOChO6ScNy0haYQuctnlUE23a__sKedxiSGUA" },
       { label: "Pre-event email plan", url: "https://www.notion.so/3b46fee642fe80c5b96bd1b82743a8c0" },
       { label: "Wish Line proposal", url: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c" },
     ],
     specialConsiderations: [
-      "Simple is a Genesys partner. Position the partnership positively; do not frame Genesys as the problem or knock the platform.",
-      "Simple is the only voice AI partner at the show. Lead with how we extend the Genesys ecosystem and use that distinction to focus target-account outreach.",
-      "There are no guaranteed meetings. Build the target list early, use the event app, and pre-book directly.",
-      "Nine booth passes require named shifts, clear handoffs, and enough floor coverage during the speaking session.",
-      "If the Wish Line proceeds, the ads do not name Genesys or Xperience. The booth, email, and landing page can make the partner context explicit.",
+      "Position Simple AI as an enhancement to the Genesys environment—not a replacement for Genesys Cloud CX. Never imply that we can bind Genesys or that we are an exclusive Genesys partner.",
+      "Simple AI is the only external voice-AI partner in the current sponsor plan besides Genesys’ own product. Use that as an event differentiator, then recheck the final sponsor roster before making the claim publicly.",
+      "Target Genesys accounts. Ask which Genesys product they run, which call types matter, monthly volume, current failure points, and who owns the contact-center roadmap.",
+      "There are no guaranteed meetings. Every attendee should download the Cvent Events app now, source named contacts, introduce themselves, and pre-book directly.",
+      "For a promising Genesys-account conversation, add the meeting and context to HubSpot, then route it to Holden or the partner owner. Read the confidential sales rules before referring an account or making any partner commitment.",
     ],
     workstreams: {
-      speaking: ["20-minute solution talk on Sep 3 at 1:10 PM", "Finalize title, abstract, speaker, deck, rehearsal, and AV plan"],
-      sponsorship: ["Booth in Orchestrators Hall", "Contracted pre-event email add-on; submit copy in the sponsor portal by Aug 13", "Wish Line OOH proposal: $15K Firefly flight Aug 31–Sep 3; approval and IO terms still open", "If approved, assign the daily review team, fulfillment owner, consent guardrails, and booth handoff"],
-      meetings: ["No guaranteed meetings", "Use the Cvent Events app attendee list to build target accounts and pre-book directly", "Track meetings as they are scheduled so the page shows booked progress separately from package status"],
-      swag: ["Confirm booth swag and materials"],
+      speaking: ["20-minute solution talk on Sep 3 at 1:10 PM", "Title, abstract, and speaker are locked", "Final deck is due Aug 10; rehearse and confirm AV after the handoff"],
+      sponsorship: ["Booth confirmed in Orchestrators Hall", "Use the live Xperience page for the 15-minute demo CTA and HubSpot capture", "Wish Line media buy is approved and the phone number is purchased; production is owned on the marketing page"],
+      meetings: ["No guaranteed meetings", "Download the Cvent Events app now and use attendee names to target Genesys accounts", "Introduce yourself in the app, move promising contacts into direct outreach, and add every booked meeting to HubSpot with the required context"],
+      swag: ["Stanleys", "Stick cards", "Printed handouts", "Karaoke machines", "Materials ship to MNHC and San Francisco, then travel with the team in large bags"],
       secondary: ["None"],
-      travel: ["Event venue: Wynn Las Vegas", "Attending: Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, and Lars", "Final roster, flights, hotel blocks, and passes are marked complete in Notion", "Publish booth shifts and day-of coverage for all nine attendees"],
-      marketing: ["Contracted pre-event email add-on: submit copy in the sponsor portal by Aug 13 and schedule only after approval", "Email angle: voice AI in Orchestrators Hall with the Omaha Steaks proof point", "usesimple.ai/xperience landing page with a 15-minute booth-demo CTA", "Tag form submissions to the Genesys Xperience 2026 HubSpot campaign", "If Wish Line proceeds, deliver media creative by Aug 20 and prepare the Sep 3 social/recap handoff"],
-      followup: ["Merge scans and notes, tier contacts, and assign one clear follow-up action"],
-      budget: ["Track booth, contracted pre-event email, OOH, travel, and materials against the applicable contracts"],
+      travel: ["Event venue: Wynn Las Vegas", "Travel and hotels should already be booked for all nine attendees", "Do not over-engineer booth shifts: avoid crowding the space, keep enough coverage, and send teammates into the event to bring priority contacts back to the booth"],
+      marketing: ["See the Genesys Xperience tab on the marketing page for email, landing page, Wish Line, talk deck, booth video, follow-up, and budget tasks"],
+      followup: ["Add booked meetings and meaningful conversations to HubSpot before the day ends", "Marketing can bulk-import badge scans; manually log card-only contacts so they do not disappear", "Use the CCW Vegas model: one lead list, tiered follow-up, a named owner, and one concrete next step"],
+      budget: ["See the Genesys Xperience tab on the marketing page"],
     },
   },
   {
