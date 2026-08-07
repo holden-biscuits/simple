@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { Footer } from "../components/footer";
-import { BackToTop, PageContents } from "../components/page-contents";
+import { BackToTop, PageContentsLayout } from "../components/page-contents";
 import { events, getProgramDate, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
 import { crmAttributionAudit } from "../data/crm-attribution";
@@ -38,7 +38,7 @@ export default function SourcesPage() {
         <h1>Where the event data comes from.</h1>
         <p className="lede">See what controls the site, what the recurring scan checks, and which disagreements still need a decision.</p>
       </section>
-      <PageContents items={[
+      <PageContentsLayout primaryLabel="Source sections" items={[
         { id: "quick-update-routes", label: "Make an update" },
         { id: "source-monitor", label: "Source monitor" },
         { id: "latest-scan", label: "Latest scan" },
@@ -59,7 +59,7 @@ export default function SourcesPage() {
         { id: "source-hierarchy", label: "Source hierarchy" },
         { id: "update-rules", label: "Update rules" },
         { id: "source-files", label: "Open source files" },
-      ]} />
+      ]}>
 
       <section className="shell quick-update-routes" id="quick-update-routes">
         <div className="section-intro">
@@ -515,6 +515,7 @@ export default function SourcesPage() {
           <BackToTop />
         </article>
       </section>
+      </PageContentsLayout>
       <Footer />
     </main>
   );

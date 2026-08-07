@@ -628,6 +628,15 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /registered, canceled, and attended states/);
   assert.match(html, /Join the commercial record/);
   assert.match(html, /https:\/\/knowledge\.hubspot\.com\/integrations\/use-marketing-events/);
+  assert.match(html, /id="event-pipeline"/);
+  assert.match(html, /What events have created in the pipeline\./);
+  assert.match(html, /Opportunities[\s\S]*22/);
+  assert.match(html, /Open pipeline[\s\S]*\$0/);
+  assert.match(html, /Closed-won revenue[\s\S]*\$0/);
+  assert.match(html, /Current stage distribution for 22 event-sourced opportunities/);
+  assert.match(html, /Demo completed[\s\S]*8/);
+  assert.match(html, /22(?:<!-- -->)? of (?:<!-- -->)?22(?:<!-- -->)? qualifying deals currently have no reportable amount/);
+  assert.match(html, /Closed Lost and Disqualified records stay out of the totals/);
   assert.match(html, /Six records make the scorecard usable\./);
   assert.match(html, /Fully loaded cost[\s\S]*Forecast at approval · final by 7 days after/);
   assert.match(html, /30 and 90 days after[\s\S]*sourced pipeline · influenced pipeline · closed revenue/);
@@ -821,7 +830,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /8(?:<!-- -->)? of nine workstreams are in play/);
   assert.match(genesysHtml, /<strong>Navigate<\/strong>/);
   assert.match(genesysHtml, /<b>Plan sections<\/b>[\s\S]*href="#workstream-marketing"/);
-  assert.match(genesysHtml, /<summary>Navigate this event <span>[^<]+<\/span><\/summary>/);
+  assert.match(genesysHtml, /<summary>Navigate this event(?:<!-- -->)? <span>[^<]+<\/span><\/summary>/);
   assert.match(genesysHtml, /id="workstream-marketing"/);
   assert.match(genesysHtml, /id="workstream-budget"/);
   assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks">Open workspace/);

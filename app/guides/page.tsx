@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { Footer } from "../components/footer";
-import { BackToTop, PageContents } from "../components/page-contents";
+import { BackToTop, PageContentsLayout } from "../components/page-contents";
 import { workstreamLabels } from "../data/events";
 
 const timeline = [
@@ -23,14 +23,14 @@ export default function GuidesPage() {
         <h1>How we prepare, work the floor, and follow up.</h1>
         <p className="lede">Event pages show the field workstreams that apply. Empty sections stay out of the way, while marketing production and budget work live in the event tabs on the marketing page.</p>
       </section>
-      <PageContents items={[
+      <PageContentsLayout primaryLabel="Guide sections" items={[
         { id: "standard-checklist", label: "Standard checklist" },
         { id: "planning-sequence", label: "Planning sequence" },
         { id: "zoominfo", label: "ZoomInfo" },
         { id: "booth-etiquette", label: "Booth etiquette" },
         { id: "lead-tiers", label: "Lead tiers" },
         { id: "role-guides", label: "Role guides" },
-      ]} />
+      ]}>
       <section className="shell guide-layout">
         <article className="guide-panel" id="standard-checklist">
           <p className="eyebrow">Workstream directory</p>
@@ -94,6 +94,7 @@ export default function GuidesPage() {
         <Link href="/marketing"><span>Marketing field guide</span><b>↗</b></Link>
       </section>
       <div className="shell section-return"><BackToTop /></div>
+      </PageContentsLayout>
       <Footer />
     </main>
   );

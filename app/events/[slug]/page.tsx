@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
-import { BackToTop, PageContents } from "../../components/page-contents";
+import { BackToTop, PageContentsLayout } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getEventPhase, getEventTrackerRowUrl, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
@@ -123,8 +123,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>
         </div>
       </section>
-      <div className="event-page-layout shell">
-      <PageContents variant="side" secondaryItems={isNotAttending ? [] : workstreamContents} secondaryLabel="Plan sections" items={isNotAttending ? [
+      <PageContentsLayout primaryLabel="Event brief" mobileLabel="Navigate this event" secondaryItems={isNotAttending ? [] : workstreamContents} secondaryLabel="Plan sections" items={isNotAttending ? [
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
         { id: "event-prospecting", label: "Prospecting" },
@@ -143,8 +142,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
         { id: "event-update-route", label: "Update this event" },
-      ]} />
-      <div className="event-page-main">
+      ]}>
 
       <section className="event-tldr shell" id="event-tldr">
         <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>{eventPhase === "past" ? "What happened and what happens next." : "Know this before you go."}</h2></div>
@@ -377,8 +375,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           </div> : null}
         </details>
       </section>
-      </div>
-      </div>
+      </PageContentsLayout>
 
       <Footer />
     </main>

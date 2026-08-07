@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BackToTop, PageContents } from "../components/page-contents";
+import { BackToTop, PageContentsLayout } from "../components/page-contents";
 import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
 import { events, getProgramDate } from "../data/events";
@@ -33,7 +33,7 @@ export default function LeadershipPage() {
         <h1>See the program without losing the source truth.</h1>
         <p className="lede">A portfolio view of commitments, execution readiness, decisions and attributable outcomes. Missing spend or CRM fields stay visible as gaps—not false certainty.</p>
       </section>
-      <PageContents items={[
+      <PageContentsLayout primaryLabel="Brief sections" items={[
         { id: "leadership-snapshot", label: "Snapshot" },
         { id: "leadership-changes", label: "Recent changes" },
         { id: "leadership-portfolio", label: "Portfolio" },
@@ -41,7 +41,7 @@ export default function LeadershipPage() {
         { id: "leadership-operating-model", label: "Operating model" },
         { id: "leadership-outcomes", label: "Outcomes" },
         { id: "leadership-trust", label: "What to trust" },
-      ]} />
+      ]}>
 
       <section className="shell leadership-snapshot" id="leadership-snapshot">
         <div className="section-intro">
@@ -187,6 +187,7 @@ export default function LeadershipPage() {
         <div className="leadership-links"><Link href="/sources#data-streams">See the data architecture →</Link><Link href="/sources#writeback-queue">See upstream work →</Link><Link href="/search">Search Event Basecamp →</Link></div>
         <BackToTop />
       </section>
+      </PageContentsLayout>
       <Footer />
     </main>
   );

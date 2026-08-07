@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { BackToTop, PageContents } from "../components/page-contents";
+import { BackToTop, PageContentsLayout } from "../components/page-contents";
 import { Footer } from "../components/footer";
 import { EventMarketingWorkspace, MarketingSupportBoard } from "../components/marketing-support-board";
 import { SiteHeader } from "../components/site-header";
 import { events, getEventPhase, getProgramDate } from "../data/events";
 import { measurementFields, measurementReadiness, measurementWindows, metricDefinitions } from "../data/event-measurement";
+import { eventPipelineSnapshot } from "../data/event-pipeline";
 import { getMarketingProgramReadiness } from "../data/marketing-readiness";
 
 export const dynamic = "force-dynamic";
@@ -92,15 +93,16 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         <p className="lede">This page tracks the support promised for each active event and the operating rules that keep contracts, creative, lead capture, follow-up, and reporting connected.</p>
         <Link className="button" href="/#events">Open the event directory <span>↗</span></Link>
       </section>
-      <PageContents items={[
+      <PageContentsLayout primaryLabel="Marketing sections" items={[
         { id: "marketing-pulse", label: "Workload pulse" },
         { id: "lessons", label: "Operating lessons" },
         { id: "event-tasks", label: "Event tasks" },
         { id: "support-matrix", label: "Support matrix" },
         ...playbook.map((section) => ({ id: section.id, label: section.label })),
+        { id: "event-pipeline", label: "Event pipeline" },
         { id: "crm-setup", label: "HubSpot setup" },
         { id: "measurement", label: "Measurement" },
-      ]} />
+      ]}>
 
       <section className="marketing-program-pulse" id="marketing-pulse">
         <div className="shell">
@@ -150,6 +152,33 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         </article>)}
       </section>
 
+      <section className="event-pipeline" id="event-pipeline">
+        <div className="shell">
+          <div className="event-pipeline-head">
+            <div className="section-intro">
+              <p className="eyebrow">HubSpot event outcomes</p>
+              <h2>What events have created in the pipeline.</h2>
+              <p>This view counts deals whose Deal Source is Event — Trade Show, Event — Field / Dinner, or Event / Conference. Closed Lost and Disqualified records stay out of the totals.</p>
+            </div>
+            <a href={eventPipelineSnapshot.hubspotUrl} target="_blank" rel="noreferrer">Open the deals in HubSpot ↗</a>
+          </div>
+          <div className="event-pipeline-metrics" aria-label="Event-sourced deal totals">
+            <article><span>Opportunities</span><strong>{eventPipelineSnapshot.opportunities}</strong><p>qualifying event-sourced deals</p></article>
+            <article><span>Open pipeline</span><strong>${eventPipelineSnapshot.openPipeline.toLocaleString()}</strong><p>from recorded deal amounts</p></article>
+            <article><span>Closed-won revenue</span><strong>${eventPipelineSnapshot.closedWonRevenue.toLocaleString()}</strong><p>recognized only after a deal is won</p></article>
+          </div>
+          <div className="event-stage-chart" role="img" aria-label={`Current stage distribution for ${eventPipelineSnapshot.opportunities} event-sourced opportunities`}>
+            {eventPipelineSnapshot.stages.map((stage) => <div className="event-stage-row" key={stage.label}>
+              <span>{stage.label}</span>
+              <div><i aria-hidden="true" style={{ width: stage.count ? `${Math.max(2, (stage.count / eventPipelineSnapshot.opportunities) * 100)}%` : "0%" }} /></div>
+              <strong>{stage.count}</strong>
+            </div>)}
+          </div>
+          <aside className="event-pipeline-quality"><strong>Pipeline hygiene</strong><p>{eventPipelineSnapshot.dealsWithoutAmount} of {eventPipelineSnapshot.opportunities} qualifying deals currently have no reportable amount, so pipeline and revenue remain $0. The chart shows stage coverage without inventing value.</p><span>Checked {eventPipelineSnapshot.checkedAt} · {eventPipelineSnapshot.refreshRule}</span></aside>
+          <BackToTop />
+        </div>
+      </section>
+
       <section className="crm-activation" id="crm-setup">
         <div className="shell">
           <div className="section-intro"><p className="eyebrow">HubSpot activation</p><h2>Build attribution before the first scan.</h2><p>The event plan is not measurement-ready until the event, campaign, participants, meetings, and deals can be joined without guessing.</p></div>
@@ -193,6 +222,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         <p className="practice-sources">Practice references: <a href="https://www.cvent.com/en/blog/events/how-to-prove-event-roi" target="_blank" rel="noreferrer">Cvent’s 2026 event-value guidance ↗</a>, <a href="https://www.bizzabo.com/blog/trade-show-roi" target="_blank" rel="noreferrer">Bizzabo’s trade-show measurement model ↗</a>, and <a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">HubSpot’s Marketing Events guidance ↗</a>.</p>
         <BackToTop />
       </section>
+      </PageContentsLayout>
       <Footer />
     </main>
   );

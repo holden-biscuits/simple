@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { SiteHeader } from "./site-header";
 import { Footer } from "./footer";
-import { BackToTop, PageContents } from "./page-contents";
+import { BackToTop, PageContentsLayout } from "./page-contents";
 
 export type RoleSection = { label: string; title: string; items: ReactNode[] };
 
@@ -21,7 +21,7 @@ export function RolePage({ code, title, intro, sections, handoff }: { code: stri
         <p className="lede">{intro}</p>
         <Link className="button" href="/">Check the event map <span>↗</span></Link>
       </section>
-      <PageContents items={[...contents, { id: "event-close", label: "Before you close" }]} />
+      <PageContentsLayout primaryLabel="Guide sections" items={[...contents, { id: "event-close", label: "Before you close" }]}>
       <section className="role-grid shell">
         {sections.map((section, index) => (
           <article className="role-block" id={sectionId(section.title)} key={section.title}>
@@ -40,6 +40,7 @@ export function RolePage({ code, title, intro, sections, handoff }: { code: stri
         <h2>{handoff}</h2>
         <BackToTop />
       </section>
+      </PageContentsLayout>
       <Footer />
     </main>
   );

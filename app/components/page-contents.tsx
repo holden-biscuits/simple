@@ -1,19 +1,25 @@
+import type { ReactNode } from "react";
+
 export type PageContentsItem = { id: string; label: string };
 
 export function PageContents({
   items,
   secondaryItems = [],
   secondaryLabel = "More sections",
+  primaryLabel = "Page sections",
+  mobileLabel = "Navigate this page",
   variant = "bar",
 }: {
   items: PageContentsItem[];
   secondaryItems?: PageContentsItem[];
   secondaryLabel?: string;
+  primaryLabel?: string;
+  mobileLabel?: string;
   variant?: "bar" | "side";
 }) {
   if (variant === "side") {
     const contentsGroups = [
-      { label: "Event brief", items },
+      { label: primaryLabel, items },
       ...(secondaryItems.length ? [{ label: secondaryLabel, items: secondaryItems }] : []),
     ];
 
@@ -27,7 +33,7 @@ export function PageContents({
           </section>)}
         </nav>
         <details className="page-contents-mobile">
-          <summary>Navigate this event <span>{items.length + secondaryItems.length}</span></summary>
+          <summary>{mobileLabel} <span>{items.length + secondaryItems.length}</span></summary>
           <nav aria-label="On this page">
             {contentsGroups.map((group) => <section key={group.label}>
               <b>{group.label}</b>
@@ -46,6 +52,36 @@ export function PageContents({
         {items.map((item) => <a key={item.id} href={`#${item.id}`}>{item.label}</a>)}
       </div>
     </nav>
+  );
+}
+
+export function PageContentsLayout({
+  items,
+  secondaryItems,
+  secondaryLabel,
+  primaryLabel,
+  mobileLabel,
+  children,
+}: {
+  items: PageContentsItem[];
+  secondaryItems?: PageContentsItem[];
+  secondaryLabel?: string;
+  primaryLabel?: string;
+  mobileLabel?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="page-with-contents shell">
+      <PageContents
+        variant="side"
+        items={items}
+        secondaryItems={secondaryItems}
+        secondaryLabel={secondaryLabel}
+        primaryLabel={primaryLabel}
+        mobileLabel={mobileLabel}
+      />
+      <div className="page-with-contents-main">{children}</div>
+    </div>
   );
 }
 
