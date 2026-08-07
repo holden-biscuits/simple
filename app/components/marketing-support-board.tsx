@@ -5,13 +5,14 @@ import Link from "next/link";
 import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord, type MarketingTask } from "../data/events";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../data/event-signals";
 
-type BoardFilter = "all" | "support" | "no-support" | "team-open" | "speaking";
+type BoardFilter = "all" | "support" | "no-support" | "team-open" | "task-setup" | "speaking";
 
 const filters: { value: BoardFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "support", label: "Support listed" },
   { value: "no-support", label: "No support listed" },
   { value: "team-open", label: "Team unassigned" },
+  { value: "task-setup", label: "Task setup open" },
   { value: "speaking", label: "Speaking" },
 ];
 
@@ -39,6 +40,7 @@ function matchesFilter(event: EventRecord, filter: BoardFilter) {
   if (filter === "support") return support.length > 0;
   if (filter === "no-support") return support.length === 0;
   if (filter === "team-open") return event.team.length === 0;
+  if (filter === "task-setup") return !event.marketingTasks?.length;
   if (filter === "speaking") return hasSpeaking(event);
   return true;
 }
@@ -89,6 +91,7 @@ export function EventMarketingWorkspace({ events, initialSlug, programDate }: { 
   const tasks = orderedEventTasks(selected);
   const support = marketingItems(selected);
   const openCount = tasks.filter((task) => task.status !== "Done").length;
+  const hasStructuredTaskPlan = Boolean(selected.marketingTasks?.length);
 
   const selectEvent = (slug: string, focus = false) => {
     setSelectedSlug(slug);
@@ -130,18 +133,19 @@ export function EventMarketingWorkspace({ events, initialSlug, programDate }: { 
     <section className="event-task-panel" id="event-task-panel" role="tabpanel" aria-labelledby={`event-task-tab-${selected.slug}`}>
       <header>
         <div><p className="eyebrow">{selected.dates} · {selected.location}</p><h3>{selected.name}</h3></div>
-        <div className="event-task-count"><strong>{openCount}</strong><span>Open tasks</span></div>
+        <div className="event-task-count"><strong>{openCount}</strong><span>Open tasks</span><small>{hasStructuredTaskPlan ? "Task details tracked" : "Owners & dates open"}</small></div>
       </header>
       <div className="event-task-grid">
         <div className="event-task-list">
           <h4>Do these next</h4>
           {tasks.length ? <ol>{tasks.map((task, index) => {
             const timing = dueState(task, programDate);
+            const taskMeta = task.status === "Done" ? [task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null] : [task.owner ? `Owner: ${task.owner}` : "Owner: Open", task.due ? `Due: ${task.due}` : "Due: Open"];
             return <li key={`${task.title}-${index}`}>
             <span className={`task-state task-state-${task.status.toLowerCase().replaceAll(" ", "-")}`}>{task.status}</span>
             <div>
               <h5>{task.url ? <a href={task.url} target="_blank" rel="noreferrer">{task.title} ↗</a> : task.title}</h5>
-              {(task.owner || task.due || timing) ? <p className="task-meta">{timing ? <span className={`task-due-state task-due-${timing.className}`}>{timing.label}</span> : null}{[task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null].filter(Boolean).join(" · ")}</p> : null}
+              {(taskMeta.some(Boolean) || timing) ? <p className="task-meta">{timing ? <span className={`task-due-state task-due-${timing.className}`}>{timing.label}</span> : null}{taskMeta.filter(Boolean).join(" · ")}</p> : null}
               {task.note ? <p>{task.note}</p> : null}
             </div>
           </li>;})}</ol> : <p className="event-task-empty">No marketing action has been entered for this event.</p>}
@@ -213,6 +217,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
           const support = marketingItems(event);
           const signals = activationSignals(event);
           const staffing = getStaffingSignal(event);
+          const hasStructuredTaskPlan = Boolean(event.marketingTasks?.length);
           const staffingDetail = staffing.state === "open" && event.available.length && !event.team.length
             ? `${staffing.detail} · ${event.available.join(", ")} marked available`
             : staffing.detail;
@@ -228,7 +233,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
             <td data-label="Activation"><div className="matrix-signals">{signals.length ? signals.map((signal) => <span key={signal}>{signal}</span>) : <span>Attendance only</span>}</div></td>
             <td data-label="Marketing support">{support.length ? <ul>{support.map((item) => <li key={item}>{item}</li>)}</ul> : <span className="matrix-empty">None listed</span>}</td>
             <td data-label="Event team"><span className={`matrix-staffing matrix-staffing-${staffing.state}`}>{staffing.state === "named" ? "Named" : staffing.state === "not-attending" ? "None" : "Open"}</span><p>{staffingDetail}</p></td>
-            <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p>{openTask?.due ? <span className="matrix-open-due">Due {openTask.due}</span> : null}<Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link></td>
+            <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p><div className="matrix-open-meta"><span>{openTask?.owner ? `Owner · ${openTask.owner}` : "Owner · Open"}</span><span>{openTask?.due ? `Due · ${openTask.due}` : "Due · Open"}</span>{!hasStructuredTaskPlan ? <span className="matrix-task-gap">Task setup open</span> : null}</div><Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link></td>
           </tr>;
         })}</tbody>
       </table>

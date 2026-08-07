@@ -155,6 +155,7 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Support listed/);
   assert.match(html, /No support listed/);
   assert.match(html, /Team unassigned/);
+  assert.match(html, /Task setup open/);
   assert.match(html, /Next open item/);
   assert.doesNotMatch(html, /Most urgent open item/);
   assert.match(html, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
@@ -165,6 +166,8 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Produce the booth-monitor product video/);
   assert.ok(html.indexOf("Deliver the final solution-talk deck") < html.indexOf("Submit the contracted pre-event email copy"));
   assert.match(html, /HubSpot form, campaign attribution, and 15-minute demo CTA are already live/);
+  assert.match(html, /Task details tracked/);
+  assert.match(html, /Owner: Open · Due: Date and owner open/);
   assert.match(html, /aria-selected="true"[^>]*id="event-task-tab-genesys-xperience"/);
   assert.match(html, /id="event-task-tab-genesys-xperience"[^>]*tabindex="0"/);
   assert.doesNotMatch(html, /Confirm the next owner and deadline/);
@@ -177,6 +180,12 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(customerConnectHtml, /Reconcile portal deadlines and booth assets/);
   assert.match(customerConnectHtml, /Complete the exhibitor company profile/);
   assert.match(customerConnectHtml, /Aug 17/);
+
+  const travelHospitality = await render("/marketing?event=iqpc-cx-travel-hospitality");
+  assert.equal(travelHospitality.status, 200);
+  const travelHospitalityHtml = await travelHospitality.text();
+  assert.match(travelHospitalityHtml, /Owners &amp; dates open/);
+  assert.match(travelHospitalityHtml, /Owner: Open · Due: Open/);
 });
 
 test("search routes marketing tasks to the selected event workspace", async () => {

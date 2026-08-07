@@ -303,9 +303,10 @@ button, input, select { font: inherit; }
 .event-task-panel { border: 1px solid var(--green); border-top: 0; background: var(--canvas); box-shadow: 10px 10px 0 var(--signal); }
 .event-task-panel > header { padding: 34px; display: flex; justify-content: space-between; gap: 30px; align-items: end; border-bottom: 1px solid var(--green); }
 .event-task-panel h3 { margin: 7px 0 0; font: 400 clamp(38px, 5vw, 66px)/.98 Georgia, serif; letter-spacing: -.04em; }
-.event-task-count { flex: none; display: flex; align-items: baseline; gap: 10px; }
+.event-task-count { flex: none; display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 0 10px; }
 .event-task-count strong { font: 400 44px Georgia, serif; }
 .event-task-count span { color: var(--muted); font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.event-task-count small { grid-column: 1 / -1; color: var(--signal-dark); font: 800 10px/1.4 var(--font-geist-mono), monospace; text-align: right; text-transform: uppercase; }
 .event-task-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .65fr); }
 .event-task-grid h4 { margin: 0 0 22px; color: var(--signal-dark); font: 800 11px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .event-task-list { padding: 34px; }
@@ -337,7 +338,7 @@ button, input, select { font: inherit; }
 .marketing-board-toolbar input:focus { border-color: #ff8b67; box-shadow: 0 1px 0 #ff8b67; }
 .marketing-board-filters { min-width: 0; margin: 0; padding: 0; border: 0; }
 .marketing-board-filters legend { margin-bottom: 9px; color: #b9c9bf; font: 800 11px var(--font-geist-mono), monospace; text-transform: uppercase; letter-spacing: .05em; }
-.marketing-board-filters > div { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid rgba(255,255,255,.62); }
+.marketing-board-filters > div { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border: 1px solid rgba(255,255,255,.62); }
 .marketing-board-filters button { min-width: 0; min-height: 52px; padding: 9px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; color: var(--paper); background: transparent; border: 0; border-right: 1px solid rgba(255,255,255,.34); cursor: pointer; font: 800 10.5px/1.25 var(--font-geist-mono), monospace; text-align: left; text-transform: uppercase; }
 .marketing-board-filters button:last-child { border-right: 0; }
 .marketing-board-filters button b { color: #ffc1ae; }
@@ -366,7 +367,9 @@ button, input, select { font: inherit; }
 .matrix-staffing-open { color: #5e3900; background: #ffd08c; }
 .marketing-table td > p { margin: 9px 0 0; }
 .matrix-open-item { min-width: 230px; }
-.matrix-open-due { display: block; width: fit-content; margin-top: 9px; padding: 4px 6px; color: var(--green); background: #ffd08c; font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.matrix-open-meta { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 5px; }
+.matrix-open-meta span { width: fit-content; padding: 4px 6px; color: var(--green); background: #ffd08c; font: 800 10.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.matrix-open-meta .matrix-task-gap { color: var(--paper); background: var(--signal-dark); }
 .matrix-open-plan { display: inline-block; margin-top: 14px; color: #ffc1ae; border-bottom: 1px solid currentColor; font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .marketing-empty-state { margin: 0; padding: 34px; color: var(--green); background: var(--paper); }
 .marketing-matrix-section .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.6); }
@@ -600,7 +603,8 @@ button, input, select { font: inherit; }
   .marketing-board-filters > div { grid-template-columns: 1fr 1fr; }
   .marketing-board-filters button, .marketing-board-filters button:nth-child(3) { border-right: 1px solid rgba(255,255,255,.34); border-bottom: 1px solid rgba(255,255,255,.34); }
   .marketing-board-filters button:nth-child(2n) { border-right: 0; }
-  .marketing-board-filters button:last-child { grid-column: 1 / -1; border-right: 0; border-bottom: 0; }
+  .marketing-board-filters button:last-child { grid-column: auto; border-right: 0; }
+  .marketing-board-filters button:nth-last-child(-n+2) { border-bottom: 0; }
   .marketing-result-summary { align-items: flex-start; flex-direction: column; padding-block: 16px; }
   .marketing-table-wrap { overflow: visible; border: 0; }
   .marketing-table { min-width: 0; display: block; }
