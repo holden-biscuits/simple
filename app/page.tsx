@@ -31,16 +31,16 @@ export default function Home() {
               <Image src="/ranger-raccoon-clean-hat.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with the Simple logo" priority unoptimized />
               <span className="ranger-hat-logo" aria-hidden="true"><Image src="/simple-mark.svg" width={19} height={24} alt="" /></span>
             </div>
-            <p><strong>Start here:</strong> check the event page before you book, ship, or promote.</p>
+            <p><strong>Start here:</strong> find your event and read the TL;DR before you go.</p>
           </div>
         </div>
         <div className="hero-tools">
-          <div className="route-board" aria-label="Basecamp quick guide">
-            <div className="route-board-head"><span>Basecamp notes</span><span>2026–27</span></div>
-            <div className="route-line"><span>01</span><p>Check the event page before booking or shipping anything.</p></div>
-            <div className="route-line"><span>02</span><p>Know your accounts, your owner, and the next-step ask.</p></div>
-            <div className="route-line"><span>03</span><p>Log the conversation before the day ends.</p></div>
-            <Link className="button" href="/guides">Open the prep guide <span>↗</span></Link>
+          <div className="route-board" aria-label="Before you go checklist">
+            <div className="route-board-head"><span>Before you go</span><span>3 checks</span></div>
+            <div className="route-line"><span>01</span><p>Confirm your travel, hotel, credentials, and event app.</p></div>
+            <div className="route-line"><span>02</span><p>Review your meetings, sessions, target accounts, and booth coverage.</p></div>
+            <div className="route-line"><span>03</span><p>Know the AE handoff and what you must record in HubSpot.</p></div>
+            <Link className="button" href="#events">Find my event <span>↓</span></Link>
           </div>
         </div>
       </section>

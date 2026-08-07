@@ -34,6 +34,13 @@ test("server-renders the event directory", async () => {
   assert.doesNotMatch(html, /page says “None/);
   assert.match(html, /ranger-raccoon-clean-hat\.png/);
   assert.match(html, /class="ranger-hat-logo"/);
+  assert.match(html, /find your event and read the TL;DR before you go/);
+  assert.match(html, /Before you go/);
+  assert.match(html, /Confirm your travel, hotel, credentials, and event app/);
+  assert.match(html, /Review your meetings, sessions, target accounts, and booth coverage/);
+  assert.match(html, /Know the AE handoff and what you must record in HubSpot/);
+  assert.match(html, /Find my event/);
+  assert.doesNotMatch(html, /before you book, ship, or promote/);
   assert.doesNotMatch(html, /ranger-raccoon-v2/);
   assert.match(html, /TeamSimple attendance/);
   assert.match(html, /Program year/);
@@ -175,6 +182,11 @@ test("search routes marketing tasks to the selected event workspace", async () =
 });
 
 test("server-renders field-role CRM rules and the updated guide model", async () => {
+  const ae = await render("/ae");
+  assert.equal(ae.status, 200);
+  const aeHtml = await ae.text();
+  assert.match(aeHtml, /Turn event conversations into real next steps\./);
+
   const sdr = await render("/sdr");
   assert.equal(sdr.status, 200);
   const sdrHtml = await sdr.text();
