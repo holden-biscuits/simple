@@ -31,6 +31,8 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /\.connector-capabilities\s*>\s*div\s*\{[^}]*grid-template-columns:\s*repeat\(5,/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.connector-capabilities\s*>\s*div\s*\{\s*grid-template-columns:\s*repeat\(2,/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.connector-capabilities\s*>\s*div\s*\{\s*grid-template-columns:\s*1fr;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.page-contents\s*>\s*div\s*\{[^}]*flex-wrap:\s*nowrap;[^}]*overflow-x:\s*auto;[^}]*scroll-snap-type:\s*inline proximity;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.page-contents a\s*\{[^}]*flex:\s*0 0 auto;[^}]*scroll-snap-align:\s*start;/);
   assert.match(css, /\.attendance-filters > div\s*\{[^}]*grid-template-columns:\s*repeat\(4,/);
   assert.match(css, /\.attention-filters > div\s*\{[^}]*grid-template-columns:\s*repeat\(5,/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.attendance-filters > div, \.attention-filters > div\s*\{\s*grid-template-columns:\s*1fr 1fr;/);

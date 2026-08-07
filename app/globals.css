@@ -1109,7 +1109,9 @@ button, input, select { font: inherit; }
   .site-header { padding-inline: 14px; flex-direction: column; }
   .updated-stamp { margin-left: 0; align-self: flex-start; }
   .site-header nav { justify-content: flex-start; }
-  .page-contents { position: static; align-items: flex-start; flex-direction: column; gap: 8px; }
+  .page-contents { position: static; align-items: flex-start; flex-direction: column; gap: 8px; overflow: hidden; }
+  .page-contents > div { width: 100%; padding-bottom: 7px; flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: inline proximity; scrollbar-width: thin; scrollbar-color: var(--signal) var(--paper-deep); }
+  .page-contents a { flex: 0 0 auto; scroll-snap-align: start; }
   .home-hero, .role-hero { padding-inline: 18px; }
   .home-hero { padding-block: 55px; }
   .home-hero h1 { font-size: 58px; }
