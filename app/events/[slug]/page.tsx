@@ -195,7 +195,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <div className="event-prospecting-head">
           <div className="section-intro">
             <p className="eyebrow">Prospecting brief</p>
-            <h2>Who is worth finding here.</h2>
+            <h2>{eventPhase === "past" ? "Who is worth following up with." : "Who is worth finding here."}</h2>
             <p>{prospecting.summary}</p>
           </div>
           <div className={`prospecting-confidence prospecting-confidence-${prospecting.confidence.toLowerCase().replaceAll(" ", "-")}`}>
@@ -271,10 +271,10 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       <section className="shell event-body">
         <aside id="event-crew">
           <p className="eyebrow">Crew</p>
-          <h2>Who’s going</h2>
+          <h2>{eventPhase === "past" ? "Who attended" : "Who’s going"}</h2>
           <div className="event-crew-groups">
-            <div><h3>Attending</h3>{event.team.length ? <ul className="crew-list">{event.team.map((person) => <li key={person}>{person}</li>)}</ul> : <p>None confirmed</p>}</div>
-            {event.available.length ? <div><h3>Available</h3><ul className="crew-list">{event.available.map((person) => <li key={person}>{person}</li>)}</ul></div> : null}
+            <div><h3>{eventPhase === "past" ? "Recorded attendees" : "Attending"}</h3>{event.team.length ? <ul className="crew-list">{event.team.map((person) => <li key={person}>{person}</li>)}</ul> : <p>{eventPhase === "past" ? "No attendee recorded" : "None confirmed"}</p>}</div>
+            {event.available.length ? <div><h3>{eventPhase === "past" ? "Marked available" : "Available"}</h3><ul className="crew-list">{event.available.map((person) => <li key={person}>{person}</li>)}</ul></div> : null}
             {event.rating !== "None" ? <div><h3>Event rating</h3><p>{event.rating}</p></div> : null}
           </div>
           <div className="detail-links">

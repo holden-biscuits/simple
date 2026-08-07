@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const lifecycleSteps = [
-  { stage: "Decide", tool: "Tracker + leadership", detail: "Confirm participation, package, dates, investment, and the event owner.", href: "/sources#field-ownership" },
-  { stage: "Plan", tool: "Event brief + Notion", detail: "Name the team, turn scope into owned tasks, and lock logistics.", href: "#events" },
-  { stage: "Promote", tool: "Marketing workspace", detail: "Run sponsor deliverables, audience work, creative, and event communications.", href: "/marketing#support-matrix" },
-  { stage: "Prepare", tool: "AE + SDR guides", detail: "Research accounts, prepare meetings, and agree on qualification and handoffs.", href: "/guides#role-guides" },
-  { stage: "Run", tool: "Event brief + HubSpot", detail: "Use the onsite brief, work the program, and log every booked meeting.", href: "#events" },
-  { stage: "Close", tool: "HubSpot + measurement", detail: "Record outcomes, assign follow-up, and review cost, pipeline, and lessons.", href: "/marketing#measurement" },
+  { stage: "Choose the event", when: "Before approval", detail: "Confirm the audience fit, participation, package, dates, budget, and event owner.", cta: "Review the decision record", href: "/sources#field-ownership" },
+  { stage: "Build the plan", when: "After approval", detail: "Name the team, capture the activation, assign the work, and lock travel and logistics.", cta: "Find the event plan", href: "#events" },
+  { stage: "Reach the audience", when: "Before the event", detail: "Build the target list, run outreach, fulfill sponsor promotion, and prepare event communications.", cta: "Review marketing support", href: "/marketing#support-matrix" },
+  { stage: "Prepare the team", when: "Final prep", detail: "Brief the crew, research priority accounts, rehearse sessions, and agree on qualification and handoffs.", cta: "Open the team guides", href: "/guides#role-guides" },
+  { stage: "Run the event", when: "At the event", detail: "Follow the event brief, work the program, capture useful context, and record every booked meeting.", cta: "Find the onsite brief", href: "#events" },
+  { stage: "Follow up and learn", when: "After the event", detail: "Send follow-up, record outcomes, assign next steps, and review cost, pipeline, and lessons.", cta: "Review event measurement", href: "/marketing#measurement" },
 ] as const;
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string | string[]; attendance?: string | string[]; attention?: string | string[]; year?: string | string[] }> }) {
@@ -60,7 +60,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
       </section>
       <PageContents items={[
         { id: "start-map", label: "Start here" },
-        { id: "event-lifecycle", label: "Operating loop" },
+        { id: "event-lifecycle", label: "Event process" },
         { id: "program-pulse", label: "Program pulse" },
         { id: "events", label: "Event directory" },
       ]} />
@@ -117,15 +117,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         </div>
         <section className="event-lifecycle" id="event-lifecycle">
           <div className="event-lifecycle-head">
-            <div><p className="eyebrow">Event operating loop</p><h3>Use the right workspace for the stage you are in.</h3></div>
-            <p>The fieldbook is the read view. Each step points to the page or system where the work should actually happen.</p>
+            <div><p className="eyebrow">Event process</p><h3>What happens before, during, and after every event.</h3></div>
+            <p>Start at 01 when an event is proposed. Move in order, and open the linked guide or event plan when you need the details.</p>
           </div>
-          <nav className="event-lifecycle-steps" aria-label="Event operating lifecycle">
+          <nav className="event-lifecycle-steps" aria-label="Event process">
             {lifecycleSteps.map((step, index) => <Link href={step.href} key={step.stage}>
-              <header><span>{String(index + 1).padStart(2, "0")}</span><small>{step.tool}</small></header>
+              <header><span>{String(index + 1).padStart(2, "0")}</span><small>{step.when}</small></header>
               <h4>{step.stage}</h4>
               <p>{step.detail}</p>
-              <b>Open stage →</b>
+              <b>{step.cta} →</b>
             </Link>)}
           </nav>
         </section>

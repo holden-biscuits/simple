@@ -72,15 +72,18 @@ test("server-renders the event directory", async () => {
   assert.match(html, /10\+ Guaranteed Meetings/);
   assert.match(html, /11(?:<!-- -->)? Planned/);
   assert.match(html, /15(?:<!-- -->)? Planned/);
-  assert.match(html, /1(?:<!-- -->)? Named · 2(?:<!-- -->)? Planned/);
+  assert.match(html, /Negative Feedback/);
+  assert.match(html, /2(?:<!-- -->)? Follow-up Meetings/);
+  assert.match(html, /16(?:<!-- -->)? Meetings Recorded/);
+  assert.match(html, /29(?:<!-- -->)? Attributed Deals/);
   assert.match(html, /Speaking TBD/);
   assert.match(html, /Program pulse/);
   assert.match(html, /id="event-lifecycle"/);
-  assert.match(html, /Event operating loop/);
-  assert.match(html, /Use the right workspace for the stage you are in\./);
-  for (const stage of ["Decide", "Plan", "Promote", "Prepare", "Run", "Close"]) assert.match(html, new RegExp(`>${stage}<`));
-  assert.match(html, /Tracker \+ leadership/);
-  assert.match(html, /Event brief \+ HubSpot/);
+  assert.match(html, /What happens before, during, and after every event\./);
+  for (const stage of ["Choose the event", "Build the plan", "Reach the audience", "Prepare the team", "Run the event", "Follow up and learn"]) assert.match(html, new RegExp(`>${stage}<`));
+  for (const timing of ["Before approval", "After approval", "Before the event", "Final prep", "At the event", "After the event"]) assert.match(html, new RegExp(`>${timing}<`));
+  assert.match(html, /Review the decision record/);
+  assert.match(html, /Find the onsite brief/);
   assert.match(html, /href="\/marketing#measurement"/);
   assert.match(html, /What’s next—and what still needs attention\./);
   assert.match(html, /happening now/);
@@ -100,7 +103,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Current(?:<!-- -->)? · <time dateTime="2026-08-07">Aug 7<\/time>/);
   assert.match(html, /Source checks due[\s\S]*\d+/);
   assert.match(html, /Direct update \+ 4/);
-  assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
+  assert.match(html, /CCW Orlando[\s\S]*7(?:<!-- -->)? Meetings Recorded/);
   assert.match(html, /Guaranteed Meetings · Count TBD/);
   assert.doesNotMatch(html, /Resolve these before more work starts\./);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|Building your site/i);
@@ -438,7 +441,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const lifecycleSearch = await render("/search?q=what%20do%20I%20do%20after%20an%20event&type=Guide");
   assert.equal(lifecycleSearch.status, 200);
   const lifecycleSearchHtml = await lifecycleSearch.text();
-  assert.match(lifecycleSearchHtml, /Event operating loop/);
+  assert.match(lifecycleSearchHtml, /Event process/);
   assert.match(lifecycleSearchHtml, /href="\/#event-lifecycle"/);
 
   const hubspotWriteSearch = await render("/search?q=can%20I%20write%20HubSpot%20meetings&type=Operations");
@@ -951,6 +954,10 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const chicago = await render("/events/ccw-exchange-chicago");
   const chicagoHtml = await chicago.text();
   assert.match(chicagoHtml, /Past event/);
+  assert.match(chicagoHtml, /Who is worth following up with\./);
+  assert.match(chicagoHtml, /Who attended/);
+  assert.match(chicagoHtml, /Recorded attendees/);
+  assert.match(chicagoHtml, /Marked available/);
   assert.match(chicagoHtml, /What happened and what happens next\./);
   assert.match(chicagoHtml, /Closeout record/);
   assert.match(chicagoHtml, /What was planned and what remains to close\./);

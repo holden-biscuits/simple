@@ -11,6 +11,14 @@ type ActivationSource = {
   sponsorship: string;
   sponsorshipStatus?: ActivationStatus;
 };
+type CompletedEventSource = {
+  rating: string;
+  meetingsBooked: string[];
+  meetingCountLabel?: string;
+  followupMeetingsBooked?: number;
+  demosBooked: string[];
+  crmSnapshot?: { totalDeals: number };
+};
 
 function knownGuaranteedMeetingLabel(event: GuaranteedMeetingSource) {
   const meetings = event.guaranteedMeetings.trim();
@@ -99,4 +107,25 @@ export function getSpeakingOpportunitySignal(event: Pick<ActivationSource, "spea
   if (status === "None") return "0 Speaking Opp";
   if (status === "Under review") return "Speaking TBD";
   return "1 Speaking Opp";
+}
+
+export function getCompletedEventSignals(event: CompletedEventSource) {
+  const rating = event.rating === "None"
+    ? "Rating Not Recorded"
+    : event.rating.includes("·")
+      ? `${event.rating.split("·")[0].trim()} Feedback`
+      : `${event.rating} Rating`;
+  const meetings = event.meetingCountLabel
+    ? `${event.meetingCountLabel} Meetings Recorded`
+    : event.meetingsBooked.length
+      ? `${event.meetingsBooked.length} Meeting${event.meetingsBooked.length === 1 ? "" : "s"} Recorded`
+      : "Meetings Not Recorded";
+  const downstream = event.followupMeetingsBooked
+    ? `${event.followupMeetingsBooked} Follow-up Meeting${event.followupMeetingsBooked === 1 ? "" : "s"}`
+    : event.demosBooked.length
+      ? `${event.demosBooked.length} Demo${event.demosBooked.length === 1 ? "" : "s"} Recorded`
+      : event.crmSnapshot?.totalDeals
+        ? `${event.crmSnapshot.totalDeals} Attributed Deal${event.crmSnapshot.totalDeals === 1 ? "" : "s"}`
+        : "CRM Outcomes Not Recorded";
+  return [rating, meetings, downstream] as const;
 }

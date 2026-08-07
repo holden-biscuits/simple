@@ -4,16 +4,20 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
 import { attendanceFilters, attentionFilters, filterEventDirectory, matchesAttendance, matchesAttention, matchesProgramYear, type AttendanceFilter, type AttentionFilter } from "../data/event-filters";
-import { getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "../data/event-signals";
+import { getCompletedEventSignals, getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "../data/event-signals";
 import { getEventDetailHref, getEventDirectoryHref, hasActiveDirectoryState, type EventDirectoryState } from "../data/directory-state";
 import { getSourceFreshness } from "../data/source-freshness";
 
 function EventCard({ event, directoryState, programDate }: { event: EventRecord; directoryState: EventDirectoryState; programDate: string }) {
   const verification = getEventVerification(event);
   const freshness = getSourceFreshness(event, programDate);
-  const signal = event.status === "No" ? "Not attending" : event.status;
+  const phase = getEventPhase(event, programDate);
   const inactive = event.status === "No";
+  const signal = inactive ? "Not attending" : phase === "past" ? "Completed" : event.status;
   const staffing = getStaffingSignal(event);
+  const cardSignals = phase === "past" && !inactive
+    ? getCompletedEventSignals(event)
+    : [getSpeakingOpportunitySignal(event), getGuaranteedMeetingSignal(event), staffing.card];
   return (
     <Link href={getEventDetailHref(event.slug, directoryState)} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
       {inactive ? <span className="event-card-x" aria-hidden="true" /> : null}
@@ -25,9 +29,7 @@ function EventCard({ event, directoryState, programDate }: { event: EventRecord;
       <p className="event-date">{event.dates}</p>
       <p className="event-location">{event.location}</p>
       <div className="event-signals">
-        <span>{getSpeakingOpportunitySignal(event)}</span>
-        <span>{getGuaranteedMeetingSignal(event)}</span>
-        <span>{staffing.card}</span>
+        {cardSignals.map((item) => <span key={item}>{item}</span>)}
       </div>
       <div className="event-card-freshness">
         <span className={`freshness-state freshness-state-${freshness.state}`}>{freshness.label} · <time dateTime={verification.checkedAtISO}>{verification.checkedAt.replace(/,\s\d{4}$/, "")}</time></span>
