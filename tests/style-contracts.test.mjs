@@ -118,4 +118,5 @@ test("essential interface text has a durable readability floor", () => {
   assert.match(css, /\.event-role-route-grid p[^}]*15px/);
   assert.match(css, /\.leadership-change-list dt[^}]*11\.5px/);
   assert.match(css, /\.leadership-change-list dd[^}]*14px/);
+  assert.match(css, /\.marketing-pulse-head \.eyebrow,[\s\S]*color:\s*var\(--green\);[\s\S]*background:\s*#ffd9cd;[\s\S]*font-weight:\s*800;/);
 });

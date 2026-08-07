@@ -53,7 +53,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
             <div className="route-board-head"><span>Before you go</span><span>3 checks</span></div>
             <div className="route-line"><span>01</span><p>Confirm your travel, hotel, credentials, and event app.</p></div>
             <div className="route-line"><span>02</span><p>Review your meetings, sessions, target accounts, and booth coverage.</p></div>
-            <div className="route-line"><span>03</span><p>Know the AE handoff and what you must record in HubSpot.</p></div>
+            <div className="route-line"><span>03</span><p>Try to connect with other attendees before the show.</p></div>
             <Link className="button" href="#events">Find my event <span>↓</span></Link>
           </div>
         </div>
@@ -69,7 +69,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         <div className="section-intro">
           <p className="eyebrow">Start with the task</p>
           <h2>What do you need to do?</h2>
-          <p>Open an event brief for event-specific facts. Use the role and process pages for work that repeats across the program.</p>
+          <p>Open an event brief for event-specific facts. Use the role and process pages for tips that are useful no matter where you&apos;re headed.</p>
         </div>
         <div className="start-map-grid">
           <Link href="#events">

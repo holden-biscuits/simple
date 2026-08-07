@@ -1274,6 +1274,28 @@ button, input, select { font: inherit; }
 .leadership-links a { min-height: 46px; padding: 12px 14px; color: var(--paper); background: var(--green); font: 800 10.5px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .leadership-links a:hover, .leadership-links a:focus-visible { background: var(--signal-dark); outline: 0; }
 
+/* Eyebrow labels keep a real readability floor when they sit on dark panels. */
+.event-lifecycle-head .eyebrow,
+.program-pulse .eyebrow,
+.action-briefing .eyebrow,
+.source-governance .eyebrow,
+.crm-attribution .eyebrow,
+.approval-queue .eyebrow,
+.handoff .eyebrow,
+.tiering .eyebrow,
+.marketing-pulse-head .eyebrow,
+.marketing-matrix-section .eyebrow,
+.crm-activation .eyebrow,
+.crm-snapshot .eyebrow,
+.event-pipeline .eyebrow,
+.leadership-portfolio .eyebrow,
+.leadership-outcomes .eyebrow {
+  color: var(--green);
+  background: #ffd9cd;
+  border-left-color: var(--signal-dark);
+  font-weight: 800;
+}
+
 .footer { padding: 55px max(30px, calc((100vw - 1180px)/2)); background: var(--green); color: var(--paper); display: flex; justify-content: space-between; gap: 40px; align-items: end; border-top: 8px solid var(--signal); }
 .footer > div:first-child { min-width: 0; flex: 1 1 auto; display: flex; gap: 22px; align-items: center; }
 .footer-back-to-top { min-width: 0; min-height: 44px; padding: 9px 12px; flex: 0 0 auto; display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 9px; color: var(--signal); border: 1px solid rgba(255,255,255,.42); font: 800 10px/1.2 var(--font-geist-mono), monospace; text-transform: uppercase; }

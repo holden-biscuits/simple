@@ -35,6 +35,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /TeamSimple/);
   assert.match(html, /Luck is what happens when preparation meets opportunity\./);
   assert.match(html, /What do you need to do\?/);
+  assert.match(html, /Use the role and process pages for tips that are useful no matter where you(?:&#x27;|')re headed\./);
   assert.match(html, /Get the plan for one event\./);
   assert.match(html, /Prepare and run the conversation\./);
   assert.match(html, /Target, qualify, and route\./);
@@ -53,7 +54,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Before you go/);
   assert.match(html, /Confirm your travel, hotel, credentials, and event app/);
   assert.match(html, /Review your meetings, sessions, target accounts, and booth coverage/);
-  assert.match(html, /Know the AE handoff and what you must record in HubSpot/);
+  assert.match(html, /Try to connect with other attendees before the show/);
   assert.match(html, /Find my event/);
   assert.doesNotMatch(html, /before you book, ship, or promote/);
   assert.doesNotMatch(html, /ranger-raccoon-v2/);
