@@ -31,7 +31,7 @@ export const siteStatus = {
     delivery: "Roundup posted in this Codex task",
     connectionCheckedAt: "2026-08-06",
     connectionCheckedLabel: "Aug 06 · 2026",
-    lastSuccessfulScan: "Aug 06, 2026 · 6:26 PM PT · manual baseline",
+    lastSuccessfulScan: "Aug 06, 2026 · 11:16 PM PT · five-event freshness scan",
     protectedOverrides: [
       { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", fieldKey: "status", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
       { id: "customer-connect-participation", eventSlug: "customer-connect-expo", eventName: "Customer Connect Expo", fieldKey: "status", field: "Participation", value: "Confirmed", confirmedAt: "Aug 06 · 2026" },
@@ -41,6 +41,18 @@ export const siteStatus = {
       { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", fieldKey: "speaking", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
     ] as SourceOverride[],
     changeLog: [
+      {
+        id: "customer-connect-portal-registration",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 06 · 2026",
+        title: "Recorded Customer Connect portal progress",
+        field: "Exhibitor setup",
+        before: "Portal active · registration status and insurance requirements open",
+        after: "Registration complete · insurance and pipe-and-drape requirements queued for the Aug 10 organizer call",
+        source: "Organizer email · direct reply",
+        sourceUrl: "https://mail.google.com/mail/#all/19fd9f287a45cfbe",
+        eventSlug: "customer-connect-expo",
+      },
       {
         id: "2027-program-added",
         state: "Applied" as SourceChangeState,
@@ -154,6 +166,12 @@ export const siteStatus = {
     ] as SourceChange[],
     latestChecks: [
       {
+        system: "Google Sheets · Notion · Gmail · Slack · Google Drive · HubSpot",
+        checkedAt: "Aug 06 · 2026",
+        scope: "Five-event freshness scan · 11:16 PM PT",
+        result: "CCW Exchange Chicago, Genesys Xperience, CX Travel & Hospitality, Customer Connect Expo and CX Retail were rechecked across their available owner and signal sources. Customer Connect portal registration is complete; insurance and pipe-and-drape requirements remain open for the Aug 10 organizer call and the blank Notion project now has an exact write-back proposal. Genesys remains aligned on nine attendees, no guaranteed meetings and the Aug 13 email deadline. Slack, Drive and exact-name HubSpot meeting searches produced no additional publishable change.",
+      },
+      {
         system: "Google Sheets · Notion",
         checkedAt: "Aug 06 · 2026",
         scope: "Upstream write-back verification",
@@ -215,11 +233,11 @@ export const siteStatus = {
       },
     ],
     sources: [
-      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "30 event rows checked · 2026 + 2027 · Aug 6" },
-      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "5 active projects checked · Aug 6" },
-      { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "1 restricted brief found · Aug 6" },
-      { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "No new matching messages · Aug 6" },
-      { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "2 organizer updates applied · Aug 6" },
+      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "5 near-term rows rechecked · Aug 6" },
+      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "5 active projects rechecked · Aug 6" },
+      { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "1 restricted brief · no new file · Aug 6" },
+      { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "5 event searches · no match · Aug 6" },
+      { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "2 event threads rechecked · 1 update · Aug 6" },
       { name: "Event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "Meetings, demos, deals and pipeline only when event attribution is clear", receipt: "29 attributed deals · all CCW Vegas · Aug 6" },
       { name: "Conversation notes", system: "Granola", state: "Indirect" as SourceConnectionState, use: "Available only when a note is shared into a connected source", receipt: "No direct scan available" },
       { name: "Legacy event reporting", system: "Monaco", state: "Indirect" as SourceConnectionState, use: "Available only through exports or references shared into a connected source", receipt: "No direct scan available" },

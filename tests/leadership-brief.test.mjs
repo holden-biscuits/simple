@@ -32,5 +32,5 @@ test("leadership outcomes preserve CRM limits", () => {
     marketingEvents: 0,
     pipelineClaimSupported: false,
   });
-  assert.deepEqual(brief.writebacks, { ready: 6, decisions: 1, setup: 8 });
+  assert.deepEqual(brief.writebacks, { ready: 7, decisions: 1, setup: 8 });
 });

@@ -6,7 +6,7 @@ import { BackToTop, PageContents } from "../components/page-contents";
 import { events, getProgramDate, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
 import { crmAttributionAudit } from "../data/crm-attribution";
-import { audienceViews, dataStreams, eventKeyRollout, fieldOwners, sourceFlow, stewardshipRoles, writebackQueue } from "../data/source-governance";
+import { audienceViews, dataStreams, eventKeyRollout, fieldOwners, operatingRoadmap, sourceFlow, stewardshipRoles, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 import { freshnessPolicies } from "../data/source-freshness";
 import { getProgramSystemLinkage } from "../data/system-linkage";
@@ -40,6 +40,7 @@ export default function SourcesPage() {
         { id: "canonical-event-key", label: "Canonical Event key" },
         { id: "data-flow", label: "How data moves" },
         { id: "data-streams", label: "Feeds and write-back" },
+        { id: "operating-roadmap", label: "Build order" },
         { id: "field-ownership", label: "Where to update" },
         { id: "stewardship", label: "Who updates it" },
         { id: "crm-attribution", label: "CRM attribution" },
@@ -72,6 +73,7 @@ export default function SourcesPage() {
             <strong className="source-receipt">{source.receipt}</strong>
           </article>)}
         </div>
+        <p className="source-governance-note"><strong>Current posture:</strong> four systems are read on a schedule, two are signal-only checks, zero sources push directly into production, and zero upstream changes are written automatically.</p>
         <div className="source-checks" aria-label="Latest source checks">
           <p className="eyebrow">Latest applied checks</p>
           {monitor.latestChecks.map((check) => <article key={`${check.system}-${check.checkedAt}-${check.scope}`}>
@@ -166,6 +168,25 @@ export default function SourcesPage() {
         </div>
         <p className="source-governance-note"><strong>Best next infrastructure move:</strong> add the existing Event key to the tracker, Notion projects and HubSpot records. That turns fragile name-and-date matching into a dependable join and makes safe rollups and approved write-back possible.</p>
         <BackToTop />
+      </section>
+
+      <section className="operating-roadmap" id="operating-roadmap">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Build order</p>
+            <h2>Make the joins trustworthy before adding more dashboards.</h2>
+            <p>The current feeds are enough to run a disciplined review loop. Long-term usefulness depends on fixing identity and ownership first, then CRM capture, then leadership reporting.</p>
+          </div>
+          <div className="operating-roadmap-grid">
+            {operatingRoadmap.map((item) => <article key={item.phase}>
+              <span>{item.phase}</span>
+              <h3>{item.title}</h3>
+              <p>{item.work}</p>
+              <dl><div><dt>Unlocks</dt><dd>{item.unlocks}</dd></div><div><dt>Done when</dt><dd>{item.doneWhen}</dd></div></dl>
+            </article>)}
+          </div>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="shell field-ownership" id="field-ownership">

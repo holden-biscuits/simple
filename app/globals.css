@@ -306,6 +306,17 @@ button, input, select { font: inherit; }
 .source-flow-grid h3 { margin: 48px 0 14px; font: 400 31px Georgia, serif; }
 .source-flow-grid p { margin: 0; color: rgba(255,255,255,.76); font-size: 15px; line-height: 1.55; }
 .source-governance-note { margin: 30px 0 0; padding: 20px 22px; color: #3a3027; background: #ffd08c; border-left: 5px solid var(--signal); line-height: 1.55; }
+.operating-roadmap { padding: 92px 0; color: var(--paper); background: var(--green); }
+.operating-roadmap .section-intro p:not(.eyebrow) { color: rgba(255,255,255,.76); }
+.operating-roadmap-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(255,255,255,.35); border-left: 1px solid rgba(255,255,255,.35); }
+.operating-roadmap-grid article { min-height: 430px; padding: 28px; border-right: 1px solid rgba(255,255,255,.35); border-bottom: 1px solid rgba(255,255,255,.35); }
+.operating-roadmap-grid article > span { color: #ff9a7d; font: 800 12px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.operating-roadmap-grid h3 { margin: 44px 0 16px; font: 400 31px/1.08 Georgia, serif; }
+.operating-roadmap-grid p { margin: 0; color: rgba(255,255,255,.78); font-size: 15px; line-height: 1.55; }
+.operating-roadmap-grid dl { margin: 36px 0 0; display: grid; gap: 22px; }
+.operating-roadmap-grid dl div { padding-top: 16px; border-top: 1px solid rgba(255,255,255,.22); }
+.operating-roadmap-grid dt { color: #ff9a7d; font: 800 11.5px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.operating-roadmap-grid dd { margin: 7px 0 0; color: rgba(255,255,255,.88); font-size: 14px; line-height: 1.5; }
 .catalog-health { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 18px; border: 1px solid rgba(255,255,255,.24); }
 .catalog-health article { min-height: 190px; padding: 23px; border-right: 1px solid rgba(255,255,255,.24); }
 .catalog-health article:last-child { border-right: 0; }
@@ -905,6 +916,7 @@ button, input, select { font: inherit; }
   .event-no-mark { width: 135px; height: 135px; font-size: 150px; }
   .monitor-summary { grid-template-columns: 1fr 1fr; }
   .source-flow-grid { grid-template-columns: 1fr 1fr; }
+  .operating-roadmap-grid { grid-template-columns: 1fr; }
   .freshness-policy-grid { grid-template-columns: 1fr 1fr; }
   .audience-views { grid-template-columns: 1fr; }
   .source-flow-grid article:nth-child(2n)::after { display: none; }

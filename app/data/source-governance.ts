@@ -49,6 +49,14 @@ export type StewardshipRole = {
   url: string;
 };
 
+export type OperatingRoadmapItem = {
+  phase: string;
+  title: string;
+  work: string;
+  unlocks: string;
+  doneWhen: string;
+};
+
 export type SourceSystem = "direct" | "sheet" | "notion" | "drive" | "hubspot" | "organizer" | "gmail" | "slack" | "granola" | "monaco";
 
 export type EventFieldRoute = {
@@ -152,6 +160,30 @@ export const audienceViews = [
   { audience: "GTM operators", view: "Program control", detail: "Readiness, owner and deadline gaps, source freshness, conflicts and the exact write-back queue." },
   { audience: "Leadership", view: "Portfolio and outcomes", detail: "Upcoming commitments, material risks and CRM-proven meetings, pipeline and revenue—without inferred or decorative counts." },
 ] as const;
+
+export const operatingRoadmap: OperatingRoadmapItem[] = [
+  {
+    phase: "01 · Establish the join",
+    title: "Put the Event key in every owning system",
+    work: "Add the existing fieldbook key to the conference tracker and Notion projects. Use the same key in Drive folder names and all new HubSpot event records.",
+    unlocks: "Reliable matching, fewer false conflicts, safer review builds and exact write-back destinations.",
+    doneWhen: "Every active event has the same immutable key in Sheets, Notion, Drive and HubSpot.",
+  },
+  {
+    phase: "02 · Capture outcomes",
+    title: "Make event attribution part of the CRM workflow",
+    work: "Add Event key properties to meetings and deals, create one HubSpot Marketing Event per attended event, and require outcome plus next step before the event day ends.",
+    unlocks: "Meeting, demo, pipeline and revenue rollups that leadership can trust without manual title searches.",
+    doneWhen: "Every published event outcome resolves through an exact CRM association and a usable outcome state.",
+  },
+  {
+    phase: "03 · Add the management layer",
+    title: "Join cost, readiness and results",
+    work: "Create the governed cost ledger, keep the daily source scan, and send a concise exception roundup to the chosen leadership channel.",
+    unlocks: "Portfolio decisions based on readiness, full cost and CRM-proven results—not anecdotes or duplicate spreadsheets.",
+    doneWhen: "Leadership can review commitments, risk, spend and outcomes from one reconciled view with links back to source records.",
+  },
+];
 
 export const eventKeyRollout: EventKeyRolloutItem[] = [
   { system: "Event Basecamp", field: "Event key · URL slug", state: "In use", rule: "The published event URL is the canonical key. Example: genesys-xperience." },
@@ -358,6 +390,16 @@ export const writebackQueue: WritebackItem[] = [
     evidenceUrl: "/events/genesys-xperience",
     state: "Ready for approval",
     url: "https://www.notion.so/3aa6fee642fe81c88a89de617863507c",
+  },
+  {
+    system: "Notion",
+    scope: "Customer Connect Expo execution page",
+    current: "The event project is blank while the working details live in organizer email and the fieldbook",
+    proposed: "Add the four-person roster decision, Aug 10 onboarding call, portal-profile work, website ticket link, and the open insurance, pipe-and-drape, booth-number and payment questions with owners and due dates",
+    evidence: "Organizer onboarding email + Holden portal-registration reply · Aug 6",
+    evidenceUrl: "/events/customer-connect-expo",
+    state: "Ready for approval",
+    url: "https://www.notion.so/3b46fee642fe80dc9ff9d1ae2661aa2c",
   },
   {
     system: "HubSpot",
