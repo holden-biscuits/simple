@@ -174,6 +174,7 @@ button, input, select { font: inherit; }
 .source-coverage small { color: var(--muted); font: 700 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .source-coverage h3 { margin: 35px 0 8px; font: 400 28px Georgia, serif; }
 .source-coverage p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+.source-receipt { display: block; margin-top: 18px; padding-top: 13px; border-top: 1px solid var(--line); color: var(--signal-dark); font: 800 9px/1.45 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .source-state { padding: 6px 8px; color: white; background: var(--green); font: 800 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .source-state-indirect { color: #6b4100; background: #ffd08c; }
 .source-checks { margin-top: 40px; }
@@ -262,6 +263,9 @@ button, input, select { font: inherit; }
 .event-task-list h5 a { color: var(--green); text-decoration: underline; text-underline-offset: 4px; }
 .event-task-list p { margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
 .event-task-list .task-meta { color: var(--signal-dark); font: 800 9px/1.45 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.task-due-state { display: inline-block; margin: 0 8px 4px 0; padding: 4px 6px; color: var(--paper); background: var(--signal-dark); }
+.task-due-overdue { background: #8f2f18; }
+.task-due-today { color: var(--green); background: #ffd08c; }
 .event-task-empty { padding: 30px; border: 1px dashed var(--line); }
 .event-task-grid aside { padding: 34px; background: var(--green-light); border-left: 1px solid var(--green); }
 .event-task-grid aside ul { margin: 0; padding-left: 18px; }
@@ -306,6 +310,7 @@ button, input, select { font: inherit; }
 .matrix-staffing-open { color: #5e3900; background: #ffd08c; }
 .marketing-table td > p { margin: 9px 0 0; }
 .matrix-open-item { min-width: 230px; }
+.matrix-open-due { display: block; width: fit-content; margin-top: 9px; padding: 4px 6px; color: var(--green); background: #ffd08c; font: 800 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .matrix-open-plan { display: inline-block; margin-top: 14px; color: #ffc1ae; border-bottom: 1px solid currentColor; font: 800 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .marketing-empty-state { margin: 0; padding: 34px; color: var(--green); background: var(--paper); }
 .marketing-matrix-section .back-to-top { color: var(--paper); border-color: rgba(255,255,255,.6); }

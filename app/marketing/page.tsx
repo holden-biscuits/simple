@@ -84,7 +84,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
 
       <section className="shell event-task-section" id="event-tasks">
         <div className="section-intro"><p className="eyebrow">Event workspaces</p><h2>Keep each event’s execution list in its own tab.</h2><p>These are marketing and program-management tasks. The field brief stays focused on what sales, SDRs, and leadership need before and during the event.</p></div>
-        <EventMarketingWorkspace events={activeEvents} initialSlug={selectedEvent} />
+        <EventMarketingWorkspace events={activeEvents} initialSlug={selectedEvent} programDate={programDate} />
         <BackToTop />
       </section>
 

@@ -15,6 +15,7 @@ export type MarketingTask = {
   title: string;
   status: "Open" | "In progress" | "Ready for review" | "Done";
   due?: string;
+  dueSort?: string;
   owner?: string;
   note?: string;
   url?: string;
@@ -458,13 +459,13 @@ export const events: EventRecord[] = [
       "Lock the post-event lead list, tiering, ownership, and follow-up workflow before the team arrives.",
     ],
     marketingTasks: [
-      { title: "Submit the contracted pre-event email copy", status: "In progress", due: "Aug 13", owner: "Holden + Cat", note: "The organizer extended the deadline and the portal task is live. Cat reviews; Holden submits.", url: "https://www.notion.so/3b46fee642fe80c5b96bd1b82743a8c0" },
+      { title: "Deliver the final solution-talk deck", status: "In progress", due: "Aug 10", dueSort: "2026-08-10", owner: "Cat + Holden", note: "Title, abstract, and speaker are locked. Cat has the source material; Holden will remind and unblock.", url: "https://usesimple.ai/xperience" },
+      { title: "Move Wish Line into creative production", status: "In progress", due: "Starts week of Aug 10", dueSort: "2026-08-10", owner: "Holden", note: "$15K media buy is approved; phone number is purchased; creative-agency handoff is Aug 7.", url: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c" },
+      { title: "Submit the contracted pre-event email copy", status: "In progress", due: "Aug 13", dueSort: "2026-08-13", owner: "Holden + Cat", note: "The organizer extended the deadline and the portal task is live. Cat reviews; Holden submits.", url: "https://www.notion.so/3b46fee642fe80c5b96bd1b82743a8c0" },
       { title: "Final QA for the Xperience landing page", status: "Ready for review", owner: "Marketing", note: "HubSpot form, campaign attribution, and 15-minute demo CTA are already live.", url: "https://usesimple.ai/xperience" },
-      { title: "Move Wish Line into creative production", status: "In progress", due: "Starts week of Aug 10", owner: "Holden", note: "$15K media buy is approved; phone number is purchased; creative-agency handoff is Aug 7.", url: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c" },
-      { title: "Deliver the final solution-talk deck", status: "In progress", due: "Aug 10", owner: "Cat + Holden", note: "Title, abstract, and speaker are locked. Cat has the source material; Holden will remind and unblock.", url: "https://usesimple.ai/xperience" },
       { title: "Produce the booth-monitor product video", status: "Open", due: "Date and owner open", note: "Critical onsite asset. Decide whether to build it from demo-environment screen recordings." },
-      { title: "Build the post-event lead and follow-up workspace", status: "Open", due: "Before Sep 1", owner: "Marketing + RevOps", note: "Use the CCW Vegas model: one lead list, tiered follow-up, named owners, and HubSpot QA." },
-      { title: "Reconcile contracted deliverables and spend", status: "In progress", due: "Before Sep 1", owner: "Marketing", note: "Track the booth, email add-on, Wish Line, production, shipping, and materials on the marketing page—not the field brief." },
+      { title: "Build the post-event lead and follow-up workspace", status: "Open", due: "Before Sep 1", dueSort: "2026-08-31", owner: "Marketing + RevOps", note: "Use the CCW Vegas model: one lead list, tiered follow-up, named owners, and HubSpot QA." },
+      { title: "Reconcile contracted deliverables and spend", status: "In progress", due: "Before Sep 1", dueSort: "2026-08-31", owner: "Marketing", note: "Track the booth, email add-on, Wish Line, production, shipping, and materials on the marketing page—not the field brief." },
     ],
     relatedLinks: [
       { label: "Xperience landing page", url: "https://usesimple.ai/xperience" },
@@ -571,12 +572,12 @@ export const events: EventRecord[] = [
       "Get the event app onto every attendee’s phone, build the target list, and start pre-booking directly.",
     ],
     marketingTasks: [
-      { title: "Complete the exhibitor company profile", status: "In progress", due: "Aug 13", owner: "Marketing", note: "The portal showed 25% complete on Aug 6. Finish the public company details and assets." },
-      { title: "Add the event and complimentary-ticket link to usesimple.ai", status: "Open", due: "Aug 13", owner: "Marketing + Web", note: "The organizer asked for the event and free-ticket link during the first onboarding week.", url: "https://www.customerconnectexpo.com/" },
-      { title: "Use the organizer onboarding call to close booth logistics", status: "Open", due: "Aug 10 · 9:00 AM PT", owner: "Holden", note: "Confirm booth number, package, lead retrieval, power, furniture, signage, and shipping." },
-      { title: "Reconcile portal deadlines and booth assets", status: "Open", due: "Aug 17", owner: "Marketing", note: "Several portal dates already show Aug 5. Confirm which deliverables apply, request recovery where needed, and close the Aug 17 space-only deadline." },
+      { title: "Confirm invoice payment status with AP", status: "In progress", due: "Aug 6 · payment not confirmed", dueSort: "2026-08-06", owner: "Holden + AP", note: "The invoice was forwarded to AP; payment is not yet confirmed." },
+      { title: "Use the organizer onboarding call to close booth logistics", status: "Open", due: "Aug 10 · 9:00 AM PT", dueSort: "2026-08-10", owner: "Holden", note: "Confirm booth number, package, lead retrieval, power, furniture, signage, and shipping." },
+      { title: "Complete the exhibitor company profile", status: "In progress", due: "Aug 13", dueSort: "2026-08-13", owner: "Marketing", note: "The portal showed 25% complete on Aug 6. Finish the public company details and assets." },
+      { title: "Add the event and complimentary-ticket link to usesimple.ai", status: "Open", due: "Aug 13", dueSort: "2026-08-13", owner: "Marketing + Web", note: "The organizer asked for the event and free-ticket link during the first onboarding week.", url: "https://www.customerconnectexpo.com/" },
+      { title: "Reconcile portal deadlines and booth assets", status: "Open", due: "Aug 17", dueSort: "2026-08-17", owner: "Marketing", note: "Several portal dates already show Aug 5. Confirm which deliverables apply, request recovery where needed, and close the Aug 17 space-only deadline." },
       { title: "File the contract and exhibitor guide in Events Drive", status: "Open", owner: "Marketing + Operations", note: "The event folder does not yet contain these files. Save them without copying portal credentials." },
-      { title: "Confirm invoice payment status with AP", status: "In progress", due: "ASAP", owner: "Holden + AP", note: "The invoice was forwarded to AP; payment is not yet confirmed." },
     ],
     workstreams: {
       speaking: ["None"],

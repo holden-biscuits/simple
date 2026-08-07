@@ -53,7 +53,28 @@ function eventTasks(event: EventRecord): MarketingTask[] {
   return (items ?? []).map((title) => ({ title, status: "Open" }));
 }
 
-export function EventMarketingWorkspace({ events, initialSlug }: { events: EventRecord[]; initialSlug?: string }) {
+function orderedEventTasks(event: EventRecord) {
+  return eventTasks(event)
+    .map((task, index) => ({ task, index }))
+    .sort((a, b) => {
+      if (a.task.status === "Done" && b.task.status !== "Done") return 1;
+      if (a.task.status !== "Done" && b.task.status === "Done") return -1;
+      if (a.task.dueSort && b.task.dueSort) return a.task.dueSort.localeCompare(b.task.dueSort) || a.index - b.index;
+      if (a.task.dueSort) return -1;
+      if (b.task.dueSort) return 1;
+      return a.index - b.index;
+    })
+    .map(({ task }) => task);
+}
+
+function dueState(task: MarketingTask, programDate: string) {
+  if (!task.dueSort || task.status === "Done") return null;
+  if (task.dueSort < programDate) return { className: "overdue", label: "Overdue" };
+  if (task.dueSort === programDate) return { className: "today", label: "Due today" };
+  return null;
+}
+
+export function EventMarketingWorkspace({ events, initialSlug, programDate }: { events: EventRecord[]; initialSlug?: string; programDate: string }) {
   const firstSlug = events.some((event) => event.slug === initialSlug) ? initialSlug : events[0]?.slug;
   const [selectedSlug, setSelectedSlug] = useState(firstSlug);
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -69,7 +90,7 @@ export function EventMarketingWorkspace({ events, initialSlug }: { events: Event
   }, [selectedSlug]);
 
   if (!selected) return null;
-  const tasks = eventTasks(selected);
+  const tasks = orderedEventTasks(selected);
   const support = marketingItems(selected);
   const openCount = tasks.filter((task) => task.status !== "Done").length;
 
@@ -118,14 +139,16 @@ export function EventMarketingWorkspace({ events, initialSlug }: { events: Event
       <div className="event-task-grid">
         <div className="event-task-list">
           <h4>Do these next</h4>
-          {tasks.length ? <ol>{tasks.map((task, index) => <li key={`${task.title}-${index}`}>
+          {tasks.length ? <ol>{tasks.map((task, index) => {
+            const timing = dueState(task, programDate);
+            return <li key={`${task.title}-${index}`}>
             <span className={`task-state task-state-${task.status.toLowerCase().replaceAll(" ", "-")}`}>{task.status}</span>
             <div>
               <h5>{task.url ? <a href={task.url} target="_blank" rel="noreferrer">{task.title} ↗</a> : task.title}</h5>
-              {(task.owner || task.due) ? <p className="task-meta">{[task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null].filter(Boolean).join(" · ")}</p> : null}
+              {(task.owner || task.due || timing) ? <p className="task-meta">{timing ? <span className={`task-due-state task-due-${timing.className}`}>{timing.label}</span> : null}{[task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null].filter(Boolean).join(" · ")}</p> : null}
               {task.note ? <p>{task.note}</p> : null}
             </div>
-          </li>)}</ol> : <p className="event-task-empty">No marketing action has been entered for this event.</p>}
+          </li>;})}</ol> : <p className="event-task-empty">No marketing action has been entered for this event.</p>}
         </div>
         <aside>
           <h4>Current support</h4>
@@ -189,12 +212,14 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
     </div>
     <div className="marketing-table-wrap">
       <table className="marketing-table">
-        <thead><tr><th>Event</th><th>Activation</th><th>Marketing support</th><th>Event team</th><th>Most urgent open item</th></tr></thead>
+        <thead><tr><th>Event</th><th>Activation</th><th>Marketing support</th><th>Event team</th><th>Next open item</th></tr></thead>
         <tbody>{filtered.map((event) => {
           const support = marketingItems(event);
           const signals = activationSignals(event);
           const staffing = staffingSignal(event);
-          const openItem = event.priorityActions?.[0] ?? (support.length ? "No open item recorded" : "Marketing support is not listed");
+          const openTask = orderedEventTasks(event).find((task) => task.status !== "Done");
+          const openItem = openTask?.title ?? (support.length ? "No open item recorded" : "Marketing support is not listed");
+          const eventPlanHref = event.priorityActions?.length ? `/events/${event.slug}#event-priorities` : `/events/${event.slug}`;
           return <tr key={event.slug}>
             <th>
               <Link href={`/events/${event.slug}`}>{event.name}</Link>
@@ -204,7 +229,7 @@ export function MarketingSupportBoard({ events, programDate }: { events: EventRe
             <td data-label="Activation"><div className="matrix-signals">{signals.length ? signals.map((signal) => <span key={signal}>{signal}</span>) : <span>Attendance only</span>}</div></td>
             <td data-label="Marketing support">{support.length ? <ul>{support.map((item) => <li key={item}>{item}</li>)}</ul> : <span className="matrix-empty">None listed</span>}</td>
             <td data-label="Event team"><span className={`matrix-staffing matrix-staffing-${staffing.state}`}>{staffing.state === "named" ? "Named" : "Open"}</span><p>{staffing.label}</p></td>
-            <td data-label="Most urgent open item"><p className="matrix-open-item">{openItem}</p><Link className="matrix-open-plan" href={`/events/${event.slug}`}>Open event plan →</Link></td>
+            <td data-label="Next open item"><p className="matrix-open-item">{openItem}</p>{openTask?.due ? <span className="matrix-open-due">Due {openTask.due}</span> : null}<Link className="matrix-open-plan" href={eventPlanHref}>Open event plan →</Link></td>
           </tr>;
         })}</tbody>
       </table>

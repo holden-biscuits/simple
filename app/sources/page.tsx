@@ -48,6 +48,7 @@ export default function SourcesPage() {
             <div><span className={`source-state source-state-${source.state.toLowerCase()}`}>{source.state}</span><small>{source.system}</small></div>
             <h3>{source.name}</h3>
             <p>{source.use}</p>
+            <strong className="source-receipt">{source.receipt}</strong>
           </article>)}
         </div>
         <div className="source-checks" aria-label="Latest source checks">

@@ -41,6 +41,10 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Source monitor/);
   assert.match(html, /Monday, Wednesday and Friday/);
   assert.match(html, /Conference tracker/);
+  assert.match(html, /27 event rows checked · Aug 6/);
+  assert.match(html, /2 organizer updates applied · Aug 6/);
+  assert.match(html, /29 attributed deals · all CCW Vegas · Aug 6/);
+  assert.match(html, /No direct scan available/);
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
   assert.doesNotMatch(html, /first run pending/);
@@ -91,12 +95,14 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Support listed/);
   assert.match(html, /No support listed/);
   assert.match(html, /Team unassigned/);
-  assert.match(html, /Most urgent open item/);
+  assert.match(html, /Next open item/);
+  assert.doesNotMatch(html, /Most urgent open item/);
   assert.match(html, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
   assert.match(html, /Keep each event’s execution list in its own tab/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /Submit the contracted pre-event email copy/);
   assert.match(html, /Produce the booth-monitor product video/);
+  assert.ok(html.indexOf("Deliver the final solution-talk deck") < html.indexOf("Submit the contracted pre-event email copy"));
   assert.match(html, /HubSpot form, campaign attribution, and 15-minute demo CTA are already live/);
   assert.match(html, /aria-selected="true"[^>]*id="event-task-tab-genesys-xperience"/);
   assert.match(html, /id="event-task-tab-genesys-xperience"[^>]*tabindex="0"/);
@@ -105,6 +111,8 @@ test("server-renders a searchable marketing support board", async () => {
   const customerConnect = await render("/marketing?event=customer-connect-expo");
   assert.equal(customerConnect.status, 200);
   const customerConnectHtml = await customerConnect.text();
+  assert.ok(customerConnectHtml.indexOf("Confirm invoice payment status with AP") < customerConnectHtml.indexOf("Use the organizer onboarding call"));
+  assert.match(customerConnectHtml, /Due today/);
   assert.match(customerConnectHtml, /Reconcile portal deadlines and booth assets/);
   assert.match(customerConnectHtml, /Complete the exhibitor company profile/);
   assert.match(customerConnectHtml, /Aug 17/);
