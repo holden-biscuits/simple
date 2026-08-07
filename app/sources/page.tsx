@@ -24,8 +24,32 @@ export default function SourcesPage() {
   const conflicts = events.filter((event) => event.notes.toLowerCase().startsWith("source conflict:"));
   const catalogHealth = getEventCatalogHealth(events);
   const monitor = siteStatus.sourceMonitor;
-  const linkage = getProgramSystemLinkage(events, getProgramDate());
-  const audienceSegments = getAudienceSegmentRegistry(events, getProgramDate());
+  const programDate = getProgramDate();
+  const linkage = getProgramSystemLinkage(events, programDate);
+  const audienceSegments = getAudienceSegmentRegistry(events, programDate);
+  const decisionChanges = monitor.changeLog.filter((change) => change.state === "Needs review");
+  const readyWritebacks = writebackQueue.filter((item) => item.state === "Ready for approval");
+  const dueTasks = events.flatMap((event) => (event.marketingTasks ?? [])
+    .filter((task) => task.status !== "Done" && task.dueSort && task.dueSort <= programDate)
+    .map((task) => ({ event, task })))
+    .sort((a, b) => (a.task.dueSort ?? "").localeCompare(b.task.dueSort ?? ""));
+  const autoUpdates = monitor.changeLog.filter((change) => change.state === "Applied" && change.checkedAt === siteStatus.contentUpdatedLabel);
+  const briefingActions = [
+    ...decisionChanges.map((change) => ({
+      event: change.eventSlug ? events.find((event) => event.slug === change.eventSlug)?.name ?? "Program-wide" : "Program-wide",
+      label: "Decision",
+      title: change.title,
+      detail: change.after,
+      href: change.eventSlug ? `/events/${change.eventSlug}#event-changes` : "/sources#approval-queue",
+    })),
+    ...dueTasks.map(({ event, task }) => ({
+      event: event.name,
+      label: task.dueSort && task.dueSort < programDate ? "Overdue" : "Due today",
+      title: task.title,
+      detail: `${task.owner ? `Owner: ${task.owner}` : "Owner missing"}${task.due ? ` · ${task.due}` : ""}`,
+      href: `/marketing?event=${event.slug}#event-tasks`,
+    })),
+  ].slice(0, 3);
   const changeStates = (["Applied", "Needs review", "No change"] as const).map((state) => ({
     state,
     count: monitor.changeLog.filter((change) => change.state === state).length,
@@ -42,6 +66,7 @@ export default function SourcesPage() {
       <PageContentsLayout groups={[
         { label: "Start here", items: [
           { id: "quick-update-routes", label: "Make an update" },
+          { id: "action-briefing", label: "Daily action briefing" },
           { id: "source-monitor", label: "Source monitor" },
           { id: "latest-scan", label: "Latest scan" },
           { id: "freshness-policy", label: "Freshness policy" },
@@ -86,6 +111,37 @@ export default function SourcesPage() {
         </div>
         <aside className="quick-update-note"><strong>A Slack message or email is evidence—not the final record.</strong><p>Once a change is confirmed, put it in the tracker, event project, Events Drive, or HubSpot. That keeps decisions searchable and prevents Event Basecamp from becoming another manual source of truth.</p></aside>
         <BackToTop />
+      </section>
+
+      <section className="action-briefing" id="action-briefing">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Daily action briefing</p>
+            <h2>Ping me only when I need to act.</h2>
+            <p>The 9:00 AM source scan now sends a private Slack briefing when a decision, overdue task, exact write-back approval, or time-sensitive source blocker needs your attention. No action means no Slack noise.</p>
+          </div>
+          <div className="briefing-delivery" aria-label="Action briefing delivery rules">
+            <article><span>Channel</span><strong>Private Slack DM</strong><p>Email stays off until you choose it as a fallback.</p></article>
+            <article><span>Trigger</span><strong>Action required</strong><p>New facts alone do not create a ping unless you need to decide, approve, or unblock something.</p></article>
+            <article><span>Reply loop</span><strong>Answer in the DM</strong><p>Reply with the item number and answer. The next scan captures the decision and routes the owning-system correction.</p></article>
+          </div>
+          <div className="briefing-metrics" aria-label="Current briefing queue">
+            <article><span>Decisions</span><strong>{decisionChanges.length}</strong><p>Conflicts or missing facts that need judgment.</p></article>
+            <article><span>Due now</span><strong>{dueTasks.length}</strong><p>Open structured tasks due today or earlier.</p></article>
+            <article><span>Write approvals</span><strong>{readyWritebacks.length}</strong><p>Exact upstream corrections waiting for approval.</p></article>
+            <article><span>Auto-updated</span><strong>{autoUpdates.length}</strong><p>Accepted facts already included in the current review build.</p></article>
+          </div>
+          <div className="briefing-actions">
+            <header><span>What the next briefing would ask</span><small>Highest-priority three · full queues stay on this page</small></header>
+            {briefingActions.length ? briefingActions.map((item, index) => <Link href={item.href} key={`${item.label}-${item.event}-${item.title}`}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div><small>{item.label} · {item.event}</small><strong>{item.title}</strong><p>{item.detail}</p></div>
+              <b>→</b>
+            </Link>) : <p className="briefing-clear">Nothing needs your answer right now. The scan will keep checking quietly.</p>}
+          </div>
+          <p className="briefing-boundary"><strong>Safety boundary:</strong> the briefing may update a saved review version from strong evidence. It still cannot deploy production or write to Sheets, Notion, HubSpot, Drive, Slack threads, or Gmail without the applicable approval.</p>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="shell source-monitor" id="source-monitor">

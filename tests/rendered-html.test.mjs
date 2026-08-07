@@ -136,6 +136,13 @@ test("server-renders the source monitor and approval queue", async () => {
   const html = await response.text();
   assert.match(html, /Fix the source that owns the fact\./);
   assert.match(html, /A Slack message or email is evidence—not the final record\./);
+  assert.match(html, /id="action-briefing"/);
+  assert.match(html, /Ping me only when I need to act\./);
+  assert.match(html, /Private Slack DM/);
+  assert.match(html, /No action means no Slack noise\./);
+  assert.match(html, /Reply with the item number and answer/);
+  assert.match(html, /What the next briefing would ask/);
+  assert.match(html, /Slack action briefing \+ Codex receipt/);
   assert.match(html, /Dates · participation · roster[\s\S]*Conference tracker/);
   assert.match(html, /Tasks · owners · decisions[\s\S]*Event project/);
   assert.match(html, /Contracts · creative · files[\s\S]*Events Drive/);
@@ -397,6 +404,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const pulseSearchHtml = await pulseSearch.text();
   assert.match(pulseSearchHtml, /Active event program pulse/);
   assert.match(pulseSearchHtml, /\/#program-pulse/);
+
+  const briefingSearch = await render("/search?q=ping%20me%20for%20updates&type=Operations");
+  assert.equal(briefingSearch.status, 200);
+  const briefingSearchHtml = await briefingSearch.text();
+  assert.match(briefingSearchHtml, /Daily event action briefing/);
+  assert.match(briefingSearchHtml, /\/sources#action-briefing/);
 
   const writebackSearch = await render("/search?q=write%20back&type=Operations");
   assert.equal(writebackSearch.status, 200);

@@ -28,7 +28,7 @@ export const siteStatus = {
   sourceMonitor: {
     automationState: "Active",
     cadence: "Daily · 9:00 AM PT",
-    delivery: "Roundup posted in this Codex task",
+    delivery: "Slack action briefing + Codex receipt",
     automationId: "event-fieldbook-source-scan",
     automationKind: "Codex heartbeat",
     automationVerifiedAt: "Aug 07 · 2026",
