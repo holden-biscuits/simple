@@ -21,6 +21,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Know the route before you hit the floor\./);
   assert.match(html, /TeamSimple attendance/);
   assert.match(html, /Genesys Xperience/);
+  assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
   assert.doesNotMatch(html, /Resolve these before more work starts\./);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|Building your site/i);
 });
@@ -82,6 +83,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(genesys.status, 200);
   const genesysHtml = await genesys.text();
   assert.match(genesysHtml, /No guaranteed meetings/);
+  assert.match(genesysHtml, /Meeting package<\/span><strong>None/);
+  assert.match(genesysHtml, /Meetings scheduled<\/span><strong>0/);
   assert.match(genesysHtml, /Do these next/);
   assert.match(genesysHtml, /Wish Line/);
   assert.match(genesysHtml, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
@@ -90,6 +93,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Contracted pre-event email add-on/);
   assert.match(genesysHtml, /sponsor portal by Aug 13/);
   assert.match(genesysHtml, /flights, hotel blocks, and passes are marked complete in Notion/);
+  assert.doesNotMatch(genesysHtml, /id="workstream-secondary"/);
 
   const contact = await render("/events/contact-io");
   assert.equal(contact.status, 200);
@@ -110,6 +114,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Aug 10 at 9:00 AM PT/);
   assert.match(customerConnectHtml, /25% complete on Aug 6/);
   assert.match(customerConnectHtml, /Exhibitor portal/);
+  assert.doesNotMatch(customerConnectHtml, /id="workstream-swag"/);
 
   const icmi = await render("/events/icmi-contact-center-expo");
   assert.equal(icmi.status, 200);

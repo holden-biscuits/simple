@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getWorkstreams, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 
 export function generateStaticParams() { return events.map((event) => ({ slug: event.slug })); }
 
@@ -42,22 +42,20 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     ["Closed", event.closed],
   ] as const;
   const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
-  const activeWorkstreamKeys = workstreamKeys.filter((key) => !(workstreams[key].length === 1 && workstreams[key][0] === "None"));
+  const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
   const programMix = isNotAttending ? "No activation planned" : [
     !event.sponsorship.toLowerCase().startsWith("none") ? "Sponsorship" : null,
     event.speaking.toLowerCase() !== "none" && !event.speaking.toLowerCase().includes("no slot confirmed") ? "Speaking" : null,
-    workstreams.swag.length === 1 && workstreams.swag[0] === "None" ? null : "Swag / materials",
+    isEmptyWorkstream(workstreams.swag) ? null : "Swag / materials",
   ].filter(Boolean).join(" · ") || "Attendance only";
-  const meetingSummary = isNotAttending
-    ? "No meetings planned"
-    : hasGuaranteedMeetings
-    ? `Guaranteed meeting package · ${bookedMeetingLabel} recorded`
-    : `No guaranteed meetings · ${bookedMeetingLabel} recorded`;
+  const meetingPackage = isNotAttending ? "None" : hasGuaranteedMeetings ? event.guaranteedMeetings : "None";
+  const meetingProgressLabel = event.phase === "past" ? "Meetings recorded" : "Meetings scheduled";
   const tldr = [
     ["Participation", event.status === "No" ? "Not attending" : event.status],
     ["Program mix", programMix],
-    ["Meetings", meetingSummary],
+    ["Meeting package", meetingPackage],
+    [meetingProgressLabel, isNotAttending ? "0" : bookedMeetingLabel],
     ["Team", isNotAttending ? "No team assigned" : event.attendeeCount ? `${event.attendeeCount} planned` : event.team.length ? `${event.team.length} named` : "Not assigned"],
   ];
   const showResults = event.phase === "past" || resultGroups.some(([, items]) => items.length > 0) || Boolean(event.crmSnapshot);

@@ -913,3 +913,7 @@ export function getWorkstreams(event: EventRecord): Record<WorkstreamKey, string
 
   return { ...base, ...event.workstreams };
 }
+
+export function isEmptyWorkstream(items: string[]) {
+  return items.length === 0 || items.every((item) => /^none(?:\s+(?:planned|listed|confirmed))?[.!]?$/i.test(item.trim()));
+}

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { getWorkstreams, type EventRecord } from "../data/events";
+import { getWorkstreams, isEmptyWorkstream, type EventRecord } from "../data/events";
 
 type BoardFilter = "all" | "support" | "no-support" | "team-open" | "speaking";
 
@@ -15,7 +15,8 @@ const filters: { value: BoardFilter; label: string }[] = [
 ];
 
 function marketingItems(event: EventRecord) {
-  return getWorkstreams(event).marketing.filter((item) => item !== "None");
+  const items = getWorkstreams(event).marketing;
+  return isEmptyWorkstream(items) ? [] : items;
 }
 
 function hasSpeaking(event: EventRecord) {

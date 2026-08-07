@@ -31,7 +31,7 @@ function EventCard({ event }: { event: EventRecord }) {
   const inactive = event.status === "No";
   const speakingText = event.speaking.toLowerCase();
   const speakingOpps = speakingText === "none" || speakingText.includes("no slot confirmed") ? 0 : 1;
-  const attending = event.attendeeCount ?? 0;
+  const attending = event.attendeeCount ?? event.team.length;
   return (
     <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
       {inactive ? <span className="event-card-x" aria-hidden="true" /> : null}
@@ -129,7 +129,9 @@ export function EventDirectory({ events }: { events: EventRecord[] }) {
       {groups.map((group) => {
         const matches = filtered
           .filter((event) => event.phase === group.phase)
-          .sort((a, b) => group.phase === "past" ? b.dateSort.localeCompare(a.dateSort) : 0);
+          .sort((a, b) => group.phase === "past"
+            ? b.dateSort.localeCompare(a.dateSort)
+            : a.dateSort.localeCompare(b.dateSort));
         if (!matches.length) return null;
         return (
           <section className="event-group" key={group.phase}>
