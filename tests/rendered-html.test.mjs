@@ -271,6 +271,24 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(stewardshipSearchHtml, /Who updates event data/);
   assert.match(stewardshipSearchHtml, /\/sources#stewardship/);
 
+  const naturalStaffingSearch = await render("/search?q=who%27s%20going%20to%20Genesys&type=Event");
+  assert.equal(naturalStaffingSearch.status, 200);
+  const naturalStaffingHtml = await naturalStaffingSearch.text();
+  assert.match(naturalStaffingHtml, /Genesys Xperience/);
+  assert.match(naturalStaffingHtml, /Team · Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard, Lars/);
+
+  const liveStreamSearch = await render("/search?q=what%27s%20live&type=Operations");
+  assert.equal(liveStreamSearch.status, 200);
+  const liveStreamHtml = await liveStreamSearch.text();
+  assert.match(liveStreamHtml, /Data feeds and write-back/);
+  assert.match(liveStreamHtml, /\/sources#data-streams/);
+
+  const durabilitySearch = await render("/search?q=how%20does%20this%20site%20stay%20useful&type=Operations");
+  assert.equal(durabilitySearch.status, 200);
+  const durabilitySearchHtml = await durabilitySearch.text();
+  assert.match(durabilitySearchHtml, /Event data operating roadmap/);
+  assert.match(durabilitySearchHtml, /\/sources#operating-roadmap/);
+
   const emptySearch = await render("/search?q=definitely-no-such-event-or-guide");
   assert.equal(emptySearch.status, 200);
   const emptySearchHtml = await emptySearch.text();

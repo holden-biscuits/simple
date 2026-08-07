@@ -17,39 +17,72 @@ export const searchTypes = ["All", "Event", "Guide", "Role", "Operations"] as co
 export type SearchType = (typeof searchTypes)[number];
 
 const quickSearches = [
-  { label: "Genesys", query: "Genesys" },
-  { label: "Staffing gaps", query: "names open" },
-  { label: "Meeting count TBD", query: "meeting package count TBD" },
-  { label: "Open event tasks", query: "open event task" },
-  { label: "Where to update", query: "who updates event data" },
-  { label: "HubSpot", query: "HubSpot" },
-  { label: "Booth etiquette", query: "Booth etiquette" },
+  { label: "Who’s going?", query: "who is attending" },
+  { label: "What needs attention?", query: "what needs attention" },
+  { label: "Open event work", query: "open event task" },
+  { label: "Where do I update it?", query: "where should I update event data" },
+  { label: "What changed?", query: "what changed" },
+  { label: "HubSpot results", query: "HubSpot event results" },
+  { label: "Booth rules", query: "Booth etiquette" },
 ] as const;
+
+const stopWords = new Set(["a", "an", "and", "are", "at", "can", "do", "does", "for", "from", "how", "i", "in", "is", "it", "me", "my", "of", "on", "our", "should", "show", "site", "the", "this", "to", "we", "what", "where", "which", "who", "with"]);
+
+const searchAliases: Record<string, string[]> = {
+  going: ["going", "attending", "attendee", "team", "roster", "staffing"],
+  attending: ["attending", "attendee", "team", "roster", "staffing", "going"],
+  attendees: ["attendees", "attendee", "team", "roster", "staffing"],
+  people: ["people", "attendee", "team", "roster", "staffing"],
+  meetings: ["meetings", "meeting"],
+  tasks: ["tasks", "task", "work", "action"],
+  work: ["work", "task", "action"],
+  changed: ["changed", "change", "updated", "update"],
+  changes: ["changes", "change", "updated", "update"],
+  updated: ["updated", "update", "changed", "change"],
+  live: ["live", "feed", "stream", "scheduled", "connected"],
+  results: ["results", "outcomes", "meetings", "demos", "deals", "pipeline", "revenue"],
+  cost: ["cost", "spend", "budget", "investment"],
+  costs: ["costs", "spend", "budget", "investment"],
+};
+
+function normalizeText(value: string) {
+  return value.toLowerCase().replace(/[’']s\b/g, "").replace(/[^a-z0-9+#]+/g, " ").trim();
+}
+
+function queryTerms(value: string) {
+  return normalizeText(value).split(/\s+/).filter((term) => term && !stopWords.has(term));
+}
+
+function termMatches(text: string, term: string) {
+  return (searchAliases[term] ?? [term]).some((candidate) => text.includes(candidate));
+}
 
 function matchDetail(record: SearchRecord, normalized: string) {
   if (!normalized || `${record.title} ${record.description}`.toLowerCase().includes(normalized)) return null;
-  const terms = normalized.split(/\s+/);
-  return record.details?.find((detail) => terms.every((term) => detail.toLowerCase().includes(term)))
-    ?? record.details?.find((detail) => terms.some((term) => detail.toLowerCase().includes(term)))
+  const terms = queryTerms(normalized);
+  return record.details?.find((detail) => terms.every((term) => termMatches(normalizeText(detail), term)))
+    ?? record.details?.find((detail) => terms.some((term) => termMatches(normalizeText(detail), term)))
     ?? null;
 }
 
 function searchScore(record: SearchRecord, normalized: string) {
   if (!normalized) return 0;
-  const terms = normalized.split(/\s+/);
-  const title = record.title.toLowerCase();
-  const description = record.description.toLowerCase();
-  const details = (record.details ?? []).join(" ").toLowerCase();
-  const keywords = record.keywords.toLowerCase();
+  const terms = queryTerms(normalized);
+  if (!terms.length) return 0;
+  const title = normalizeText(record.title);
+  const description = normalizeText(record.description);
+  const details = normalizeText((record.details ?? []).join(" "));
+  const keywords = normalizeText(record.keywords);
   const fullText = `${title} ${description} ${details} ${keywords}`;
-  if (!terms.every((term) => fullText.includes(term))) return -1;
+  if (!terms.every((term) => termMatches(fullText, term))) return -1;
 
-  let score = title === normalized ? 100 : title.startsWith(normalized) ? 70 : title.includes(normalized) ? 50 : 0;
+  const normalizedQuery = normalizeText(normalized);
+  let score = title === normalizedQuery ? 100 : title.startsWith(normalizedQuery) ? 70 : title.includes(normalizedQuery) ? 50 : 0;
   for (const term of terms) {
-    if (title.includes(term)) score += 12;
-    if (description.includes(term)) score += 6;
-    if (details.includes(term)) score += 4;
-    if (keywords.includes(term)) score += 1;
+    if (termMatches(title, term)) score += 12;
+    if (termMatches(description, term)) score += 6;
+    if (termMatches(details, term)) score += 4;
+    if (termMatches(keywords, term)) score += 1;
   }
   return score;
 }
@@ -57,7 +90,7 @@ function searchScore(record: SearchRecord, normalized: string) {
 export function SiteSearch({ records, initialQuery = "", initialType = "All" }: { records: SearchRecord[]; initialQuery?: string; initialType?: SearchType }) {
   const [query, setQuery] = useState(initialQuery);
   const [type, setType] = useState<SearchType>(initialType);
-  const normalized = query.trim().toLowerCase();
+  const normalized = normalizeText(query);
   const matchingRecords = useMemo(() => records
     .filter((record) => normalized || !record.hiddenUntilQuery)
     .map((record, index) => ({ record, index, score: searchScore(record, normalized) }))
