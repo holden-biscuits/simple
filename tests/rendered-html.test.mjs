@@ -189,6 +189,24 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(writebackSearchHtml, /\/sources#writeback-queue/);
 });
 
+test("directory filters survive an event-page round trip", async () => {
+  const filtered = await render("/?q=Genesys&attendance=going&year=2026");
+  assert.equal(filtered.status, 200);
+  const filteredHtml = await filtered.text();
+  assert.match(filteredHtml, /value="Genesys"/);
+  assert.match(filteredHtml, /Showing <strong>2<\/strong> of <!-- -->29<!-- --> events/);
+  assert.match(filteredHtml, /href="\/events\/genesys-xperience\?returnTo=%2F%3Fq%3DGenesys%26attendance%3Dgoing%26year%3D2026%23events"/);
+
+  const event = await render("/events/genesys-xperience?returnTo=%2F%3Fq%3DGenesys%26attendance%3Dgoing%26year%3D2026%23events");
+  assert.equal(event.status, 200);
+  const eventHtml = await event.text();
+  assert.match(eventHtml, /href="\/\?q=Genesys&amp;attendance=going&amp;year=2026#events"[^>]*class="back-link"/);
+
+  const unsafe = await render("/events/genesys-xperience?returnTo=https%3A%2F%2Fevil.example%2F%23events");
+  assert.equal(unsafe.status, 200);
+  assert.match(await unsafe.text(), /href="\/#events"[^>]*class="back-link"/);
+});
+
 test("server-renders a searchable marketing support board", async () => {
   const response = await render("/marketing?event=genesys-xperience");
   assert.equal(response.status, 200);

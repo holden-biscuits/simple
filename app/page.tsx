@@ -8,6 +8,7 @@ import { BackToTop, PageContents } from "./components/page-contents";
 import { events, getEventPhase, getProgramDate } from "./data/events";
 import { getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "./data/event-signals";
 import { getProgramPulse } from "./data/program-pulse";
+import { parseEventDirectoryState } from "./data/directory-state";
 
 export const metadata: Metadata = {
   title: "Event Basecamp · 2026–2027",
@@ -16,9 +17,12 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string | string[]; attendance?: string | string[]; year?: string | string[] }> }) {
+  const params = await searchParams;
   const programDate = getProgramDate();
   const pulse = getProgramPulse(events, programDate);
+  const years = [...new Set(events.map((event) => event.dateSort.slice(0, 4)))].sort();
+  const initialDirectoryState = parseEventDirectoryState(params, years);
   return (
     <main id="page-top">
       <SiteHeader />
@@ -144,7 +148,7 @@ export default function Home() {
           <h2>Pick an event. See the whole plan.</h2>
           <p>The conference tracker supplies the event list. Active Notion projects add the working details. Each page surfaces the workstreams in play and tucks everything else under “Not in this event plan.”</p>
         </div>
-        <EventDirectory events={events} programDate={programDate} />
+        <EventDirectory events={events} programDate={programDate} initialState={initialDirectoryState} />
         <BackToTop />
       </section>
       <Footer />

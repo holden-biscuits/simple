@@ -1,18 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
 import { attendanceFilters, filterEventDirectory, matchesAttendance, matchesProgramYear, type AttendanceFilter } from "../data/event-filters";
 import { getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "../data/event-signals";
+import { getEventDetailHref, getEventDirectoryHref, hasActiveDirectoryState, type EventDirectoryState } from "../data/directory-state";
 
-function EventCard({ event }: { event: EventRecord }) {
+function EventCard({ event, directoryState }: { event: EventRecord; directoryState: EventDirectoryState }) {
   const verification = getEventVerification(event);
   const signal = event.status === "No" ? "Not attending" : event.status;
   const inactive = event.status === "No";
   const staffing = getStaffingSignal(event);
   return (
-    <Link href={`/events/${event.slug}`} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
+    <Link href={getEventDetailHref(event.slug, directoryState)} className={`event-card${inactive ? " event-card-inactive" : ""}`}>
       {inactive ? <span className="event-card-x" aria-hidden="true" /> : null}
       <div className="event-card-top">
         <span className={`status status-${event.status.toLowerCase()}`}><span>{signal}</span></span>
@@ -34,10 +35,10 @@ function EventCard({ event }: { event: EventRecord }) {
   );
 }
 
-export function EventDirectory({ events, programDate }: { events: EventRecord[]; programDate: string }) {
-  const [query, setQuery] = useState("");
-  const [attendance, setAttendance] = useState<AttendanceFilter>("all");
-  const [year, setYear] = useState("all");
+export function EventDirectory({ events, programDate, initialState }: { events: EventRecord[]; programDate: string; initialState: EventDirectoryState }) {
+  const [query, setQuery] = useState(initialState.query);
+  const [attendance, setAttendance] = useState<AttendanceFilter>(initialState.attendance);
+  const [year, setYear] = useState(initialState.year);
   const years = useMemo(() => [...new Set(events.map((event) => event.dateSort.slice(0, 4)))].sort(), [events]);
   const filtered = useMemo(() => filterEventDirectory(events, { query, attendance, year }), [events, query, attendance, year]);
 
@@ -55,6 +56,14 @@ export function EventDirectory({ events, programDate }: { events: EventRecord[];
     attendance !== "all" ? attendanceFilters.find((filter) => filter.value === attendance)?.label : null,
     query.trim() ? `Search: ${query.trim()}` : null,
   ].filter(Boolean).join(" · ");
+  const directoryState = useMemo(() => ({ query: query.trim(), attendance, year }), [attendance, query, year]);
+
+  useEffect(() => {
+    const current = new URL(window.location.href);
+    const hadDirectoryParams = ["q", "attendance", "year"].some((key) => current.searchParams.has(key));
+    if (!hasActiveDirectoryState(directoryState) && !hadDirectoryParams) return;
+    window.history.replaceState(null, "", getEventDirectoryHref(directoryState));
+  }, [directoryState]);
 
   const groups: { phase: EventPhase; label: string; kicker: string }[] = [
     { phase: "now", label: "Happening now", kicker: "Current stop" },
@@ -118,7 +127,7 @@ export function EventDirectory({ events, programDate }: { events: EventRecord[];
               <div><p className="eyebrow">{group.kicker}</p><h2>{group.label}</h2></div>
               <span>{matches.length.toString().padStart(2, "0")}</span>
             </div>
-            <div className="event-grid">{matches.map((event) => <EventCard key={event.slug} event={event} />)}</div>
+            <div className="event-grid">{matches.map((event) => <EventCard key={event.slug} event={event} directoryState={directoryState} />)}</div>
           </section>
         );
       })}

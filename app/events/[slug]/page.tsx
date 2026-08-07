@@ -6,6 +6,7 @@ import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getEventPhase, getEventVerification, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
+import { getSafeEventReturnHref } from "../../data/directory-state";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: event ? `${event.name} · Event Basecamp` : "Event not found" };
 }
 
-export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function EventPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ returnTo?: string | string[] }> }) {
   const { slug } = await params;
+  const { returnTo } = await searchParams;
   const event = eventBySlug(slug);
   if (!event) notFound();
+  const eventDirectoryHref = getSafeEventReturnHref(returnTo);
   const eventPhase = getEventPhase(event);
   const verification = getEventVerification(event);
   const isNotAttending = event.status === "No";
@@ -74,7 +77,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
     <main id="page-top">
       <SiteHeader />
       <section className={`event-hero${isNotAttending ? " event-hero-inactive" : ""}`}>
-        <div className="event-back"><Link className="back-link" href="/#events"><b aria-hidden="true">←</b><span>Back to events</span></Link><span>{event.status === "No" ? "Not attending" : eventPhase === "past" ? "Past event" : eventPhase === "now" ? "Happening now" : "Upcoming"}</span></div>
+        <div className="event-back"><Link className="back-link" href={eventDirectoryHref}><b aria-hidden="true">←</b><span>Back to events</span></Link><span>{event.status === "No" ? "Not attending" : eventPhase === "past" ? "Past event" : eventPhase === "now" ? "Happening now" : "Upcoming"}</span></div>
         <div className="event-title-row">
           <div><p className="eyebrow">{event.dates}</p><h1>{event.name}</h1><p className="event-city">{event.location}</p></div>
           <a className="round-link" href={event.organizerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${event.name} organizer site`}><span>Event<br />site</span><b>↗</b></a>
