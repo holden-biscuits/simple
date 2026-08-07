@@ -6,7 +6,8 @@ import { SiteHeader } from "./components/site-header";
 import { Footer } from "./components/footer";
 import { BackToTop, PageContents } from "./components/page-contents";
 import { events, getEventPhase, getProgramDate } from "./data/events";
-import { hasGuaranteedMeetingPackage } from "./data/event-signals";
+import { getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "./data/event-signals";
+import { getProgramPulse } from "./data/program-pulse";
 
 export const metadata: Metadata = {
   title: "Event Basecamp · 2026–2027",
@@ -17,8 +18,7 @@ export const dynamic = "force-dynamic";
 
 export default function Home() {
   const programDate = getProgramDate();
-  const confirmedUpcoming = events.filter((event) => getEventPhase(event, programDate) !== "past" && event.status === "Confirmed").length;
-  const meetings = events.filter(hasGuaranteedMeetingPackage).length;
+  const pulse = getProgramPulse(events, programDate);
   return (
     <main id="page-top">
       <SiteHeader />
@@ -47,7 +47,7 @@ export default function Home() {
       </section>
       <PageContents items={[
         { id: "start-map", label: "Start here" },
-        { id: "program-summary", label: "Program summary" },
+        { id: "program-pulse", label: "Program pulse" },
         { id: "events", label: "Event directory" },
       ]} />
 
@@ -98,13 +98,45 @@ export default function Home() {
         <BackToTop />
       </section>
 
-      <section className="stats shell" id="program-summary" aria-label="Program summary">
-        <div><strong>{events.length}</strong><span>events on the map</span></div>
-        <div><strong>{confirmedUpcoming}</strong><span>confirmed ahead</span></div>
-        <div><strong>{meetings}</strong><span>include guaranteed meetings</span></div>
-        <div><strong>09</strong><span>planning workstreams</span></div>
+      <section className="program-pulse" id="program-pulse">
+        <div className="shell">
+          <div className="section-intro">
+            <p className="eyebrow">Program pulse</p>
+            <h2>What’s next—and what still needs attention.</h2>
+            <p>A current view of the active schedule. Open an event for the field brief; use the source record when a fact is disputed.</p>
+          </div>
+          <div className="pulse-metrics" aria-label="Active program summary">
+            <article><strong>{pulse.current.length}</strong><span>happening now</span></article>
+            <article><strong>{pulse.next60Days.length}</strong><span>starting within 60 days</span></article>
+            <article><strong>{pulse.rosterGaps.length}</strong><span>rosters incomplete</span></article>
+            <article><strong>{pulse.sourceConflicts.length}</strong><span>source conflicts</span></article>
+          </div>
+          <div className="pulse-layout">
+            <section className="next-stops" aria-labelledby="next-stops-title">
+              <div className="pulse-heading"><p className="eyebrow">Route ahead</p><h3 id="next-stops-title">Current and next stops</h3></div>
+              <div>{pulse.nextStops.map((event) => {
+                const phase = getEventPhase(event, programDate);
+                const staffing = getStaffingSignal(event);
+                return <Link href={`/events/${event.slug}`} key={event.slug}>
+                  <time dateTime={event.dateSort}>{event.dates}</time>
+                  <h4>{event.name}</h4>
+                  <p>{event.location}</p>
+                  <div><span>{phase === "now" ? "Happening now" : getSpeakingOpportunitySignal(event)}</span><span>{getGuaranteedMeetingSignal(event)}</span><span>{staffing.card}</span></div>
+                </Link>;
+              })}</div>
+            </section>
+            <section className="attention-board" aria-labelledby="attention-title">
+              <div className="pulse-heading"><p className="eyebrow">Action queue</p><h3 id="attention-title">Earliest plans with open inputs</h3></div>
+              <ol>{pulse.attention.slice(0, 6).map((item, index) => <li key={item.eventKey}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <div><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><p>{item.issues.join(" · ")}</p></div>
+              </li>)}</ol>
+              <Link className="attention-source-link" href="/sources#approval-queue">Open source and approval record →</Link>
+            </section>
+          </div>
+          <BackToTop />
+        </div>
       </section>
-      <div className="shell section-return"><BackToTop /></div>
 
       <section className="directory shell" id="events">
         <div className="section-intro">

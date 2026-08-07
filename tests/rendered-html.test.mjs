@@ -59,7 +59,15 @@ test("server-renders the event directory", async () => {
   assert.match(html, /15(?:<!-- -->)? Planned/);
   assert.match(html, /1(?:<!-- -->)? Named · 2(?:<!-- -->)? Planned/);
   assert.match(html, /Speaking TBD/);
-  assert.match(html, /29(?:<!-- -->)?<\/strong><span>events on the map/);
+  assert.match(html, /Program pulse/);
+  assert.match(html, /What’s next—and what still needs attention\./);
+  assert.match(html, /happening now/);
+  assert.match(html, /starting within 60 days/);
+  assert.match(html, /rosters incomplete/);
+  assert.match(html, /source conflicts/);
+  assert.match(html, /Current and next stops/);
+  assert.match(html, /Earliest plans with open inputs/);
+  assert.match(html, /Open source and approval record/);
   assert.match(html, /Checked <time dateTime="2026-08-06">Aug 6<\/time>/);
   assert.match(html, /Conference tracker \+ 4/);
   assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
@@ -167,6 +175,12 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const startSearchHtml = await startSearch.text();
   assert.match(startSearchHtml, /Start with the task/);
   assert.match(startSearchHtml, /\/#start-map/);
+
+  const pulseSearch = await render("/search?q=what%20needs%20attention&type=Operations");
+  assert.equal(pulseSearch.status, 200);
+  const pulseSearchHtml = await pulseSearch.text();
+  assert.match(pulseSearchHtml, /Active event program pulse/);
+  assert.match(pulseSearchHtml, /\/#program-pulse/);
 
   const writebackSearch = await render("/search?q=write%20back&type=Operations");
   assert.equal(writebackSearch.status, 200);
