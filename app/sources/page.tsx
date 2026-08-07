@@ -4,6 +4,7 @@ import { SiteHeader } from "../components/site-header";
 import { Footer } from "../components/footer";
 import { BackToTop, PageContents } from "../components/page-contents";
 import { events, sourceLinks } from "../data/events";
+import { getEventCatalogHealth } from "../data/event-contract";
 import { fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
 
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 
 export default function SourcesPage() {
   const conflicts = events.filter((event) => event.notes.toLowerCase().startsWith("source conflict:"));
+  const catalogHealth = getEventCatalogHealth(events);
   const monitor = siteStatus.sourceMonitor;
   const changeStates = (["Applied", "Needs review", "No change"] as const).map((state) => ({
     state,
@@ -88,6 +90,12 @@ export default function SourcesPage() {
             </article>)}
           </div>
           <p className="source-governance-note"><strong>The missing join:</strong> each system needs the same stable Event key. The fieldbook already has one in every event URL; Sheets, Notion and HubSpot do not yet share it.</p>
+          <div className="catalog-health" aria-label="Event data publish checks">
+            <article><span>Stable event keys</span><strong>{catalogHealth.eventKeys}</strong><p>Unique IDs ready to carry into Sheets, Notion and HubSpot.</p></article>
+            <article><span>Blocking errors</span><strong>{catalogHealth.errors.length}</strong><p>Duplicate keys, broken dates or invalid source links stop a build.</p></article>
+            <article><span>Rosters to name</span><strong>{catalogHealth.unnamedRosters}</strong><p>Attendance is planned, but the people are not yet recorded.</p></article>
+            <article><span>Source conflicts</span><strong>{catalogHealth.sourceConflicts}</strong><p>Contradictory facts remain in the approval queue.</p></article>
+          </div>
           <BackToTop />
         </div>
       </section>

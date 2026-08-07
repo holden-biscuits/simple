@@ -76,6 +76,10 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /A scheduled snapshot, not a live database\./);
   assert.match(html, /The missing join:/);
   assert.match(html, /Sheets, Notion and HubSpot do not yet share it/);
+  assert.match(html, /Stable event keys[\s\S]*29/);
+  assert.match(html, /Blocking errors[\s\S]*0/);
+  assert.match(html, /Rosters to name[\s\S]*11/);
+  assert.match(html, /Source conflicts[\s\S]*3/);
   assert.match(html, /Update the system that owns the fact\./);
   assert.match(html, /Tracker outcome columns should become rollups or references/);
   assert.match(html, /Changes that belong upstream\./);

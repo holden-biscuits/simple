@@ -297,7 +297,7 @@ export const events: EventRecord[] = [
       secondary: ["Welcome party", "Private dinner", "VIP experiences"],
       travel: ["Registration, travel and booth staffing plan"],
       marketing: ["Session promotion", "Personalized VIP demos", "Event collateral and QR assets"],
-      followup: ["Reconcile all lead sources", "Tier contacts 1–4", "Tag Monaco: CCW2026", "Set SDR attribution to Josh and opportunity source detail to CCW 2026"],
+      followup: ["Reconcile all lead sources", "Tier contacts 1–4", "Set the HubSpot event attribution to CCW 2026", "Set SDR attribution to Josh and assign one owner and next action"],
       budget: ["Track sponsorship, shipping, swag, raffle and secondary-event costs"],
     },
   },
@@ -391,13 +391,13 @@ export const events: EventRecord[] = [
     priorityActions: [
       "Get the organizer’s current meeting schedule and matched-account list. Pair it with the internal 28-account ICP sheet and add one useful talking point to every meeting brief.",
       "Confirm Taylor’s quickfire run-of-show and AV handoff before the session.",
-      "Capture the decision context and next step from every meeting, then log meetings and demos in Monaco.",
+      "Capture the decision context and next step from every meeting, then log meetings and demos in HubSpot.",
       "Send same-week follow-up with one clear CTA and update the conference tracker after the team debrief.",
     ],
     workstreams: {
       speaking: ["10-minute quickfire with Taylor", "Confirm the run-of-show and AV handoff; keep the talk to one argument, one proof point, and one CTA"],
       sponsorship: ["No expo booth", "Confirm whether the package includes a seat drop or materials distribution before placing anything"],
-      meetings: ["Guaranteed 1:1 meetings", "The internal ICP sheet has 28 researched accounts: 9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked", "Use the organizer’s matched-account schedule—not the ICP sheet—to confirm actual meetings", "Prepare one useful talking point per confirmed meeting", "Record decision context and the next step in Monaco"],
+      meetings: ["Guaranteed 1:1 meetings", "The internal ICP sheet has 28 researched accounts: 9 priority-1, 9 priority-2, 9 priority-3, and 1 unranked", "Use the organizer’s matched-account schedule—not the ICP sheet—to confirm actual meetings", "Prepare one useful talking point per confirmed meeting", "Record decision context and the next step in HubSpot"],
       swag: ["Only organizer-approved one-pagers or leave-behinds"],
       secondary: ["If a dinner is not already set, use Aug 6 only when there is a clear prospect or customer list"],
       travel: ["Taylor is the confirmed attendee; one additional attendee is not yet named in the tracker", "Carter and Josh are marked available", "Verify return travel and registration only if unresolved"],
@@ -544,7 +544,7 @@ export const events: EventRecord[] = [
     workstreams: {
       speaking: ["30-minute plenary", "Confirm speaker and title/abstract with IQPC", "Frame the session for senior travel and hospitality leaders around connected guest journeys, operational complexity, and channel routing", "Use the published Omaha numbers as the externally safe proof points", "Build deck, complete the Pre-Publish Gate, rehearse, and confirm AV"],
       sponsorship: ["None"],
-      meetings: ["The organizer describes pre-qualified one-to-one meetings; package count and format are not yet confirmed", "Get the matched-account list and prepare one brief per meeting", "Log meetings and demos in Monaco"],
+      meetings: ["The organizer describes pre-qualified one-to-one meetings; package count and format are not yet confirmed", "Get the matched-account list and prepare one brief per meeting", "Log meetings and demos in HubSpot"],
       swag: ["Print required materials in the UK; select a London vendor"],
       secondary: ["Optional client dinner with matched prospects and UK accounts; none confirmed"],
       travel: ["Confirm three travelers and register passes", "Book flights and hotel; check whether anyone is traveling directly from Las Vegas"],
@@ -636,7 +636,7 @@ export const events: EventRecord[] = [
     workstreams: {
       speaking: ["30-minute plenary", "Confirm speaker and title/abstract with IQPC", "Build a retail narrative around the peak-season and seasonality wedge", "Complete the Pre-Publish Gate, rehearsal, and AV check"],
       sponsorship: ["None"],
-      meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in Monaco"],
+      meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in HubSpot"],
       swag: ["One-pagers and leave-behinds shipped to the hotel"],
       secondary: ["Optional dinner with matched prospects and Atlanta-area accounts; none confirmed"],
       travel: ["Assign two travelers, register passes, and book flights and hotel"],
@@ -699,7 +699,7 @@ export const events: EventRecord[] = [
     ],
     workstreams: {
       speaking: ["50-minute breakout", "Confirm speaker and title/abstract with Consero", "Plan an interactive format: live Holly demo or Q&A block", "Build materials, complete the Pre-Publish Gate, rehearse, and confirm AV"],
-      sponsorship: ["None"], meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in Monaco"],
+      sponsorship: ["None"], meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in HubSpot"],
       swag: ["Ship leave-behinds to the venue or hotel"], secondary: ["None"],
       travel: ["Assign two travelers with the CCW Nashville overlap in mind", "Register and book travel"],
       marketing: ["LinkedIn post and outreach to attending accounts with one CTA"],
@@ -761,7 +761,7 @@ export const events: EventRecord[] = [
     workstreams: {
       speaking: ["Panel on Oct 8", "Confirm panelist, topic, moderator questions, and logistics", "Use only externally cleared proof points"],
       sponsorship: ["Confirm every contract inclusion: booth, bag insert, app push, and CCWomen participation", "If a booth is included, lock backdrop, signage, lead capture, power, furniture, production, and shipping", "Publish booth staffing across the 10-person roster"],
-      meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in Monaco"],
+      meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in HubSpot"],
       swag: ["Choose quantities, order, ship to the venue, and plan returns"],
       secondary: ["Book Noko Nashville through Carter’s contacts Mary and Jon", "Build the customer/prospect invite list, send invitations, and track RSVPs"],
       travel: ["Lock the 10-person roster and register everyone", "Book flights and hotel block", "Publish an onsite schedule covering shifts, meetings, panel, dinner, and breaks"],
@@ -840,7 +840,7 @@ export const events: EventRecord[] = [
     ],
     workstreams: {
       speaking: ["45-minute interactive workshop", "Confirm workshop lead and topic with CCW", "Build worksheets or discussion prompts, complete the Pre-Publish Gate, rehearse, and confirm AV", "Keep this distinct from the separate March 2027 UK workshop"],
-      sponsorship: ["None"], meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in Monaco"],
+      sponsorship: ["None"], meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in HubSpot"],
       swag: ["Print workshop materials in the UK"], secondary: ["None"],
       travel: ["Assign two travelers with the Miami split in mind", "Register and book travel"],
       marketing: ["LinkedIn post and outreach to UK accounts with one CTA"],
@@ -876,7 +876,7 @@ export const events: EventRecord[] = [
     ],
     workstreams: {
       speaking: ["Main-stage client case study", "Choose the customer and confirm whether they will co-present or approve the story", "Use externally safe proof points only", "Build the deck, complete the Pre-Publish Gate, secure customer approval, and confirm AV/run of show"],
-      sponsorship: ["None"], meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in Monaco"],
+      sponsorship: ["None"], meetings: ["Guaranteed meetings; count and format not yet confirmed", "Get the matched-account list and prepare account briefs", "Log meetings and demos in HubSpot"],
       swag: ["Prepare only required materials"], secondary: ["Optional dinner; none confirmed"],
       travel: ["Assign two attendees with the London split in mind", "Register and book travel"],
       marketing: ["LinkedIn post on the main-stage session after customer approval; use one CTA"],
