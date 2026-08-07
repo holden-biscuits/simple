@@ -149,6 +149,8 @@ button, input, select { font: inherit; }
 .role-hero { min-height: 610px; padding: 90px max(30px, calc((100vw - 1180px)/2)); border-bottom: 1px solid var(--line); background-color: var(--canvas); position: relative; overflow: hidden; }
 .role-hero > * { position: relative; z-index: 1; }
 .role-hero h1 { font-size: clamp(72px, 10vw, 142px); max-width: 1050px; }
+.role-hero-sdr { min-height: 540px; padding-block: 72px; }
+.role-hero-sdr h1 { max-width: 900px; font-size: clamp(58px, 7vw, 104px); line-height: .94; }
 .role-hero .lede { margin-top: 35px; }
 .role-grid { padding-block: 90px; }
 .role-block { display: grid; grid-template-columns: 100px 1fr; gap: 30px; padding: 55px 0; border-top: 1px solid var(--line); }

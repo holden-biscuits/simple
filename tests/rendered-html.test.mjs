@@ -163,6 +163,14 @@ test("server-renders field-role CRM rules and the updated guide model", async ()
   const sdr = await render("/sdr");
   assert.equal(sdr.status, 200);
   const sdrHtml = await sdr.text();
+  assert.match(sdrHtml, /role-hero-sdr/);
+  assert.match(sdrHtml, /Turn event conversations into qualified meetings\./);
+  assert.match(sdrHtml, /How to work the event/);
+  assert.match(sdrHtml, /Protect the AEs’ time/);
+  assert.match(sdrHtml, /keeping the booth from going quiet/);
+  assert.match(sdrHtml, /A paid SDR ticket is for working the floor/);
+  assert.match(sdrHtml, /Events with alcohol are still work/);
+  assert.match(sdrHtml, /Treat the trip as a privilege, not a vacation/);
   assert.match(sdrHtml, /add every booked meeting to/);
   assert.match(sdrHtml, /event source, current setup, call volume, qualification outcome, owner, agreed next action, and meeting logistics/);
   assert.match(sdrHtml, /https:\/\/app\.hubspot\.com/);

@@ -15,7 +15,7 @@ export function RolePage({ code, title, intro, sections, handoff }: { code: stri
   return (
     <main id="page-top">
       <SiteHeader />
-      <section className="role-hero">
+      <section className={`role-hero role-hero-${code.toLowerCase()}`}>
         <p className="eyebrow">Crew guide · {code}</p>
         <h1>{title}</h1>
         <p className="lede">{intro}</p>
