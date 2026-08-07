@@ -7,7 +7,7 @@ import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuarante
 import { getEventBriefReadiness } from "../data/event-brief-readiness";
 import { siteStatus } from "../data/site-status";
 import { getEventRoleRoutes } from "../data/event-role-routes";
-import { dataStreams, fieldOwners, writebackQueue } from "../data/source-governance";
+import { connectorCapabilities, dataStreams, fieldOwners, writebackQueue } from "../data/source-governance";
 import { matchesAttendance, matchesAttention } from "../data/event-filters";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
@@ -84,6 +84,18 @@ const attentionViewRecords: SearchRecord[] = [
     keywords: "guaranteed meeting meetings count unknown open TBD package format matched accounts how many",
   },
 ];
+
+const connectorCapabilityRecords: SearchRecord[] = connectorCapabilities.map((item) => ({
+  type: "Operations",
+  context: "Connector access",
+  status: item.access,
+  title: `${item.system} connector access`,
+  href: "/sources#data-streams",
+  description: item.detail,
+  keywords: [item.system, item.access, item.detail, item.boundary, "can I write update edit connector access permission policy"].join(" "),
+  details: [`Operating boundary · ${item.boundary}`],
+  hiddenUntilQuery: true,
+}));
 
 const dataStreamRecords: SearchRecord[] = dataStreams.map((stream) => ({
   type: "Operations",
@@ -232,5 +244,5 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const initialQuery = typeof params.q === "string" ? params.q : "";
   const requestedType = typeof params.type === "string" ? params.type : "All";
   const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, ...eventChangeRecords, ...marketingTaskRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, and role instructions. Results open the exact section or workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, ...eventChangeRecords, ...marketingTaskRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }

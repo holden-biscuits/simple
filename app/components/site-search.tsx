@@ -23,6 +23,7 @@ const quickSearches = [
   { label: "What needs attention?", query: "what needs attention" },
   { label: "Open event work", query: "open event task" },
   { label: "Where do I update it?", query: "where should I update event data" },
+  { label: "What can write back?", query: "what can write back to source systems" },
   { label: "What changed?", query: "what changed" },
   { label: "Live data feeds", query: "which data feeds are live" },
   { label: "HubSpot results", query: "HubSpot event results" },

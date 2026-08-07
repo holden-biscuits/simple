@@ -1112,6 +1112,9 @@ button, input, select { font: inherit; }
   .page-contents { position: static; align-items: flex-start; flex-direction: column; gap: 8px; overflow: hidden; }
   .page-contents > div { width: 100%; padding-bottom: 7px; flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: inline proximity; scrollbar-width: thin; scrollbar-color: var(--signal) var(--paper-deep); }
   .page-contents a { flex: 0 0 auto; scroll-snap-align: start; }
+  .search-quick { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .search-quick > div { width: 100%; padding: 0 1px 7px 0; flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: inline proximity; scrollbar-width: thin; scrollbar-color: var(--signal) var(--paper-deep); }
+  .search-quick button { flex: 0 0 auto; scroll-snap-align: start; }
   .home-hero, .role-hero { padding-inline: 18px; }
   .home-hero { padding-block: 55px; }
   .home-hero h1 { font-size: 58px; }

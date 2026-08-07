@@ -337,6 +337,19 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(lifecycleSearchHtml, /Event operating loop/);
   assert.match(lifecycleSearchHtml, /href="\/#event-lifecycle"/);
 
+  const hubspotWriteSearch = await render("/search?q=can%20I%20write%20HubSpot%20meetings&type=Operations");
+  assert.equal(hubspotWriteSearch.status, 200);
+  const hubspotWriteHtml = await hubspotWriteSearch.text();
+  assert.match(hubspotWriteHtml, /HubSpot connector access/);
+  assert.match(hubspotWriteHtml, /Deals \+ meetings writable/);
+  assert.match(hubspotWriteHtml, /href="\/sources#data-streams"/);
+
+  const slackWriteSearch = await render("/search?q=can%20I%20write%20event%20facts%20to%20Slack&type=Operations");
+  assert.equal(slackWriteSearch.status, 200);
+  const slackWriteHtml = await slackWriteSearch.text();
+  assert.match(slackWriteHtml, /Slack \+ Gmail connector access/);
+  assert.match(slackWriteHtml, /Do not back-write event facts into a thread/);
+
   const rosterGapSearch = await render("/search?q=roster%20missing&type=Operations");
   assert.equal(rosterGapSearch.status, 200);
   const rosterGapSearchHtml = await rosterGapSearch.text();
