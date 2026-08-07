@@ -116,6 +116,47 @@ export function getEventBriefReadiness(event: EventRecord, programDate: string):
   };
 }
 
+const onsiteAdminIssues = new Set(["workspace", "execution-plan", "execution-gaps"]);
+
+function onsiteIssueLabel(issue: BriefReadinessIssue, event: EventRecord) {
+  if (issue.key === "participation") return "Attendance status is still unverified";
+  if (issue.key === "dates") return "Event dates are still unverified";
+  if (issue.key === "speaking") return "Speaking commitment is still unverified";
+  if (issue.key === "sponsorship") return "Sponsor package details are not recorded";
+  if (issue.key === "meeting-count") return "Guaranteed-meeting count and format are not recorded";
+  if (issue.key === "source-conflict") return "A source conflict still affects this brief";
+  if (issue.key === "source-check") return "The event sources need a same-day refresh";
+  if (issue.key === "roster" && event.attendeeCount !== null) {
+    const remaining = Math.max(0, event.attendeeCount - event.team.length);
+    return `${remaining} attendee name${remaining === 1 ? " is" : "s are"} still missing from the onsite roster`;
+  }
+  if (issue.key === "roster") return "The onsite roster is not recorded";
+  if (issue.key === "venue") return "Venue details are not recorded";
+  if (issue.key === "credentials") return "Pass and credential details are not recorded";
+  return issue.label;
+}
+
+/**
+ * Event pages switch from planning hygiene to field utility once an event starts.
+ * Program and leadership views keep the full readiness backlog through
+ * getEventBriefReadiness; this view removes admin work that cannot help onsite.
+ */
+export function getEventPageBriefReadiness(event: EventRecord, programDate: string): EventBriefReadiness {
+  const readiness = getEventBriefReadiness(event, programDate);
+  if (readiness.stage !== "onsite") return readiness;
+
+  const issues = readiness.issues
+    .filter((issue) => !onsiteAdminIssues.has(issue.key))
+    .map((issue) => ({ ...issue, label: onsiteIssueLabel(issue, event) }));
+
+  return {
+    ...readiness,
+    label: readinessLabel(readiness.stage, issues.length),
+    state: issues.length ? "attention" : "ready",
+    issues,
+  };
+}
+
 export function getProgramBriefReadiness(catalog: EventRecord[], programDate: string) {
   const events = catalog
     .map((event) => getEventBriefReadiness(event, programDate))

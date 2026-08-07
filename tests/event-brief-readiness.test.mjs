@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { eventBySlug, events } from "../app/data/events.ts";
-import { getBriefIssueAction, getEventBriefReadiness, getProgramBriefReadiness } from "../app/data/event-brief-readiness.ts";
+import { getBriefIssueAction, getEventBriefReadiness, getEventPageBriefReadiness, getProgramBriefReadiness } from "../app/data/event-brief-readiness.ts";
 
 const programDate = "2026-08-06";
 
@@ -33,6 +33,18 @@ test("current-event readiness keeps unresolved source and onsite inputs visible"
   assert.ok(chicago.issues.some((issue) => issue.key === "roster"));
   assert.ok(chicago.issues.some((issue) => issue.key === "venue"));
   assert.ok(chicago.issues.some((issue) => issue.key === "credentials"));
+});
+
+test("current event pages replace planning administration with onsite facts", () => {
+  const chicago = getEventPageBriefReadiness(eventBySlug("ccw-exchange-chicago"), programDate);
+  assert.equal(chicago.stage, "onsite");
+  assert.ok(chicago.issues.some((issue) => issue.label === "A source conflict still affects this brief"));
+  assert.ok(chicago.issues.some((issue) => issue.label === "1 attendee name is still missing from the onsite roster"));
+  assert.ok(chicago.issues.some((issue) => issue.label === "Venue details are not recorded"));
+  assert.ok(chicago.issues.some((issue) => issue.label === "Pass and credential details are not recorded"));
+  assert.ok(!chicago.issues.some((issue) => issue.key === "execution-plan"));
+  assert.ok(!chicago.issues.some((issue) => issue.key === "execution-gaps"));
+  assert.ok(!chicago.issues.some((issue) => issue.key === "workspace"));
 });
 
 test("program readiness excludes past and non-attending events", () => {

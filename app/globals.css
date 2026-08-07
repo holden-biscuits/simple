@@ -921,6 +921,8 @@ button, input, select { font: inherit; }
 .event-brief-readiness > footer { min-height: 50px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-top: 1px solid var(--green); color: var(--green); }
 .event-brief-readiness > footer a { color: var(--signal-dark); border-bottom: 1px solid currentColor; }
 .event-brief-readiness-attention > header { background: var(--signal-dark); }
+.event-brief-readiness-onsite > header { background: var(--green); }
+.event-brief-readiness-onsite { box-shadow: 6px 6px 0 var(--signal); }
 .tldr-note { margin: 22px 0 0; padding: 18px 20px; border-left: 4px solid var(--signal); background: color-mix(in srgb, var(--canvas) 72%, transparent); font-size: 17px; line-height: 1.55; }
 .tldr-note strong { display: block; margin-bottom: 7px; color: var(--signal-dark); font: 800 10px var(--font-geist-mono), monospace; letter-spacing: .04em; text-transform: uppercase; }
 .tldr-note.source-conflict { border: 1px solid var(--signal); border-left-width: 7px; background: #f8d6c7; }

@@ -10,7 +10,7 @@ import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
 import { getEventSystemLinkage } from "../../data/system-linkage";
 import { getEventMeasurementCheckpoint } from "../../data/event-measurement";
-import { getBriefIssueAction, getEventBriefReadiness } from "../../data/event-brief-readiness";
+import { getBriefIssueAction, getEventPageBriefReadiness } from "../../data/event-brief-readiness";
 import { getEventSourceChanges } from "../../data/site-status";
 import { getEventRoleRoutes } from "../../data/event-role-routes";
 import { getEventFootprint } from "../../data/event-footprint";
@@ -40,7 +40,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const freshness = getSourceFreshness(event, programDate);
   const systemLinkage = getEventSystemLinkage(event);
   const measurementCheckpoint = getEventMeasurementCheckpoint(event, eventPhase);
-  const briefReadiness = getEventBriefReadiness(event, programDate);
+  const briefReadiness = getEventPageBriefReadiness(event, programDate);
   const recentChanges = getEventSourceChanges(event.slug);
   const eventWritebacks = getEventWritebackQueue(event.slug);
   const roleRoutes = getEventRoleRoutes(event, eventPhase);
@@ -80,6 +80,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
   const activeWorkstreamKeys = workstreamKeys.filter((key) => !isEmptyWorkstream(workstreams[key]));
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => !activeWorkstreamKeys.includes(key));
+  const firstActiveWorkstreamHref = activeWorkstreamKeys.length ? `#workstream-${activeWorkstreamKeys[0]}` : "#event-crew";
   const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
   const footprint = getEventFootprint(event);
   const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see field checklist";
@@ -153,18 +154,18 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <div><span>Next move</span><h3>{nextMove.title}</h3></div>
           <dl>
             <div><dt>Owner</dt><dd>{nextMove.owner ?? "Open"}</dd></div>
-            <div><dt>Due</dt><dd>{nextMove.due ?? "Open"}</dd></div>
-            <div><dt>Status</dt><dd>{nextMove.structured ? nextMove.status : "Needs an owner and date"}</dd></div>
+            <div><dt>Due</dt><dd>{eventPhase === "now" && !nextMove.structured ? "Today" : nextMove.due ?? "Open"}</dd></div>
+            <div><dt>Status</dt><dd>{nextMove.structured ? nextMove.status : eventPhase === "now" ? "Owner open" : "Needs an owner and date"}</dd></div>
           </dl>
-          <Link href={nextMove.href}>{nextMove.structured ? "Open task plan" : "Turn priorities into a plan"} →</Link>
+          <Link href={eventPhase === "now" && !nextMove.structured ? "#event-priorities" : nextMove.href}>{nextMove.structured ? "Open task plan" : eventPhase === "now" ? "Open onsite priorities" : "Turn priorities into a plan"} →</Link>
         </div> : null}
-        {!isNotAttending && eventPhase !== "past" ? <div className={`event-brief-readiness event-brief-readiness-${briefReadiness.state}`}>
-          <header><div><span>Brief readiness</span><strong>{briefReadiness.label}</strong></div><b>{briefReadiness.timing}</b></header>
+        {!isNotAttending && eventPhase !== "past" ? <div className={`event-brief-readiness event-brief-readiness-${briefReadiness.state}${briefReadiness.stage === "onsite" ? " event-brief-readiness-onsite" : ""}`}>
+          <header><div><span>{briefReadiness.stage === "onsite" ? "Onsite check" : "Brief readiness"}</span><strong>{briefReadiness.label}</strong></div><b>{briefReadiness.timing}</b></header>
           {briefReadiness.issues.length ? <ul>{briefReadiness.issues.map((issue) => {
             const action = getBriefIssueAction(issue, event);
             return <li key={issue.key}><div><p>{issue.label}</p><span>{issue.destination}</span></div>{action.external ? <a href={action.href} target="_blank" rel="noreferrer">{action.label} ↗</a> : <Link href={action.href}>{action.label} →</Link>}</li>;
-          })}</ul> : <p>No decision-critical inputs are missing for this planning stage. Check the open work below before treating the plan as complete.</p>}
-          <footer><span>{briefReadiness.issues.length ? `${briefReadiness.issues.length} open input${briefReadiness.issues.length === 1 ? "" : "s"}` : "Required inputs present"}</span><a href="#event-update-route">Open all update routes →</a></footer>
+          })}</ul> : <p>{briefReadiness.stage === "onsite" ? "No decision-critical onsite details are missing. Use the field checklist and log each meaningful conversation before the day ends." : "No decision-critical inputs are missing for this planning stage. Check the open work below before treating the plan as complete."}</p>}
+          <footer><span>{briefReadiness.issues.length ? `${briefReadiness.issues.length} ${briefReadiness.stage === "onsite" ? `onsite fact${briefReadiness.issues.length === 1 ? "" : "s"} unresolved` : `open input${briefReadiness.issues.length === 1 ? "" : "s"}`}` : briefReadiness.stage === "onsite" ? "Onsite facts present" : "Required inputs present"}</span><a href="#event-update-route">Open all update routes →</a></footer>
         </div> : null}
         {note ? <p className={`tldr-note${isSourceConflict ? " source-conflict" : ""}`}>
           {isSourceConflict ? <strong>Source check needed</strong> : null}
@@ -232,9 +233,9 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <section className="event-priorities shell" id="event-priorities">
           <div className="priority-intro">
             <p className="eyebrow">{eventPhase === "now" ? "Onsite focus" : "Before the event"}</p>
-            <h2>Still needs attention.</h2>
-            <p>{event.priorityActions!.length} event-specific {event.priorityActions!.length === 1 ? "item is" : "items are"} still open in the current plan.</p>
-            <Link className="priority-link" href={`/marketing?event=${event.slug}#event-tasks`}>Open marketing workspace →</Link>
+            <h2>{eventPhase === "now" ? "Do these next." : "Still needs attention."}</h2>
+            <p>{event.priorityActions!.length} event-specific {eventPhase === "now" ? `priorit${event.priorityActions!.length === 1 ? "y is" : "ies are"} live today` : `${event.priorityActions!.length === 1 ? "item is" : "items are"} still open in the current plan`}.</p>
+            <Link className="priority-link" href={eventPhase === "now" ? firstActiveWorkstreamHref : `/marketing?event=${event.slug}#event-tasks`}>{eventPhase === "now" ? "Open field checklist" : "Open marketing workspace"} →</Link>
           </div>
           <ol>{event.priorityActions!.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
           <BackToTop />
