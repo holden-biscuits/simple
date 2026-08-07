@@ -32,9 +32,9 @@ export const siteStatus = {
     automationId: "event-fieldbook-source-scan",
     automationKind: "Codex heartbeat",
     automationVerifiedAt: "Aug 07 · 2026",
-    connectionCheckedAt: "2026-08-06",
-    connectionCheckedLabel: "Aug 06 · 2026",
-    lastSuccessfulScan: "Aug 07, 2026 · 12:32 AM PT · HubSpot attribution refresh",
+    connectionCheckedAt: "2026-08-07",
+    connectionCheckedLabel: "Aug 07 · 2026",
+    lastSuccessfulScan: "Aug 07, 2026 · 6:42 AM PT · Chicago closeout check",
     lastSuccessfulScanMode: "Task review",
     protectedOverrides: [
       { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", fieldKey: "status", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
@@ -45,6 +45,18 @@ export const siteStatus = {
       { id: "vegas-2027-speaking-signal", eventSlug: "ccw-vegas-2027", eventName: "CCW Vegas 2027", fieldKey: "speaking", field: "Directory speaking signal", value: "1 speaking opportunity", confirmedAt: "Aug 06 · 2026" },
     ] as SourceOverride[],
     changeLog: [
+      {
+        id: "chicago-closeout-no-change",
+        state: "No change" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Chicago conflict remains unresolved at closeout",
+        field: "Attendees and CRM outcomes",
+        before: "Tracker: Taylor confirmed · Josh available · Notion: Taylor + Josh",
+        after: "No newer decision in Gmail or Slack · no Chicago-named HubSpot deal or meeting",
+        source: "Google Sheets · Notion · Gmail · Slack · HubSpot",
+        sourceUrl: "https://docs.google.com/spreadsheets/d/1vDieEhNcLwWNFxrMQBQLCInhQTcPkspb-6glkSn44Fk/edit?gid=0&range=A14:W14",
+        eventSlug: "ccw-exchange-chicago",
+      },
       {
         id: "hubspot-ccw-source-mismatch",
         state: "Needs review" as SourceChangeState,
@@ -194,6 +206,12 @@ export const siteStatus = {
     ] as SourceChange[],
     latestChecks: [
       {
+        system: "Google Sheets · Notion · Gmail · Slack · HubSpot",
+        checkedAt: "Aug 07 · 2026",
+        scope: "CCW Exchange Chicago closeout check · 6:42 AM PT",
+        result: "The tracker row still confirms Taylor, marks Josh and Carter available, and records two attendees; the Notion project still says Taylor + Josh and contains the same pre-event checklist. Gmail and Slack contain no new Chicago event message after Aug 6. Exact-name HubSpot searches return zero deals and zero meeting records. The staffing conflict remains open and no event outcome is published.",
+      },
+      {
         system: "HubSpot",
         checkedAt: "Aug 07 · 2026",
         scope: "CCW Vegas attribution refresh · 12:32 AM PT",
@@ -267,12 +285,12 @@ export const siteStatus = {
       },
     ],
     sources: [
-      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "5 near-term rows rechecked · Aug 6" },
-      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "5 active projects rechecked · Aug 6" },
+      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "Chicago row rechecked · Aug 7" },
+      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "Chicago project rechecked · Aug 7" },
       { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "1 restricted brief · no new file · Aug 6" },
-      { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "5 event searches · no match · Aug 6" },
-      { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "2 event threads rechecked · 1 update · Aug 6" },
-      { name: "Event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "Meetings, demos, deals and pipeline only when event attribution is clear", receipt: "29 exact deals · 1 source mismatch · Aug 7" },
+      { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "Chicago search · no match · Aug 7" },
+      { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "Chicago search · no match · Aug 7" },
+      { name: "Event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "Meetings, demos, deals and pipeline only when event attribution is clear", receipt: "Chicago deals + meetings · 0 matches · Aug 7" },
       { name: "Conversation notes", system: "Granola", state: "Indirect" as SourceConnectionState, use: "Available only when a note is shared into a connected source", receipt: "No direct scan available" },
       { name: "Legacy event reporting", system: "Monaco", state: "Indirect" as SourceConnectionState, use: "Available only through exports or references shared into a connected source", receipt: "No direct scan available" },
     ],

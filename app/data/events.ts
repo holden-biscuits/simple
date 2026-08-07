@@ -1058,8 +1058,8 @@ const eventVerificationOverrides: Record<string, EventVerification> = {
     sources: ["Conference tracker", "CCW Vegas plan", "HubSpot"],
   },
   "ccw-exchange-chicago": {
-    checkedAt: "Aug 6, 2026",
-    checkedAtISO: "2026-08-06",
+    checkedAt: "Aug 7, 2026",
+    checkedAtISO: "2026-08-07",
     sources: ["Conference tracker", "Notion", "Gmail", "Slack", "HubSpot"],
   },
   "contact-io": {

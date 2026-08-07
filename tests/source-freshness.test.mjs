@@ -10,10 +10,10 @@ const find = (slug) => {
 };
 
 test("current events use a daily source-check window", () => {
-  const freshness = getSourceFreshness(find("ccw-exchange-chicago"), "2026-08-06");
+  const freshness = getSourceFreshness(find("ccw-exchange-chicago"), "2026-08-07");
   assert.equal(freshness.state, "current");
   assert.equal(freshness.maxAgeDays, 1);
-  assert.equal(freshness.nextCheckISO, "2026-08-07");
+  assert.equal(freshness.nextCheckISO, "2026-08-08");
 });
 
 test("upcoming events tighten from weekly to every three days", () => {

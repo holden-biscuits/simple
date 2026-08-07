@@ -87,7 +87,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Earliest plans with open inputs/);
   assert.match(html, /\+\d+ more on the brief/);
   assert.match(html, /Open source and approval record/);
-  assert.match(html, /Current(?:<!-- -->)? · <time dateTime="2026-08-06">Aug 6<\/time>/);
+  assert.match(html, /Current(?:<!-- -->)? · <time dateTime="2026-08-07">Aug 7<\/time>/);
   assert.match(html, /Source checks due[\s\S]*\d+/);
   assert.match(html, /Conference tracker \+ 4/);
   assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
@@ -172,7 +172,9 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /What changed, and why\./);
   assert.match(html, /<span>Applied<\/span><strong>5<\/strong>/);
   assert.match(html, /<span>Needs review<\/span><strong>4<\/strong>/);
-  assert.match(html, /<span>No change<\/span><strong>4<\/strong>/);
+  assert.match(html, /<span>No change<\/span><strong>5<\/strong>/);
+  assert.match(html, /Chicago conflict remains unresolved at closeout/);
+  assert.match(html, /no Chicago-named HubSpot deal or meeting/);
   assert.match(html, /Reconcile one CCW deal-source mismatch/);
   assert.match(html, /Exact CCW attribution baseline still holds/);
   assert.match(html, /Upstream write-back verification/);
@@ -192,14 +194,14 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Direct confirmation/);
   assert.match(html, /A successful scan may save a review version/);
   assert.match(html, /Conference tracker/);
-  assert.match(html, /5 near-term rows rechecked · Aug 6/);
-  assert.match(html, /2 event threads rechecked · 1 update · Aug 6/);
-  assert.match(html, /29 exact deals · 1 source mismatch · Aug 7/);
+  assert.match(html, /Chicago row rechecked · Aug 7/);
+  assert.match(html, /Chicago search · no match · Aug 7/);
+  assert.match(html, /Chicago deals \+ meetings · 0 matches · Aug 7/);
   assert.match(html, /No direct scan available/);
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
   assert.doesNotMatch(html, /first run pending/);
-  assert.match(html, /Latest evidence refresh · Task review: Aug 07, 2026 · 12:32 AM PT · HubSpot attribution refresh/);
+  assert.match(html, /Latest evidence refresh · Task review: Aug 07, 2026 · 6:42 AM PT · Chicago closeout check/);
   assert.match(html, /four systems are read on a schedule/);
   assert.match(html, /zero sources push directly into production/);
   assert.match(html, /Make the joins trustworthy before adding more dashboards\./);
@@ -212,7 +214,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /tracker names Taylor and marks Josh available/);
   assert.match(html, /IQPC CX Travel &amp; Hospitality/);
   assert.match(html, /calendar record lists Zach \+ Taylor/);
-  assert.match(html, /Latest applied checks/);
+  assert.match(html, /Latest source checks/);
+  assert.match(html, /CCW Exchange Chicago closeout check · 6:42 AM PT/);
   assert.match(html, /29 of 29 exact event-sourced deals/);
   assert.match(html, /four are possible on-site meetings/);
   assert.match(html, /Google Sheets/);

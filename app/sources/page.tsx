@@ -97,7 +97,7 @@ export default function SourcesPage() {
         </div>
         <p className="source-governance-note"><strong>Current posture:</strong> four systems are read on a schedule, two are signal-only checks, zero sources push directly into production, and zero upstream changes are written automatically.</p>
         <div className="source-checks" aria-label="Latest source checks">
-          <p className="eyebrow">Latest applied checks</p>
+          <p className="eyebrow">Latest source checks</p>
           {monitor.latestChecks.map((check) => <article key={`${check.system}-${check.checkedAt}-${check.scope}`}>
             <div><strong>{check.system}</strong><span>{check.checkedAt}</span></div>
             <p>{check.scope}</p>
