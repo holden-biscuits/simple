@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PageContentsLinks, type PageContentsGroup } from "./page-contents-links";
 
 export type PageContentsItem = { id: string; label: string };
 
@@ -18,28 +19,17 @@ export function PageContents({
   variant?: "bar" | "side";
 }) {
   if (variant === "side") {
-    const contentsGroups = [
+    const contentsGroups: PageContentsGroup[] = [
       { label: primaryLabel, items },
       ...(secondaryItems.length ? [{ label: secondaryLabel, items: secondaryItems }] : []),
     ];
 
     return (
       <aside className="page-contents-side">
-        <nav aria-label="On this page">
-          <strong>Navigate</strong>
-          {contentsGroups.map((group) => <section key={group.label}>
-            <b>{group.label}</b>
-            {group.items.map((item) => <a key={item.id} href={`#${item.id}`}>{item.label}</a>)}
-          </section>)}
-        </nav>
+        <PageContentsLinks groups={contentsGroups} showHeading />
         <details className="page-contents-mobile">
           <summary>{mobileLabel} <span>{items.length + secondaryItems.length}</span></summary>
-          <nav aria-label="On this page">
-            {contentsGroups.map((group) => <section key={group.label}>
-              <b>{group.label}</b>
-              {group.items.map((item) => <a key={item.id} href={`#${item.id}`}>{item.label}</a>)}
-            </section>)}
-          </nav>
+          <PageContentsLinks groups={contentsGroups} />
         </details>
       </aside>
     );

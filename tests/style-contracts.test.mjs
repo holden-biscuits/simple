@@ -36,6 +36,8 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.page-contents a\s*\{[^}]*flex:\s*0 0 auto;[^}]*scroll-snap-align:\s*start;/);
   assert.match(css, /\.page-with-contents\s*\{[^}]*grid-template-columns:\s*210px minmax\(0, 1fr\)/);
   assert.match(css, /\.page-contents-side\s*\{[^}]*position:\s*sticky;[^}]*top:\s*96px;/);
+  assert.match(css, /\.page-contents-side a\[aria-current="location"\]\s*\{[^}]*font-weight:\s*700/);
+  assert.match(css, /\.page-contents-side a\[aria-current="location"\]::before\s*\{[^}]*background:\s*var\(--signal\)/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.page-with-contents\s*\{\s*display:\s*block;/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.page-contents-mobile\s*\{\s*display:\s*block;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.search-quick\s*>\s*div\s*\{[^}]*flex-wrap:\s*nowrap;[^}]*overflow-x:\s*auto;[^}]*scroll-snap-type:\s*inline proximity;/);
