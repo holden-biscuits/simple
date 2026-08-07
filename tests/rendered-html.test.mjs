@@ -12,6 +12,15 @@ async function render(path = "/") {
   );
 }
 
+function assertSectionOrder(html, ids) {
+  let previous = -1;
+  for (const id of ids) {
+    const position = html.indexOf(`id="${id}"`);
+    assert.ok(position > previous, `${id} should render after the previous event section`);
+    previous = position;
+  }
+}
+
 test("server-renders the event directory", async () => {
   const response = await render();
   assert.equal(response.status, 200);
@@ -629,6 +638,18 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const genesys = await render("/events/genesys-xperience");
   assert.equal(genesys.status, 200);
   const genesysHtml = await genesys.text();
+  assertSectionOrder(genesysHtml, [
+    "event-tldr",
+    "event-role-routes",
+    "event-priorities",
+    "event-considerations",
+    "event-crew",
+    "workstream-travel",
+    "event-changes",
+    "event-writebacks",
+    "event-update-route",
+  ]);
+  assert.match(genesysHtml, /href="#event-priorities"[\s\S]*href="#event-considerations"[\s\S]*href="#event-crew"[\s\S]*href="#event-changes"/);
   assert.match(genesysHtml, /No guaranteed meetings/);
   assert.match(genesysHtml, /Open event project(?:<!-- -->)? ↗/);
   assert.match(genesysHtml, new RegExp(`href="${"https://www.notion.so/3aa6fee642fe81c88a89de617863507c"}"[^>]*>Open event project(?:<!-- -->)? ↗`));
@@ -644,6 +665,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
   assert.match(genesysHtml, /id="event-changes"/);
   assert.match(genesysHtml, /What changed for this event\./);
+  assert.match(genesysHtml, /Applied changes are already reflected on this page\./);
+  assert.doesNotMatch(genesysHtml, /already in this review build/);
   assert.match(genesysHtml, /Confirmed the Genesys Xperience roster/);
   assert.match(genesysHtml, /Updated the Genesys sponsor-email deadline/);
   assert.match(genesysHtml, /Genesys guaranteed meetings already match/);
@@ -712,6 +735,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const contact = await render("/events/contact-io");
   assert.equal(contact.status, 200);
   const contactHtml = await contact.text();
+  assertSectionOrder(contactHtml, ["event-tldr", "event-no-plan", "event-writebacks", "event-update-route"]);
   assert.match(contactHtml, /Not attending/);
   assert.match(contactHtml, /Onsite footprint<\/span><strong>None/);
   assert.match(contactHtml, /Swag \/ materials<\/span><strong>None/);

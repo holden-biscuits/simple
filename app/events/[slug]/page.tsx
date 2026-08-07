@@ -110,21 +110,21 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       <PageContents items={isNotAttending ? [
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
+        { id: "event-no-plan", label: "Event status" },
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
         { id: "event-update-route", label: "Update this event" },
-        { id: "event-no-plan", label: "Event status" },
       ] : [
         { id: "event-tldr", label: "TL;DR" },
         ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
+        ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
+        ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
+        { id: "event-crew", label: "Crew" },
+        ...activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] })),
+        ...(showResults ? [{ id: "event-results", label: "Results" }] : []),
         ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
         ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
         { id: "event-update-route", label: "Update this event" },
-        ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
-        { id: "event-crew", label: "Crew" },
-        ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
-        ...activeWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] })),
-        ...(showResults ? [{ id: "event-results", label: "Results" }] : []),
       ]} />
 
       <section className="event-tldr shell" id="event-tldr">
@@ -159,64 +159,6 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         </Link>)}</div>
         <BackToTop />
       </section> : null}
-
-      {recentChanges.length ? <section className="event-recent-changes shell" id="event-changes">
-        <div className="section-intro"><p className="eyebrow">Recent source activity</p><h2>What changed for this event.</h2><p>These are event-specific receipts from the source scan. Applied changes are already in this review build; unresolved differences still need a decision.</p></div>
-        <div className="event-change-grid">{recentChanges.map((change) => {
-          const firstLabel = change.state === "Applied" ? "Before" : change.state === "Needs review" ? "Controlling source" : "Checked";
-          const secondLabel = change.state === "Applied" ? "Now" : change.state === "Needs review" ? "Conflicting source" : "Result";
-          return <article className={`event-change event-change-${change.state.toLowerCase().replace(" ", "-")}`} key={change.id}>
-            <header><span>{change.state}</span><time>{change.checkedAt}</time></header>
-            <small>{change.field}</small><h3>{change.title}</h3>
-            <dl><div><dt>{firstLabel}</dt><dd>{change.before}</dd></div><div><dt>{secondLabel}</dt><dd>{change.after}</dd></div></dl>
-            <footer>{change.sourceUrl ? <a href={change.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a> : <span>{change.source}</span>}<Link href="/sources#change-log">Open full log →</Link></footer>
-          </article>;
-        })}</div>
-        <BackToTop />
-      </section> : null}
-
-      {eventWritebacks.length ? <section className="event-writebacks shell" id="event-writebacks">
-        <div className="section-intro"><p className="eyebrow">Source write-backs</p><h2>Source records still need to catch up.</h2><p>The fieldbook and an owning system do not match yet. Each card shows the exact upstream correction and its approval state; update the destination, then remove the item after a fresh source check.</p></div>
-        <div className="writeback-grid event-writeback-grid">
-          {eventWritebacks.map((item) => <article key={`${item.system}-${item.scope}`}>
-            <header><span>{item.system}</span><b className={`writeback-state writeback-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</b></header>
-            <h3>{item.scope}</h3>
-            <dl className="writeback-diff"><div><dt>Current source</dt><dd>{item.current}</dd></div><div><dt>Proposed source</dt><dd>{item.proposed}</dd></div></dl>
-            <p className="writeback-evidence">Evidence · {item.evidence}{item.evidenceUrl ? <Link href={item.evidenceUrl}> View →</Link> : null}</p>
-            <a className="writeback-destination" href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noreferrer" : undefined}>Open {item.system} ↗</a>
-          </article>)}
-        </div>
-        <BackToTop />
-      </section> : null}
-
-      <section className="event-update-route shell" id="event-update-route">
-        <details>
-          <summary><span><small>Something changed?</small><strong>Update the source that owns it.</strong></span><b>Open routes <i aria-hidden="true">+</i></b></summary>
-          <div className="event-update-route-body">
-            <aside>
-              <span>Canonical Event key</span>
-              <code>{event.slug}</code>
-              <p>Use this exact value across the tracker, Notion and HubSpot. Until the CRM properties exist, include <code>[evt:{event.slug}]</code> in an event-sourced activity.</p>
-            </aside>
-            <div className="event-update-route-grid">
-              {updateRoutes.map((route) => <a href={route.url} target="_blank" rel="noreferrer" key={route.id}><span>{route.scope}</span><strong>{route.system}</strong><p>{route.detail}</p><b>{route.action} ↗</b></a>)}
-            </div>
-          </div>
-          <div className="event-linkage-strip" aria-label="Event system coverage">
-            {systemLinkage.map((item) => <div key={item.system}><span>{item.system}</span><strong className={`linkage-state linkage-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</strong><p>{item.detail}</p></div>)}
-          </div>
-          {!isNotAttending ? <div className="event-measurement-checkpoint">
-            <header><span>Measurement checkpoint</span><strong>{measurementCheckpoint.state}</strong></header>
-            <div>
-              <p><span>Primary objective</span><b>{measurementCheckpoint.objective}</b></p>
-              <p><span>Fully loaded cost</span><b>{measurementCheckpoint.cost}</b></p>
-              <p><span>CRM association</span><b>{measurementCheckpoint.crm}</b></p>
-              <p><span>Meeting evidence</span><b>{measurementCheckpoint.meetings}</b></p>
-            </div>
-            <footer><p>{measurementCheckpoint.nextAction}</p><Link href="/marketing#measurement">Open measurement contract →</Link></footer>
-          </div> : null}
-        </details>
-      </section>
 
       {showPriorities ? (
         <section className="event-priorities shell" id="event-priorities">
@@ -304,6 +246,65 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <BackToTop />
       </section> : null}
       </>}
+
+      {recentChanges.length ? <section className="event-recent-changes shell" id="event-changes">
+        <div className="section-intro"><p className="eyebrow">Recent source activity</p><h2>What changed for this event.</h2><p>Applied changes are already reflected on this page. Unresolved differences still need a decision.</p></div>
+        <div className="event-change-grid">{recentChanges.map((change) => {
+          const firstLabel = change.state === "Applied" ? "Before" : change.state === "Needs review" ? "Controlling source" : "Checked";
+          const secondLabel = change.state === "Applied" ? "Now" : change.state === "Needs review" ? "Conflicting source" : "Result";
+          return <article className={`event-change event-change-${change.state.toLowerCase().replace(" ", "-")}`} key={change.id}>
+            <header><span>{change.state}</span><time>{change.checkedAt}</time></header>
+            <small>{change.field}</small><h3>{change.title}</h3>
+            <dl><div><dt>{firstLabel}</dt><dd>{change.before}</dd></div><div><dt>{secondLabel}</dt><dd>{change.after}</dd></div></dl>
+            <footer>{change.sourceUrl ? <a href={change.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a> : <span>{change.source}</span>}<Link href="/sources#change-log">Open full log →</Link></footer>
+          </article>;
+        })}</div>
+        <BackToTop />
+      </section> : null}
+
+      {eventWritebacks.length ? <section className="event-writebacks shell" id="event-writebacks">
+        <div className="section-intro"><p className="eyebrow">Source write-backs</p><h2>Source records still need to catch up.</h2><p>The fieldbook and an owning system do not match yet. Each card shows the exact upstream correction and its approval state; update the destination, then remove the item after a fresh source check.</p></div>
+        <div className="writeback-grid event-writeback-grid">
+          {eventWritebacks.map((item) => <article key={`${item.system}-${item.scope}`}>
+            <header><span>{item.system}</span><b className={`writeback-state writeback-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</b></header>
+            <h3>{item.scope}</h3>
+            <dl className="writeback-diff"><div><dt>Current source</dt><dd>{item.current}</dd></div><div><dt>Proposed source</dt><dd>{item.proposed}</dd></div></dl>
+            <p className="writeback-evidence">Evidence · {item.evidence}{item.evidenceUrl ? <Link href={item.evidenceUrl}> View →</Link> : null}</p>
+            <a className="writeback-destination" href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noreferrer" : undefined}>Open {item.system} ↗</a>
+          </article>)}
+        </div>
+        <BackToTop />
+      </section> : null}
+
+      <section className="event-update-route shell" id="event-update-route">
+        <details>
+          <summary><span><small>Something changed?</small><strong>Update the source that owns it.</strong></span><b>Open routes <i aria-hidden="true">+</i></b></summary>
+          <div className="event-update-route-body">
+            <aside>
+              <span>Canonical Event key</span>
+              <code>{event.slug}</code>
+              <p>Use this exact value across the tracker, Notion and HubSpot. Until the CRM properties exist, include <code>[evt:{event.slug}]</code> in an event-sourced activity.</p>
+            </aside>
+            <div className="event-update-route-grid">
+              {updateRoutes.map((route) => <a href={route.url} target="_blank" rel="noreferrer" key={route.id}><span>{route.scope}</span><strong>{route.system}</strong><p>{route.detail}</p><b>{route.action} ↗</b></a>)}
+            </div>
+          </div>
+          <div className="event-linkage-strip" aria-label="Event system coverage">
+            {systemLinkage.map((item) => <div key={item.system}><span>{item.system}</span><strong className={`linkage-state linkage-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</strong><p>{item.detail}</p></div>)}
+          </div>
+          {!isNotAttending ? <div className="event-measurement-checkpoint">
+            <header><span>Measurement checkpoint</span><strong>{measurementCheckpoint.state}</strong></header>
+            <div>
+              <p><span>Primary objective</span><b>{measurementCheckpoint.objective}</b></p>
+              <p><span>Fully loaded cost</span><b>{measurementCheckpoint.cost}</b></p>
+              <p><span>CRM association</span><b>{measurementCheckpoint.crm}</b></p>
+              <p><span>Meeting evidence</span><b>{measurementCheckpoint.meetings}</b></p>
+            </div>
+            <footer><p>{measurementCheckpoint.nextAction}</p><Link href="/marketing#measurement">Open measurement contract →</Link></footer>
+          </div> : null}
+        </details>
+      </section>
+
       <Footer />
     </main>
   );
