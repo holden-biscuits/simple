@@ -33,7 +33,7 @@ test("leadership outcomes preserve CRM limits", () => {
     marketingEvents: 0,
     pipelineClaimSupported: false,
   });
-  assert.deepEqual(brief.writebacks, { ready: 7, decisions: 1, setup: 9 });
+  assert.deepEqual(brief.writebacks, { ready: 9, decisions: 1, setup: 9 });
 });
 
 test("leadership change digest separates applied facts from unresolved claims", () => {

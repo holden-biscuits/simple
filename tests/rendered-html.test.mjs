@@ -258,7 +258,9 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /zero sources push directly into production/);
   assert.match(html, /Make the joins trustworthy before adding more dashboards\./);
   assert.match(html, /Put the Event key in every owning system/);
-  assert.match(html, /Customer Connect Expo execution page[\s\S]*The event project is blank/);
+  assert.match(html, /Customer Connect priorities · organizer call[\s\S]*Notion project blank/);
+  assert.match(html, /Customer Connect task plan · organizer call[\s\S]*Notion project blank/);
+  assert.match(html, /Customer Connect sponsorship workstream[\s\S]*Notion project blank/);
   assert.match(html, /First end-to-end source baseline/);
   assert.match(html, /all explicitly attributed to CCW Vegas/);
   assert.match(html, /Approval queue/);
@@ -282,7 +284,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /invitation-only format/);
   assert.match(html, /Customer Connect Expo focused scan/);
   assert.match(html, /25%-complete company profile/);
-  assert.match(html, /Customer Connect Expo execution page[\s\S]*Aug 11 onboarding call at 9:30 AM PT/);
+  assert.match(html, /Customer Connect priorities · organizer call[\s\S]*Aug 11 at 9:30 AM PT/);
   assert.match(html, /2027 conference tracker/);
   assert.match(html, /Three confirmed 2027 events were added/);
   assert.match(html, /“Mon Jun 15” workshop label conflicts/);
@@ -803,7 +805,9 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Confirmed/);
   assert.match(customerConnectHtml, /id="event-writebacks"/);
   assert.match(customerConnectHtml, /Customer Connect Expo participation/);
-  assert.match(customerConnectHtml, /Customer Connect Expo execution page/);
+  assert.match(customerConnectHtml, /Customer Connect priorities · organizer call/);
+  assert.match(customerConnectHtml, /Customer Connect task plan · organizer call/);
+  assert.match(customerConnectHtml, /Customer Connect sponsorship workstream/);
   assert.match(customerConnectHtml, /gid=0&amp;range=A18:W18/);
   assert.match(customerConnectHtml, /Onsite footprint<\/span><strong>Booth confirmed/);
   assert.match(customerConnectHtml, /Swag \/ materials<\/span><strong>None/);
