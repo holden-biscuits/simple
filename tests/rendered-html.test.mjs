@@ -41,6 +41,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Conference tracker/);
   assert.match(html, /HubSpot/);
   assert.match(html, /Granola/);
+  assert.match(html, /first run pending/);
+  assert.match(html, /checks above were completed manually/);
   assert.match(html, /Approval queue/);
   assert.match(html, /CCW Exchange Chicago/);
   assert.match(html, /tracker names Taylor and marks Josh available/);
@@ -67,7 +69,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const html = await response.text();
   assert.match(html, /Find the detail, not the page\./);
   assert.match(html, /value="names open"/);
-  assert.match(html, /The URL updates as you search/);
+  assert.match(html, /Results open the exact event brief or marketing workspace you need/);
   assert.match(html, /Useful starting points/);
   assert.match(html, /Staffing · names open/);
   assert.match(html, /Meeting package · count TBD/);
@@ -93,7 +95,17 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /Produce the booth-monitor product video/);
   assert.match(html, /HubSpot form, campaign attribution, and 15-minute demo CTA are already live/);
   assert.match(html, /aria-selected="true"[^>]*id="event-task-tab-genesys-xperience"/);
+  assert.match(html, /id="event-task-tab-genesys-xperience"[^>]*tabindex="0"/);
   assert.doesNotMatch(html, /Confirm the next owner and deadline/);
+});
+
+test("search routes marketing tasks to the selected event workspace", async () => {
+  const response = await render("/search?q=booth-monitor%20product%20video&type=Operations");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Genesys Xperience · Produce the booth-monitor product video/);
+  assert.match(html, /\/marketing\?event=genesys-xperience#event-tasks/);
+  assert.match(html, /Results open the exact event brief or marketing workspace you need/);
 });
 
 test("server-renders field-role CRM rules and the updated guide model", async () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { getEventPhase, getWorkstreams, isEmptyWorkstream, type EventRecord, type MarketingTask } from "../data/events";
 
@@ -56,22 +56,56 @@ function eventTasks(event: EventRecord): MarketingTask[] {
 export function EventMarketingWorkspace({ events, initialSlug }: { events: EventRecord[]; initialSlug?: string }) {
   const firstSlug = events.some((event) => event.slug === initialSlug) ? initialSlug : events[0]?.slug;
   const [selectedSlug, setSelectedSlug] = useState(firstSlug);
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const tablistRef = useRef<HTMLDivElement | null>(null);
   const selected = events.find((event) => event.slug === selectedSlug) ?? events[0];
+
+  useEffect(() => {
+    const container = tablistRef.current;
+    const tab = selectedSlug ? tabRefs.current[selectedSlug] : null;
+    if (!container || !tab) return;
+    const left = tab.offsetLeft - (container.clientWidth - tab.clientWidth) / 2;
+    container.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+  }, [selectedSlug]);
+
   if (!selected) return null;
   const tasks = eventTasks(selected);
   const support = marketingItems(selected);
   const openCount = tasks.filter((task) => task.status !== "Done").length;
 
+  const selectEvent = (slug: string, focus = false) => {
+    setSelectedSlug(slug);
+    const url = new URL(window.location.href);
+    url.searchParams.set("event", slug);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    if (focus) requestAnimationFrame(() => tabRefs.current[slug]?.focus());
+  };
+
+  const handleTabKey = (event: KeyboardEvent<HTMLButtonElement>, slug: string) => {
+    const currentIndex = events.findIndex((item) => item.slug === slug);
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowRight") nextIndex = (currentIndex + 1) % events.length;
+    if (event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + events.length) % events.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = events.length - 1;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    selectEvent(events[nextIndex].slug, true);
+  };
+
   return <div className="event-task-workspace">
-    <div className="event-task-tabs" role="tablist" aria-label="Marketing tasks by event">
+    <div className="event-task-tabs" role="tablist" aria-label="Marketing tasks by event" ref={tablistRef}>
       {events.map((event) => <button
         type="button"
         role="tab"
         aria-selected={event.slug === selected.slug}
         aria-controls="event-task-panel"
         id={`event-task-tab-${event.slug}`}
+        tabIndex={event.slug === selected.slug ? 0 : -1}
+        ref={(element) => { tabRefs.current[event.slug] = element; }}
         key={event.slug}
-        onClick={() => setSelectedSlug(event.slug)}
+        onClick={() => selectEvent(event.slug)}
+        onKeyDown={(keyboardEvent) => handleTabKey(keyboardEvent, event.slug)}
       >
         <span>{event.name}</span><b>{eventTasks(event).filter((task) => task.status !== "Done").length}</b>
       </button>)}

@@ -38,7 +38,7 @@ export default function SourcesPage() {
           <p>The recurring review is active. Connected means this task can read the source; it does not mean every record is complete or current.</p>
         </div>
         <div className="monitor-summary">
-          <article><span>Automation</span><strong>{monitor.automationState}</strong></article>
+          <article><span>Automation</span><strong>{monitor.automationState}{monitor.lastSuccessfulScan ? "" : " · first run pending"}</strong></article>
           <article><span>Cadence</span><strong>{monitor.cadence}</strong></article>
           <article><span>Delivery</span><strong>{monitor.delivery}</strong></article>
           <article><span>Last connection check</span><strong>{monitor.connectionCheckedLabel}</strong></article>
@@ -58,7 +58,7 @@ export default function SourcesPage() {
             <p>{check.result}</p>
           </article>)}
         </div>
-        <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Last completed scan: ${monitor.lastSuccessfulScan}` : "No completed scan receipt has been written yet. The next successful run will add one here."}</p>
+        <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Last completed scan: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed manually while building the fieldbook; the first successful recurring run will add its own receipt here."}</p>
         <BackToTop />
       </section>
 

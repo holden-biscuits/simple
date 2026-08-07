@@ -10,6 +10,7 @@ export type SearchRecord = {
   href: string;
   keywords: string;
   details?: string[];
+  hiddenUntilQuery?: boolean;
 };
 
 export const searchTypes = ["All", "Event", "Guide", "Role", "Operations"] as const;
@@ -19,6 +20,7 @@ const quickSearches = [
   { label: "Genesys", query: "Genesys" },
   { label: "Staffing gaps", query: "names open" },
   { label: "Meeting count TBD", query: "meeting package count TBD" },
+  { label: "Open event tasks", query: "open event task" },
   { label: "HubSpot", query: "HubSpot" },
   { label: "Booth etiquette", query: "Booth etiquette" },
 ] as const;
@@ -56,6 +58,7 @@ export function SiteSearch({ records, initialQuery = "", initialType = "All" }: 
   const [type, setType] = useState<SearchType>(initialType);
   const normalized = query.trim().toLowerCase();
   const matchingRecords = useMemo(() => records
+    .filter((record) => normalized || !record.hiddenUntilQuery)
     .map((record, index) => ({ record, index, score: searchScore(record, normalized) }))
     .filter(({ score }) => score >= 0)
     .sort((a, b) => b.score - a.score || a.index - b.index), [normalized, records]);

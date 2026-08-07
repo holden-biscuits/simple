@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
 import { SiteSearch, type SearchRecord, type SearchType } from "../components/site-search";
-import { events, getWorkstreams, workstreamLabels } from "../data/events";
+import { events, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -41,7 +41,6 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     event.notes ? `Plan note · ${event.notes}` : "",
     event.credentials ? `Credentials · ${event.credentials}` : "",
     ...(event.specialConsiderations ?? []).map((item) => `Rule · ${item}`),
-    ...(event.priorityActions ?? []).map((item) => `Open item · ${item}`),
     ...(event.relatedLinks ?? []).map((link) => `Link · ${link.label}`),
     ...(event.outcomeNotes ?? []).map((item) => `Result · ${item}`),
     ...Object.entries(getWorkstreams(event)).flatMap(([key, items]) => items.map((item) => `${workstreamLabels[key as keyof typeof workstreamLabels]} · ${item}`)),
@@ -65,10 +64,25 @@ const eventRecords: SearchRecord[] = events.map((event) => {
   };
 });
 
+const marketingTaskRecords: SearchRecord[] = events.flatMap((event) => {
+  const tasks: MarketingTask[] = event.marketingTasks?.length
+    ? event.marketingTasks
+    : (event.priorityActions ?? []).map((title) => ({ title, status: "Open" as const }));
+  return tasks.map((task) => ({
+    type: "Operations" as const,
+    title: `${event.name} · ${task.title}`,
+    href: `/marketing?event=${event.slug}#event-tasks`,
+    description: [task.status, task.owner ? `Owner: ${task.owner}` : null, task.due ? `Due: ${task.due}` : null].filter(Boolean).join(" · "),
+    keywords: [event.name, event.location, event.dates, task.title, task.status, task.owner, task.due, task.note, "event task marketing open item"].filter(Boolean).join(" "),
+    details: [task.note ? `Task note · ${task.note}` : "", task.owner ? `Owner · ${task.owner}` : "", task.due ? `Due · ${task.due}` : ""].filter(Boolean),
+    hiddenUntilQuery: true,
+  }));
+});
+
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string | string[]; type?: string | string[] }> }) {
   const params = await searchParams;
   const initialQuery = typeof params.q === "string" ? params.q : "";
   const requestedType = typeof params.type === "string" ? params.type : "All";
   const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, and role instructions. The URL updates as you search, so you can share the exact result set.</p></section><SiteSearch records={[...referenceRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Fieldbook search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, and role instructions. Results open the exact event brief or marketing workspace you need.</p></section><SiteSearch records={[...referenceRecords, ...marketingTaskRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }
