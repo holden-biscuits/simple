@@ -2,16 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Fragment } from "react";
 import { siteStatus } from "../data/site-status";
-
-const links = [
-  ["Events", "/#events"],
-  ["Guides", "/guides"],
-  ["AEs", "/ae"],
-  ["SDRs", "/sdr"],
-  ["Marketing", "/marketing"],
-  ["Leaders", "/leadership"],
-  ["Search", "/search"],
-];
+import { SiteNav } from "./site-nav";
 
 export function SiteHeader() {
   return (
@@ -26,11 +17,7 @@ export function SiteHeader() {
           <span>Last updated</span>
           <strong>{siteStatus.contentUpdatedLabel}</strong>
         </time>
-        <nav aria-label="Primary navigation">
-          {links.map(([label, href]) => (
-            <Link key={href} href={href} className={label === "Events" ? "events-nav-link" : label === "Search" ? "search-nav-link" : undefined}>{label}</Link>
-          ))}
-        </nav>
+        <SiteNav />
       </header>
       <span id="main-content" className="content-start" tabIndex={-1} />
     </Fragment>

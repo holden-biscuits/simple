@@ -45,8 +45,10 @@ button, input, select { font: inherit; }
 .site-header nav { display: flex; align-items: center; gap: 20px; font: 700 13px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .site-header nav a { min-height: 44px; display: inline-flex; align-items: center; padding: 10px 5px; border-bottom: 2px solid transparent; }
 .site-header nav a:hover, .site-header nav a:focus-visible { border-color: var(--signal); }
-.site-header nav .events-nav-link { padding-inline: 16px; background: var(--signal); color: white; border: 0; border-radius: 2px; }
-.site-header nav .events-nav-link:hover, .site-header nav .events-nav-link:focus-visible { background: var(--signal-dark); outline: 3px solid color-mix(in srgb, var(--signal) 28%, transparent); }
+.site-header nav a.is-current { padding-inline: 11px; color: white; background: var(--green); border-color: var(--green); border-radius: 2px; }
+.site-header nav a.is-current:hover, .site-header nav a.is-current:focus-visible { color: white; background: var(--signal-dark); border-color: var(--signal-dark); }
+.site-header nav .events-nav-link.is-current { padding-inline: 16px; background: var(--signal); border-color: var(--signal); }
+.site-header nav .events-nav-link.is-current:hover, .site-header nav .events-nav-link.is-current:focus-visible { background: var(--signal-dark); outline: 3px solid color-mix(in srgb, var(--signal) 28%, transparent); }
 .site-header nav .search-nav-link::before { content: '⌕'; margin-right: 6px; color: var(--signal-dark); font-size: 18px; line-height: 1; }
 .page-contents { min-height: 70px; padding-block: 13px; display: flex; align-items: center; gap: 28px; position: sticky; top: 82px; z-index: 15; background: color-mix(in srgb, var(--paper) 96%, transparent); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
 .page-contents > strong { flex: 0 0 auto; color: var(--signal-dark); font: 800 11px var(--font-geist-mono), monospace; letter-spacing: .08em; text-transform: uppercase; }

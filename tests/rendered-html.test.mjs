@@ -96,6 +96,26 @@ test("server-renders the event directory", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|Building your site/i);
 });
 
+test("primary navigation identifies the current destination", async () => {
+  const cases = [
+    ["/", "/#events", "Events"],
+    ["/events/genesys-xperience", "/#events", "Events"],
+    ["/guides", "/guides", "Guides"],
+    ["/ae", "/ae", "AEs"],
+    ["/sdr", "/sdr", "SDRs"],
+    ["/marketing", "/marketing", "Marketing"],
+    ["/leadership", "/leadership", "Leaders"],
+    ["/search", "/search", "Search"],
+  ];
+  for (const [route, href, label] of cases) {
+    const response = await render(route);
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    assert.equal((html.match(/aria-current="page"/g) ?? []).length, 1, `${route} should expose one current destination`);
+    assert.match(html, new RegExp(`<a(?=[^>]*href="${href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}")(?=[^>]*aria-current="page")[^>]*>${label}</a>`));
+  }
+});
+
 test("server-renders the source monitor and approval queue", async () => {
   const response = await render("/sources");
   assert.equal(response.status, 200);
@@ -264,7 +284,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Foundation work[\s\S]*8/);
   assert.match(html, /Pipeline value is not supported\./);
   assert.match(html, /All 29 attributed deals currently have a \$0 amount/);
-  assert.match(html, /href="\/leadership">Leaders<\/a>/);
+  assert.match(html, /<a[^>]*href="\/leadership"[^>]*>Leaders<\/a>/);
 });
 
 test("server-renders searchable event outcomes and filter counts", async () => {
