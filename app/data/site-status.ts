@@ -27,7 +27,7 @@ export const siteStatus = {
   contentUpdatedLabel: "Aug 06 · 2026",
   sourceMonitor: {
     automationState: "Active",
-    cadence: "Monday, Wednesday and Friday · 9:00 AM PT",
+    cadence: "Daily · 9:00 AM PT",
     delivery: "Roundup posted in this Codex task",
     connectionCheckedAt: "2026-08-06",
     connectionCheckedLabel: "Aug 06 · 2026",

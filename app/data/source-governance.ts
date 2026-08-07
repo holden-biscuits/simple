@@ -14,6 +14,14 @@ export type FieldOwner = {
   automation: string;
 };
 
+export type DataStream = {
+  system: string;
+  state: "Scheduled read" | "Signal only" | "Indirect" | "Published view";
+  refresh: string;
+  feeds: string;
+  writeback: string;
+};
+
 export type WritebackItem = {
   system: string;
   scope: string;
@@ -63,6 +71,71 @@ export const sourceFlow: SourceFlowStep[] = [
     detail: "Approved corrections return to the system that owns the field. Slack, Gmail and the fieldbook itself are not allowed to become shadow databases.",
   },
 ];
+
+export const dataStreams: DataStream[] = [
+  {
+    system: "Google Sheets · conference tracker",
+    state: "Scheduled read",
+    refresh: "Checked by the daily scan when an event’s freshness window is due.",
+    feeds: "Event roster, dates, participation, speaking, sponsorship, meeting package and topline staffing.",
+    writeback: "Yes—an approved row-level correction can be written to the tracker first, then reflected here.",
+  },
+  {
+    system: "Notion · event projects",
+    state: "Scheduled read",
+    refresh: "Checked for active events when their freshness window is due.",
+    feeds: "Workstreams, tasks, owners, due dates, execution decisions and event links.",
+    writeback: "Yes—approved task and project corrections belong on the event project, not only in the fieldbook.",
+  },
+  {
+    system: "Google Drive · Events Drive",
+    state: "Scheduled read",
+    refresh: "Folder and file receipts are checked with the relevant active event.",
+    feeds: "Contracts, creative, attendee files and post-event artifacts; confidential content stays restricted.",
+    writeback: "Yes for approved folder and file organization. Inferred content is never used to rewrite a source file.",
+  },
+  {
+    system: "HubSpot",
+    state: "Scheduled read",
+    refresh: "Event-attributed records are checked with active-event and post-event reviews.",
+    feeds: "Meetings, demos, deals, pipeline and revenue only when a canonical event association is present.",
+    writeback: "Yes, with an exact approved record set. The Event key properties and Marketing Event objects still need setup.",
+  },
+  {
+    system: "Gmail and Slack",
+    state: "Signal only",
+    refresh: "New matching correspondence is scanned for changes, deadlines and decisions.",
+    feeds: "Potential organizer changes and internal decisions that must be reconciled with an owning system.",
+    writeback: "No factual writeback. Confirmed signals are promoted into Sheets, Notion, Drive or HubSpot.",
+  },
+  {
+    system: "Organizer sites",
+    state: "Signal only",
+    refresh: "Checked when dates, venues, agendas or participation packages need external verification.",
+    feeds: "Public dates, venues, agendas and sponsor information.",
+    writeback: "No. Verified facts are recorded in the tracker or the relevant Notion project.",
+  },
+  {
+    system: "Granola and Monaco",
+    state: "Indirect",
+    refresh: "Only available when notes or exports arrive in a connected source.",
+    feeds: "Conversation context and legacy event reporting; neither is a dependable direct feed today.",
+    writeback: "No direct route. Useful facts should move to Notion or HubSpot after review.",
+  },
+  {
+    system: "Event Basecamp",
+    state: "Published view",
+    refresh: "A reconciled review build is created after supported changes; production waits for approval.",
+    feeds: "One readable view for event teams, GTM operators and leadership.",
+    writeback: "Never the system of record. Site corrections are routed upstream to the field owner.",
+  },
+];
+
+export const audienceViews = [
+  { audience: "Event team", view: "One event brief", detail: "The TL;DR, roster, rules, logistics, meetings, open work and links needed before and during the event." },
+  { audience: "GTM operators", view: "Program control", detail: "Readiness, owner and deadline gaps, source freshness, conflicts and the exact write-back queue." },
+  { audience: "Leadership", view: "Portfolio and outcomes", detail: "Upcoming commitments, material risks and CRM-proven meetings, pipeline and revenue—without inferred or decorative counts." },
+] as const;
 
 export const fieldOwners: FieldOwner[] = [
   {

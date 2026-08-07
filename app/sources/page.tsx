@@ -6,8 +6,9 @@ import { BackToTop, PageContents } from "../components/page-contents";
 import { events, sourceLinks } from "../data/events";
 import { getEventCatalogHealth } from "../data/event-contract";
 import { crmAttributionAudit } from "../data/crm-attribution";
-import { fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
+import { audienceViews, dataStreams, fieldOwners, sourceFlow, writebackQueue } from "../data/source-governance";
 import { siteStatus } from "../data/site-status";
+import { freshnessPolicies } from "../data/source-freshness";
 
 export const metadata: Metadata = {
   title: "About this site’s sources · Event Basecamp",
@@ -33,7 +34,9 @@ export default function SourcesPage() {
       </section>
       <PageContents items={[
         { id: "source-monitor", label: "Source monitor" },
+        { id: "freshness-policy", label: "Freshness policy" },
         { id: "data-flow", label: "How data moves" },
+        { id: "data-streams", label: "Feeds and write-back" },
         { id: "field-ownership", label: "Where to update" },
         { id: "crm-attribution", label: "CRM attribution" },
         { id: "writeback-queue", label: "Write-back queue" },
@@ -74,6 +77,10 @@ export default function SourcesPage() {
           </article>)}
         </div>
         <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Last completed scan: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed manually while building the fieldbook; the first successful recurring run will add its own receipt here."}</p>
+        <div className="freshness-policy" id="freshness-policy">
+          <div className="section-intro"><p className="eyebrow">Freshness policy</p><h2>The closer the event, the tighter the check.</h2><p>A connected source is not automatically current. Event cards and pages compare the last verified date with these operating windows.</p></div>
+          <div className="freshness-policy-grid">{freshnessPolicies.map((policy) => <article key={policy.window}><span>{policy.window}</span><strong>{policy.cadence}</strong><p>{policy.detail}</p></article>)}</div>
+        </div>
         <BackToTop />
       </section>
 
@@ -100,6 +107,31 @@ export default function SourcesPage() {
           </div>
           <BackToTop />
         </div>
+      </section>
+
+      <section className="shell data-streams" id="data-streams">
+        <div className="section-intro">
+          <p className="eyebrow">Feeds and write-back</p>
+          <h2>Connected does not mean live.</h2>
+          <p>No source pushes directly into the production site today. The fieldbook is a versioned read model: a scheduled job reads available sources, reconciles them, saves a review build and waits for deployment approval.</p>
+        </div>
+        <div className="source-route-table-wrap">
+          <table className="source-route-table data-stream-table">
+            <thead><tr><th>System</th><th>Connection</th><th>Refresh</th><th>What it feeds</th><th>Can we write back?</th></tr></thead>
+            <tbody>{dataStreams.map((stream) => <tr key={stream.system}>
+              <th scope="row">{stream.system}</th>
+              <td data-label="Connection"><span className={`stream-state stream-state-${stream.state.toLowerCase().replaceAll(" ", "-")}`}>{stream.state}</span></td>
+              <td data-label="Refresh">{stream.refresh}</td>
+              <td data-label="What it feeds">{stream.feeds}</td>
+              <td data-label="Can we write back?">{stream.writeback}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        <div className="audience-views" aria-label="Fieldbook views by audience">
+          {audienceViews.map((item) => <article key={item.audience}><span>{item.audience}</span><h3>{item.view}</h3><p>{item.detail}</p></article>)}
+        </div>
+        <p className="source-governance-note"><strong>Best next infrastructure move:</strong> add the existing Event key to the tracker, Notion projects and HubSpot records. That turns fragile name-and-date matching into a dependable join and makes safe rollups and approved write-back possible.</p>
+        <BackToTop />
       </section>
 
       <section className="shell field-ownership" id="field-ownership">

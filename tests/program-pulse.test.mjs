@@ -15,8 +15,17 @@ test("the program pulse prioritizes the active route and real data gaps", () => 
   assert.equal(pulse.next60Days.length, 5);
   assert.equal(pulse.rosterGaps.length, 13);
   assert.equal(pulse.sourceConflicts.length, 3);
+  assert.equal(pulse.sourceChecksDue.length, 0);
   assert.equal(pulse.readiness.structuredPlans, 2);
   assert.equal(pulse.readiness.planSetupNeeded, 12);
+});
+
+test("the program pulse raises source checks when a verification window expires", () => {
+  const pulse = getProgramPulse(events, "2026-08-14");
+  const genesys = events.find((event) => event.slug === "genesys-xperience");
+  assert.ok(genesys);
+  assert.ok(pulse.sourceChecksDue.some((event) => event.slug === "genesys-xperience"));
+  assert.ok(getEventAttention(genesys, "2026-08-14").includes("Source check due"));
 });
 
 test("attention labels distinguish source, staffing, execution and meeting-count gaps", () => {

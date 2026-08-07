@@ -1,6 +1,7 @@
-import { getEventPhase, type EventRecord } from "./events.ts";
+import { getEventPhase, getProgramDate, type EventRecord } from "./events.ts";
 import { getSpeakingStatus, getSponsorshipStatus, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
 import { getEventReadiness, getProgramReadiness, type ReadinessAction } from "./program-readiness.ts";
+import { getSourceFreshness } from "./source-freshness.ts";
 
 export type ProgramAttentionItem = {
   eventKey: string;
@@ -17,7 +18,7 @@ function addDays(isoDate: string, days: number) {
   return date.toISOString().slice(0, 10);
 }
 
-export function getEventAttention(event: EventRecord) {
+export function getEventAttention(event: EventRecord, programDate = getProgramDate()) {
   const issues: string[] = [];
   const named = event.team.length;
   const planned = event.attendeeCount;
@@ -30,6 +31,7 @@ export function getEventAttention(event: EventRecord) {
   if (getSpeakingStatus(event) === "Under review") issues.push("Speaking under review");
   if (getSponsorshipStatus(event) === "Under review") issues.push("Sponsor package under review");
   if (hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event)) issues.push("Guaranteed-meeting count open");
+  if (["due", "overdue"].includes(getSourceFreshness(event, programDate).state)) issues.push("Source check due");
 
   return issues;
 }
@@ -40,7 +42,7 @@ export function getProgramPulse(catalog: EventRecord[], programDate: string) {
     .sort((a, b) => a.dateSort.localeCompare(b.dateSort) || a.name.localeCompare(b.name));
   const through60Days = addDays(programDate, 60);
   const attention: ProgramAttentionItem[] = active
-    .map((event) => ({ eventKey: event.slug, name: event.name, dates: event.dates, dateSort: event.dateSort, issues: getEventAttention(event), nextAction: getEventReadiness(event, programDate).nextAction }))
+    .map((event) => ({ eventKey: event.slug, name: event.name, dates: event.dates, dateSort: event.dateSort, issues: getEventAttention(event, programDate), nextAction: getEventReadiness(event, programDate).nextAction }))
     .filter((event) => event.issues.length > 0);
 
   return {
@@ -50,6 +52,7 @@ export function getProgramPulse(catalog: EventRecord[], programDate: string) {
     next60Days: active.filter((event) => event.dateSort > programDate && event.dateSort <= through60Days),
     rosterGaps: active.filter((event) => event.attendeeCount !== null && event.team.length < event.attendeeCount),
     sourceConflicts: active.filter((event) => event.notes.toLowerCase().startsWith("source conflict:")),
+    sourceChecksDue: active.filter((event) => ["due", "overdue"].includes(getSourceFreshness(event, programDate).state)),
     readiness: getProgramReadiness(active, programDate),
     attention,
   };

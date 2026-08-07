@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContents } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getEventPhase, getEventVerification, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
+import { getSourceFreshness } from "../../data/source-freshness";
 
 export const dynamic = "force-dynamic";
 
@@ -24,8 +25,10 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const event = eventBySlug(slug);
   if (!event) notFound();
   const eventDirectoryHref = getSafeEventReturnHref(returnTo);
-  const eventPhase = getEventPhase(event);
+  const programDate = getProgramDate();
+  const eventPhase = getEventPhase(event, programDate);
   const verification = getEventVerification(event);
+  const freshness = getSourceFreshness(event, programDate);
   const isNotAttending = event.status === "No";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
@@ -103,8 +106,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           {isSourceConflict ? note.replace(/^Source conflict:\s*/i, "") : note}
         </p> : null}
         <div className="event-verification">
-          <div><span>Source check</span><strong>Checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt}</time></strong></div>
-          <p>{verification.sources.join(" · ")}</p>
+          <div><span>Source check</span><strong className={`freshness-state freshness-state-${freshness.state}`}>{freshness.label} · checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt}</time></strong></div>
+          <p>{verification.sources.join(" · ")}<small>{freshness.nextCheckLabel ? `Next check ${freshness.nextCheckLabel}. ` : ""}{freshness.reason}</small></p>
           <Link href="/sources">See source record →</Link>
         </div>
       </section>

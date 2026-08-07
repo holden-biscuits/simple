@@ -74,7 +74,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Current and next stops/);
   assert.match(html, /Earliest plans with open inputs/);
   assert.match(html, /Open source and approval record/);
-  assert.match(html, /Checked <time dateTime="2026-08-06">Aug 6<\/time>/);
+  assert.match(html, /Current(?:<!-- -->)? · <time dateTime="2026-08-06">Aug 6<\/time>/);
+  assert.match(html, /Source checks due[\s\S]*0/);
   assert.match(html, /Conference tracker \+ 4/);
   assert.match(html, /CCW Orlando[\s\S]*2(?:<!-- -->)? Attending/);
   assert.match(html, /Guaranteed Meetings · Count TBD/);
@@ -87,6 +88,15 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Source monitor/);
+  assert.match(html, /The closer the event, the tighter the check\./);
+  assert.match(html, /Connected does not mean live\./);
+  assert.match(html, /Google Sheets · conference tracker/);
+  assert.match(html, /Can we write back\?/);
+  assert.match(html, /One event brief/);
+  assert.match(html, /Portfolio and outcomes/);
+  assert.match(html, /Happening now[\s\S]*Daily/);
+  assert.match(html, /Starts within 14 days[\s\S]*Every 3 days/);
+  assert.match(html, /More than 60 days away[\s\S]*Monthly/);
   assert.match(html, /A scheduled snapshot, not a live database\./);
   assert.match(html, /The missing join:/);
   assert.match(html, /Sheets, Notion and HubSpot do not yet share it/);
@@ -122,7 +132,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Added the 2027 event program/);
   assert.match(html, /26 events · 2026 only/);
   assert.match(html, /29 events · 2026–2027/);
-  assert.match(html, /Monday, Wednesday and Friday/);
+  assert.match(html, /Daily · 9:00 AM PT/);
   assert.match(html, /Do not let stale sources undo these\./);
   assert.match(html, /Contact\.io[\s\S]*Not attending/);
   assert.match(html, /Genesys Xperience[\s\S]*Guaranteed meetings[\s\S]*None/);
@@ -312,7 +322,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.equal(genesys.status, 200);
   const genesysHtml = await genesys.text();
   assert.match(genesysHtml, /No guaranteed meetings/);
-  assert.match(genesysHtml, /Checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
+  assert.match(genesysHtml, /Current(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
+  assert.match(genesysHtml, /Next check Aug 13/);
   assert.match(genesysHtml, /Direct update · Notion · Gmail · HubSpot · Restricted Genesys brief/);
   assert.match(genesysHtml, /href="\/sources">See source record/);
   assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
@@ -361,8 +372,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   const trackerBaselineEvent = await render("/events/ccw-orlando");
   assert.equal(trackerBaselineEvent.status, 200);
   const trackerBaselineHtml = await trackerBaselineEvent.text();
-  assert.match(trackerBaselineHtml, /Checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
-  assert.match(trackerBaselineHtml, /<p>Conference tracker<\/p>/);
+  assert.match(trackerBaselineHtml, /Archived(?:<!-- -->)? · checked <time dateTime="2026-08-06">Aug 6, 2026<\/time>/);
+  assert.match(trackerBaselineHtml, /<p>Conference tracker<small>/);
 
   const customerConnect = await render("/events/customer-connect-expo");
   assert.equal(customerConnect.status, 200);

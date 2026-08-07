@@ -6,9 +6,11 @@ import { getEventPhase, getEventVerification, type EventPhase, type EventRecord 
 import { attendanceFilters, filterEventDirectory, matchesAttendance, matchesProgramYear, type AttendanceFilter } from "../data/event-filters";
 import { getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "../data/event-signals";
 import { getEventDetailHref, getEventDirectoryHref, hasActiveDirectoryState, type EventDirectoryState } from "../data/directory-state";
+import { getSourceFreshness } from "../data/source-freshness";
 
-function EventCard({ event, directoryState }: { event: EventRecord; directoryState: EventDirectoryState }) {
+function EventCard({ event, directoryState, programDate }: { event: EventRecord; directoryState: EventDirectoryState; programDate: string }) {
   const verification = getEventVerification(event);
+  const freshness = getSourceFreshness(event, programDate);
   const signal = event.status === "No" ? "Not attending" : event.status;
   const inactive = event.status === "No";
   const staffing = getStaffingSignal(event);
@@ -28,7 +30,7 @@ function EventCard({ event, directoryState }: { event: EventRecord; directorySta
         <span>{staffing.card}</span>
       </div>
       <div className="event-card-freshness">
-        <span>Checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt.replace(/,\s\d{4}$/, "")}</time></span>
+        <span className={`freshness-state freshness-state-${freshness.state}`}>{freshness.label} · <time dateTime={verification.checkedAtISO}>{verification.checkedAt.replace(/,\s\d{4}$/, "")}</time></span>
         <span>{verification.sources.length === 1 ? verification.sources[0] : `${verification.sources[0]} + ${verification.sources.length - 1}`}</span>
       </div>
     </Link>
@@ -127,7 +129,7 @@ export function EventDirectory({ events, programDate, initialState }: { events: 
               <div><p className="eyebrow">{group.kicker}</p><h2>{group.label}</h2></div>
               <span>{matches.length.toString().padStart(2, "0")}</span>
             </div>
-            <div className="event-grid">{matches.map((event) => <EventCard key={event.slug} event={event} directoryState={directoryState} />)}</div>
+            <div className="event-grid">{matches.map((event) => <EventCard key={event.slug} event={event} directoryState={directoryState} programDate={programDate} />)}</div>
           </section>
         );
       })}
