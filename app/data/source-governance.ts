@@ -626,6 +626,17 @@ export const writebackQueue: WritebackItem[] = [
   },
   {
     system: "Notion",
+    scope: "IQPC CX Retail CRM logging route",
+    eventSlug: "iqpc-cx-retail-atlanta",
+    current: "The event checklist directs the team to log meetings and demos in Monaco",
+    proposed: "Replace Monaco with HubSpot and require the account, contact, conversation context, owner and next step for every booked meeting or demo",
+    evidence: "Live Notion checklist + Holden’s protected HubSpot recording rule · Aug 7",
+    evidenceUrl: "/events/iqpc-cx-retail-atlanta#workstream-followup",
+    state: "Ready for approval",
+    url: "https://www.notion.so/3aa6fee642fe81b2b1b5c2e93added0f",
+  },
+  {
+    system: "Notion",
     scope: "Customer Connect priorities · organizer call",
     eventSlug: "customer-connect-expo",
     current: "Notion project blank",

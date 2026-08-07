@@ -8,7 +8,7 @@ test("leadership brief derives the active portfolio from governed event data", (
   const brief = getLeadershipBrief(events, "2026-08-06");
   assert.equal(brief.portfolio.length, 14);
   assert.equal(brief.pulse.next60Days.length, 5);
-  assert.equal(brief.pulse.readiness.structuredPlans, 3);
+  assert.equal(brief.pulse.readiness.structuredPlans, 4);
   assert.equal(brief.pulse.rosterGaps.length, 12);
   assert.equal(brief.pulse.sourceConflicts.length, 2);
   assert.equal(brief.pulse.sourceChecksDue.length, 0);
@@ -43,12 +43,12 @@ test("leadership outcomes preserve CRM limits", () => {
     marketingEvents: 29,
     pipelineClaimSupported: false,
   });
-  assert.deepEqual(brief.writebacks, { ready: 20, decisions: 2, setup: 10 });
+  assert.deepEqual(brief.writebacks, { ready: 21, decisions: 2, setup: 10 });
 });
 
 test("leadership change digest separates applied facts from unresolved claims", () => {
   const digest = getLeadershipChangeDigest(events, siteStatus.sourceMonitor.changeLog);
-  assert.equal(digest.applied.length, 13);
+  assert.equal(digest.applied.length, 14);
   assert.equal(digest.needsReview.length, 3);
   assert.equal(digest.applied.find((change) => change.id === "genesys-roster-confirmed")?.href, "/events/genesys-xperience#event-changes");
   assert.equal(digest.applied.find((change) => change.id === "genesys-wish-line-route-confirmed")?.href, "/events/genesys-xperience#event-changes");
@@ -59,6 +59,7 @@ test("leadership change digest separates applied facts from unresolved claims", 
   assert.equal(digest.applied.find((change) => change.id === "customer-connect-onboarding-signal")?.eventName, "Customer Connect Expo");
   assert.equal(digest.applied.find((change) => change.id === "ccw-vegas-meeting-tracker-confirmed")?.eventName, "CCW Vegas");
   assert.equal(digest.applied.find((change) => change.id === "travel-hospitality-task-checklist")?.eventName, "IQPC CX Travel & Hospitality");
+  assert.equal(digest.applied.find((change) => change.id === "retail-task-checklist")?.eventName, "IQPC CX Retail");
   assert.equal(digest.applied.some((change) => change.state === "No change"), false);
   assert.equal(digest.needsReview.some((change) => change.state === "No change"), false);
 });

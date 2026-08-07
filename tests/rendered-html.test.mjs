@@ -66,7 +66,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Needs attention/);
   assert.match(html, /Source issue<\/span><b>2<\/b>/);
   assert.match(html, /Roster open<\/span><b>12<\/b>/);
-  assert.match(html, /Plan setup<\/span><b>10<\/b>/);
+  assert.match(html, /Plan setup<\/span><b>9<\/b>/);
   assert.match(html, /Genesys Xperience/);
   assert.match(html, /CCW Orlando 2027/);
   assert.match(html, /CCW UK Executive Exchange 2027/);
@@ -94,8 +94,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /starting within 60 days/);
   assert.match(html, /rosters incomplete/);
   assert.match(html, /source conflicts/);
-  assert.match(html, /Tracked task lists[\s\S]*3(?:<!-- -->)? \/ (?:<!-- -->)?13/);
-  assert.match(html, /Checklist setup needed[\s\S]*10/);
+  assert.match(html, /Tracked task lists[\s\S]*4(?:<!-- -->)? \/ (?:<!-- -->)?13/);
+  assert.match(html, /Checklist setup needed[\s\S]*9/);
   assert.match(html, /Due or overdue now[\s\S]*1/);
   assert.match(html, /Next action/);
   assert.match(html, /Owner · Holden \+ AP/);
@@ -258,7 +258,7 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Active event audience segments[\s\S]*0 active-event segments are automatically maintained/);
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
-  assert.match(html, /<span>Applied<\/span><strong>13<\/strong>/);
+  assert.match(html, /<span>Applied<\/span><strong>14<\/strong>/);
   assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
   assert.match(html, /<span>No change<\/span><strong>5<\/strong>/);
   assert.match(html, /Accepted Gabby Pring’s Customer Connect answers/);
@@ -342,7 +342,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /2(?:<!-- -->)? \/ (?:<!-- -->)?13/);
   assert.match(html, /Planning gaps open/);
   assert.match(html, /What changed—and what still needs a decision\./);
-  assert.match(html, /13<\/strong><span>Applied updates/);
+  assert.match(html, /14<\/strong><span>Applied updates/);
   assert.match(html, /3<\/strong><span>Needs review/);
   assert.match(html, /Customer Connect Expo[\s\S]*Accepted Gabby Pring’s Customer Connect answers/);
   assert.match(html, /Genesys Xperience[\s\S]*Confirmed the Genesys Xperience roster/);
@@ -358,7 +358,7 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /9(?:<!-- -->)? active event workspaces are linked/);
   assert.match(html, /Leadership gets decisions, not data-entry work\./);
   assert.match(html, /Needs judgment[\s\S]*2/);
-  assert.match(html, /Ready to approve<\/span><strong>20/);
+  assert.match(html, /Ready to approve<\/span><strong>21/);
   assert.match(html, /Foundation work<\/span><strong>10/);
   assert.match(html, /Source-based opportunities[\s\S]*22/);
   assert.match(html, /Exact CCW opportunities[\s\S]*21/);
@@ -736,6 +736,14 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(travelHospitalityHtml, /Confirm speaker and finalize title\/abstract with IQPC/);
   assert.match(travelHospitalityHtml, /Log booked meetings and demos in HubSpot with the required context/);
   assert.match(travelHospitalityHtml, /Owner: Open · Due: Open/);
+
+  const retail = await render("/marketing?event=iqpc-cx-retail-atlanta");
+  assert.equal(retail.status, 200);
+  const retailHtml = await retail.text();
+  assert.match(retailHtml, /13 owners · 12 dates open/);
+  assert.match(retailHtml, /Confirm the plenary speaker/);
+  assert.match(retailHtml, /retail seasonality wedge/);
+  assert.match(retailHtml, /Log booked meetings and demos in HubSpot with the required context/);
 });
 
 test("search routes marketing tasks to the selected event workspace", async () => {

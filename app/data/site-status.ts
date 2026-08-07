@@ -66,6 +66,18 @@ export const siteStatus = {
     ] as SourceOverride[],
     changeLog: [
       {
+        id: "retail-task-checklist",
+        state: "Applied" as SourceChangeState,
+        checkedAt: "Aug 07 · 2026",
+        title: "Promoted the IQPC CX Retail checklist",
+        field: "Event execution tasks",
+        before: "4 high-level priorities · no searchable task list",
+        after: "13 tracked tasks · 13 owners open · 12 exact deadlines open",
+        source: "Notion task review · protected HubSpot recording rule",
+        sourceUrl: "https://app.notion.com/p/3aa6fee642fe81b2b1b5c2e93added0f",
+        eventSlug: "iqpc-cx-retail-atlanta",
+      },
+      {
         id: "travel-hospitality-task-checklist",
         state: "Applied" as SourceChangeState,
         checkedAt: "Aug 07 · 2026",
@@ -308,6 +320,13 @@ export const siteStatus = {
       {
         system: "Notion · direct CRM rule",
         checkedAt: "Aug 07 · 2026",
+        scope: "Task review · IQPC CX Retail execution checklist",
+        result: "The Notion project contains 13 unchecked execution items but no named owners and only one relative follow-up deadline. The review batch passed the complete audit gate and promoted those items into a searchable checklist without inventing ownership. The stale Monaco logging instruction was normalized to Holden’s protected HubSpot rule. No Notion write or production deployment was made.",
+        state: "Current",
+      },
+      {
+        system: "Notion · direct CRM rule",
+        checkedAt: "Aug 07 · 2026",
         scope: "Task review · IQPC CX Travel/Hospitality execution checklist",
         result: "The Notion project contains 15 unchecked execution items but no named owners and only one relative follow-up deadline. The review batch passed the complete audit gate and promoted those items into a searchable checklist without inventing ownership. The stale Monaco logging instruction was normalized to Holden’s protected HubSpot rule. No Notion write or production deployment was made.",
         state: "Current",
@@ -451,7 +470,7 @@ export const siteStatus = {
     ] as SourceCheck[],
     sources: [
       { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "Not due · no due or overdue events · Aug 7" },
-      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "CX Travel/Hospitality task review · 15 tasks · owner/date gaps preserved · Aug 7" },
+      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "CX Travel/Hospitality + CX Retail task reviews · 28 tasks · owner/date gaps preserved · Aug 7" },
       { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "Not due · Aug 7" },
       { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "2 near-term searches · no match · Aug 7" },
       { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "Customer Connect change detected · Aug 7" },

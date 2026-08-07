@@ -23,6 +23,10 @@ test("current and upcoming event routes reflect the actual activation", () => {
   assert.equal(travel[2].title, "Finish assigning the tracked task list.");
   assert.match(travel[2].detail, /15 open tasks need an owner; 14 need dated deadlines/);
 
+  const retail = getEventRoleRoutes(event("iqpc-cx-retail-atlanta"), "upcoming");
+  assert.equal(retail[2].title, "Finish assigning the tracked task list.");
+  assert.match(retail[2].detail, /13 open tasks need an owner; 12 need dated deadlines/);
+
   const orlando = getEventRoleRoutes(event("ccw-orlando-2027"), "upcoming");
   assert.match(orlando[0].detail, /6 Executive Leadership Exchange meetings/);
 

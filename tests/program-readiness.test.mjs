@@ -6,10 +6,21 @@ import { getEventReadiness, getProgramReadiness } from "../app/data/program-read
 test("program readiness distinguishes structured task plans from unassigned priorities", () => {
   const readiness = getProgramReadiness(events, "2026-08-06");
   assert.equal(readiness.activeEvents, 14);
-  assert.equal(readiness.structuredPlans, 3);
-  assert.equal(readiness.planSetupNeeded, 11);
-  assert.equal(readiness.openStructuredTasks, 28);
+  assert.equal(readiness.structuredPlans, 4);
+  assert.equal(readiness.planSetupNeeded, 10);
+  assert.equal(readiness.openStructuredTasks, 41);
   assert.equal(readiness.dueNow.length, 1);
+});
+
+test("the retail checklist keeps assignment gaps explicit and preserves its only sourced deadline", () => {
+  const retail = events.find((event) => event.slug === "iqpc-cx-retail-atlanta");
+  assert.ok(retail);
+  const readiness = getEventReadiness(retail, "2026-08-07");
+  assert.equal(readiness.planState, "structured");
+  assert.equal(readiness.totalTasks, 13);
+  assert.equal(readiness.ownerGaps, 13);
+  assert.equal(readiness.dateGaps, 12);
+  assert.equal(readiness.nextAction?.title, "Confirm the plenary speaker");
 });
 
 test("a source-backed checklist is searchable without pretending its owner and date gaps are closed", () => {
