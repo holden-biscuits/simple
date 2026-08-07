@@ -168,13 +168,18 @@ export default function SourcesPage() {
           </article>)}
         </div>
         <p className="source-governance-note"><strong>Current posture:</strong> four systems are read on a schedule, two are signal-only checks, zero sources push directly into production, and zero upstream changes are written automatically.</p>
-        <div className="source-checks" aria-label="Latest source checks">
-          <p className="eyebrow">Latest source checks</p>
-          {monitor.latestChecks.map((check) => <article key={`${check.system}-${check.checkedAt}-${check.scope}`}>
-            <div><strong>{check.system}</strong><span>{check.checkedAt}</span></div>
+        <div className="source-checks" aria-label="Source check history">
+          <p className="eyebrow">Source check history</p>
+          <h3>Current truth first. Older receipts stay for the audit trail.</h3>
+          <p className="source-checks-intro">Use records marked <strong>Current</strong> for today’s operating state. Historical records show what a source said when it was checked. Superseded records remain visible, but the replacement evidence is named directly.</p>
+          {monitor.latestChecks.map((check) => {
+            const state = check.state ?? "Historical";
+            return <article className={`source-check source-check-${state.toLowerCase()}`} key={`${check.system}-${check.checkedAt}-${check.scope}`}>
+            <div><strong>{check.system}</strong><span><em>{state}</em>{check.checkedAt}</span></div>
             <p>{check.scope}</p>
             <p>{check.result}</p>
-          </article>)}
+            {check.supersededBy ? <small><strong>Replaced by:</strong> {check.supersededBy}.</small> : null}
+          </article>;})}
         </div>
         <p className="scan-receipt">{monitor.lastSuccessfulScan ? `Latest evidence refresh · ${monitor.lastSuccessfulScanMode}: ${monitor.lastSuccessfulScan}` : "The recurring scan is scheduled, but it has not completed its first run. The checks above were completed while building Event Basecamp; the first successful recurring run will add its own labeled receipt here."}</p>
         <div className="latest-scan-receipt" id="latest-scan">

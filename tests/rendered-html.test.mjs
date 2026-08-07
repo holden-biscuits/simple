@@ -305,7 +305,10 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /CCW Exchange Chicago final roster[\s\S]*Taylor was the sole attendee/);
   assert.match(html, /IQPC CX Travel &amp; Hospitality/);
   assert.match(html, /calendar record lists Zach \+ Taylor/);
-  assert.match(html, /Latest source checks/);
+  assert.match(html, /Source check history/);
+  assert.match(html, /Current truth first\. Older receipts stay for the audit trail\./);
+  assert.match(html, /Use records marked[\s\S]*Current[\s\S]*for today’s operating state/);
+  assert.match(html, /Superseded[\s\S]*The Aug 7 full Marketing Event audit that found 29 keyed records/);
   assert.match(html, /Scheduled source scan · 9:00 AM PT/);
   assert.match(html, /CCW Exchange Chicago closeout check · 6:42 AM PT/);
   assert.match(html, /29 of 29 exact event-sourced deals/);
@@ -532,6 +535,13 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(liveFeedSearchHtml, /HubSpot · Marketing Events and CRM outcomes data stream/);
   assert.match(liveFeedSearchHtml, /Feeds · The Marketing Event is the CRM event spine/);
   assert.match(liveFeedSearchHtml, /Data stream/);
+
+  const marketingEventRoleSearch = await render("/search?q=HubSpot%20Marketing%20Events%20current%20truth&type=Operations");
+  assert.equal(marketingEventRoleSearch.status, 200);
+  const marketingEventRoleSearchHtml = await marketingEventRoleSearch.text();
+  assert.match(marketingEventRoleSearchHtml, /HubSpot Marketing Events · current role/);
+  assert.match(marketingEventRoleSearchHtml, /29 keyed Marketing Event records provide CRM event identity/);
+  assert.match(marketingEventRoleSearchHtml, /href="\/sources#marketing-event-role"/);
 
   const fieldOwnerSearch = await render("/search?q=where%20do%20I%20update%20meeting%20outcomes&type=Operations");
   assert.equal(fieldOwnerSearch.status, 200);

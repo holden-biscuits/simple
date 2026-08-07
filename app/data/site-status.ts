@@ -21,6 +21,15 @@ export type SourceOverride = {
   value: string;
   confirmedAt: string;
 };
+export type SourceCheckState = "Current" | "Historical" | "Superseded";
+export type SourceCheck = {
+  system: string;
+  checkedAt: string;
+  scope: string;
+  result: string;
+  state?: SourceCheckState;
+  supersededBy?: string;
+};
 
 export const siteStatus = {
   contentUpdatedAt: "2026-08-07",
@@ -289,54 +298,66 @@ export const siteStatus = {
         checkedAt: "Aug 07 · 2026",
         scope: "Task review · CRM event object, schema and key coverage",
         result: "All 29 Marketing Event records and their available properties were reviewed. Every record carries the canonical Event key, and read/write access is available. The site now treats this object as the CRM event spine for participant state and associations while keeping tracker, Notion, meeting and deal field ownership intact. Campaign, participant, meeting and deal associations remain a separate audit. No HubSpot write or production deployment was made.",
+        state: "Current",
       },
       {
         system: "Google Sheets · direct confirmation",
         checkedAt: "Aug 07 · 2026",
         scope: "Task review · CCW Vegas Meetings 6/22 - 8/12 tab",
         result: "The user-provided meetings tracker contains 54 records: 12 Booth, 20 Demo, and 22 Intro. One Intro is canceled, 53 status cells are blank, all 54 outcome cells are blank, and five rows are marked as additional touchpoints rather than net new. Event Basecamp now shows the recorded activity without treating blank outcomes as completed meetings, pipeline, or revenue. No Sheet, HubSpot, or production write was made.",
+        state: "Current",
       },
       {
         system: "Direct confirmation · Gmail",
         checkedAt: "Aug 07 · 2026",
         scope: "Task review · Customer Connect organizer answers",
         result: "Holden directed Event Basecamp to treat Gabby Pring’s organizer responses as fact. The brief now records the rescheduled Aug 11 at 9:30 AM PT onboarding call, completed portal registration, and insurance as recommended rather than mandatory. The Customer Connect Notion project remains blank, so three exact upstream write-backs remain queued. No Gmail, Notion, or production write was made.",
+        state: "Current",
       },
       {
         system: "HubSpot",
         checkedAt: "Aug 07 · 2026",
         scope: "Task review · controlled Deal Source and Deal Source Detail reconciliation",
         result: "Both controlled-field populations were read independently with full 30-record coverage. Their intersection contains 29 exact CCW records. One Event — Trade Show record carries a field-event detail, and one CCW-detail record carries an Outbound — SDR source; both remain outside exact attribution pending RevOps QA. The source-based operating view contains 22 qualifying opportunities, while the exact CCW view contains 21. All 22 source-based opportunities lack a positive amount, so pipeline and closed-won revenue remain $0. No HubSpot write or production deployment was made.",
+        state: "Current",
       },
       {
         system: "Direct update",
         checkedAt: "Aug 07 · 2026",
         scope: "Task review · CCW Exchange Chicago closeout",
         result: "Holden relayed Taylor’s closeout: the event concluded, overall feedback was negative, two follow-up meetings are scheduled, and cookies are planned for six named accounts. No opportunity is confirmed. The possible contractual amount of 10 remains unverified. A complete task-review batch routed completion and rating to the tracker, follow-up outcomes to HubSpot, and the cookie plan to Notion. No external write or production deployment was made.",
+        state: "Current",
       },
       {
         system: "Direct update",
         checkedAt: "Aug 07 · 2026",
         scope: "Task review · Genesys Wish Line activation · 9:50 AM PT",
         result: "Holden confirmed the condensed taxi route, quarter-mile geofence, estimated loop timing, bonus spot-based placement, conditional airport inventory, live driver tracking, Michael as the single contact and AP confirmation pending. The event brief and marketing workspace were updated; four exact Notion write-back candidates now preserve field ownership. No external write or production deployment was made.",
+        state: "Current",
       },
       {
         system: "Scheduled heartbeat · Notion · Gmail · Slack · HubSpot",
         checkedAt: "Aug 07 · 2026",
         scope: "Scheduled source scan · 9:00 AM PT",
         result: "No event was due or overdue under the freshness policy. A targeted signal check found that the Customer Connect organizer call moved to Aug 11 at 9:30 AM PT and that insurance is recommended, not mandatory. Because Gmail is a signal source and the Notion project is still blank, all three affected execution fields are in review rather than published. The Genesys roster and the CCW Vegas CRM snapshot remain unchanged. The controlled HubSpot union is still 29 exact CCW deals plus one excluded detail-only mismatch.",
+        state: "Superseded",
+        supersededBy: "Holden’s later direction to accept Gabby Pring’s organizer answers as fact",
       },
       {
         system: "Google Sheets · Notion · Gmail · Slack · HubSpot",
         checkedAt: "Aug 07 · 2026",
         scope: "CCW Exchange Chicago closeout check · 6:42 AM PT",
         result: "The tracker row still confirms Taylor, marks Josh and Carter available, and records two attendees; the Notion project still says Taylor + Josh and contains the same pre-event checklist. Gmail and Slack contain no new Chicago event message after Aug 6. Exact-name HubSpot searches return zero deals and zero meeting records. The staffing conflict remains open and no event outcome is published.",
+        state: "Superseded",
+        supersededBy: "Holden’s later confirmation that Taylor was the sole attendee and the event was complete",
       },
       {
         system: "HubSpot",
         checkedAt: "Aug 07 · 2026",
         scope: "CCW Vegas attribution refresh · 12:32 AM PT",
         result: "All 29 deals with the strict Event / Conference + CCW Vegas follow-up pair were re-read; the stage mix remains 5 meeting booked, 6 qualification, 8 demo completed, 2 validation, 4 closed lost and 4 disqualified. All 29 still have $0 amount and none is Closed Won. One additional deal carries the CCW detail with an Outbound — SDR source and stays excluded pending RevOps review. The full Jun 22–26 meeting window still contains eight records: four possible event meetings with no completed outcome and four unrelated calls. Marketing Events remains empty.",
+        state: "Superseded",
+        supersededBy: "The Aug 7 full Marketing Event audit that found 29 keyed records",
       },
       {
         system: "Google Sheets · Notion · Gmail · Slack · Google Drive · HubSpot",
@@ -385,6 +406,8 @@ export const siteStatus = {
         checkedAt: "Aug 06 · 2026",
         scope: "Genesys Xperience field brief and CRM check",
         result: "Holden confirmed the Wish Line media buy is approved, the phone number is purchased, the landing page and HubSpot campaign are live, the talk title/abstract/speaker are locked, and the final deck is due Aug 10. Organizer mail extended the contracted pre-event email deadline to Aug 13. The confidential referral agreement is represented only as operational guardrails and a link to the restricted brief; its commercial terms are not published. Exact HubSpot event-source fields contain no Genesys-attributed deal, and no matching meeting- or marketing-event record was found, so the event page does not publish a decorative outcome count.",
+        state: "Superseded",
+        supersededBy: "The Aug 7 full Marketing Event audit; the event still has no exact deal or completed meeting outcome",
       },
       {
         system: "Direct decision",
@@ -397,6 +420,8 @@ export const siteStatus = {
         checkedAt: "Aug 06 · 2026",
         scope: "Deal, meeting and Marketing Event attribution audit",
         result: "29 of 29 exact event-sourced deals still resolve to CCW Vegas. HubSpot has no Marketing Event records. Eight meeting activities fell inside the CCW Vegas date window: four are possible on-site meetings and four are unrelated account calls. The four possible records have no completed outcome, so they remain a QA queue rather than a published meeting count.",
+        state: "Superseded",
+        supersededBy: "The Aug 7 full Marketing Event audit that found 29 keyed records",
       },
       {
         system: "Google Sheets",
@@ -404,7 +429,7 @@ export const siteStatus = {
         scope: "2026 conference tracker · '2026'!A1:W30",
         result: "27 event rows reviewed. Staffing was reconciled for The Lead Summit, CCW Exchange Denver and CCW Exchange Chicago; Shoptalk Fall dates and inactive headcount were corrected. Direct decisions for Contact.io, Customer Connect Expo and ICMI remain in force while the tracker is updated.",
       },
-    ],
+    ] as SourceCheck[],
     sources: [
       { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "Not due · no due or overdue events · Aug 7" },
       { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "Customer Connect + Genesys checked · Aug 7" },
