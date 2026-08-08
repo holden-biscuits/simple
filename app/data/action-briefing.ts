@@ -1,12 +1,14 @@
-import type { EventRecord, MarketingTask } from "./events.ts";
+import { getEventPhase, type EventRecord, type MarketingTask } from "./events.ts";
+import { getCompletedEventOutcomeCoverage } from "./event-signals.ts";
 import { getOpenItemRoute } from "./open-item-routes.ts";
+import { getEventUpdateRoutes } from "./event-update-routes.ts";
 import type { SourceChange } from "./site-status.ts";
 import type { WritebackItem } from "./source-governance.ts";
 
 export type ActionBriefingItem = {
   id: string;
   event: string;
-  label: "Decision" | "Overdue" | "Due today" | "Approval";
+  label: "Decision" | "Closeout" | "Overdue" | "Due today" | "Approval";
   title: string;
   detail: string;
   href: string;
@@ -19,6 +21,7 @@ export type ActionBriefing = {
   items: ActionBriefingItem[];
   counts: {
     decisions: number;
+    closeouts: number;
     dueNow: number;
     approvals: number;
   };
@@ -26,9 +29,10 @@ export type ActionBriefing = {
 
 export const actionBriefingPolicy = {
   maxActions: 3,
+  recentCloseoutDays: 7,
   setupCreatesPing: false,
-  priority: ["Decision", "Due now", "Approval", "Source blocker"] as const,
-  deliverySummary: "At most 3 actions total: decisions first, then due work, exact approvals, and time-sensitive blockers.",
+  priority: ["Decision", "Recent closeout", "Due now", "Approval", "Source blocker"] as const,
+  deliverySummary: "At most 3 actions total: decisions first, then recent closeouts, due work, exact approvals, and time-sensitive blockers.",
 };
 
 type ActionBriefingInput = {
@@ -66,7 +70,7 @@ function writebackAction(item: WritebackItem, events: EventRecord[]): ActionBrie
     detail: item.state === "Decision needed" ? item.proposed : `Approve this exact ${item.system} update: ${item.proposed}`,
     href: item.url,
     destination: item.system,
-    priority: item.state === "Decision needed" ? 0 : 3,
+    priority: item.state === "Decision needed" ? 0 : 4,
   };
 }
 
@@ -97,9 +101,29 @@ function taskAction(event: EventRecord, task: MarketingTask, programDate: string
     detail: `${task.owner ? `Owner: ${task.owner}` : "Owner missing"}${task.due ? ` · ${task.due}` : ""}`,
     href: task.url ?? route.href,
     destination: task.url ? "Task source" : route.system,
-    priority: overdue ? 1 : 2,
+    priority: overdue ? 2 : 3,
     dueSort: task.dueSort,
   };
+}
+
+function closeoutAction(event: EventRecord): ActionBriefingItem {
+  const coverage = getCompletedEventOutcomeCoverage(event);
+  const crmRoute = getEventUpdateRoutes(event).find((route) => route.id === "hubspot");
+  return {
+    id: `closeout:${event.slug}`,
+    event: event.name,
+    label: "Closeout",
+    title: `Complete the ${event.name} closeout`,
+    detail: `${coverage.missing.length} outcome categories are not recorded: ${coverage.missing.join(" · ")}. Missing evidence is not zero.`,
+    href: crmRoute?.url ?? `/events/${event.slug}#event-results`,
+    destination: crmRoute?.system ?? "Event results",
+    priority: 1,
+    dueSort: event.dateEndSort ?? event.dateSort,
+  };
+}
+
+function daysSince(date: string, programDate: string) {
+  return Math.floor((Date.parse(`${programDate}T00:00:00Z`) - Date.parse(`${date}T00:00:00Z`)) / 86_400_000);
 }
 
 export function getActionBriefing({ events, changes, writebacks, programDate, limit }: ActionBriefingInput): ActionBriefing {
@@ -111,10 +135,17 @@ export function getActionBriefing({ events, changes, writebacks, programDate, li
   const dueTasks = events.flatMap((event) => (event.marketingTasks ?? [])
     .filter((task) => task.status !== "Done" && task.dueSort && task.dueSort <= programDate)
     .map((task) => ({ event, task })));
+  const recentCloseouts = events
+    .filter((event) => event.status !== "No" && getEventPhase(event, programDate) === "past")
+    .filter((event) => {
+      const age = daysSince(event.dateEndSort ?? event.dateSort, programDate);
+      return age >= 0 && age <= actionBriefingPolicy.recentCloseoutDays && getCompletedEventOutcomeCoverage(event).state !== "complete";
+    });
 
   const actions = [
     ...decisionWritebacks.map((item) => writebackAction(item, events)),
     ...changeDecisions.map((change) => changeAction(change, events)),
+    ...recentCloseouts.map(closeoutAction),
     ...dueTasks.map(({ event, task }) => taskAction(event, task, programDate)),
     ...approvalWritebacks.map((item) => writebackAction(item, events)),
   ].sort((a, b) => a.priority - b.priority
@@ -127,6 +158,7 @@ export function getActionBriefing({ events, changes, writebacks, programDate, li
     items: typeof limit === "number" ? unique.slice(0, limit) : unique,
     counts: {
       decisions: decisionWritebacks.length + changeDecisions.length,
+      closeouts: recentCloseouts.length,
       dueNow: dueTasks.length,
       approvals: approvalWritebacks.length,
     },

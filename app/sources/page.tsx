@@ -29,7 +29,6 @@ export default function SourcesPage() {
   const programDate = getProgramDate();
   const linkage = getProgramSystemLinkage(events, programDate);
   const audienceSegments = getAudienceSegmentRegistry(events, programDate);
-  const autoUpdates = monitor.changeLog.filter((change) => change.state === "Applied" && change.checkedAt === siteStatus.contentUpdatedLabel);
   const briefing = getActionBriefing({ events, changes: monitor.changeLog, writebacks: writebackQueue, programDate, limit: actionBriefingPolicy.maxActions });
   const changeStates = (["Applied", "Needs review", "No change"] as const).map((state) => ({
     state,
@@ -100,7 +99,7 @@ export default function SourcesPage() {
           <div className="section-intro">
             <p className="eyebrow">Daily action briefing</p>
             <h2>Ping me only when I need to act.</h2>
-            <p>The 9:00 AM source scan now sends a private Slack briefing when a decision, overdue task, exact write-back approval, or time-sensitive source blocker needs your attention. No action means no Slack noise.</p>
+            <p>The 9:00 AM source scan now sends a private Slack briefing when a decision, recent event closeout, overdue task, exact write-back approval, or time-sensitive source blocker needs your attention. No action means no Slack noise.</p>
           </div>
           <div className="briefing-delivery" aria-label="Action briefing delivery rules">
             <article><span>Channel</span><strong>Private Slack DM</strong><p>Email stays off until you choose it as a fallback.</p></article>
@@ -111,7 +110,7 @@ export default function SourcesPage() {
             <article><span>Decisions</span><strong>{briefing.counts.decisions}</strong><p>Conflicts or missing facts that need judgment.</p></article>
             <article><span>Due now</span><strong>{briefing.counts.dueNow}</strong><p>Open structured tasks due today or earlier.</p></article>
             <article><span>Write approvals</span><strong>{briefing.counts.approvals}</strong><p>Exact upstream corrections waiting for approval.</p></article>
-            <article><span>Auto-updated</span><strong>{autoUpdates.length}</strong><p>Accepted facts already included in the current review build.</p></article>
+            <article><span>Recent closeouts</span><strong>{briefing.counts.closeouts}</strong><p>Events ended within seven days that still need outcome evidence.</p></article>
           </div>
           <div className="briefing-actions">
             <header><span>What the next briefing would ask</span><small>Highest-priority {actionBriefingPolicy.maxActions} · full queues stay on this page</small></header>
@@ -125,7 +124,7 @@ export default function SourcesPage() {
               <b>→</b>
             </Link>) : <p className="briefing-clear">Nothing needs your answer right now. The scan will keep checking quietly.</p>}
           </div>
-          <p className="briefing-boundary"><strong>Noise boundary:</strong> setup work stays in the full queue and does not create a DM unless it becomes a time-sensitive blocker. Every action links to the owning record where it can be resolved.</p>
+          <p className="briefing-boundary"><strong>Noise boundary:</strong> setup work and historical closeout gaps stay in the full queue. A closeout can create a DM only during the seven days after an event ends. Every action links to the owning record where it can be resolved.</p>
           <p className="briefing-boundary"><strong>Safety boundary:</strong> the briefing may update a saved review version from strong evidence. It still cannot deploy production or write to Sheets, Notion, HubSpot, Drive, Slack threads, or Gmail without the applicable approval.</p>
           <BackToTop />
         </div>
