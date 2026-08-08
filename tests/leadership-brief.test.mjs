@@ -22,6 +22,7 @@ test("leadership brief derives the active portfolio from governed event data", (
   assert.equal(brief.linkage.activeCrmEvents, 0);
   assert.equal(brief.portfolio[0].eventKey, "ccw-exchange-chicago");
   assert.equal(brief.portfolio.at(-1).eventKey, "ccw-vegas-2027");
+  assert.deepEqual(brief.closeout, { completedEvents: 12, complete: 0, partial: 9, missing: 3, openCategories: 36 });
 });
 
 test("leadership outcomes preserve CRM limits", () => {

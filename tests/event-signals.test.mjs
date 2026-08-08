@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { events } from "../app/data/events.ts";
-import { getCompletedEventSignals, getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../app/data/event-signals.ts";
+import { getCompletedEventOutcomeCoverage, getCompletedEventSignals, getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../app/data/event-signals.ts";
 
 function event(slug) {
   const match = events.find((item) => item.slug === slug);
@@ -51,7 +51,12 @@ test("activation signals distinguish attendance from activation certainty", () =
 });
 
 test("completed event cards replace planning signals with recorded outcomes", () => {
-  assert.deepEqual(getCompletedEventSignals(event("ccw-exchange-chicago")), ["Negative Feedback", "Meetings Not Recorded", "2 Follow-up Meetings"]);
-  assert.deepEqual(getCompletedEventSignals(event("nice-world")), ["Good Rating", "16 Meetings Recorded", "7 Demos Recorded"]);
-  assert.deepEqual(getCompletedEventSignals(event("ccw-vegas")), ["Rating Not Recorded", "54 Meetings Recorded", "20 Demos Recorded"]);
+  assert.deepEqual(getCompletedEventSignals(event("ccw-exchange-chicago")), ["Negative Feedback", "Meetings Not Recorded", "3 Closeout Gaps"]);
+  assert.deepEqual(getCompletedEventSignals(event("nice-world")), ["Good Rating", "16 Meetings Recorded", "2 Closeout Gaps"]);
+  assert.deepEqual(getCompletedEventSignals(event("ccw-vegas")), ["Rating Not Recorded", "54 Meetings Recorded", "2 Closeout Gaps"]);
+  assert.deepEqual(getCompletedEventOutcomeCoverage(event("ccw-exchange-chicago")), {
+    recorded: ["Follow-up meetings booked"],
+    missing: ["Meetings recorded", "Demos recorded", "Closed"],
+    state: "partial",
+  });
 });

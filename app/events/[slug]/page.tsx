@@ -6,7 +6,7 @@ import { Footer } from "../../components/footer";
 import { BackToTop, PageContentsLayout } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
-import { getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
+import { getCompletedEventOutcomeCoverage, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
 import { getSourceFreshness } from "../../data/source-freshness";
 import { getEventSystemLinkage } from "../../data/system-linkage";
@@ -109,7 +109,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     [eventPhase === "past" ? "Demos recorded" : "Demos booked", event.demosBooked.length ? event.demosBooked : event.demoCountLabel ? [`${event.demoCountLabel} rows labeled Demo in the meetings tracker`] : []],
     ["Closed", event.closed],
   ] as const;
-  const missingResultLabels = resultGroups.filter(([, items]) => items.length === 0).map(([label]) => label);
+  const missingResultLabels = getCompletedEventOutcomeCoverage(event).missing;
   const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
   const workstreamStates = new Map(workstreamKeys.map((key) => [key, getEventWorkstreamState(event, key)]));
   const activeWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) === "active");

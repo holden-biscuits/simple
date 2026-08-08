@@ -1,5 +1,5 @@
 import { getEventPhase, type EventRecord } from "./events.ts";
-import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal } from "./event-signals.ts";
+import { getCompletedEventOutcomeCoverage, getSpeakingStatus, getSponsorshipStatus, getStaffingSignal } from "./event-signals.ts";
 import { getProgramPulse } from "./program-pulse.ts";
 import { getEventReadiness } from "./program-readiness.ts";
 import { crmAttributionAudit } from "./crm-attribution.ts";
@@ -61,6 +61,8 @@ export function getLeadershipBrief(catalog: EventRecord[], programDate: string) 
     decisions: writebackQueue.filter((item) => item.state === "Decision needed").length,
     setup: writebackQueue.filter((item) => item.state === "Setup needed").length,
   };
+  const completedEvents = catalog.filter((event) => event.status !== "No" && getEventPhase(event, programDate) === "past");
+  const closeoutStates = completedEvents.map((event) => getCompletedEventOutcomeCoverage(event));
 
   return {
     programDate,
@@ -69,6 +71,13 @@ export function getLeadershipBrief(catalog: EventRecord[], programDate: string) 
     linkage,
     portfolio,
     writebacks,
+    closeout: {
+      completedEvents: completedEvents.length,
+      complete: closeoutStates.filter((item) => item.state === "complete").length,
+      partial: closeoutStates.filter((item) => item.state === "partial").length,
+      missing: closeoutStates.filter((item) => item.state === "missing").length,
+      openCategories: closeoutStates.reduce((total, item) => total + item.missing.length, 0),
+    },
     outcomes: {
       sourceEligibleRecords: eventPipelineSnapshot.sourceEligibleRecords,
       qualifyingOpportunities: eventPipelineSnapshot.opportunities,

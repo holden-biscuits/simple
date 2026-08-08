@@ -77,10 +77,10 @@ test("server-renders the event directory", async () => {
   assert.match(html, /0(?:<!-- -->)? Attending \/ 11(?:<!-- -->)? Passes/);
   assert.match(html, /0(?:<!-- -->)? Attending \/ 9(?:<!-- -->)? Passes/);
   assert.match(html, /Negative Feedback/);
-  assert.match(html, /2(?:<!-- -->)? Follow-up Meetings/);
+  assert.match(html, /3(?:<!-- -->)? Closeout Gaps/);
   assert.match(html, /16(?:<!-- -->)? Meetings Recorded/);
   assert.match(html, /54(?:<!-- -->)? Meetings Recorded/);
-  assert.match(html, /20(?:<!-- -->)? Demos Recorded/);
+  assert.match(html, /2(?:<!-- -->)? Closeout Gaps/);
   assert.match(html, /Speaking TBD/);
   assert.match(html, /Program pulse/);
   assert.match(html, /id="event-lifecycle"/);
@@ -368,6 +368,11 @@ test("server-renders the leadership portfolio without unsupported ROI claims", a
   assert.match(html, /Exact CCW opportunities[\s\S]*21/);
   assert.match(html, /Open pipeline[\s\S]*\$0/);
   assert.match(html, /Closed-won revenue[\s\S]*\$0/);
+  assert.match(html, /Completed events<\/span><strong>13/);
+  assert.match(html, /Partial closeouts<\/span><strong>10/);
+  assert.match(html, /No outcome evidence<\/span><strong>3/);
+  assert.match(html, /39(?:<!-- -->)? outcome categories remain unrecorded/);
+  assert.match(html, /Missing evidence never counts as zero/);
   assert.match(html, /Read the populations correctly\./);
   assert.match(html, /Deal Source search returns (?:<!-- -->)?30(?:<!-- -->)? records and (?:<!-- -->)?22(?:<!-- -->)? qualifying opportunities/);
   assert.match(html, /exact CCW intersection contains (?:<!-- -->)?29(?:<!-- -->)? records and (?:<!-- -->)?21(?:<!-- -->)? qualifying opportunities/);
@@ -401,6 +406,13 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(html, /16 meetings · 7 demos recorded/);
   assert.match(html, /<span>All<\/span><b>\d+<\/b>/);
   assert.match(html, /Holden/);
+
+  const closeoutSearch = await render("/search?q=closeout%20incomplete&type=Event");
+  assert.equal(closeoutSearch.status, 200);
+  const closeoutSearchHtml = await closeoutSearch.text();
+  assert.match(closeoutSearchHtml, /Partial closeout · 3 gaps/);
+  assert.match(closeoutSearchHtml, /Closeout gap · Meetings recorded/);
+  assert.match(closeoutSearchHtml, /Missing evidence is not zero/);
 
   const sourceSearch = await render("/search?q=Restricted%20Genesys%20brief&type=Event");
   assert.equal(sourceSearch.status, 200);

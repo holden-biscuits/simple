@@ -19,8 +19,25 @@ type CompletedEventSource = {
   followupMeetingsBooked?: number;
   demosBooked: string[];
   demoCountLabel?: string;
+  closed: string[];
   crmSnapshot?: { totalDeals: number };
 };
+
+export function getCompletedEventOutcomeCoverage(event: CompletedEventSource) {
+  const categories = [
+    { label: "Meetings recorded", recorded: Boolean(event.meetingsBooked.length || event.meetingCountLabel) },
+    { label: "Follow-up meetings booked", recorded: Boolean(event.followupMeetingsBooked) },
+    { label: "Demos recorded", recorded: Boolean(event.demosBooked.length || event.demoCountLabel) },
+    { label: "Closed", recorded: event.closed.length > 0 },
+  ];
+  const recorded = categories.filter((category) => category.recorded).map((category) => category.label);
+  const missing = categories.filter((category) => !category.recorded).map((category) => category.label);
+  return {
+    recorded,
+    missing,
+    state: missing.length === 0 ? "complete" as const : recorded.length ? "partial" as const : "missing" as const,
+  };
+}
 
 function knownGuaranteedMeetingLabel(event: GuaranteedMeetingSource) {
   const meetings = event.guaranteedMeetings.trim();
@@ -128,6 +145,7 @@ export function getSpeakingOpportunitySignal(event: Pick<ActivationSource, "spea
 }
 
 export function getCompletedEventSignals(event: CompletedEventSource) {
+  const coverage = getCompletedEventOutcomeCoverage(event);
   const rating = event.rating === "None"
     ? "Rating Not Recorded"
     : event.rating.includes("·")
@@ -138,14 +156,8 @@ export function getCompletedEventSignals(event: CompletedEventSource) {
     : event.meetingsBooked.length
       ? `${event.meetingsBooked.length} Meeting${event.meetingsBooked.length === 1 ? "" : "s"} Recorded`
       : "Meetings Not Recorded";
-  const downstream = event.followupMeetingsBooked
-    ? `${event.followupMeetingsBooked} Follow-up Meeting${event.followupMeetingsBooked === 1 ? "" : "s"}`
-    : event.demoCountLabel
-      ? `${event.demoCountLabel} Demos Recorded`
-      : event.demosBooked.length
-      ? `${event.demosBooked.length} Demo${event.demosBooked.length === 1 ? "" : "s"} Recorded`
-      : event.crmSnapshot?.totalDeals
-        ? `${event.crmSnapshot.totalDeals} Attributed Deal${event.crmSnapshot.totalDeals === 1 ? "" : "s"}`
-        : "CRM Outcomes Not Recorded";
-  return [rating, meetings, downstream] as const;
+  const closeout = coverage.missing.length
+    ? `${coverage.missing.length} Closeout Gap${coverage.missing.length === 1 ? "" : "s"}`
+    : "Closeout Complete";
+  return [rating, meetings, closeout] as const;
 }

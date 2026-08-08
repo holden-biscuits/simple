@@ -69,6 +69,7 @@ test("the program pulse keeps its hierarchy on tablet and mobile", () => {
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-role-route-grid\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.briefing-delivery\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.outcome-closeout-empty\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.leadership-closeout-coverage\s*\{\s*grid-template-columns:\s*1fr 1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.briefing-metrics\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.event-key-example\s*\{\s*grid-template-columns:\s*1fr/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.linkage-coverage, \.event-linkage-strip, \.linkage-gap-list\s*\{\s*grid-template-columns:\s*1fr/);

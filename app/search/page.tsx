@@ -3,7 +3,7 @@ import { Footer } from "../components/footer";
 import { SiteHeader } from "../components/site-header";
 import { SiteSearch, type SearchRecord, type SearchType } from "../components/site-search";
 import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
-import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../data/event-signals";
+import { getCompletedEventOutcomeCoverage, getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../data/event-signals";
 import { getBriefIssueAction, getEventBriefReadiness } from "../data/event-brief-readiness";
 import { siteStatus } from "../data/site-status";
 import { getEventRoleRoutes } from "../data/event-role-routes";
@@ -199,6 +199,8 @@ const eventRecords: SearchRecord[] = events.map((event) => {
   const guaranteedCountOpen = hasGuaranteedMeetingPackage(event) && !hasKnownGuaranteedMeetingCount(event);
   const staffing = getStaffingSignal(event);
   const confirmationWorkstreams = getEventWorkstreamsNeedingConfirmation(event);
+  const phase = getEventPhase(event, searchProgramDate);
+  const closeoutCoverage = getCompletedEventOutcomeCoverage(event);
   const outcomeCounts = [
     event.meetingsBooked.length ? `${event.meetingsBooked.length} meeting${event.meetingsBooked.length === 1 ? "" : "s"}` : "",
     event.demosBooked.length ? `${event.demosBooked.length} demo${event.demosBooked.length === 1 ? "" : "s"}` : "",
@@ -257,7 +259,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     status: event.status === "No" ? "Not attending" : event.status,
     title: event.name,
     href: `/events/${event.slug}`,
-    description: `${event.dates} · ${event.location}${event.venue ? ` · ${event.venue}` : ""} · ${event.status === "No" ? "Not attending" : event.status}${outcomeCounts ? ` · ${outcomeCounts} recorded` : ""}`,
+    description: `${event.dates} · ${event.location}${event.venue ? ` · ${event.venue}` : ""} · ${event.status === "No" ? "Not attending" : event.status}${outcomeCounts ? ` · ${outcomeCounts} recorded` : ""}${phase === "past" && event.status !== "No" ? ` · ${closeoutCoverage.missing.length} closeout gap${closeoutCoverage.missing.length === 1 ? "" : "s"}` : ""}`,
     keywords: details.join(" "),
     details,
   };
@@ -310,6 +312,7 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
     ...(event.rating !== "None" ? [`Event rating · ${event.rating}`] : []),
     ...(event.crmSnapshot ? [`HubSpot deals · ${event.crmSnapshot.totalDeals}`, `CRM quality · ${event.crmSnapshot.dataQualityNote}`] : []),
   ];
+  const closeoutCoverage = getCompletedEventOutcomeCoverage(event);
   const sectionRecords: SearchRecord[] = [
     {
       type: "Event",
@@ -365,12 +368,12 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
     sectionRecords.push({
       type: "Event",
       context: "Event section · Results",
-      status: outcomeDetails.length ? "Outcomes recorded" : "Closeout incomplete",
+      status: closeoutCoverage.state === "complete" ? "Closeout complete" : closeoutCoverage.state === "partial" ? `Partial closeout · ${closeoutCoverage.missing.length} gaps` : "Closeout not recorded",
       title: `${event.name} · results`,
       href: `/events/${event.slug}#event-results`,
-      description: outcomeDetails.length ? outcomeDetails.slice(0, 2).join(" · ") : "No outcomes have been recorded yet.",
-      keywords: [event.name, event.location, "what happened results result outcomes outcome closeout meetings demos deals revenue rating", ...outcomeDetails].join(" "),
-      details: outcomeDetails.length ? outcomeDetails : ["Closeout · No outcomes recorded yet"],
+      description: outcomeDetails.length ? `${outcomeDetails.slice(0, 2).join(" · ")} · Missing: ${closeoutCoverage.missing.join(" · ") || "None"}` : "No outcomes have been recorded yet. Missing evidence is not zero.",
+      keywords: [event.name, event.location, "what happened results result outcomes outcome closeout incomplete partial missing not recorded meetings demos deals revenue rating", ...outcomeDetails, ...closeoutCoverage.missing].join(" "),
+      details: [...(outcomeDetails.length ? outcomeDetails : ["Closeout · No outcomes recorded yet"]), ...closeoutCoverage.missing.map((label) => `Closeout gap · ${label}`)],
       hiddenUntilQuery: true,
     });
   }

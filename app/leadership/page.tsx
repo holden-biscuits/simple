@@ -176,6 +176,14 @@ export default function LeadershipPage() {
             <article><span>Open pipeline</span><strong>${brief.outcomes.openPipeline.toLocaleString()}</strong><p>Sum of positive amounts on qualifying open deals.</p></article>
             <article><span>Closed-won revenue</span><strong>${brief.outcomes.closedWonRevenue.toLocaleString()}</strong><p>Recognized only when a qualifying deal is Closed Won.</p></article>
           </div>
+          <div className="leadership-closeout-coverage">
+            <div><span>Completed events</span><strong>{brief.closeout.completedEvents}</strong></div>
+            <div><span>Complete closeouts</span><strong>{brief.closeout.complete}</strong></div>
+            <div><span>Partial closeouts</span><strong>{brief.closeout.partial}</strong></div>
+            <div><span>No outcome evidence</span><strong>{brief.closeout.missing}</strong></div>
+            <p><strong>{brief.closeout.openCategories} outcome categories remain unrecorded.</strong> This measures documentation coverage, not event performance. Missing evidence never counts as zero.</p>
+            <Link href="/search?q=closeout+incomplete">Find incomplete closeouts →</Link>
+          </div>
           <div className="leadership-caveat"><strong>Read the populations correctly.</strong><p>The Deal Source search returns {brief.outcomes.sourceEligibleRecords} records and {brief.outcomes.qualifyingOpportunities} qualifying opportunities. The exact CCW intersection contains {brief.outcomes.exactDeals} records and {brief.outcomes.exactQualifyingOpportunities} qualifying opportunities. {brief.outcomes.pairMismatchCount} records need field QA: {brief.outcomes.sourceOnlyRecords} source-only and {brief.outcomes.detailOnlyRecords} detail-only. All {brief.outcomes.dealsWithoutAmount} source-based opportunities lack a reportable amount, so $0 pipeline and revenue describe CRM completeness—not the business value of the event.</p><Link href="/marketing#event-pipeline">Open the pipeline chart →</Link></div>
           <BackToTop />
         </div>
