@@ -477,6 +477,21 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(targetSearchHtml, /Genesys Xperience · prospecting/);
   assert.match(targetSearchHtml, /href="\/events\/genesys-xperience#event-prospecting"/);
 
+  const eventCrmRouteSearch = await render("/search?q=where%20update%20Genesys%20meetings&type=Operations");
+  assert.equal(eventCrmRouteSearch.status, 200);
+  const eventCrmRouteHtml = await eventCrmRouteSearch.text();
+  assert.match(eventCrmRouteHtml, /Genesys Xperience · Meetings · demos · pipeline/);
+  assert.match(eventCrmRouteHtml, /Event update route/);
+  assert.match(eventCrmRouteHtml, /record\/0-54\/827998353134/);
+  assert.match(eventCrmRouteHtml, /target="_blank"/);
+
+  const readinessRouteSearch = await render("/search?q=Travel%20Hospitality%20assign%202%20remaining%20passes&type=Operations");
+  assert.equal(readinessRouteSearch.status, 200);
+  const readinessRouteHtml = await readinessRouteSearch.text();
+  assert.match(readinessRouteHtml, /IQPC CX Travel &amp; Hospitality · Assign 2 remaining passes/);
+  assert.match(readinessRouteHtml, /Open event input/);
+  assert.match(readinessRouteHtml, /gid=0&amp;range=A17:W17/);
+
   const travelSearch = await render("/search?q=Genesys%20travel&type=Event");
   assert.equal(travelSearch.status, 200);
   const travelSearchHtml = await travelSearch.text();

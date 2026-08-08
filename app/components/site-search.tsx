@@ -154,8 +154,11 @@ export function SiteSearch({ records, initialQuery = "", initialType = "All" }: 
       <div className="search-results">
         {results.map((record) => {
           const detail = matchDetail(record, normalized);
-          return <Link href={record.href} key={`${record.href}-${record.title}`}>
-            <div className="search-result-meta"><span>{record.type}</span>{record.context ? <span>{record.context}</span> : null}{record.status ? <span>{record.status}</span> : null}</div><h2>{record.title}</h2><p>{record.description}</p>{detail ? <p className="search-match"><strong>Matched detail</strong>{detail}</p> : null}<b aria-hidden="true">↗</b>
+          const content = <><div className="search-result-meta"><span>{record.type}</span>{record.context ? <span>{record.context}</span> : null}{record.status ? <span>{record.status}</span> : null}</div><h2>{record.title}</h2><p>{record.description}</p>{detail ? <p className="search-match"><strong>Matched detail</strong>{detail}</p> : null}<b aria-hidden="true">↗</b></>;
+          return record.href.startsWith("http") ? <a href={record.href} target="_blank" rel="noreferrer" key={`${record.href}-${record.title}`}>
+            {content}
+          </a> : <Link href={record.href} key={`${record.href}-${record.title}`}>
+            {content}
           </Link>;
         })}
       </div>

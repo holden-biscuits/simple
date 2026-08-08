@@ -4,7 +4,7 @@ import { SiteHeader } from "../components/site-header";
 import { SiteSearch, type SearchRecord, type SearchType } from "../components/site-search";
 import { eventBySlug, events, getEventPhase, getEventVerification, getProgramDate, getWorkstreams, workstreamLabels, type MarketingTask } from "../data/events";
 import { getSpeakingStatus, getSponsorshipStatus, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "../data/event-signals";
-import { getEventBriefReadiness } from "../data/event-brief-readiness";
+import { getBriefIssueAction, getEventBriefReadiness } from "../data/event-brief-readiness";
 import { siteStatus } from "../data/site-status";
 import { getEventRoleRoutes } from "../data/event-role-routes";
 import { connectorCapabilities, dataStreams, fieldOwners, writebackQueue } from "../data/source-governance";
@@ -13,6 +13,7 @@ import { getEventProspectingBrief } from "../data/event-prospecting";
 import { getAudienceSegmentRegistry } from "../data/audience-segment-registry";
 import { latestSourceScan } from "../data/latest-source-scan";
 import { getEventWorkstreamState, getEventWorkstreamsNeedingConfirmation } from "../data/event-page-model";
+import { getEventUpdateRoutes } from "../data/event-update-routes";
 
 export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
@@ -262,6 +263,36 @@ const eventRecords: SearchRecord[] = events.map((event) => {
   };
 });
 
+const eventReadinessRecords: SearchRecord[] = events.flatMap((event) => {
+  const readiness = getEventBriefReadiness(event, searchProgramDate);
+  return readiness.issues.map((issue) => {
+    const action = getBriefIssueAction(issue, event);
+    return {
+      type: "Operations" as const,
+      context: "Open event input",
+      status: issue.destination,
+      title: `${event.name} · ${issue.label}`,
+      href: action.href,
+      description: `${readiness.timing} · ${action.label}.`,
+      keywords: [event.name, event.location, event.dates, issue.key, issue.label, issue.destination, action.label, "open gap missing unresolved needs attention fix update correct source record"].join(" "),
+      details: [`Timing · ${readiness.timing}`, `Owning destination · ${issue.destination}`, `Action · ${action.label}`],
+      hiddenUntilQuery: true,
+    };
+  });
+});
+
+const eventUpdateRouteRecords: SearchRecord[] = events.flatMap((event) => getEventUpdateRoutes(event).map((route) => ({
+  type: "Operations" as const,
+  context: "Event update route",
+  status: route.system,
+  title: `${event.name} · ${route.scope}`,
+  href: route.url,
+  description: route.detail,
+  keywords: [event.name, event.location, event.dates, route.scope, route.system, route.detail, route.action, "where update edit correct fix log record source of truth"].join(" "),
+  details: [`Owning destination · ${route.system}`, `Action · ${route.action}`],
+  hiddenUntilQuery: true,
+})));
+
 const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
   if (event.status === "No") return [];
   const phase = getEventPhase(event, searchProgramDate);
@@ -402,5 +433,5 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const initialQuery = typeof params.q === "string" ? params.q : "";
   const requestedType = typeof params.type === "string" ? params.type : "All";
   const initialType: SearchType = validSearchTypes.includes(requestedType as SearchType) ? requestedType as SearchType : "All";
-  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Event Basecamp search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, audience segments, and role instructions. Results open the exact section or working system you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, latestScanRecord, ...eventChangeRecords, ...marketingTaskRecords, ...eventSectionRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...audienceSegmentRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
+  return <main id="page-top"><SiteHeader /><section className="search-hero"><p className="eyebrow">Event Basecamp search</p><h1>Find the detail, not the page.</h1><p>Search events, cities, people, tools, workstreams, meeting records, tasks, owners, due dates, source changes, audience segments, and role instructions. Results open the exact section or working system you need.</p></section><SiteSearch records={[...referenceRecords, ...attentionViewRecords, latestScanRecord, ...eventReadinessRecords, ...eventUpdateRouteRecords, ...eventChangeRecords, ...marketingTaskRecords, ...eventSectionRecords, ...connectorCapabilityRecords, ...dataStreamRecords, ...fieldOwnerRecords, ...writebackRecords, ...audienceSegmentRecords, ...eventRecords]} initialQuery={initialQuery} initialType={initialType} /><Footer /></main>;
 }
