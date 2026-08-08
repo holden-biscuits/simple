@@ -1167,8 +1167,21 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /1 attending/);
   assert.match(chicagoHtml, /Guaranteed meetings<\/span><strong>Included · count TBD/);
   assert.match(chicagoHtml, /Meetings recorded<\/span><strong>Not recorded/);
+
+  const sanDiego = await render("/events/ccw-exchange-san-diego");
+  assert.equal(sanDiego.status, 200);
+  const sanDiegoHtml = await sanDiego.text();
+  assert.match(sanDiegoHtml, /Closeout has not been recorded\./);
+  assert.match(sanDiegoHtml, /Not recorded(?:<\/p>)/);
+  assert.match(sanDiegoHtml, /It does not mean zero\./);
+  assert.match(sanDiegoHtml, /Closeout needed/);
+  assert.match(sanDiegoHtml, /Record what actually happened\./);
+  assert.match(sanDiegoHtml, /record\/0-54\/827978954470/);
+  assert.doesNotMatch(sanDiegoHtml, /class="outcome-not-recorded"[^>]*>[\s\S]*?<p>None<\/p>/);
   assert.match(chicagoHtml, /Follow-up meetings<\/span><strong>2 booked · HubSpot details pending/);
   assert.match(chicagoHtml, /Follow-up meetings booked[\s\S]*2 scheduled · account, contact, date, owner, and outcome pending in HubSpot/);
+  assert.match(chicagoHtml, /Complete the missing results\./);
+  assert.match(chicagoHtml, /Missing:[\s\S]{0,200}Meetings recorded · Demos recorded · Closed/);
   assert.match(chicagoHtml, /Negative · Taylor’s post-event feedback/);
   assert.match(chicagoHtml, /No opportunities are confirmed yet\./);
   assert.match(chicagoHtml, /contractual meeting amount may be 10, but it is not verified/);

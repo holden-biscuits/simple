@@ -109,6 +109,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     [eventPhase === "past" ? "Demos recorded" : "Demos booked", event.demosBooked.length ? event.demosBooked : event.demoCountLabel ? [`${event.demoCountLabel} rows labeled Demo in the meetings tracker`] : []],
     ["Closed", event.closed],
   ] as const;
+  const missingResultLabels = resultGroups.filter(([, items]) => items.length === 0).map(([label]) => label);
   const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
   const workstreamStates = new Map(workstreamKeys.map((key) => [key, getEventWorkstreamState(event, key)]));
   const activeWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) === "active");
@@ -164,6 +165,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ["Team", staffing.summary],
   ];
   const updateRoutes = getEventUpdateRoutes(event);
+  const crmUpdateRoute = updateRoutes.find((route) => route.id === "hubspot");
 
   return (
     <main id="page-top">
@@ -349,8 +351,13 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section>
 
       {showResults ? <section className="shell outcomes" id="event-results">
-        <div className="section-intro"><p className="eyebrow">Event results</p><h2>Results recorded across event sources.</h2></div>
-        <div className="outcome-grid">{resultGroups.map(([label, items]) => <article key={label}><span>{label}</span>{items.length ? <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p>None</p>}</article>)}</div>
+        <div className="section-intro"><p className="eyebrow">Event results</p><h2>{hasRecordedResults ? "Results recorded across event sources." : "Closeout has not been recorded."}</h2><p>“Not recorded” means no qualifying evidence is linked yet. It does not mean zero.</p></div>
+        <div className="outcome-grid">{resultGroups.map(([label, items]) => <article className={items.length ? "outcome-recorded" : "outcome-not-recorded"} key={label}><span>{label}</span>{items.length ? <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p>Not recorded</p>}</article>)}</div>
+        {missingResultLabels.length && eventPhase === "past" ? <aside className="outcome-closeout-empty">
+          <div><span>Closeout needed · {missingResultLabels.length} {missingResultLabels.length === 1 ? "gap" : "gaps"}</span><h3>{hasRecordedResults ? "Complete the missing results." : "Record what actually happened."}</h3></div>
+          <p><strong>Missing:</strong> {missingResultLabels.join(" · ")}. Start from the keyed HubSpot Marketing Event, then associate the meeting and deal records that carry the actual outcome, stage, and value.</p>
+          {crmUpdateRoute ? <a href={crmUpdateRoute.url} target="_blank" rel="noreferrer">Open HubSpot Marketing Event ↗</a> : <a href="#event-update-route">Open update routes →</a>}
+        </aside> : null}
         {event.outcomeNotes?.length ? <ul className="outcome-notes">{event.outcomeNotes.map((note) => <li key={note}>{note}</li>)}</ul> : null}
         {event.crmSnapshot ? <article className="crm-snapshot">
           <div className="crm-snapshot-head">

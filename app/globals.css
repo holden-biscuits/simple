@@ -1145,9 +1145,15 @@ button, input, select { font: inherit; }
 .outcomes { padding-block: 100px; border-top: 1px solid var(--line); }
 .outcome-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
 .outcome-grid article { border: 1px solid var(--line); margin-right: -1px; padding: 28px; min-height: 200px; background: var(--canvas); }
+.outcome-grid .outcome-not-recorded { background: rgba(230, 232, 222, .48); }
 .outcome-grid ul { margin: 0; padding-left: 18px; columns: 2; }
 .outcome-grid li { margin-bottom: 8px; break-inside: avoid; }
-.outcome-grid p { color: var(--muted); }
+.outcome-grid p { color: var(--muted); font-style: italic; }
+.outcome-closeout-empty { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(260px, 1.4fr) auto; align-items: center; gap: 28px; margin-top: 22px; padding: 28px; border: 1px solid var(--forest); border-left: 6px solid var(--signal); background: var(--paper); }
+.outcome-closeout-empty span { color: var(--signal-dark); font: 800 11px/1.3 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.outcome-closeout-empty h3 { margin: 8px 0 0; font: 400 30px/1.05 Georgia, serif; }
+.outcome-closeout-empty p { margin: 0; color: var(--muted); line-height: 1.55; }
+.outcome-closeout-empty a { padding: 14px 16px; color: var(--paper); background: var(--forest); font: 800 11px/1.3 var(--font-geist-mono), monospace; text-transform: uppercase; text-decoration: none; }
 .outcome-notes { margin: 22px 0 0; padding: 22px 24px 22px 42px; border-left: 4px solid var(--signal); background: var(--canvas); }
 .outcome-notes li { margin: 7px 0; line-height: 1.5; }
 .crm-snapshot { margin-top: 28px; padding: 34px; color: var(--paper); background: var(--green); border: 1px solid var(--ink); box-shadow: 9px 9px 0 var(--signal); }
@@ -1332,6 +1338,8 @@ button, input, select { font: inherit; }
 }
 
 @media (max-width: 900px) {
+  .outcome-closeout-empty { grid-template-columns: 1fr; align-items: start; }
+  .outcome-closeout-empty a { justify-self: start; }
   :root { --anchor-offset: 96px; }
   .site-header { position: static; height: auto; padding-block: 18px; align-items: flex-start; }
   .site-header nav { flex-wrap: wrap; gap: 10px 18px; justify-content: flex-end; }
