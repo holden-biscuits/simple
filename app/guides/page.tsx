@@ -23,7 +23,7 @@ export default function GuidesPage() {
         <div className="role-hero-copy">
           <p className="eyebrow">Event process</p>
           <h1>How we prepare, work the floor, and follow up.</h1>
-          <p className="lede">Event pages show the field workstreams that apply. Empty sections stay out of the way, while marketing production and budget work live in the event tabs on the marketing page.</p>
+          <p className="lede">Use this page for the steps that apply to every event. Open your event page for its agenda, team, and specific plan.</p>
         </div>
         <PageMascot variant="guides" />
       </section>

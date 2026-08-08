@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const lifecycleSteps = [
-  { stage: "Choose the event", when: "Before approval", detail: "Confirm the audience fit, participation, package, dates, budget, and event owner.", cta: "Review the decision record", href: "/sources#field-ownership" },
+  { stage: "Choose the event", when: "Before approval", detail: "Confirm the audience fit, participation, package, dates, budget, and event owner.", cta: "Find the event plan", href: "#events" },
   { stage: "Build the plan", when: "After approval", detail: "Name the team, capture the activation, assign the work, and lock travel and logistics.", cta: "Find the event plan", href: "#events" },
   { stage: "Reach the audience", when: "Before the event", detail: "Build the target list, run outreach, fulfill sponsor promotion, and prepare event communications.", cta: "Review marketing support", href: "/marketing#support-matrix" },
   { stage: "Prepare the team", when: "Final prep", detail: "Brief the crew, research priority accounts, rehearse sessions, and agree on qualification and handoffs.", cta: "Open the team guides", href: "/guides#role-guides" },
@@ -38,24 +38,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
       <section className="home-hero">
         <div className="hero-copy">
           <p className="eyebrow">TeamSimple · 2026–2027 event plan</p>
-          <h1>Luck is what happens when preparation meets opportunity.</h1>
-          <p className="hero-note">This is where the preparation lives: dates, staffing, meeting targets, event plans, and follow-up.</p>
-          <div className="ranger-card">
-            <div className="ranger-figure">
-              <Image src="/ranger-raccoon-clean-hat.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with the Simple logo" priority unoptimized />
-              <span className="ranger-hat-logo" aria-hidden="true"><Image src="/simple-mark.svg" width={19} height={24} alt="" /></span>
-            </div>
-            <p><strong>Start here:</strong> find your event and read the TL;DR before you go.</p>
-          </div>
+          <h1>Find your event. Know what matters.</h1>
+          <p className="hero-note">The agenda, team, activation, open work, and follow-up for every event in one place.</p>
+          <div className="home-hero-actions"><Link href="#events">Find my event ↓</Link><Link href="/guides">Read the event guide →</Link></div>
         </div>
-        <div className="hero-tools">
-          <div className="route-board" aria-label="Before you go checklist">
-            <div className="route-board-head"><span>Before you go</span><span>3 checks</span></div>
-            <div className="route-line"><span>01</span><p>Confirm your travel, hotel, credentials, and event app.</p></div>
-            <div className="route-line"><span>02</span><p>Review your meetings, sessions, target accounts, and booth coverage.</p></div>
-            <div className="route-line"><span>03</span><p>Try to connect with other attendees before the show.</p></div>
-            <Link className="button" href="#events">Find my event <span>↓</span></Link>
+        <div className="home-hero-start">
+          <div className="ranger-figure">
+            <Image src="/ranger-raccoon-clean-hat.png" width={1122} height={1402} alt="A raccoon ranger wearing a green hat with the Simple logo" priority unoptimized />
+            <span className="ranger-hat-logo" aria-hidden="true"><Image src="/simple-mark.svg" width={19} height={24} alt="" /></span>
           </div>
+          <p><strong>Before you go</strong><span>Open your event, check the agenda, and read the TL;DR.</span></p>
         </div>
       </section>
       <PageContents items={[
@@ -108,12 +100,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
             <p>Upcoming commitments, execution coverage, decision gaps, and CRM-proven outcomes.</p>
             <b>Open the leadership brief →</b>
           </Link>
-          <Link href="/sources" className="start-map-wide">
-            <header><span>07</span><small>Source truth</small></header>
-            <h3>See what changed and what conflicts.</h3>
-            <p>Source coverage, scan receipts, applied updates, unresolved conflicts, and working files.</p>
-            <b>Open the source record →</b>
-          </Link>
         </div>
         <section className="event-lifecycle" id="event-lifecycle">
           <div className="event-lifecycle-head">
@@ -137,19 +123,19 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
           <div className="section-intro">
             <p className="eyebrow">Program pulse</p>
             <h2>What’s next—and what still needs attention.</h2>
-            <p>A current view of the active schedule. Open an event for the field brief; use the source record when a fact is disputed.</p>
+            <p>A current view of the active schedule and the work that can change an event outcome.</p>
           </div>
           <div className="pulse-metrics" aria-label="Active program summary">
             <article><strong>{pulse.current.length}</strong><span>happening now</span></article>
             <article><strong>{pulse.next60Days.length}</strong><span>starting within 60 days</span></article>
             <article><strong>{pulse.rosterGaps.length}</strong><span>rosters incomplete</span></article>
-            <article><strong>{pulse.sourceConflicts.length}</strong><span>source conflicts</span></article>
+            <article><strong>{pulse.readiness.dueNow.length}</strong><span>actions due now</span></article>
           </div>
-          <div className="pulse-readiness" aria-label="Execution and source coverage">
+          <div className="pulse-readiness" aria-label="Execution coverage">
             <article><span>Tracked task lists</span><strong>{pulse.readiness.structuredPlans} / {pulse.readiness.activeEvents}</strong><p>active events have searchable tasks; open owners and deadlines stay visible.</p></article>
             <article><span>Checklist setup needed</span><strong>{pulse.readiness.planSetupNeeded}</strong><p>events still show only high-level priorities instead of a task-by-task checklist.</p></article>
             <article><span>Due or overdue now</span><strong>{pulse.readiness.dueNow.length}</strong><p>next actions need attention today.</p></article>
-            <article><span>Source checks due</span><strong>{pulse.sourceChecksDue.length}</strong><p>active event briefs are outside their freshness window.</p></article>
+            <article className={pulse.rosterGaps.length ? "metric-attention" : "metric-good"}><span>Rosters incomplete</span><strong>{pulse.rosterGaps.length}</strong><p>event passes still need a named attendee.</p></article>
           </div>
           <div className="pulse-layout">
             <section className="next-stops" aria-labelledby="next-stops-title">
@@ -171,7 +157,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <div><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><p>{item.issues.slice(0, 3).join(" · ")}{item.issues.length > 3 ? ` · +${item.issues.length - 3} more on the brief` : ""}</p>{item.nextAction ? <div className="attention-next"><span>Next action</span><Link href={item.nextAction.href}>{item.nextAction.title}</Link><small>{item.nextAction.owner ? `Owner · ${item.nextAction.owner}` : "Owner · Open"} · {item.nextAction.due ? `Due · ${item.nextAction.due}` : "Due · Open"}</small></div> : null}</div>
               </li>)}</ol>
-              <Link className="attention-source-link" href="/sources#approval-queue">Open source and approval record →</Link>
+              <Link className="attention-source-link" href="#events">Open all event plans →</Link>
             </section>
           </div>
           <div className="pulse-footer-links">

@@ -24,12 +24,13 @@ test("directory filters compose year, attendance and search", () => {
   assert.equal(noShowsIn2027.length, 0);
 });
 
-test("attention filters expose the kind of operating gap without including archived events", () => {
+test("attention filters expose active operating gaps and archived closeout gaps", () => {
   assert.equal(events.filter((event) => matchesAttention(event, "source", "2026-08-07")).length, 2);
   assert.equal(events.filter((event) => matchesAttention(event, "roster", "2026-08-07")).length, 12);
   assert.equal(events.filter((event) => matchesAttention(event, "meetings", "2026-08-07")).length, 6);
   assert.equal(events.filter((event) => matchesAttention(event, "program", "2026-08-07")).length, 9);
   assert.equal(events.filter((event) => matchesAttention(event, "plan", "2026-08-07")).length, 8);
+  assert.equal(events.filter((event) => matchesAttention(event, "closeout", "2026-08-07")).length, 13);
 
   const sourceIssues = filterEventDirectory(events, { query: "", attendance: "going", attention: "source", year: "2026" }, "2026-08-07");
   assert.deepEqual(sourceIssues.map((event) => event.slug), ["iqpc-cx-travel-hospitality"]);
@@ -49,4 +50,11 @@ test("attention filters expose the kind of operating gap without including archi
   assert.ok(openPrograms.some((event) => event.slug === "icmi-contact-center-expo"));
   assert.ok(openPrograms.every((event) => event.status === "Confirmed"));
   assert.ok(openPrograms.every((event) => event.dateSort.startsWith("2026")));
+
+  const openCloseouts = filterEventDirectory(events, { query: "", attendance: "going", attention: "closeout", year: "2026" }, "2026-08-07");
+  assert.equal(openCloseouts.length, 13);
+  assert.ok(openCloseouts.every((event) => event.status === "Confirmed"));
+  assert.ok(openCloseouts.every((event) => event.dateSort <= "2026-08-07"));
+  assert.ok(openCloseouts.some((event) => event.slug === "ccw-exchange-chicago"));
+  assert.equal(openCloseouts.some((event) => event.slug === "contact-io"), false);
 });

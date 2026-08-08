@@ -5,10 +5,9 @@ import { headers } from "next/headers";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContentsLayout } from "../../components/page-contents";
 import { SiteHeader } from "../../components/site-header";
-import { eventBySlug, events, getEventVerification, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
+import { eventBySlug, events, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getCompletedEventOutcomeCoverage, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
-import { getSourceFreshness } from "../../data/source-freshness";
 import { getEventSystemLinkage } from "../../data/system-linkage";
 import { getEventMeasurementCheckpoint } from "../../data/event-measurement";
 import { getBriefIssueAction, getEventPageBriefReadiness } from "../../data/event-brief-readiness";
@@ -21,6 +20,7 @@ import { getEventReadiness } from "../../data/program-readiness";
 import { getEventPageModel, getEventWorkstreamState } from "../../data/event-page-model";
 import { getOpenItemRoute } from "../../data/open-item-routes";
 import { getEventUpdateRoutes } from "../../data/event-update-routes";
+import { getEventAgenda } from "../../data/event-agenda";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const canonical = `/events/${event.slug}`;
   const image = new URL("/og-2026-2027.png", origin).toString();
   const participation = event.status === "No" ? "TeamSimple is not attending." : "TeamSimple event brief.";
-  const description = `${participation} ${event.dates} · ${event.location}. Open the current plan, links, and source status.`;
+  const description = `${participation} ${event.dates} · ${event.location}. Open the agenda, team, activation, and current plan.`;
   const title = `${event.name} · Event Basecamp`;
   return {
     title,
@@ -68,8 +68,6 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const programDate = getProgramDate();
   const pageModel = getEventPageModel(event, programDate);
   const { phase: eventPhase, isNotAttending, hasRecordedResults, showProspecting, showPlanningBody, showResults } = pageModel;
-  const verification = getEventVerification(event);
-  const freshness = getSourceFreshness(event, programDate);
   const systemLinkage = getEventSystemLinkage(event);
   const measurementCheckpoint = getEventMeasurementCheckpoint(event, eventPhase);
   const briefReadiness = getEventPageBriefReadiness(event, programDate);
@@ -120,10 +118,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
   const eventBriefContents = isNotAttending ? [
     { id: "event-tldr", label: "TL;DR" },
+    { id: "event-agenda", label: "Agenda" },
     ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
     { id: "event-no-plan", label: "Event status" },
   ] : [
     { id: "event-tldr", label: "TL;DR" },
+    { id: "event-agenda", label: "Agenda" },
     ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
     { id: "event-prospecting", label: "Prospecting" },
     ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
@@ -166,6 +166,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   ];
   const updateRoutes = getEventUpdateRoutes(event);
   const crmUpdateRoute = updateRoutes.find((route) => route.id === "hubspot");
+  const agenda = getEventAgenda(event, programDate);
 
   return (
     <main id="page-top">
@@ -208,11 +209,17 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           {isSourceConflict ? <strong>Source check needed</strong> : null}
           {isSourceConflict ? note.replace(/^Source conflict:\s*/i, "") : note}
         </p> : null}
-        <div className="event-verification">
-          <div><span>Source check</span><strong className={`freshness-state freshness-state-${freshness.state}`}>{freshness.label} · checked <time dateTime={verification.checkedAtISO}>{verification.checkedAt}</time></strong></div>
-          <p>{verification.sources.join(" · ")}<small>{freshness.nextCheckLabel ? `Next check ${freshness.nextCheckLabel}. ` : ""}{freshness.reason}</small></p>
-          <Link href="/sources">See source record →</Link>
-        </div>
+      </section>
+
+      <section className="event-agenda shell" id="event-agenda">
+        <div className="section-intro"><p className="eyebrow">Agenda</p><h2>{eventPhase === "past" ? "What was on the schedule." : "What is on the schedule."}</h2><p>Only recorded event facts and TeamSimple commitments appear here. Use the live agenda for organizer sessions and last-minute changes.</p></div>
+        <ol className="event-agenda-list">{agenda.items.map((item, index) => <li key={`${item.label}-${item.title}`}>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <div><small>{item.label}</small><h3>{item.title}</h3><p>{item.detail}</p></div>
+          <b className={`agenda-state agenda-state-${item.state}`}>{item.state === "confirmed" ? "Confirmed" : "Confirm"}</b>
+        </li>)}</ol>
+        <a className="event-agenda-link" href={agenda.url} target="_blank" rel="noreferrer">{agenda.linkLabel} ↗</a>
+        <BackToTop />
       </section>
 
       {roleRoutes.length ? <section className="event-role-routes shell" id="event-role-routes">

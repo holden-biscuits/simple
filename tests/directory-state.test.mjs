@@ -18,6 +18,13 @@ test("invalid filters fall back to the full directory", () => {
   assert.equal(getEventDetailHref("genesys-xperience", state), "/events/genesys-xperience");
 });
 
+test("the closeout queue is a shareable directory view", () => {
+  const state = parseEventDirectoryState({ attendance: "going", attention: "closeout", year: "2026" }, years);
+  assert.deepEqual(state, { query: "", attendance: "going", attention: "closeout", year: "2026" });
+  assert.equal(getEventDirectoryHref(state), "/?attendance=going&attention=closeout&year=2026#events");
+  assert.equal(getSafeEventReturnHref("/?attendance=going&attention=closeout&year=2026#events"), "/?attendance=going&attention=closeout&year=2026#events");
+});
+
 test("event return links cannot leave the fieldbook or target another route", () => {
   assert.equal(getSafeEventReturnHref("/?q=Genesys&attendance=going#events"), "/?q=Genesys&attendance=going#events");
   assert.equal(getSafeEventReturnHref("/?attention=source&year=2026#events"), "/?attention=source&year=2026#events");

@@ -1,11 +1,11 @@
 import { getEventPhase, type EventRecord } from "./events.ts";
 import { getEventReadiness } from "./program-readiness.ts";
 import { getSourceFreshness } from "./source-freshness.ts";
-import { getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
+import { getCompletedEventOutcomeCoverage, getStaffingSignal, hasGuaranteedMeetingPackage, hasKnownGuaranteedMeetingCount } from "./event-signals.ts";
 import { getEventWorkstreamsNeedingConfirmation } from "./event-page-model.ts";
 
 export type AttendanceFilter = "all" | "going" | "deciding" | "not-going";
-export type AttentionFilter = "all" | "source" | "roster" | "meetings" | "program" | "plan";
+export type AttentionFilter = "all" | "source" | "roster" | "meetings" | "program" | "plan" | "closeout";
 
 export const attendanceFilters: { value: AttendanceFilter; label: string }[] = [
   { value: "all", label: "All" },
@@ -21,6 +21,7 @@ export const attentionFilters: { value: AttentionFilter; label: string }[] = [
   { value: "meetings", label: "Meeting count open" },
   { value: "program", label: "Program open" },
   { value: "plan", label: "Plan setup" },
+  { value: "closeout", label: "Closeout open" },
 ];
 
 export function matchesAttendance(event: EventRecord, filter: AttendanceFilter) {
@@ -36,6 +37,11 @@ export function matchesProgramYear(event: EventRecord, year: string) {
 
 export function matchesAttention(event: EventRecord, filter: AttentionFilter, programDate: string) {
   if (filter === "all") return true;
+  if (filter === "closeout") {
+    return event.status !== "No"
+      && getEventPhase(event, programDate) === "past"
+      && getCompletedEventOutcomeCoverage(event).state !== "complete";
+  }
   if (event.status === "No" || getEventPhase(event, programDate) === "past") return false;
   if (filter === "source") {
     return event.notes.toLowerCase().startsWith("source conflict:")

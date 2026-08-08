@@ -2,207 +2,92 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BackToTop, PageContentsLayout } from "../components/page-contents";
 import { Footer } from "../components/footer";
-import { SiteHeader } from "../components/site-header";
 import { PageMascot } from "../components/page-mascot";
+import { SiteHeader } from "../components/site-header";
 import { events, getProgramDate } from "../data/events";
-import { getLeadershipBrief, getLeadershipChangeDigest } from "../data/leadership-brief";
-import { siteStatus } from "../data/site-status";
-import { measurementReadiness } from "../data/event-measurement";
+import { getLeadershipBrief } from "../data/leadership-brief";
 
 export const metadata: Metadata = {
   title: "Leadership brief · Event Basecamp",
-  description: "TeamSimple’s event portfolio, execution readiness, decisions and attributable outcomes.",
+  description: "The TeamSimple event portfolio, immediate priorities, and attributable outcomes.",
 };
 
 export const dynamic = "force-dynamic";
 
-function planLabel(state: "structured" | "priorities-only" | "missing") {
-  if (state === "structured") return "Structured plan";
-  if (state === "priorities-only") return "Owners + dates needed";
-  return "Plan missing";
-}
-
 export default function LeadershipPage() {
   const brief = getLeadershipBrief(events, getProgramDate());
-  const changeDigest = getLeadershipChangeDigest(events, siteStatus.sourceMonitor.changeLog);
-  const sourceConflicts = brief.pulse.attention.filter((item) => item.issues.includes("Source conflict"));
+  const priorities = brief.portfolio.filter((item) => item.readiness.nextAction);
+
   return (
     <main id="page-top">
       <SiteHeader />
-      <section className="role-hero leadership-hero">
+      <section className="role-hero leadership-hero leadership-hero-quiet">
         <div className="role-hero-copy">
           <p className="eyebrow">Leadership brief</p>
-          <h1>See the program without losing the source truth.</h1>
-          <p className="lede">A portfolio view of commitments, execution readiness, decisions and attributable outcomes. Missing spend or CRM fields stay visible as gaps—not false certainty.</p>
+          <h1>The program, the next moves, and the results.</h1>
+          <p className="lede">Start with the portfolio. Escalate decisions that change participation, spend, staffing, or the customer experience.</p>
         </div>
         <PageMascot variant="leadership" />
       </section>
-      <PageContentsLayout groups={[
-        { label: "Program now", items: [
-          { id: "leadership-snapshot", label: "Snapshot" },
-          { id: "leadership-changes", label: "Recent changes" },
-          { id: "leadership-portfolio", label: "Portfolio" },
-          { id: "leadership-decisions", label: "Decisions" },
-        ] },
-        { label: "Program health", items: [
-          { id: "leadership-operating-model", label: "Operating model" },
-          { id: "leadership-outcomes", label: "Outcomes" },
-          { id: "leadership-trust", label: "What to trust" },
-        ] },
+
+      <PageContentsLayout primaryLabel="Leadership brief" items={[
+        { id: "leadership-snapshot", label: "At a glance" },
+        { id: "leadership-portfolio", label: "Portfolio" },
+        { id: "leadership-decisions", label: "Next moves" },
+        { id: "leadership-outcomes", label: "Outcomes" },
       ]}>
-
-      <section className="shell leadership-snapshot" id="leadership-snapshot">
-        <div className="section-intro">
-          <p className="eyebrow">Program snapshot</p>
-          <h2>What needs executive attention now.</h2>
-          <p>Current as of {siteStatus.contentUpdatedLabel}. Open an event for operating detail; use the source record for evidence, conflicts and write-back status.</p>
-        </div>
-        <div className="leadership-metrics">
-          <article><strong>{brief.pulse.active.length}</strong><span>Active program</span><p>Confirmed, tentative and TBD events that have not ended.</p></article>
-          <article><strong>{brief.pulse.next60Days.length}</strong><span>Starting within 60 days</span><p>Near-term commitments that should have owners and dates.</p></article>
-          <article><strong>{brief.briefReadiness.ready.length} / {brief.briefReadiness.events.length}</strong><span>Briefs on track</span><p>Decision-critical inputs required for each event’s current planning stage are present.</p></article>
-          <article><strong>{brief.pulse.rosterGaps.length}</strong><span>Passes to assign</span><p>Events where the current pass allocation exceeds the attending team.</p></article>
-        </div>
-        <div className="leadership-alerts">
-          <Link href="/sources#approval-queue"><span>Source conflicts</span><strong>{brief.pulse.sourceConflicts.length}</strong><p>Conflicting facts are held for a decision.</p><b>Review →</b></Link>
-          <Link href="/marketing#event-tasks"><span>Checklist setup needed</span><strong>{brief.pulse.readiness.planSetupNeeded}</strong><p>Events still need their high-level priorities turned into searchable tasks.</p><b>Open work →</b></Link>
-          <Link href="/sources#freshness-policy"><span>Source checks due</span><strong>{brief.pulse.sourceChecksDue.length}</strong><p>Active event briefs outside their freshness window.</p><b>See policy →</b></Link>
-          <Link href="/sources#writeback-queue"><span>Upstream queue</span><strong>{brief.writebacks.ready + brief.writebacks.decisions + brief.writebacks.setup}</strong><p>{brief.writebacks.ready} ready · {brief.writebacks.decisions} decision · {brief.writebacks.setup} setup</p><b>Open queue →</b></Link>
-        </div>
-        <BackToTop />
-      </section>
-
-      <section className="leadership-changes" id="leadership-changes">
-        <div className="shell">
-          <div className="section-intro">
-            <p className="eyebrow">Latest source work</p>
-            <h2>What changed—and what still needs a decision.</h2>
-            <p>{siteStatus.sourceMonitor.lastSuccessfulScan}. Applied records already match Event Basecamp; review records preserve both claims until the source owner decides.</p>
-          </div>
-          <div className="leadership-change-summary" aria-label="Latest source change summary">
-            <article><strong>{changeDigest.applied.length}</strong><span>Applied updates</span><p>Verified values already reflected in Event Basecamp.</p></article>
-            <article><strong>{changeDigest.needsReview.length}</strong><span>Needs review</span><p>Contradictory facts held for an explicit decision.</p></article>
-          </div>
-          <div className="leadership-change-columns">
-            <section aria-labelledby="leadership-applied-heading">
-              <header><div><span>Applied</span><h3 id="leadership-applied-heading">New governed values</h3></div><Link href="/sources#change-log">Full log →</Link></header>
-              <div className="leadership-change-list">{changeDigest.applied.length ? changeDigest.applied.map((change) => <Link href={change.href} key={change.id}>
-                <div><span>{change.eventName}</span><time>{change.checkedAt}</time></div>
-                <h4>{change.title}</h4>
-                <dl><div><dt>{change.field}</dt><dd>{change.after}</dd></div></dl>
-                <p>{change.source}</p>
-              </Link>) : <p className="leadership-change-empty">No applied updates in the latest source record.</p>}</div>
-            </section>
-            <section aria-labelledby="leadership-review-heading">
-              <header><div><span>Needs review</span><h3 id="leadership-review-heading">Claims that still conflict</h3></div><Link href="/sources#approval-queue">Decision queue →</Link></header>
-              <div className="leadership-change-list leadership-change-list-review">{changeDigest.needsReview.length ? changeDigest.needsReview.map((change) => <Link href={change.href} key={change.id}>
-                <div><span>{change.eventName}</span><time>{change.checkedAt}</time></div>
-                <h4>{change.title}</h4>
-                <dl><div><dt>Current record</dt><dd>{change.before}</dd></div><div><dt>Conflicting source</dt><dd>{change.after}</dd></div></dl>
-                <p>{change.source}</p>
-              </Link>) : <p className="leadership-change-empty">No unresolved source conflicts in the latest source record.</p>}</div>
-            </section>
+        <section className="shell leadership-snapshot" id="leadership-snapshot">
+          <div className="section-intro"><p className="eyebrow">At a glance</p><h2>What matters now.</h2></div>
+          <div className="leadership-metrics">
+            <article><strong>{brief.pulse.active.length}</strong><span>Active events</span></article>
+            <article><strong>{brief.pulse.next60Days.length}</strong><span>Within 60 days</span></article>
+            <article className={brief.pulse.rosterGaps.length ? "metric-attention" : "metric-good"}><strong>{brief.pulse.rosterGaps.length}</strong><span>Rosters incomplete</span></article>
+            <article className={priorities.length ? "metric-attention" : "metric-good"}><strong>{priorities.length}</strong><span>Next moves open</span></article>
           </div>
           <BackToTop />
-        </div>
-      </section>
+        </section>
 
-      <section className="leadership-portfolio" id="leadership-portfolio">
-        <div className="shell">
-          <div className="section-intro">
-            <p className="eyebrow">Portfolio</p>
-            <h2>Every active commitment and its next move.</h2>
-            <p>Sorted by event date. Brief readiness checks the inputs needed at this stage; it does not score the event’s strategic value.</p>
+        <section className="leadership-portfolio" id="leadership-portfolio">
+          <div className="shell">
+            <div className="section-intro"><p className="eyebrow">Portfolio</p><h2>Every active commitment.</h2></div>
+            <div className="leadership-table-wrap">
+              <table className="leadership-table leadership-table-quiet">
+                <thead><tr><th>Event</th><th>Activation</th><th>Team</th><th>Next move</th></tr></thead>
+                <tbody>{brief.portfolio.map((item) => <tr key={item.eventKey}>
+                  <th scope="row"><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><small>{item.location}{item.phase === "now" ? " · happening now" : ""}</small></th>
+                  <td data-label="Activation">{item.activation}</td>
+                  <td data-label="Team"><strong>{item.staffing.summary}</strong>{item.staffing.state === "open" ? <small>{item.staffing.detail}</small> : null}</td>
+                  <td data-label="Next move">{item.readiness.nextAction ? <><Link href={item.readiness.nextAction.href}>{item.readiness.nextAction.title}</Link><small>{item.readiness.nextAction.owner ? `Owner · ${item.readiness.nextAction.owner}` : "Owner · Open"} · {item.readiness.nextAction.due ? `Due · ${item.readiness.nextAction.due}` : "Due · Open"}</small></> : <span>Plan complete</span>}</td>
+                </tr>)}</tbody>
+              </table>
+            </div>
+            <BackToTop />
           </div>
-          <div className="leadership-table-wrap">
-            <table className="leadership-table">
-              <thead><tr><th>Event</th><th>Participation</th><th>Activation</th><th>Staffing</th><th>Readiness</th><th>Next move</th></tr></thead>
-              <tbody>{brief.portfolio.map((item) => <tr key={item.eventKey}>
-                <th scope="row"><Link href={`/events/${item.eventKey}`}>{item.name}</Link><time dateTime={item.dateSort}>{item.dates}</time><small>{item.location}{item.phase === "now" ? " · happening now" : ""}</small></th>
-                <td data-label="Participation"><span className={`leadership-status leadership-status-${item.status.toLowerCase()}`}>{item.status}</span></td>
-                <td data-label="Activation">{item.activation}</td>
-                <td data-label="Staffing"><strong>{item.staffing.summary}</strong>{item.staffing.state === "open" ? <small>{item.staffing.detail}</small> : null}</td>
-                <td data-label="Readiness"><strong>{item.briefReadiness.label}</strong><small>{item.briefReadiness.timing} · {item.briefReadiness.issues.length ? `${item.briefReadiness.issues.length} open input${item.briefReadiness.issues.length === 1 ? "" : "s"}` : "required inputs present"} · {planLabel(item.readiness.planState)}</small></td>
-                <td data-label="Next move">{item.readiness.nextAction ? <><Link href={item.readiness.nextAction.href}>{item.readiness.nextAction.title}</Link><small>{item.readiness.nextAction.owner ? `Owner · ${item.readiness.nextAction.owner}` : "Owner · Open"} · {item.readiness.nextAction.due ? `Due · ${item.readiness.nextAction.due}` : "Due · Open"}</small></> : <span>Plan complete</span>}</td>
-              </tr>)}</tbody>
-            </table>
-          </div>
+        </section>
+
+        <section className="shell leadership-decisions" id="leadership-decisions">
+          <div className="section-intro"><p className="eyebrow">Next moves</p><h2>Open work with an owner—or an owner still needed.</h2></div>
+          <ol className="leadership-priority-list">{priorities.map((item, index) => <li key={item.eventKey}>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <div><small>{item.name} · {item.dates}</small><h3>{item.readiness.nextAction!.title}</h3><p>{item.readiness.nextAction!.owner ? `Owner: ${item.readiness.nextAction!.owner}` : "Owner needed"} · {item.readiness.nextAction!.due ? `Due ${item.readiness.nextAction!.due}` : "Due date needed"}</p></div>
+            <Link href={item.readiness.nextAction!.href}>Open →</Link>
+          </li>)}</ol>
           <BackToTop />
-        </div>
-      </section>
+        </section>
 
-      <section className="shell leadership-decisions" id="leadership-decisions">
-        <div className="section-intro">
-          <p className="eyebrow">Decisions and risk</p>
-          <h2>Where the program still depends on judgment.</h2>
-          <p>These are decision-quality gaps, not hidden green status. The site will not resolve them from weak evidence.</p>
-        </div>
-        <div className="leadership-risk-grid">
-          <article><span>01 · Execution coverage</span><h3>{brief.pulse.readiness.planSetupNeeded} active events still lack a tracked checklist.</h3><p>High-level priorities exist, but they are not yet captured as searchable tasks. Owner and deadline gaps remain visible separately after a checklist is added.</p><Link href="/marketing#event-tasks">Open event task lists →</Link></article>
-          <article><span>02 · Source conflicts</span><h3>{sourceConflicts.length} event briefs have contradictory facts.</h3><p>{sourceConflicts.length ? sourceConflicts.map((item) => item.name).join(" · ") : "No unresolved source conflicts are recorded."}</p><Link href="/sources#approval-queue">Review decisions →</Link></article>
-          <article><span>03 · Spend and ROI</span><h3>{measurementReadiness.normalizedCostEvents} events have a normalized cost record.</h3><p>No normalized event-cost dataset exists yet. The program cannot responsibly rank event ROI until sponsorship, travel, production, paid media, activation and freight share a controlled schema.</p><Link href="/marketing#measurement">Open measurement contract →</Link></article>
-          <article><span>04 · Reporting foundation</span><h3>{brief.linkage.activeCrmEvents} of {brief.linkage.activeEvents} active events have an exact CRM join.</h3><p>{brief.linkage.activeNotionProjects} active event workspaces are linked, but event-specific Drive folders and canonical HubSpot associations still need setup. Portfolio pipeline is not yet a trustworthy leadership metric.</p><Link href="/sources#canonical-event-key">Open linkage coverage →</Link></article>
-        </div>
-        <BackToTop />
-      </section>
-
-      <section className="leadership-operating-model" id="leadership-operating-model">
-        <div className="shell">
-          <div className="section-intro">
-            <p className="eyebrow">Operating model</p>
-            <h2>Leadership gets decisions, not data-entry work.</h2>
-            <p>The upstream queue separates judgment from routine corrections and systems setup, so the escalation surface stays small.</p>
+        <section className="leadership-outcomes" id="leadership-outcomes">
+          <div className="shell">
+            <div className="section-intro"><p className="eyebrow">Outcomes</p><h2>What the program has produced.</h2></div>
+            <div className="leadership-outcome-grid">
+              <article><span>Event opportunities</span><strong>{brief.outcomes.qualifyingOpportunities}</strong></article>
+              <article><span>Open pipeline</span><strong>${brief.outcomes.openPipeline.toLocaleString()}</strong></article>
+              <article><span>Closed-won revenue</span><strong>${brief.outcomes.closedWonRevenue.toLocaleString()}</strong></article>
+              <article><span>Completed closeouts</span><strong>{brief.closeout.complete} / {brief.closeout.completedEvents}</strong></article>
+            </div>
+            <div className="leadership-outcome-note"><p>{brief.closeout.openCategories} outcome categories still need to be recorded across completed events.</p><Link href="/?attendance=going&attention=closeout#events">Open incomplete closeouts →</Link><Link href="/marketing#event-pipeline">Open event pipeline →</Link></div>
+            <BackToTop />
           </div>
-          <div className="leadership-queue-grid">
-            <article><span>Needs judgment</span><strong>{brief.writebacks.decisions}</strong><h3>Resolve the material ambiguity.</h3><p>Participation, investment, customer commitments or contradictory program facts belong here.</p></article>
-            <article><span>Ready to approve</span><strong>{brief.writebacks.ready}</strong><h3>Let the source owner correct it.</h3><p>The evidence and proposed value are already documented. Approval authorizes the exact upstream change.</p></article>
-            <article><span>Foundation work</span><strong>{brief.writebacks.setup}</strong><h3>Assign the operating owner.</h3><p>Event keys, Drive folders and CRM objects are systems work—not strategic decisions.</p></article>
-          </div>
-          <div className="leadership-operating-note"><strong>The rule</strong><p>A field rep records the interaction, the event lead maintains the plan, Marketing Ops maintains program facts, and RevOps maintains attribution. Leadership intervenes only when the correct value depends on a business decision.</p><Link href="/sources#stewardship">See ownership and timing →</Link></div>
-          <BackToTop />
-        </div>
-      </section>
-
-      <section className="leadership-outcomes" id="leadership-outcomes">
-        <div className="shell">
-          <div className="section-intro">
-            <p className="eyebrow">Attributable outcomes</p>
-            <h2>What HubSpot can prove today.</h2>
-            <p>These figures describe data coverage and explicitly attributed records. They are not an ROI claim.</p>
-          </div>
-          <div className="leadership-outcome-grid">
-            <article><span>Source-based opportunities</span><strong>{brief.outcomes.qualifyingOpportunities}</strong><p>Deals with an event Deal Source, excluding Closed Lost and Disqualified.</p></article>
-            <article><span>Exact CCW opportunities</span><strong>{brief.outcomes.exactQualifyingOpportunities}</strong><p>Deals where the source and CCW Event detail agree, after the same stage exclusions.</p></article>
-            <article><span>Open pipeline</span><strong>${brief.outcomes.openPipeline.toLocaleString()}</strong><p>Sum of positive amounts on qualifying open deals.</p></article>
-            <article><span>Closed-won revenue</span><strong>${brief.outcomes.closedWonRevenue.toLocaleString()}</strong><p>Recognized only when a qualifying deal is Closed Won.</p></article>
-          </div>
-          <div className="leadership-closeout-coverage">
-            <div><span>Completed events</span><strong>{brief.closeout.completedEvents}</strong></div>
-            <div><span>Complete closeouts</span><strong>{brief.closeout.complete}</strong></div>
-            <div><span>Partial closeouts</span><strong>{brief.closeout.partial}</strong></div>
-            <div><span>No outcome evidence</span><strong>{brief.closeout.missing}</strong></div>
-            <p><strong>{brief.closeout.openCategories} outcome categories remain unrecorded.</strong> This measures documentation coverage, not event performance. Missing evidence never counts as zero.</p>
-            <Link href="/search?q=closeout+incomplete">Find incomplete closeouts →</Link>
-          </div>
-          <div className="leadership-caveat"><strong>Read the populations correctly.</strong><p>The Deal Source search returns {brief.outcomes.sourceEligibleRecords} records and {brief.outcomes.qualifyingOpportunities} qualifying opportunities. The exact CCW intersection contains {brief.outcomes.exactDeals} records and {brief.outcomes.exactQualifyingOpportunities} qualifying opportunities. {brief.outcomes.pairMismatchCount} records need field QA: {brief.outcomes.sourceOnlyRecords} source-only and {brief.outcomes.detailOnlyRecords} detail-only. All {brief.outcomes.dealsWithoutAmount} source-based opportunities lack a reportable amount, so $0 pipeline and revenue describe CRM completeness—not the business value of the event.</p><Link href="/marketing#event-pipeline">Open the pipeline chart →</Link></div>
-          <BackToTop />
-        </div>
-      </section>
-
-      <section className="shell leadership-trust" id="leadership-trust">
-        <div className="section-intro">
-          <p className="eyebrow">Decision contract</p>
-          <h2>What to trust—and what not to infer.</h2>
-        </div>
-        <div className="leadership-trust-grid">
-          <article><span>Use now</span><h3>Schedule and commitments</h3><p>Tracker-backed dates, participation, activation packages and named rosters, with direct corrections protected from stale upstream data.</p></article>
-          <article><span>Use now</span><h3>Execution readiness</h3><p>Structured task coverage, named owners, due dates, source conflicts and freshness status. Open values remain visibly open.</p></article>
-          <article><span>Use carefully</span><h3>CRM outcomes</h3><p>Keep the {brief.outcomes.qualifyingOpportunities} source-based opportunities separate from the {brief.outcomes.exactQualifyingOpportunities} exactly attributed CCW opportunities. Scheduled or blank-outcome meetings still do not count as held.</p></article>
-          <article><span>Do not claim yet</span><h3>Portfolio ROI</h3><p>Current pipeline is $0 because deal amounts are missing, while normalized event cost and complete Event-key coverage are also absent. Do not turn a data gap into an ROI conclusion.</p></article>
-        </div>
-        <div className="leadership-links"><Link href="/sources#data-streams">See the data architecture →</Link><Link href="/sources#writeback-queue">See upstream work →</Link><Link href="/search">Search Event Basecamp →</Link></div>
-        <BackToTop />
-      </section>
+        </section>
       </PageContentsLayout>
       <Footer />
     </main>
