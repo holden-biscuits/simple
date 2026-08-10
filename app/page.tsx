@@ -131,12 +131,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
             <article><strong>{pulse.rosterGaps.length}</strong><span>rosters incomplete</span></article>
             <article><strong>{pulse.readiness.dueNow.length}</strong><span>actions due now</span></article>
           </div>
-          <div className="pulse-readiness" aria-label="Execution coverage">
-            <article><span>Tracked task lists</span><strong>{pulse.readiness.structuredPlans} / {pulse.readiness.activeEvents}</strong><p>active events have searchable tasks; open owners and deadlines stay visible.</p></article>
-            <article><span>Checklist setup needed</span><strong>{pulse.readiness.planSetupNeeded}</strong><p>events still show only high-level priorities instead of a task-by-task checklist.</p></article>
-            <article><span>Due or overdue now</span><strong>{pulse.readiness.dueNow.length}</strong><p>next actions need attention today.</p></article>
-            <article className={pulse.rosterGaps.length ? "metric-attention" : "metric-good"}><span>Rosters incomplete</span><strong>{pulse.rosterGaps.length}</strong><p>event passes still need a named attendee.</p></article>
-          </div>
           <div className="pulse-layout">
             <section className="next-stops" aria-labelledby="next-stops-title">
               <div className="pulse-heading"><p className="eyebrow">Route ahead</p><h3 id="next-stops-title">Current and next stops</h3></div>

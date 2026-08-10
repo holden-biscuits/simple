@@ -42,17 +42,18 @@ test("source conflicts and unnamed rosters remain visible as review warnings", (
   assert.ok(validateEventCatalog([credentialsOnly]).some((issue) => issue.field === "team" && issue.message === "Some passes still need attendees assigned."));
 });
 
-test("event TLDR callouts are optional, concise, and route to local detail", () => {
+test("event TLDR callouts are optional, concise, and route to supporting detail", () => {
   const genesys = events.find((event) => event.slug === "genesys-xperience");
   const contact = events.find((event) => event.slug === "contact-io");
 
   assert.deepEqual(genesys?.tldrCallout, {
-    label: "Featured activation",
-    title: "Wish Line taxi campaign",
-    detail: "0.25-mile geofence · Bellagio to Fontainebleau · ~10-minute loop",
-    status: "AP confirmation pending",
-    href: "#workstream-marketing",
-    action: "Open route and viewing plan",
+    label: "Wish Line FYI",
+    title: "1-855-955-WISH",
+    detail: "Live Simple agent · Aug 31–Sep 3",
+    goal: "Turn the Vegas campaign into a live product demo and bring qualified conference callers to the booth.",
+    salesAction: "Ask prospects to call it; if they engage, continue the conversation at the booth and record the next step.",
+    href: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c",
+    action: "Open the campaign brief",
   });
   assert.equal(contact?.tldrCallout, undefined);
 });

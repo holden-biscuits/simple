@@ -13,6 +13,7 @@ export type EventAgendaDay = {
   items: {
     time: string;
     title: string;
+    teamSimple?: boolean;
   }[];
 };
 
@@ -40,6 +41,7 @@ const officialAgendaBySlug: Record<string, EventAgendaDay[]> = {
       items: [
         { time: "9:00 AM", title: "Morning keynote" },
         { time: "11:00 AM", title: "Expo, sessions and labs" },
+        { time: "1:10 PM", title: "Cat’s 20-minute solution talk", teamSimple: true },
         { time: "4:00 PM", title: "Closing keynote" },
         { time: "7:00 PM", title: "Closing celebration" },
       ],

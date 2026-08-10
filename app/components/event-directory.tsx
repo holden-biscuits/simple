@@ -2,15 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { getEventPhase, getEventVerification, type EventPhase, type EventRecord } from "../data/events";
+import { getEventPhase, type EventPhase, type EventRecord } from "../data/events";
 import { attendanceFilters, attentionFilters, filterEventDirectory, matchesAttendance, matchesAttention, matchesProgramYear, type AttendanceFilter, type AttentionFilter } from "../data/event-filters";
 import { getCompletedEventSignals, getGuaranteedMeetingSignal, getSpeakingOpportunitySignal, getStaffingSignal } from "../data/event-signals";
 import { getEventDetailHref, getEventDirectoryHref, hasActiveDirectoryState, type EventDirectoryState } from "../data/directory-state";
-import { getSourceFreshness } from "../data/source-freshness";
 
 function EventCard({ event, directoryState, programDate }: { event: EventRecord; directoryState: EventDirectoryState; programDate: string }) {
-  const verification = getEventVerification(event);
-  const freshness = getSourceFreshness(event, programDate);
   const phase = getEventPhase(event, programDate);
   const inactive = event.status === "No";
   const signal = inactive ? "Not attending" : phase === "past" ? "Completed" : event.status;
@@ -30,10 +27,6 @@ function EventCard({ event, directoryState, programDate }: { event: EventRecord;
       <p className="event-location">{event.location}</p>
       <div className="event-signals">
         {cardSignals.map((item) => <span key={item}>{item}</span>)}
-      </div>
-      <div className="event-card-freshness">
-        <span className={`freshness-state freshness-state-${freshness.state}`}>{freshness.label} · <time dateTime={verification.checkedAtISO}>{verification.checkedAt.replace(/,\s\d{4}$/, "")}</time></span>
-        <span>{verification.sources.length === 1 ? verification.sources[0] : `${verification.sources[0]} + ${verification.sources.length - 1}`}</span>
       </div>
     </Link>
   );
@@ -89,7 +82,7 @@ export function EventDirectory({ events, programDate, initialState }: { events: 
           <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search event, city, teammate, program or detail" />
         </label>
         <fieldset className="directory-filter-set attendance-filters">
-          <legend>TeamSimple attendance</legend>
+          <legend>Attendance</legend>
           <div>
             {attendanceFilters.map((filter) => (
               <button

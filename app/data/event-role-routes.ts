@@ -1,11 +1,10 @@
 import { getSpeakingStatus, getSponsorshipStatus, hasGuaranteedMeetingPackage } from "./event-signals.ts";
-import { getWorkstreams, isEmptyWorkstream, type EventPhase, type EventRecord } from "./events.ts";
+import { type EventPhase, type EventRecord } from "./events.ts";
 import { getEventFootprint } from "./event-footprint.ts";
 
 export type EventRoleRoute = {
-  role: "AE" | "SDR" | "Marketing / event lead";
-  title: string;
-  detail: string;
+  role: "AE" | "SDR";
+  bullets: [string, string, string];
   href: string;
   cta: string;
 };
@@ -16,60 +15,51 @@ export function getEventRoleRoutes(event: EventRecord, phase: EventPhase): Event
   const sponsorship = getSponsorshipStatus(event);
   const speaking = getSpeakingStatus(event);
   const footprint = getEventFootprint(event);
-  const workstreams = getWorkstreams(event);
-  const hasMarketingWork = !isEmptyWorkstream(workstreams.marketing) || Boolean(event.marketingTasks?.length || event.priorityActions?.length);
-  const marketingItemCount = event.priorityActions?.length || workstreams.marketing.length;
-  const openMarketingTasks = (event.marketingTasks ?? []).filter((task) => task.status !== "Done");
-  const marketingOwnerGaps = openMarketingTasks.filter((task) => !task.owner).length;
-  const marketingDateGaps = openMarketingTasks.filter((task) => !task.dueSort).length;
-  const marketingPlanFullyAssigned = Boolean(event.marketingTasks?.length) && marketingOwnerGaps === 0 && marketingDateGaps === 0;
   const bookedMeetingCount = event.meetingsBooked.length;
   const guaranteedMeetingDetail = event.guaranteedMeetings.replace(/^Yes\s*(?:·\s*)?/i, "").trim();
 
-  const aeDetail = hasGuaranteedMeetingPackage(event)
-    ? `${guaranteedMeetingDetail ? `${guaranteedMeetingDetail}.` : "A guaranteed meeting package is included, but the count is still open."} Get the matched-account list, prepare one hypothesis per account, and decide the next-step ask before each conversation.`
-    : bookedMeetingCount
-      ? `${bookedMeetingCount} meeting${bookedMeetingCount === 1 ? " is" : "s are"} already booked. Review each account, protect the discovery time, and leave with an owned next action.`
+  const aeExpectation = hasGuaranteedMeetingPackage(event)
+    ? guaranteedMeetingDetail ? `Expect ${guaranteedMeetingDetail.toLowerCase()}; review the matched accounts and the meeting format before you arrive.` : "A guaranteed meeting package is included, but the count is still open; confirm the matched accounts and format before you arrive."
+      : bookedMeetingCount
+      ? `${bookedMeetingCount} meeting${bookedMeetingCount === 1 ? " is" : "s are"} already booked; review the account and protect the discovery time for each one.`
       : sponsorship === "Confirmed" || speaking === "Confirmed"
-        ? "No guaranteed meeting package is listed. Use the event program to create qualified conversations, then record the context and next action in HubSpot."
-        : "No meeting package or confirmed activation is listed. Prepare priority accounts and a direct meeting ask before relying on onsite traffic.";
+        ? "Expect to create qualified conversations through the event program, booth, app, and direct outreach; nothing arrives pre-booked."
+        : "No meeting package or confirmed activation is listed; do not rely on onsite traffic to create the meeting for you.";
 
-  const sdrDetail = footprint.kind === "booth"
-    ? `Work the booth and nearby traffic, use the event app to find priority people, and protect AE time with fast qualification.${speaking === "Confirmed" ? " Use the speaking program as context—not as permission to improvise product claims." : ""}`
+  const sdrFootprint = footprint.kind === "booth"
+    ? "Work the booth and nearby traffic: start conversations, keep the space clear, and bring qualified people to the right AE."
     : footprint.kind === "meeting-area"
-      ? `Keep the meeting area ready for scheduled conversations, use the event app and networking program to find priority people, and protect AE time with fast qualification.${speaking === "Confirmed" ? " Use the speaking program as context—not as permission to improvise product claims." : ""}`
+      ? "Keep the meeting area ready for scheduled conversations and bring qualified people to the right AE without crowding the space."
       : footprint.kind === "sponsor-activation"
-        ? `Use the sponsor activation as an introduction point, then work the event app and nearby traffic. Qualify quickly before routing someone to an AE.${speaking === "Confirmed" ? " Use the speaking program as context—not as permission to improvise product claims." : ""}`
+        ? "Use the sponsor activation as an introduction point, then qualify quickly before routing someone to an AE."
         : footprint.kind === "unresolved"
-      ? "Confirm the onsite footprint before promising a booth meeting. Use the event app, sessions, and networking areas while the activation remains unresolved."
-      : `No booth is listed. Work the event app, sessions, and networking areas; make direct introductions instead of waiting for traffic.${speaking === "Confirmed" ? " Use the session as a relevant opener and route qualified interest to an AE." : ""}`;
+          ? "The onsite footprint is unresolved; do not promise a booth meeting. Work the app, sessions, and networking areas instead."
+          : "No booth is listed; work the app, sessions, and networking areas and make direct introductions instead of waiting for traffic.";
 
-  const routes: EventRoleRoute[] = [
+  const sdrProgram = speaking === "Confirmed"
+    ? "Use the speaking program as a relevant opener, never as permission to improvise product claims; route qualified interest to an AE."
+    : "Qualify quickly: protect AE time, identify the real use case and buyer role, and route only the conversations worth advancing.";
+
+  return [
     {
       role: "AE",
-      title: "Prepare the account and the next-step ask.",
-      detail: aeDetail,
+      bullets: [
+        aeExpectation,
+        "Know the priority account, its contact-center environment, one useful hypothesis, and the next-step ask before the conversation.",
+        "Before the day ends, record the contact, context, qualification, owner, and next action in HubSpot.",
+      ],
       href: "/ae#build-the-meeting-hypothesis",
-      cta: "Open the AE route",
+      cta: "Open the general AE guide",
     },
     {
       role: "SDR",
-      title: ["booth", "meeting-area", "sponsor-activation"].includes(footprint.kind) ? "Create traffic and qualify quickly." : "Go find the right conversations.",
-      detail: sdrDetail,
+      bullets: [
+        "Download the event app, find priority people and accounts, and try to connect before the show.",
+        sdrFootprint,
+        sdrProgram,
+      ],
       href: "/sdr#how-to-work-the-event",
-      cta: "Open the SDR route",
+      cta: "Open the general SDR guide",
     },
   ];
-
-  if (hasMarketingWork) routes.push({
-    role: "Marketing / event lead",
-    title: marketingPlanFullyAssigned ? "Run the owned event task list." : event.marketingTasks?.length ? "Finish assigning the tracked task list." : "Turn the open plan into owned work.",
-    detail: event.marketingTasks?.length
-      ? `${event.marketingTasks.length} task${event.marketingTasks.length === 1 ? " is" : "s are"} tracked for this event. ${marketingOwnerGaps} open task${marketingOwnerGaps === 1 ? " needs" : "s need"} an owner; ${marketingDateGaps} ${marketingDateGaps === 1 ? "needs a dated deadline" : "need dated deadlines"}.`
-      : `${marketingItemCount} event-specific item${marketingItemCount === 1 ? " needs" : "s need"} ownership and timing. Track the work in the shared event task list rather than a private checklist.`,
-    href: `/marketing?event=${event.slug}#event-tasks`,
-    cta: "Open this event’s task list",
-  });
-
-  return routes;
 }

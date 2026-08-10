@@ -4,22 +4,14 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContentsLayout } from "../../components/page-contents";
-import { EventAdmin } from "../../components/event-admin";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getCompletedEventOutcomeCoverage, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
 import { getSafeEventReturnHref } from "../../data/directory-state";
-import { getEventSystemLinkage } from "../../data/system-linkage";
-import { getEventMeasurementCheckpoint } from "../../data/event-measurement";
-import { getBriefIssueAction, getEventPageBriefReadiness } from "../../data/event-brief-readiness";
-import { getEventSourceChanges } from "../../data/site-status";
 import { getEventRoleRoutes } from "../../data/event-role-routes";
 import { getEventFootprint } from "../../data/event-footprint";
-import { getEventWritebackQueue } from "../../data/source-governance";
 import { getEventProspectingBrief } from "../../data/event-prospecting";
-import { getEventReadiness } from "../../data/program-readiness";
 import { getEventPageModel, getEventWorkstreamState } from "../../data/event-page-model";
-import { getOpenItemRoute } from "../../data/open-item-routes";
 import { getEventUpdateRoutes } from "../../data/event-update-routes";
 import { getEventAgenda } from "../../data/event-agenda";
 
@@ -69,22 +61,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const programDate = getProgramDate();
   const pageModel = getEventPageModel(event, programDate);
   const { phase: eventPhase, isNotAttending, hasRecordedResults, showProspecting, showPlanningBody, showResults } = pageModel;
-  const systemLinkage = getEventSystemLinkage(event);
-  const measurementCheckpoint = getEventMeasurementCheckpoint(event, eventPhase);
-  const briefReadiness = getEventPageBriefReadiness(event, programDate);
-  const recentChanges = getEventSourceChanges(event.slug);
-  const eventWritebacks = getEventWritebackQueue(event.slug);
   const roleRoutes = getEventRoleRoutes(event, eventPhase);
   const prospecting = getEventProspectingBrief(event);
-  const executionReadiness = getEventReadiness(event, programDate);
-  const nextMove = event.status !== "No" && eventPhase !== "past" ? executionReadiness.nextAction : undefined;
-  const zoomInfoOnlyReason = prospecting.confidence === "Matched-account qualification"
-    ? "Use the organizer's matched accounts; do not manufacture an attendee segment."
-    : prospecting.confidence === "No active plan"
-      ? "No event segment is maintained while TeamSimple is not attending."
-      : prospecting.confidence === "Names required"
-        ? "Create a segment only after a credible source supplies attendee or company names."
-        : "No defensible event-specific HubSpot segment is linked yet.";
   const workstreams = getWorkstreams(event);
   const hasGuaranteedMeetings = hasGuaranteedMeetingPackage(event);
   const bookedMeetingCount = event.meetingsBooked.length;
@@ -101,7 +79,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     : "None";
   const staffing = getStaffingSignal(event);
   const note = event.notes.trim();
-  const isSourceConflict = note.toLowerCase().startsWith("source conflict:");
+  const userFacingNote = note.replace(/^Source conflict:\s*/i, "");
   const resultGroups = [
     [meetingProgressLabel, event.meetingsBooked.length ? event.meetingsBooked : event.meetingCountLabel ? [event.meetingRecordSummary ?? `${event.meetingCountLabel} meetings ${eventPhase === "past" ? "recorded" : "booked"}; account names were not captured`] : []],
     ["Follow-up meetings booked", event.followupMeetingsBooked ? [`${event.followupMeetingsBooked} scheduled · account, contact, date, owner, and outcome pending in HubSpot`] : []],
@@ -109,14 +87,13 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ["Closed", event.closed],
   ] as const;
   const missingResultLabels = getCompletedEventOutcomeCoverage(event).missing;
-  const workstreamKeys = Object.keys(workstreamLabels) as WorkstreamKey[];
+  const workstreamKeys = (Object.keys(workstreamLabels) as WorkstreamKey[]).filter((key) => key !== "marketing" && key !== "budget");
   const workstreamStates = new Map(workstreamKeys.map((key) => [key, getEventWorkstreamState(event, key)]));
   const activeWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) === "active");
   const reviewWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) === "needs-confirmation");
   const displayedWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) !== "inactive");
   const inactiveWorkstreamKeys = workstreamKeys.filter((key) => workstreamStates.get(key) === "inactive");
   const workstreamContents = displayedWorkstreamKeys.map((key) => ({ id: `workstream-${key}`, label: workstreamLabels[key] }));
-  const showPriorities = !isNotAttending && eventPhase !== "past" && Boolean(event.priorityActions?.length);
   const eventBriefContents = isNotAttending ? [
     { id: "event-tldr", label: "TL;DR" },
     { id: "event-agenda", label: "Agenda" },
@@ -125,21 +102,16 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   ] : [
     { id: "event-tldr", label: "TL;DR" },
     { id: "event-agenda", label: "Agenda" },
-    ...(briefReadiness.issues.length ? [{ id: "event-readiness", label: "Open decisions" }] : []),
+    ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Need to know" }] : []),
     ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
     { id: "event-prospecting", label: "Prospecting" },
-    ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
-    ...(event.specialConsiderations?.length ? [{ id: "event-considerations", label: "Rules of engagement" }] : []),
     { id: "event-crew", label: "Crew" },
   ];
-  const eventRecordContents = [
-    ...(showResults ? [{ id: "event-results", label: "Results" }] : []),
-    { id: "event-admin", label: "Update records" },
-  ];
+  const eventRecordContents = showResults ? [{ id: "event-results", label: "Results" }] : [];
   const eventContentsGroups = [
     { label: "Event brief", items: eventBriefContents },
     ...(!isNotAttending && workstreamContents.length ? [{ label: pageModel.secondaryLabel, items: workstreamContents }] : []),
-    { label: isNotAttending ? "Event record" : eventPhase === "past" ? "Closeout" : "Results + admin", items: eventRecordContents },
+    ...(eventRecordContents.length ? [{ label: eventPhase === "past" ? "Closeout" : "Results", items: eventRecordContents }] : []),
   ];
   const footprint = getEventFootprint(event);
   const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see event materials";
@@ -181,65 +153,50 @@ export default async function EventPage({ params, searchParams }: { params: Prom
 
       <section className="event-tldr shell" id="event-tldr">
         <div className="section-intro"><p className="eyebrow">TL;DR</p><h2>{pageModel.tldrHeading}</h2></div>
-        <div className={`tldr-grid tldr-grid-${tldr.length}`}>{tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
-        {event.tldrCallout ? <aside className="event-tldr-callout" aria-label={event.tldrCallout.title}>
-          <div><span>{event.tldrCallout.label}</span><h3>{event.tldrCallout.title}</h3></div>
-          <p>{event.tldrCallout.detail}</p>
-          <div className="event-tldr-callout-action"><strong>{event.tldrCallout.status}</strong>{event.tldrCallout.href ? <a href={event.tldrCallout.href}>{event.tldrCallout.action ?? "Open plan"} ↓</a> : null}</div>
-        </aside> : null}
-        {nextMove ? <div className={`event-next-move event-next-move-${nextMove.urgency}`}>
-          <div><span>Next move</span><h3>{nextMove.title}</h3></div>
-          <dl>
-            <div><dt>Owner</dt><dd>{nextMove.owner ?? "Open"}</dd></div>
-            <div><dt>Due</dt><dd>{eventPhase === "now" && !nextMove.structured ? "Today" : nextMove.due ?? "Open"}</dd></div>
-            <div><dt>Status</dt><dd>{nextMove.structured ? nextMove.status : eventPhase === "now" ? "Owner open" : "Needs an owner and date"}</dd></div>
-          </dl>
-          <Link href={eventPhase === "now" && !nextMove.structured ? "#event-priorities" : nextMove.href}>{nextMove.structured ? "Open task plan" : eventPhase === "now" ? "Open onsite priorities" : "Turn priorities into a plan"} →</Link>
-        </div> : null}
-        {note ? <p className={`tldr-note${isSourceConflict ? " source-conflict" : ""}`}>
-          {isSourceConflict ? <strong>Source check needed</strong> : null}
-          {isSourceConflict ? note.replace(/^Source conflict:\s*/i, "") : note}
-        </p> : null}
+        <div className={`tldr-grid tldr-grid-${tldr.length + (event.tldrCallout ? 1 : 0)}`}>
+          {tldr.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}
+          {event.tldrCallout ? <aside className="tldr-fyi" aria-label={event.tldrCallout.label}>
+            <span>{event.tldrCallout.label}</span>
+            <strong>{event.tldrCallout.title}</strong>
+            <small>{event.tldrCallout.detail}</small>
+            <p><b>Goal</b>{event.tldrCallout.goal}</p>
+            <ul><li>{event.tldrCallout.salesAction}</li></ul>
+            {event.tldrCallout.href ? <a href={event.tldrCallout.href} target="_blank" rel="noreferrer">{event.tldrCallout.action ?? "Open brief"} ↗</a> : null}
+          </aside> : null}
+        </div>
+        {userFacingNote ? <p className="tldr-note">{userFacingNote}</p> : null}
       </section>
 
       <section className="event-agenda shell" id="event-agenda">
         <div className="section-intro"><p className="eyebrow">Agenda</p><h2>{eventPhase === "past" ? "Recorded schedule." : "What is on the schedule."}</h2><p>{agenda.days.length ? "Official event schedule. Check the live agenda for session details and last-minute changes." : "TeamSimple commitments are listed here. Use the live agenda for organizer sessions and last-minute changes."}</p></div>
         {agenda.days.length ? <div className="event-agenda-days">{agenda.days.map((day) => <section key={day.date}>
           <h3>{day.date}</h3>
-          <ol>{day.items.map((item) => <li key={`${day.date}-${item.time}-${item.title}`}><time>{item.time}</time><span>{item.title}</span></li>)}</ol>
+          <ol>{day.items.map((item) => <li className={item.teamSimple ? "event-agenda-team" : undefined} key={`${day.date}-${item.time}-${item.title}`}><time>{item.time}</time><div><span>{item.title}</span>{item.teamSimple ? <small>TeamSimple · Cat speaking</small> : null}</div></li>)}</ol>
         </section>)}</div> : <ol className="event-agenda-list">{agenda.items.map((item, index) => <li key={`${item.label}-${item.title}`}>
           <span>{String(index + 1).padStart(2, "0")}</span>
           <div><small>{item.label}</small><h3>{item.title}</h3><p>{item.detail}</p></div>
           <b className={`agenda-state agenda-state-${item.state}`}>{item.state === "confirmed" ? "Confirmed" : "Confirm"}</b>
         </li>)}</ol>}
-        {agenda.days.length && agenda.items.some((item) => item.label !== "Event window") ? <aside className="event-agenda-commitments">
-          <span>TeamSimple commitment</span>
-          {agenda.items.filter((item) => item.label !== "Event window").map((item) => <p key={`${item.label}-${item.title}`}><strong>{item.title}</strong><small>{item.label}</small></p>)}
-        </aside> : null}
         <a className="event-agenda-link" href={agenda.url} target="_blank" rel="noreferrer">{agenda.linkLabel} ↗</a>
         <BackToTop />
       </section>
 
-      {!isNotAttending && eventPhase !== "past" && briefReadiness.issues.length ? <section className="event-readiness shell" id="event-readiness">
-        <div className="section-intro"><p className="eyebrow">Open decisions</p><h2>{briefReadiness.label}</h2><p>{briefReadiness.timing}</p></div>
-        <div className={`event-brief-readiness event-brief-readiness-${briefReadiness.state}${briefReadiness.stage === "onsite" ? " event-brief-readiness-onsite" : ""}`}>
-          <ul>{briefReadiness.issues.map((issue) => {
-            const action = getBriefIssueAction(issue, event);
-            return <li key={issue.key}><div><p>{issue.label}</p><span>{issue.destination}</span></div>{action.external ? <a href={action.href} target="_blank" rel="noreferrer">{action.label} ↗</a> : <Link href={action.href}>{action.label} →</Link>}</li>;
-          })}</ul>
-          <footer><span>{briefReadiness.issues.length} {briefReadiness.stage === "onsite" ? `onsite fact${briefReadiness.issues.length === 1 ? "" : "s"} unresolved` : `open input${briefReadiness.issues.length === 1 ? "" : "s"}`}</span><a href="#event-admin">Open all update routes →</a></footer>
-        </div>
-        <BackToTop />
-      </section> : null}
+      {event.specialConsiderations?.length ? (
+        <section className="event-considerations shell" id="event-considerations">
+          <div><p className="eyebrow">Need to know</p><h2>Key information for the sales team.</h2></div>
+          <ul>{event.specialConsiderations.map((item) => <li key={item}>{item}</li>)}</ul>
+          {partnerGuidelines ? <a className="text-link" href={partnerGuidelines.url} target="_blank" rel="noreferrer">Open the restricted partner guidelines ↗</a> : null}
+          <BackToTop />
+        </section>
+      ) : null}
 
       {roleRoutes.length ? <section className="event-role-routes shell" id="event-role-routes">
-        <div className="section-intro"><p className="eyebrow">Use the route for your role</p><h2>Start with what this event changes for you.</h2><p>These are event-specific starting points, not staffing assignments. Open the full role guide for the rules that apply everywhere.</p></div>
-        <div className={`event-role-route-grid event-role-route-grid-${roleRoutes.length}`}>{roleRoutes.map((route, index) => <Link href={route.href} key={route.role}>
-          <header><span>{String(index + 1).padStart(2, "0")}</span><b>{route.role}</b></header>
-          <h3>{route.title}</h3>
-          <p>{route.detail}</p>
-          <strong>{route.cta} →</strong>
-        </Link>)}</div>
+        <div className="section-intro"><p className="eyebrow">For sales</p><h2>What to do and expect at this event.</h2></div>
+        <div className="event-role-briefs">{roleRoutes.map((route) => <article key={route.role}>
+          <header><h3>{route.role}</h3><span>3 event-specific points</span></header>
+          <ul>{route.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>
+          <Link href={route.href}>{route.cta} →</Link>
+        </article>)}</div>
         <BackToTop />
       </section> : null}
 
@@ -254,59 +211,34 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <span>Audience basis</span><strong>{prospecting.confidence}</strong>
           </div>
         </div>
-        <div className="prospecting-grid">
+        <div className="prospecting-filter-grid">
           <article>
-            <header><span>01</span><h3>Company search</h3></header>
+            <header><h3>Company criteria</h3></header>
             <dl>{prospecting.companyFilters.map((filter) => <div key={`${filter.label}-${filter.value}`}><dt>{filter.label}</dt><dd>{filter.value}</dd></div>)}</dl>
-            <a href={prospecting.zoomInfoCompanyUrl} target="_blank" rel="noreferrer">Open ZoomInfo companies ↗</a>
+            <a href={prospecting.zoomInfoCompanyUrl} target="_blank" rel="noreferrer">Open ZoomInfo company search ↗</a>
+            <small>Opens Advanced Search. Apply the criteria above.</small>
           </article>
           <article>
-            <header><span>02</span><h3>Contact search</h3></header>
+            <header><h3>Contact criteria</h3></header>
             <dl>{prospecting.contactFilters.map((filter) => <div key={`${filter.label}-${filter.value}`}><dt>{filter.label}</dt><dd>{filter.value}</dd></div>)}</dl>
-            <a href={prospecting.zoomInfoContactUrl} target="_blank" rel="noreferrer">Open ZoomInfo contacts ↗</a>
+            <a href={prospecting.zoomInfoContactUrl} target="_blank" rel="noreferrer">Open ZoomInfo contact search ↗</a>
+            <small>Opens Advanced Search. Apply the criteria above.</small>
           </article>
-          <article className="prospecting-route-card">
-            <header><span>03</span><h3>Working route</h3></header>
-            <p>{prospecting.workflow}</p>
-            {prospecting.hubspotSegment ? <div className="prospecting-segment">
-              <span>Existing HubSpot segment</span>
-              <strong>{prospecting.hubspotSegment.name}</strong>
-              <small>{prospecting.hubspotSegment.size.toLocaleString()} contacts · {prospecting.hubspotSegment.kind.toLowerCase()} · checked {prospecting.hubspotSegment.checkedAt}</small>
-              <a href={prospecting.hubspotSegment.url} target="_blank" rel="noreferrer">Open HubSpot segment ↗</a>
-            </div> : prospecting.hubspotAccountLinks.length ? <div className="prospecting-account-links">
-              <span>Grounded account searches</span>
-              {prospecting.hubspotAccountLinks.map((account) => <a href={account.url} target="_blank" rel="noreferrer" key={account.name}>Open {account.name} contacts ↗</a>)}
-            </div> : <p className="prospecting-zoominfo-only"><strong>ZoomInfo only.</strong> {zoomInfoOnlyReason}</p>}
-          </article>
+        </div>
+        <div className="prospecting-sequence">
+          <h3>Use this order</h3>
+          <ol>
+            <li><span>01</span><div><strong>Start with the event app.</strong><p>Use the app, organizer file, or meeting schedule to identify companies and people who may actually be there.</p></div></li>
+            <li><span>02</span><div><strong>Qualify the companies.</strong><p>Apply the company criteria in ZoomInfo, including the event-specific technology or industry filter.</p></div></li>
+            <li><span>03</span><div><strong>Find the right people.</strong><p>Enrich the named contacts and prioritize the job functions, titles, and seniority above.</p></div></li>
+            <li><span>04</span><div><strong>Reach out before the show.</strong><p>Invite qualified people to the relevant booth, meeting, or session and route the next step to the right AE.</p></div></li>
+          </ol>
+          {prospecting.hubspotSegment ? <a href={prospecting.hubspotSegment.url} target="_blank" rel="noreferrer">Open the existing HubSpot segment ↗</a> : null}
+          {prospecting.hubspotAccountLinks.map((account) => <a href={account.url} target="_blank" rel="noreferrer" key={account.name}>Open {account.name} contacts in HubSpot ↗</a>)}
         </div>
         <p className="prospecting-boundary"><strong>Do not confuse targeting with attendance.</strong> A company fits the event audience only after the event app, organizer file, matched-meeting schedule, scan, session, or other named signal connects it to the show.</p>
         <BackToTop />
       </section> : null}
-
-      {showPriorities ? (
-        <section className="event-priorities shell" id="event-priorities">
-          <div className="priority-intro">
-            <p className="eyebrow">{eventPhase === "now" ? "Onsite focus" : "Before the event"}</p>
-            <h2>{eventPhase === "now" ? "Do these next." : "Still needs attention."}</h2>
-            <p>{event.priorityActions!.length} event-specific {eventPhase === "now" ? `priorit${event.priorityActions!.length === 1 ? "y is" : "ies are"} live today` : `${event.priorityActions!.length === 1 ? "item is" : "items are"} still open in the current plan`}.</p>
-            <p className="priority-route-note">Use each item’s link to document the update in its owning event record.</p>
-          </div>
-          <ol>{event.priorityActions!.map((item, index) => {
-            const route = getOpenItemRoute(event, item);
-            return <li key={item}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <p>{item}</p>
-                <a className={route.setupNeeded ? "priority-item-route priority-item-route-setup" : "priority-item-route"} href={route.href} target="_blank" rel="noreferrer" aria-label={`${route.label}: ${item}`}>
-                  <b>{route.system}</b>
-                  <span>{route.label} ↗</span>
-                </a>
-              </div>
-            </li>;
-          })}</ol>
-          <BackToTop />
-        </section>
-      ) : null}
 
       {!showPlanningBody ? (
         <section className="event-no-plan shell" id="event-no-plan">
@@ -324,15 +256,6 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           </div>
         </section>
       ) : <>
-      {event.specialConsiderations?.length ? (
-        <section className="event-considerations shell" id="event-considerations">
-          <div><p className="eyebrow">Rules of engagement</p><h2>What is different about this event.</h2></div>
-          <ol>{event.specialConsiderations.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
-          {partnerGuidelines ? <a className="text-link" href={partnerGuidelines.url} target="_blank" rel="noreferrer">Open the restricted partner guidelines ↗</a> : null}
-          <BackToTop />
-        </section>
-      ) : null}
-
       <section className="shell event-body">
         <aside id="event-crew">
           <p className="eyebrow">Crew</p>
@@ -346,7 +269,6 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <a href={event.organizerUrl} target="_blank" rel="noreferrer">Live event site ↗</a>
             {event.notionUrl ? <a href={event.notionUrl} target="_blank" rel="noreferrer">Notion project ↗</a> : <span>Notion project · None</span>}
             {event.relatedLinks?.map((link) => <a href={link.url} target="_blank" rel="noreferrer" key={link.url}>{link.label} ↗</a>)}
-            {event.priorityActions?.length ? <Link href={`/marketing?event=${event.slug}#event-tasks`}>Marketing tasks →</Link> : null}
           </div>
           <BackToTop />
         </aside>
@@ -373,7 +295,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         {missingResultLabels.length && eventPhase === "past" ? <aside className="outcome-closeout-empty">
           <div><span>Closeout needed · {missingResultLabels.length} {missingResultLabels.length === 1 ? "gap" : "gaps"}</span><h3>{hasRecordedResults ? "Complete the missing results." : "Record what actually happened."}</h3></div>
           <p><strong>Missing:</strong> {missingResultLabels.join(" · ")}. Start from the keyed HubSpot Marketing Event, then associate the meeting and deal records that carry the actual outcome, stage, and value.</p>
-          {crmUpdateRoute ? <a href={crmUpdateRoute.url} target="_blank" rel="noreferrer">Open HubSpot Marketing Event ↗</a> : <a href="#event-update-route">Open update routes →</a>}
+          {crmUpdateRoute ? <a href={crmUpdateRoute.url} target="_blank" rel="noreferrer">Open HubSpot Marketing Event ↗</a> : <Link href="/sources#quick-update-routes">Open update routes →</Link>}
         </aside> : null}
         {event.outcomeNotes?.length ? <ul className="outcome-notes">{event.outcomeNotes.map((note) => <li key={note}>{note}</li>)}</ul> : null}
         {event.crmSnapshot ? <article className="crm-snapshot">
@@ -389,65 +311,6 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section> : null}
       </>}
 
-      <EventAdmin changes={recentChanges.length} writebacks={eventWritebacks.length}>
-      {recentChanges.length ? <section className="event-recent-changes" id="event-changes">
-        <div className="section-intro"><p className="eyebrow">Recent source activity</p><h2>What changed for this event.</h2><p>Applied changes are already reflected on this page. Unresolved differences still need a decision.</p></div>
-        <div className="event-change-grid">{recentChanges.map((change) => {
-          const firstLabel = change.state === "Applied" ? "Before" : change.state === "Needs review" ? "Controlling source" : "Checked";
-          const secondLabel = change.state === "Applied" ? "Now" : change.state === "Needs review" ? "Conflicting source" : "Result";
-          return <article className={`event-change event-change-${change.state.toLowerCase().replace(" ", "-")}`} key={change.id}>
-            <header><span>{change.state}</span><time>{change.checkedAt}</time></header>
-            <small>{change.field}</small><h3>{change.title}</h3>
-            <dl><div><dt>{firstLabel}</dt><dd>{change.before}</dd></div><div><dt>{secondLabel}</dt><dd>{change.after}</dd></div></dl>
-            <footer>{change.sourceUrl ? <a href={change.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a> : <span>{change.source}</span>}<Link href="/sources#change-log">Open full log →</Link></footer>
-          </article>;
-        })}</div>
-        <BackToTop />
-      </section> : null}
-
-      {eventWritebacks.length ? <section className="event-writebacks" id="event-writebacks">
-        <div className="section-intro"><p className="eyebrow">Source write-backs</p><h2>Source records still need to catch up.</h2><p>This event page and an owning system do not match yet. Each card shows the exact upstream correction and its approval state; update the destination, then remove the item after a fresh source check.</p></div>
-        <div className="writeback-grid event-writeback-grid">
-          {eventWritebacks.map((item) => <article key={`${item.system}-${item.scope}`}>
-            <header><span>{item.system}</span><b className={`writeback-state writeback-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</b></header>
-            <h3>{item.scope}</h3>
-            <dl className="writeback-diff"><div><dt>Current source</dt><dd>{item.current}</dd></div><div><dt>Proposed source</dt><dd>{item.proposed}</dd></div></dl>
-            <p className="writeback-evidence">Evidence · {item.evidence}{item.evidenceUrl ? <Link href={item.evidenceUrl}> View →</Link> : null}</p>
-            <a className="writeback-destination" href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noreferrer" : undefined}>Open {item.system} ↗</a>
-          </article>)}
-        </div>
-        <BackToTop />
-      </section> : null}
-
-      <section className="event-update-route" id="event-update-route">
-        <details>
-          <summary><span><small>Something changed?</small><strong>Update the source that owns it.</strong></span><b>Open routes <i aria-hidden="true">+</i></b></summary>
-          <div className="event-update-route-body">
-            <aside>
-              <span>Canonical Event key</span>
-              <code>{event.slug}</code>
-              <p>Use this exact value across the tracker, Notion and HubSpot. Until the CRM properties exist, include <code>[evt:{event.slug}]</code> in an event-sourced activity.</p>
-            </aside>
-            <div className="event-update-route-grid">
-              {updateRoutes.map((route) => <a href={route.url} target="_blank" rel="noreferrer" key={route.id}><span>{route.scope}</span><strong>{route.system}</strong><p>{route.detail}</p><b>{route.action} ↗</b></a>)}
-            </div>
-          </div>
-          <div className="event-linkage-strip" aria-label="Event system coverage">
-            {systemLinkage.map((item) => <div key={item.system}><span>{item.system}</span><strong className={`linkage-state linkage-state-${item.state.toLowerCase().replaceAll(" ", "-")}`}>{item.state}</strong><p>{item.detail}</p>{item.url ? <a href={item.url} target="_blank" rel="noreferrer">Open Marketing Event ↗</a> : null}</div>)}
-          </div>
-          {!isNotAttending ? <div className="event-measurement-checkpoint">
-            <header><span>Measurement checkpoint</span><strong>{measurementCheckpoint.state}</strong></header>
-            <div>
-              <p><span>Primary objective</span><b>{measurementCheckpoint.objective}</b></p>
-              <p><span>Fully loaded cost</span><b>{measurementCheckpoint.cost}</b></p>
-              <p><span>CRM association</span><b>{measurementCheckpoint.crm}</b></p>
-              <p><span>Meeting evidence</span><b>{measurementCheckpoint.meetings}</b></p>
-            </div>
-            <footer><p>{measurementCheckpoint.nextAction}</p><Link href="/marketing#measurement">Open measurement contract →</Link></footer>
-          </div> : null}
-        </details>
-      </section>
-      </EventAdmin>
       </PageContentsLayout>
 
       <Footer />

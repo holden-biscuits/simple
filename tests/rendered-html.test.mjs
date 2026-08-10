@@ -55,7 +55,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Find my event/);
   assert.doesNotMatch(html, /before you book, ship, or promote/);
   assert.doesNotMatch(html, /ranger-raccoon-v2/);
-  assert.match(html, /TeamSimple attendance/);
+  assert.match(html, /Attendance/);
   assert.match(html, /Program year/);
   assert.match(html, /<span>All years<\/span><b>29<\/b>/);
   assert.match(html, /<span>2026<\/span><b>26<\/b>/);
@@ -92,9 +92,8 @@ test("server-renders the event directory", async () => {
   assert.match(html, /starting within 60 days/);
   assert.match(html, /rosters incomplete/);
   assert.match(html, /actions due now/);
-  assert.match(html, /Tracked task lists[\s\S]*5(?:<!-- -->)? \/ (?:<!-- -->)?13/);
-  assert.match(html, /Checklist setup needed[\s\S]*8/);
-  assert.match(html, /Due or overdue now[\s\S]*0/);
+  assert.doesNotMatch(html, /Tracked task lists|Checklist setup needed/);
+  assert.doesNotMatch(html, /event-card-freshness|Source current|Source due|Source overdue/);
   assert.match(html, /Next action/);
   assert.match(html, /Owner · Holden \+ AP/);
   assert.match(html, /Owner · Open[\s\S]*Due · Open/);
@@ -102,9 +101,7 @@ test("server-renders the event directory", async () => {
   assert.match(html, /Earliest plans with open inputs/);
   assert.match(html, /\+\d+ more on the brief/);
   assert.match(html, /Open all event plans/);
-  assert.match(html, /Current(?:<!-- -->)? · <time dateTime="2026-08-07">Aug 7<\/time>/);
   assert.doesNotMatch(html, /Source checks due/);
-  assert.match(html, /Direct update \+ 5/);
   assert.match(html, /CCW Orlando[\s\S]*7(?:<!-- -->)? Meetings Recorded/);
   assert.match(html, /Guaranteed Meetings · Count TBD/);
   assert.match(html, /Closeout open[\s\S]*13/);
@@ -136,6 +133,9 @@ test("server-renders the source monitor and approval queue", async () => {
   const response = await render("/sources");
   assert.equal(response.status, 200);
   const html = await response.text();
+  assert.match(html, /<title>Microsite admin · Event Basecamp<\/title>/);
+  assert.match(html, /Microsite admin/);
+  assert.match(html, /Source health and change control\./);
   assert.match(html, /Fix the source that owns the fact\./);
   assert.match(html, /A Slack message or email is evidence—not the final record\./);
   assert.match(html, /id="action-briefing"/);
@@ -260,6 +260,8 @@ test("server-renders the source monitor and approval queue", async () => {
   assert.match(html, /Active event audience segments[\s\S]*0 active-event segments are automatically maintained/);
   assert.match(html, /Nothing in this queue writes to an external system until the exact change is approved/);
   assert.match(html, /What changed, and why\./);
+  assert.match(html, /class="change-log-list"/);
+  assert.doesNotMatch(html, /class="event-change-grid"/);
   assert.match(html, /<span>Applied<\/span><strong>17<\/strong>/);
   assert.match(html, /<span>Needs review<\/span><strong>3<\/strong>/);
   assert.match(html, /<span>No change<\/span><strong>6<\/strong>/);
@@ -391,12 +393,13 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(sourceSearchHtml, /Genesys Xperience/);
   assert.match(sourceSearchHtml, /Source check · Aug 7, 2026 · Direct update · OOH meeting notes · Notion · Gmail · HubSpot · Restricted Genesys brief/);
 
-  const activationSearch = await render("/search?q=Wish%20Line%20route&type=Event");
+  const activationSearch = await render("/search?q=live%20product%20demo&type=Event");
   assert.equal(activationSearch.status, 200);
   const activationSearchHtml = await activationSearch.text();
   assert.match(activationSearchHtml, /Genesys Xperience/);
-  assert.match(activationSearchHtml, /Activation route · 0\.25-mile geofence · Bellagio to Fontainebleau · ~10-minute loop/);
-  assert.match(activationSearchHtml, /Activation status · AP confirmation pending/);
+  assert.match(activationSearchHtml, /Wish Line FYI · 1-855-955-WISH/);
+  assert.match(activationSearchHtml, /Activation goal · Turn the Vegas campaign into a live product demo/);
+  assert.match(activationSearchHtml, /Sales action · Ask prospects to call it/);
 
   const startSearch = await render("/search?q=where%20should%20I%20go&type=Guide");
   assert.equal(startSearch.status, 200);
@@ -484,7 +487,7 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   const rulesSearch = await render("/search?q=Genesys%20rules&type=Event");
   assert.equal(rulesSearch.status, 200);
   const rulesSearchHtml = await rulesSearch.text();
-  assert.match(rulesSearchHtml, /Genesys Xperience · rules of engagement/);
+  assert.match(rulesSearchHtml, /Genesys Xperience · need to know/);
   assert.match(rulesSearchHtml, /href="\/events\/genesys-xperience#event-considerations"/);
 
   const liveStreamSearch = await render("/search?q=what%27s%20live&type=Operations");
@@ -592,13 +595,13 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.match(exactWritebackSearchHtml, /Status: No · 0 attendees · clear the available roster/);
   assert.match(exactWritebackSearchHtml, /Ready for approval/);
   assert.match(exactWritebackSearchHtml, /Event source correction/);
-  assert.match(exactWritebackSearchHtml, /href="\/events\/contact-io#event-writebacks"/);
+  assert.match(exactWritebackSearchHtml, /href="\/sources#writeback-queue"/);
 
   const genesysWritebackSearch = await render("/search?q=Genesys%20roster%20upstream&type=Operations");
   assert.equal(genesysWritebackSearch.status, 200);
   const genesysWritebackSearchHtml = await genesysWritebackSearch.text();
   assert.match(genesysWritebackSearchHtml, /Genesys Xperience roster · upstream work/);
-  assert.match(genesysWritebackSearchHtml, /href="\/events\/genesys-xperience#event-writebacks"/);
+  assert.match(genesysWritebackSearchHtml, /href="\/sources#writeback-queue"/);
   assert.match(genesysWritebackSearchHtml, /Cat, Holden, Matt, Taylor, Josh, Carter, Deepti, Richard and Lars attending/);
 
   const hubspotMismatchSearch = await render("/search?q=HubSpot%20source%20detail%20mismatch&type=Operations");
@@ -612,21 +615,21 @@ test("server-renders searchable event outcomes and filter counts", async () => {
   assert.equal(eventRoleSearch.status, 200);
   const eventRoleSearchHtml = await eventRoleSearch.text();
   assert.match(eventRoleSearchHtml, /Genesys Xperience/);
-  assert.match(eventRoleSearchHtml, /SDR route · Create traffic and qualify quickly/);
+  assert.match(eventRoleSearchHtml, /SDR guide/);
   assert.match(eventRoleSearchHtml, /Work the booth and nearby traffic/);
 
   const genesysChangeSearch = await render("/search?q=what%20changed%20at%20Genesys&type=Operations");
   assert.equal(genesysChangeSearch.status, 200);
   const genesysChangeSearchHtml = await genesysChangeSearch.text();
   assert.match(genesysChangeSearchHtml, /Genesys Xperience · Confirmed the Genesys Xperience roster/);
-  assert.match(genesysChangeSearchHtml, /href="\/events\/genesys-xperience#event-changes"/);
+  assert.match(genesysChangeSearchHtml, /href="\/sources#change-log"/);
   assert.match(genesysChangeSearchHtml, /Before · Shorter tracker roster · Carter listed only as available/);
 
   const chicagoChangeSearch = await render("/search?q=Taylor%20sole%20Chicago%20attendee&type=Operations");
   assert.equal(chicagoChangeSearch.status, 200);
   const chicagoChangeSearchHtml = await chicagoChangeSearch.text();
   assert.match(chicagoChangeSearchHtml, /CCW Exchange Chicago · Confirmed Taylor as the sole Chicago attendee/);
-  assert.match(chicagoChangeSearchHtml, /href="\/events\/ccw-exchange-chicago#event-changes"/);
+  assert.match(chicagoChangeSearchHtml, /href="\/sources#change-log"/);
   assert.match(chicagoChangeSearchHtml, /Now · 1 attendee · Taylor only · Josh did not attend/);
 
   const programChangeSearch = await render("/search?q=Added%20the%202027%20event%20program&type=Operations");
@@ -745,7 +748,7 @@ test("server-renders a searchable marketing support board", async () => {
   assert.match(html, /30 and 90 days after[\s\S]*sourced pipeline · influenced pipeline · closed revenue/);
   assert.match(html, /Held meeting[\s\S]*Scheduled, blank-outcome and no-show records do not count/);
   assert.match(html, /Meeting-to-opportunity rate[\s\S]*Event-sourced opportunities ÷ held meetings/);
-  assert.match(html, /Portfolio comparison is blocked today\./);
+  assert.match(html, /Portfolio ROI is still blocked\./);
   assert.match(html, /Cvent’s 2026 event-value guidance/);
   assert.match(html, /HubSpot’s Marketing Events guidance/);
   assert.match(html, /Close the loop in the system that owns each fact/);
@@ -854,14 +857,11 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assertSectionOrder(genesysHtml, [
     "event-tldr",
     "event-agenda",
-    "event-readiness",
+    "event-considerations",
     "event-role-routes",
     "event-prospecting",
-    "event-priorities",
-    "event-considerations",
     "event-crew",
     "workstream-travel",
-    "event-admin",
   ]);
   assert.match(genesysHtml, /href="#event-agenda">Agenda/);
   assert.match(genesysHtml, /Tuesday, September 1/);
@@ -870,107 +870,46 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /9:00 AM[\s\S]*Opening keynote/);
   assert.match(genesysHtml, /Thursday, September 3/);
   assert.match(genesysHtml, /7:00 PM[\s\S]*Closing celebration/);
-  assert.match(genesysHtml, /20-minute solution talk · Sep 3 at 1:10 PM/);
+  assert.match(genesysHtml, /1:10 PM[\s\S]*Cat’s 20-minute solution talk/);
+  assert.match(genesysHtml, /TeamSimple · Cat speaking/);
   assert.match(genesysHtml, /Open the live agenda/);
-  assert.match(genesysHtml, /href="#event-priorities"[\s\S]*href="#event-considerations"[\s\S]*href="#event-crew"[\s\S]*href="#event-admin"/);
+  assert.match(genesysHtml, /href="#event-agenda">Agenda[\s\S]*href="#event-considerations">Need to know[\s\S]*href="#event-role-routes">Your role/);
   assert.match(genesysHtml, /Team &amp; passes<\/span><strong>9 attending \/ 9 passes/);
   assert.doesNotMatch(genesysHtml, /Passes \/ credentials/);
-  assert.match(genesysHtml, /No guaranteed meetings/);
-  assert.match(genesysHtml, /Open event project(?:<!-- -->)? ↗/);
-  assert.match(genesysHtml, new RegExp(`href="${"https://www.notion.so/3aa6fee642fe81c88a89de617863507c"}"[^>]*>Open event project(?:<!-- -->)? ↗`));
-  assert.match(genesysHtml, /Open all update routes →/);
+  assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
   assert.match(genesysHtml, /id="event-role-routes"/);
   assert.match(genesysHtml, /href="#event-role-routes">Your role/);
   assert.match(genesysHtml, /href="#event-prospecting">Prospecting/);
   assert.match(genesysHtml, /Who is worth finding here\./);
   assert.match(genesysHtml, /Technology products[\s\S]*Genesys/);
-  assert.match(genesysHtml, /Open ZoomInfo companies/);
+  assert.match(genesysHtml, /Open ZoomInfo company search/);
+  assert.match(genesysHtml, /Opens Advanced Search\. Apply the criteria above\./);
   assert.match(genesysHtml, /Do not confuse targeting with attendance/);
-  assert.match(genesysHtml, /No defensible event-specific HubSpot segment is linked yet/);
-  assert.match(genesysHtml, /Start with what this event changes for you\./);
-  assert.match(genesysHtml, /No guaranteed meeting package is listed/);
+  assert.match(genesysHtml, /Use this order/);
+  assert.match(genesysHtml, /Start with the event app[\s\S]*Qualify the companies[\s\S]*Find the right people[\s\S]*Reach out before the show/);
+  assert.doesNotMatch(genesysHtml, /Working route|ZoomInfo only|No defensible event-specific HubSpot segment/);
+  assert.match(genesysHtml, /What to do and expect at this event\./);
   assert.match(genesysHtml, /Work the booth and nearby traffic/);
-  assert.match(genesysHtml, /7 task(?:<!-- -->)?s are(?:<!-- -->)? tracked for this event/);
-  assert.match(genesysHtml, /1 open task(?:<!-- -->)? needs an owner; (?:<!-- -->)?2(?:<!-- -->)? need dated deadlines/);
   assert.match(genesysHtml, /href="\/ae#build-the-meeting-hypothesis"/);
   assert.match(genesysHtml, /href="\/sdr#how-to-work-the-event"/);
-  assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
-  assert.match(genesysHtml, /id="event-changes"/);
-  assert.match(genesysHtml, /What changed for this event\./);
-  assert.match(genesysHtml, /Applied changes are already reflected on this page\./);
-  assert.doesNotMatch(genesysHtml, /already in this review build/);
-  assert.match(genesysHtml, /Confirmed the Genesys Xperience roster/);
-  assert.match(genesysHtml, /Updated the Genesys sponsor-email deadline/);
-  assert.match(genesysHtml, /Recorded the Wish Line route and operating plan/);
-  assert.match(genesysHtml, /Genesys guaranteed meetings already match/);
-  assert.match(genesysHtml, /href="\/sources#change-log">Open full log →/);
-  assert.doesNotMatch(genesysHtml, /Source check<\/span>/);
-  assert.match(genesysHtml, /Update the source that owns it\./);
-  assert.match(genesysHtml, /id="event-writebacks"/);
-  assert.match(genesysHtml, /Source records still need to catch up\./);
-  assert.match(genesysHtml, /Genesys Xperience roster[\s\S]*Current source[\s\S]*Proposed source/);
-  assert.match(genesysHtml, /Genesys roster reference/);
-  assert.match(genesysHtml, /Genesys Wish Line activation/);
-  assert.match(genesysHtml, /Genesys speaking plan/);
-  assert.match(genesysHtml, /Genesys CRM logging route/);
-  assert.match(genesysHtml, /gid=0&amp;range=A16:W16/);
-  assert.match(genesysHtml, /Open event row(?:<!-- -->)? ↗/);
-  assert.match(genesysHtml, /Canonical Event key/);
-  assert.match(genesysHtml, /\[evt:(?:<!-- -->)?genesys-xperience(?:<!-- -->)?\]/);
-  assert.match(genesysHtml, /Dates · participation · roster/);
-  assert.match(genesysHtml, /Meetings · demos · pipeline/);
-  assert.match(genesysHtml, /Event system coverage/);
-  assert.match(genesysHtml, /Conference tracker[\s\S]*Located/);
-  assert.match(genesysHtml, /Events Drive[\s\S]*Setup needed/);
-  assert.match(genesysHtml, /Measurement checkpoint/);
-  assert.match(genesysHtml, /Primary objective[\s\S]*Not recorded as a governed field/);
-  assert.match(genesysHtml, /Fully loaded cost[\s\S]*No normalized cost record/);
-  assert.match(genesysHtml, /CRM association[\s\S]*Keyed Marketing Event · activity and deal joins pending/);
-  assert.match(genesysHtml, /Open Marketing Event/);
-  assert.match(genesysHtml, /Open measurement contract/);
-  assert.doesNotMatch(genesysHtml, /Direct update · OOH meeting notes · Notion · Gmail · HubSpot · Restricted Genesys brief/);
-  assert.doesNotMatch(genesysHtml, /href="\/sources">See source record/);
-  assert.match(genesysHtml, /Guaranteed meetings<\/span><strong>None/);
+  assert.doesNotMatch(genesysHtml, /Marketing \/ event lead/);
+  assert.doesNotMatch(genesysHtml, /id="event-changes"|id="event-writebacks"|id="event-update-route"|id="event-admin"/);
+  assert.doesNotMatch(genesysHtml, /Source records still need to catch up|Canonical Event key|Event system coverage|Measurement checkpoint/);
   assert.match(genesysHtml, /Onsite footprint<\/span><strong>Booth confirmed/);
   assert.match(genesysHtml, /Swag \/ materials<\/span><strong>In plan · see event materials/);
   assert.doesNotMatch(genesysHtml, /Meetings scheduled/);
   assert.match(genesysHtml, /Team &amp; passes<\/span><strong>9 attending/);
-  assert.match(genesysHtml, /Next move[\s\S]*Deliver the final solution-talk deck/);
-  assert.match(genesysHtml, /Owner[\s\S]*Cat \+ Holden/);
-  assert.match(genesysHtml, /Due[\s\S]*Aug 10/);
-  assert.match(genesysHtml, /Status[\s\S]*In progress/);
-  assert.match(genesysHtml, /Open task plan/);
-  assert.doesNotMatch(genesysHtml, /Do these next/);
-  assert.match(genesysHtml, /id="event-priorities"/);
-  assert.match(genesysHtml, /Still needs attention\./);
-  assert.match(genesysHtml, /6(?:<!-- -->)? event-specific/);
-  assert.match(genesysHtml, /items are(?:<!-- -->)? still open in the current plan/);
-  assert.match(genesysHtml, /Deliver Cat’s final solution-talk deck by Aug 10/);
-  assert.match(genesysHtml, /Use each item’s link to document the update in its owning event record/);
-  assert.match(genesysHtml, /Document the update in Notion/);
-  assert.match(genesysHtml, /Update the HubSpot event/);
-  assert.match(genesysHtml, /record\/0-54\/827998353134/);
-  assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks"/);
-  assert.match(genesysHtml, /Wish Line/);
-  assert.match(genesysHtml, /Featured activation/);
-  assert.match(genesysHtml, /Wish Line taxi campaign/);
-  assert.match(genesysHtml, /0\.25-mile geofence · Bellagio to Fontainebleau · ~10-minute loop/);
-  assert.match(genesysHtml, /AP confirmation pending/);
-  assert.match(genesysHtml, /href="#workstream-marketing">Open route and viewing plan(?:<!-- -->)? ↓/);
-  assert.match(genesysHtml, /shortest no-U-turn loop available/);
-  assert.match(genesysHtml, /quarter-mile taxi geofence/);
-  assert.match(genesysHtml, /Bellagio to Fontainebleau/);
-  assert.match(genesysHtml, /estimated 10-minute loop/);
-  assert.match(genesysHtml, /track a driver live/);
-  assert.match(genesysHtml, /airport placement happens only if inventory is available/);
-  assert.match(genesysHtml, /AP submitted payment/);
+  assert.doesNotMatch(genesysHtml, /id="event-priorities"|Next move|Open task plan|Still needs attention/);
+  assert.match(genesysHtml, /Wish Line FYI/);
+  assert.match(genesysHtml, /1-855-955-WISH/);
+  assert.match(genesysHtml, /Turn the Vegas campaign into a live product demo/);
+  assert.match(genesysHtml, /Ask prospects to call it/);
+  assert.doesNotMatch(genesysHtml, /quarter-mile taxi geofence|Bellagio to Fontainebleau|AP confirmation pending/);
   for (const person of ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]) assert.match(genesysHtml, new RegExp(`>${person}<`));
   assert.doesNotMatch(genesysHtml, />Available</);
   assert.doesNotMatch(genesysHtml, /Final roster still needs to be reconciled/);
   assert.match(genesysHtml, /only external voice-AI partner in the current sponsor plan/);
-  assert.match(genesysHtml, /Download the Cvent Events app now/);
-  assert.match(genesysHtml, /Stanleys/);
-  assert.match(genesysHtml, /Karaoke machines/);
+  assert.match(genesysHtml, /4–5 rolling duffels/);
   assert.match(genesysHtml, /Genesys sales rules \(confidential\)/);
   assert.match(genesysHtml, /Genesys trademark usage policy/);
   assert.match(genesysHtml, /referral agreement applies only if we are referring a prospect to Genesys/);
@@ -978,28 +917,23 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(genesysHtml, /Open the restricted partner guidelines/);
   assert.match(genesysHtml, /Steak cards/);
   assert.doesNotMatch(genesysHtml, /Stick cards|MNHC|10 business days|Lead Registration Form/);
-  assert.match(genesysHtml, /Do not pursue or register federal, state, local, or foreign government entities/);
   assert.match(genesysHtml, /Do not promise Genesys pricing, terms, product commitments, or approval/);
-  assert.match(genesysHtml, /Aug 13/);
+  assert.doesNotMatch(genesysHtml, /Aug 13|contracted pre-event email|Marketing tasks/);
   assert.match(genesysHtml, /Travel and hotels should already be booked/);
-  assert.match(genesysHtml, /Marketing tasks/);
-  assert.match(genesysHtml, /8(?:<!-- -->)? in plan · (?:<!-- -->)?0(?:<!-- -->)? need confirmation · (?:<!-- -->)?1(?:<!-- -->)? not in plan/);
+  assert.match(genesysHtml, /6(?:<!-- -->)? in plan · (?:<!-- -->)?0(?:<!-- -->)? need confirmation · (?:<!-- -->)?1(?:<!-- -->)? not in plan/);
   assert.match(genesysHtml, /<strong>Navigate<\/strong>/);
-  assert.match(genesysHtml, /<b>Event brief<\/b>[\s\S]*<b>Plan sections<\/b>[\s\S]*href="#workstream-marketing"[\s\S]*<b>Results \+ admin<\/b>/);
+  assert.match(genesysHtml, /<b>Event brief<\/b>[\s\S]*<b>Plan sections<\/b>/);
+  assert.doesNotMatch(genesysHtml, /Results \+ admin/);
   assert.ok(genesysHtml.indexOf('href="#event-crew"') < genesysHtml.indexOf('href="#workstream-speaking"'));
-  assert.ok(genesysHtml.indexOf('href="#workstream-budget"') < genesysHtml.indexOf('href="#event-admin"'));
   assert.match(genesysHtml, /<summary>Navigate this event(?:<!-- -->)? <span>[^<]+<\/span><\/summary>/);
-  assert.match(genesysHtml, /id="workstream-marketing"/);
-  assert.match(genesysHtml, /id="workstream-budget"/);
-  assert.match(genesysHtml, /href="\/marketing\?event=genesys-xperience#event-tasks">Open event tasks/);
-  assert.match(genesysHtml, /href="\/marketing#measurement">Open measurement/);
+  assert.doesNotMatch(genesysHtml, /id="workstream-marketing"|id="workstream-budget"|Budget &amp; contract/);
   assert.doesNotMatch(genesysHtml, /id="workstream-secondary"/);
   assert.match(genesysHtml, /Not in this event plan[\s\S]*Secondary events[\s\S]*None/);
 
   const contact = await render("/events/contact-io");
   assert.equal(contact.status, 200);
   const contactHtml = await contact.text();
-  assertSectionOrder(contactHtml, ["event-tldr", "event-no-plan", "event-writebacks", "event-update-route"]);
+  assertSectionOrder(contactHtml, ["event-tldr", "event-no-plan"]);
   assert.match(contactHtml, /Not attending/);
   assert.match(contactHtml, /Why there is no TeamSimple plan\./);
   assert.match(contactHtml, /Participation<\/span><strong>Not attending/);
@@ -1017,27 +951,23 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.doesNotMatch(contactHtml, /Who’s going/);
   assert.doesNotMatch(contactHtml, /Measurement checkpoint/);
   assert.doesNotMatch(contactHtml, /id="event-role-routes"/);
-  assert.match(contactHtml, /id="event-writebacks"/);
-  assert.match(contactHtml, /Contact\.io participation/);
-  assert.match(contactHtml, /gid=0&amp;range=A15:W15/);
+  assert.doesNotMatch(contactHtml, /id="event-writebacks"|id="event-update-route"|Contact\.io participation/);
 
   const trackerBaselineEvent = await render("/events/ccw-orlando");
   assert.equal(trackerBaselineEvent.status, 200);
   const trackerBaselineHtml = await trackerBaselineEvent.text();
   assert.doesNotMatch(trackerBaselineHtml, /Source check<\/span>/);
-  assert.match(trackerBaselineHtml, /Notion setup needed/);
+  assert.doesNotMatch(trackerBaselineHtml, /Notion setup needed|Source health/);
   assert.doesNotMatch(trackerBaselineHtml, /class="event-next-move/);
 
   const customerConnect = await render("/events/customer-connect-expo");
   assert.equal(customerConnect.status, 200);
   const customerConnectHtml = await customerConnect.text();
   assert.match(customerConnectHtml, /Confirmed/);
-  assert.match(customerConnectHtml, /id="event-writebacks"/);
-  assert.match(customerConnectHtml, /Customer Connect Expo participation/);
+  assert.doesNotMatch(customerConnectHtml, /id="event-writebacks"|Customer Connect Expo participation/);
   assert.doesNotMatch(customerConnectHtml, /Customer Connect priorities · organizer call/);
   assert.doesNotMatch(customerConnectHtml, /Customer Connect task plan · organizer call/);
   assert.doesNotMatch(customerConnectHtml, /Customer Connect sponsorship workstream/);
-  assert.match(customerConnectHtml, /gid=0&amp;range=A18:W18/);
   assert.match(customerConnectHtml, /Onsite footprint<\/span><strong>Booth confirmed/);
   assert.match(customerConnectHtml, /Swag \/ materials<\/span><strong>None/);
   assert.match(customerConnectHtml, /Four attendees and a 10×10 booth are planned/);
@@ -1045,19 +975,10 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(customerConnectHtml, /Aug 11 at 9:30 AM PT/);
   assert.match(customerConnectHtml, /Insurance is not needed for our pipe-and-drape booth/);
   assert.match(customerConnectHtml, /25% complete on Aug 6/);
-  assert.match(customerConnectHtml, /Next move[\s\S]*Confirm the AP payment has settled/);
-  assert.match(customerConnectHtml, /Owner[\s\S]*Holden \+ AP/);
-  assert.match(customerConnectHtml, /Open task plan/);
+  assert.doesNotMatch(customerConnectHtml, /Next move|Open task plan|id="event-priorities"/);
   assert.match(customerConnectHtml, /Exhibitor portal/);
   assert.match(customerConnectHtml, /Complimentary tickets/);
-  assert.match(customerConnectHtml, /6(?:<!-- -->)? in plan · (?:<!-- -->)?0(?:<!-- -->)? need confirmation · (?:<!-- -->)?3(?:<!-- -->)? not in plan/);
-  assert.match(customerConnectHtml, /Open event row(?:<!-- -->)? ↗/);
-  assert.match(customerConnectHtml, /Open event project(?:<!-- -->)? ↗/);
-  assert.match(customerConnectHtml, /Recorded Customer Connect portal progress/);
-  assert.match(customerConnectHtml, /Confirmed Customer Connect Expo participation/);
-  assert.match(customerConnectHtml, /Accepted Gabby Pring’s Customer Connect answers/);
-  assert.match(customerConnectHtml, /id="workstream-marketing"/);
-  assert.match(customerConnectHtml, /id="workstream-budget"/);
+  assert.doesNotMatch(customerConnectHtml, /id="workstream-marketing"|id="workstream-budget"|Recorded Customer Connect portal progress|Accepted Gabby Pring’s Customer Connect answers/);
   assert.doesNotMatch(customerConnectHtml, /id="workstream-swag"/);
 
   const icmi = await render("/events/icmi-contact-center-expo");
@@ -1068,7 +989,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(icmiHtml, /Speaking<\/span><strong>Lunch &amp; Learn · Wednesday · confirmation needs reconciliation/);
   assert.match(icmiHtml, /workstream-state-needs-confirmation/);
   assert.match(icmiHtml, /Needs confirmation/);
-  assert.match(icmiHtml, /Open event row(?:<!-- -->)? ↗/);
+  assert.doesNotMatch(icmiHtml, /Open event row(?:<!-- -->)? ↗/);
 
   const orlando = await render("/events/ccw-orlando");
   assert.equal(orlando.status, 200);
@@ -1092,7 +1013,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(vegasHtml, /One Intro record is marked Canceled/);
   assert.match(vegasHtml, /All 54 outcome fields are blank/);
   assert.match(vegasHtml, /CCW Vegas meetings tracker/);
-  assert.match(vegasHtml, /CCW Vegas meeting tracker reconciliation/);
+  assert.doesNotMatch(vegasHtml, /CCW Vegas meeting tracker reconciliation/);
 
   const lead = await render("/events/the-lead-summit");
   const leadHtml = await lead.text();
@@ -1111,7 +1032,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(orlando2027Html, /6 Executive Leadership Exchange meetings/);
   assert.match(orlando2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.match(orlando2027Html, /JW Marriott Bonnet Creek/);
-  assert.match(orlando2027Html, /6 Executive Leadership Exchange meetings\. Get the matched-account list/);
+  assert.match(orlando2027Html, /Get the matched-account list and prepare one brief per meeting/);
 
   const uk2027 = await render("/events/ccw-uk-executive-exchange-2027");
   assert.equal(uk2027.status, 200);
@@ -1123,12 +1044,12 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(uk2027Html, /minimum 10 30-minute meetings/);
   assert.match(uk2027Html, /Meetings booked<\/span><strong>None recorded yet/);
   assert.doesNotMatch(uk2027Html, /Passes \/ credentials/);
-  assert.match(uk2027Html, /Open event row(?:<!-- -->)? ↗/);
+  assert.doesNotMatch(uk2027Html, /Open event row(?:<!-- -->)? ↗/);
 
   const vegas2027 = await render("/events/ccw-vegas-2027");
   assert.equal(vegas2027.status, 200);
   const vegas2027Html = await vegas2027.text();
-  assert.match(vegas2027Html, /Source check needed/);
+  assert.doesNotMatch(vegas2027Html, /Source check needed/);
   assert.match(vegas2027Html, /June 15, 2027 is Tuesday/);
   assert.match(vegas2027Html, /0 attending \/ 9 passes · 9 unassigned/);
   assert.doesNotMatch(vegas2027Html, /Passes \/ credentials/);
@@ -1153,7 +1074,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /Josh did not attend/);
   assert.doesNotMatch(chicagoHtml, /Source check needed/);
   assert.doesNotMatch(chicagoHtml, /Onsite check|Onsite gaps open|Open onsite priorities|Do these next/);
-  assert.match(chicagoHtml, /Confirmed Taylor as the sole Chicago attendee/);
+  assert.doesNotMatch(chicagoHtml, /Confirmed Taylor as the sole Chicago attendee/);
   assert.match(chicagoHtml, /1 attending/);
   assert.match(chicagoHtml, /Guaranteed meetings<\/span><strong>Included · count TBD/);
   assert.match(chicagoHtml, /Meetings recorded<\/span><strong>Not recorded/);
@@ -1176,9 +1097,8 @@ test("server-renders dynamic event facts without empty filler notes", async () =
   assert.match(chicagoHtml, /No opportunities are confirmed yet\./);
   assert.match(chicagoHtml, /contractual meeting amount may be 10, but it is not verified/);
   for (const account of ["Kemper", "Beyond Finance", "United Airlines", "CNA", "TransUnion", "Spot Hero"]) assert.match(chicagoHtml, new RegExp(account));
-  assert.match(chicagoHtml, /CCW Exchange Chicago follow-up meetings/);
-  assert.match(chicagoHtml, /do not mark either completed until it happens/);
-  assert.match(chicagoHtml, /CCW Exchange Chicago cookie follow-up/);
+  assert.match(chicagoHtml, /Do not count either scheduled follow-up as held or as an opportunity/);
+  assert.doesNotMatch(chicagoHtml, /CCW Exchange Chicago follow-up meetings|CCW Exchange Chicago cookie follow-up/);
 
   const shoptalkFall = await render("/events/shoptalk-fall");
   const shoptalkFallHtml = await shoptalkFall.text();
@@ -1188,7 +1108,7 @@ test("server-renders dynamic event facts without empty filler notes", async () =
 
   const travel = await render("/events/iqpc-cx-travel-hospitality");
   const travelHtml = await travel.text();
-  assert.match(travelHtml, /Source check needed/);
+  assert.doesNotMatch(travelHtml, /Source check needed/);
   assert.match(travelHtml, /Hilton London Syon Park/);
   assert.match(travelHtml, /invitation-only Exchange/);
   assert.match(travelHtml, /connected guest journeys/);

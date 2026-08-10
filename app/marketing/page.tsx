@@ -7,6 +7,7 @@ import { PageMascot } from "../components/page-mascot";
 import { events, getEventPhase, getProgramDate } from "../data/events";
 import { measurementFields, measurementReadiness, measurementWindows, metricDefinitions } from "../data/event-measurement";
 import { eventPipelineSnapshot } from "../data/event-pipeline";
+import { eventCostPortfolio, getEventCostLedgers } from "../data/event-costs";
 import { getMarketingProgramReadiness } from "../data/marketing-readiness";
 
 export const dynamic = "force-dynamic";
@@ -80,11 +81,16 @@ const crmActivationSteps = [
   },
 ];
 
+function money(value: number | null) {
+  return value === null ? "Needs cost" : `$${value.toLocaleString()}`;
+}
+
 export default async function MarketingPage({ searchParams }: { searchParams: Promise<{ event?: string }> }) {
   const { event: selectedEvent } = await searchParams;
   const programDate = getProgramDate();
   const activeEvents = events.filter((event) => getEventPhase(event, programDate) !== "past" && event.status !== "No");
   const workload = getMarketingProgramReadiness(activeEvents, programDate);
+  const costLedgers = getEventCostLedgers();
   return (
     <main id="page-top">
       <SiteHeader />
@@ -106,6 +112,8 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         ] },
         { label: "Event playbook", items: playbook.map((section) => ({ id: section.id, label: section.label })) },
         { label: "Reporting", items: [
+          { id: "event-costs", label: "Event costs" },
+          { id: "event-roi", label: "Expense vs return" },
           { id: "event-pipeline", label: "Event pipeline" },
           { id: "crm-setup", label: "HubSpot setup" },
           { id: "measurement", label: "Measurement" },
@@ -158,6 +166,43 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
           <div className="role-number">{String(index + 1).padStart(2, "0")}</div>
           <div><p className="eyebrow">{section.label}</p><h2>{section.title}</h2><ul>{section.items.map((item) => <li key={item}>{item}</li>)}</ul><BackToTop /></div>
         </article>)}
+      </section>
+
+      <section className="shell event-costs" id="event-costs">
+        <div className="section-intro"><p className="eyebrow">Event cost ledger</p><h2>One cost table per event.</h2><p>Known commitments are recorded. Every missing forecast or final amount stays visible as “Needs cost” until the owning event record is updated.</p></div>
+        <div className="event-cost-ledgers">
+          {costLedgers.map((ledger) => <details key={ledger.eventSlug} open={ledger.eventSlug === selectedEvent || ledger.eventSlug === "genesys-xperience"}>
+            <summary>
+              <span><strong>{ledger.eventName}</strong><small>{ledger.dates}</small></span>
+              <span><b>{ledger.knownForecast ? `${money(ledger.knownForecast)} known` : "Needs cost"}</b><small>{ledger.missingCount} incomplete line{ledger.missingCount === 1 ? "" : "s"}</small></span>
+            </summary>
+            <div className="event-cost-table-wrap"><table className="event-cost-table">
+              <thead><tr><th>Category</th><th>What is included</th><th>Forecast / committed</th><th>Final</th><th>Status</th></tr></thead>
+              <tbody>{ledger.lines.map((line) => <tr key={`${line.category}-${line.detail}`}><th scope="row">{line.category}</th><td>{line.detail}</td><td>{money(line.forecast)}</td><td>{money(line.final)}</td><td><span className={`cost-state cost-state-${line.state.toLowerCase().replaceAll(" ", "-")}`}>{line.state}</span></td></tr>)}</tbody>
+              <tfoot><tr><th colSpan={2}>Known subtotal</th><td>{money(ledger.knownForecast)}</td><td>{ledger.knownFinal ? money(ledger.knownFinal) : "Not final"}</td><td>{ledger.missingCount ? "Partial" : "Complete"}</td></tr></tfoot>
+            </table></div>
+            <footer><a href={ledger.sourceUrl} target="_blank" rel="noreferrer">Update this event’s cost record ↗</a><Link href={`/events/${ledger.eventSlug}`}>Open event brief →</Link></footer>
+          </details>)}
+        </div>
+        <BackToTop />
+      </section>
+
+      <section className="event-roi" id="event-roi">
+        <div className="shell">
+          <div className="section-intro"><p className="eyebrow">Expense vs return</p><h2>Cost beside pipeline and revenue.</h2><p>This is a coverage table, not an ROI ranking. Blank costs and blank deal amounts remain explicit so partial records cannot look complete.</p></div>
+          <div className="event-roi-summary" aria-label="Portfolio expense and return summary">
+            <article><span>Known committed expense</span><strong>{money(eventCostPortfolio.knownCommittedExpense)}</strong><p>Partial · currently the approved Genesys Wish Line buy</p></article>
+            <article><span>Qualifying opportunities</span><strong>{eventCostPortfolio.qualifyingOpportunities}</strong><p>Source-based HubSpot view; Closed Lost and Disqualified excluded</p></article>
+            <article><span>Recorded pipeline</span><strong>{money(eventCostPortfolio.recordedPipeline)}</strong><p>{eventCostPortfolio.dealsWithoutAmount} qualifying deals have no reportable amount</p></article>
+            <article><span>Recorded revenue</span><strong>{money(eventCostPortfolio.recordedRevenue)}</strong><p>Closed Won only</p></article>
+          </div>
+          <div className="event-roi-table-wrap"><table className="event-roi-table">
+            <thead><tr><th>Event</th><th>Known expense</th><th>Cost coverage</th><th>Opportunities</th><th>Pipeline</th><th>Revenue</th></tr></thead>
+            <tbody>{costLedgers.map((ledger) => <tr key={ledger.eventSlug}><th scope="row"><Link href={`/events/${ledger.eventSlug}`}>{ledger.eventName}</Link><small>{ledger.dates}</small></th><td>{ledger.knownForecast ? money(ledger.knownForecast) : "Needs cost"}</td><td>{ledger.missingCount ? `${ledger.missingCount} line${ledger.missingCount === 1 ? "" : "s"} incomplete` : "Complete"}</td><td>{ledger.opportunities ?? "Not linked"}</td><td>{ledger.pipeline === null ? "Not reportable" : money(ledger.pipeline)}</td><td>{ledger.revenue === null ? "Not linked" : money(ledger.revenue)}</td></tr>)}</tbody>
+          </table></div>
+          <p className="event-roi-note"><strong>Current constraint:</strong> {eventCostPortfolio.costCoverageEvents} of {eventCostPortfolio.participatingEvents} participating events have a complete cost ledger. CCW Vegas has the only exact event-level opportunity rollup; its deal amounts are blank.</p>
+          <BackToTop />
+        </div>
       </section>
 
       <section className="event-pipeline" id="event-pipeline">
@@ -232,7 +277,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
           <div className="section-intro"><p className="eyebrow">Metric definitions</p><h3>Use the same denominator every time.</h3><p>These definitions prevent a scheduled calendar entry, a badge scan, and a qualified opportunity from collapsing into one flattering number.</p></div>
           <div>{metricDefinitions.map((item) => <article key={item.metric}><span>{item.metric}</span><p>{item.definition}</p>{item.formula ? <code>{item.formula}</code> : null}</article>)}</div>
         </div>
-        <aside className="measurement-gate"><strong>Portfolio comparison is blocked today.</strong><p>The Marketing Event identity layer exists, but no normalized event-cost ledger or complete commercial association set does. Until costs, meetings, and deals are joined and outcome-complete, report coverage and follow-up—not event ROI rankings.</p><Link href="/sources#writeback-queue">Open the setup queue →</Link></aside>
+        <aside className="measurement-gate"><strong>Portfolio ROI is still blocked.</strong><p>The cost ledger now exists, but it is incomplete, and most commercial records are not joined to a canonical Event key. Use the expense-versus-return table to close the gaps before ranking events by ROI.</p><Link href="#event-costs">Open the cost ledger ↑</Link></aside>
         <p className="practice-sources">Practice references: <a href="https://www.cvent.com/en/blog/events/how-to-prove-event-roi" target="_blank" rel="noreferrer">Cvent’s 2026 event-value guidance ↗</a>, <a href="https://www.bizzabo.com/blog/trade-show-roi" target="_blank" rel="noreferrer">Bizzabo’s trade-show measurement model ↗</a>, and <a href="https://knowledge.hubspot.com/integrations/use-marketing-events" target="_blank" rel="noreferrer">HubSpot’s Marketing Events guidance ↗</a>.</p>
         <BackToTop />
       </section>

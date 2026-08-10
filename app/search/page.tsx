@@ -33,6 +33,8 @@ const referenceRecords: SearchRecord[] = [
   { type: "Role", title: "AE field guide", href: "/ae", description: "Account preparation, marketing support, gifting, event strategy, onsite discovery, HubSpot notes, Granola, and next steps.", keywords: "account executive meeting hypothesis deal booked meeting CRM follow-up marketing help support gifting Goody ongoody event details giveaways advertising strategy" },
   { type: "Role", title: "SDR field guide", href: "/sdr", description: "Onsite ground rules, event logistics, gifting, product claims, AE triage, targeting, qualification, and follow-up.", keywords: "sales development representative conduct professionalism alcohol safety booth etiquette work the floor gatekeeper AE time qualification product claims sequence phone email LinkedIn ZoomInfo event app gifting Goody ongoody rendezvous meeting point billing location side events swag giveaways materials" },
   { type: "Operations", title: "Marketing operations", href: "/marketing", description: "Event support matrix, operating lessons, production, capture, reporting, and measurement.", keywords: "campaign creative booth contract sponsor deliverables ROI budget support matrix lessons" },
+  { type: "Operations", title: "Event cost ledger", href: "/marketing#event-costs", description: "One cost table per participating event, with known commitments, missing forecasts, final expenses, and links to the owning event record.", keywords: "event cost costs expense expenses ledger budget sponsorship travel production paid media activation freight forecast committed final fully loaded" },
+  { type: "Operations", title: "Expense versus pipeline and revenue", href: "/marketing#event-roi", description: "Portfolio and event-level coverage for known expense, qualifying opportunities, pipeline, and closed-won revenue.", keywords: "expense versus pipeline revenue ROI return comparison opportunities closed won event" },
   { type: "Operations", title: "Marketing workload pulse", href: "/marketing#marketing-pulse", description: "Task-plan coverage, open and overdue structured work, the next shared deadline, and missing owners or dates across active events.", keywords: "marketing workload overdue tasks plan coverage next deadline owner gap date gap what needs attention now operations" },
   { type: "Operations", title: "Event-sourced pipeline", href: "/marketing#event-pipeline", description: "HubSpot source-based and exact-attribution opportunity counts, stage distribution, open pipeline, closed-won revenue, and amount hygiene.", keywords: "hubspot event conference trade show field dinner opportunities deals stages open pipeline revenue closed won deal source detail exact attribution 30 source records 29 exact 22 source based 21 exact qualifying 2 mismatches" },
   { type: "Operations", title: "Event measurement contract", href: "/marketing#measurement", description: "Required fields, reporting windows, metric definitions, formulas, and the gates that block trustworthy event ROI.", keywords: "measurement scorecard ROI event cost ledger spend held meetings sourced pipeline influenced pipeline show rate opportunity conversion 30 90 days attribution" },
@@ -148,7 +150,7 @@ const writebackRecords: SearchRecord[] = writebackQueue.map((item) => {
     context: event ? "Event source correction" : "Program write-back item",
     status: item.state,
     title: `${item.scope} · upstream work`,
-    href: event ? `/events/${event.slug}#event-writebacks` : "/sources#writeback-queue",
+    href: "/sources#writeback-queue",
     description: `${item.system} · ${item.proposed}`,
     keywords: [event?.name, event?.location, item.system, item.scope, item.current, item.proposed, item.evidence, item.state, "write back upstream correction setup decision approval"].filter(Boolean).join(" "),
     details: [`Current · ${item.current}`, `Proposed · ${item.proposed}`, `Evidence · ${item.evidence}`],
@@ -225,8 +227,9 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     event.credentials ? `Credentials · ${event.credentials}` : "",
     ...(event.tldrCallout ? [
       `${event.tldrCallout.label} · ${event.tldrCallout.title}`,
-      `Activation route · ${event.tldrCallout.detail}`,
-      `Activation status · ${event.tldrCallout.status}`,
+      `Activation detail · ${event.tldrCallout.detail}`,
+      `Activation goal · ${event.tldrCallout.goal}`,
+      `Sales action · ${event.tldrCallout.salesAction}`,
     ] : []),
     `Source check · ${verification.checkedAt} · ${verification.sources.join(" · ")}`,
     `Brief readiness · ${briefReadiness.label} · ${briefReadiness.timing}`,
@@ -235,7 +238,7 @@ const eventRecords: SearchRecord[] = events.map((event) => {
     ...(event.priorityActions ?? []).map((item) => `Open item · ${item}`),
     ...(event.relatedLinks ?? []).map((link) => `Link · ${link.label}`),
     ...(event.outcomeNotes ?? []).map((item) => `Result · ${item}`),
-    ...getEventRoleRoutes(event, getEventPhase(event, searchProgramDate)).map((route) => `${route.role} route · ${route.title} ${route.detail}`),
+    ...getEventRoleRoutes(event, getEventPhase(event, searchProgramDate)).map((route) => `${route.role} guide · ${route.bullets.join(" · ")}`),
     ...Object.entries(getWorkstreams(event)).flatMap(([key, items]) => items.map((item) => `${workstreamLabels[key as keyof typeof workstreamLabels]} · ${item}`)),
     ...confirmationWorkstreams.map((key) => `Needs confirmation · ${workstreamLabels[key]}`),
     ...event.meetingsBooked.map((item) => `Meeting · ${item}`),
@@ -338,9 +341,9 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
     },
     ...(event.specialConsiderations?.length ? [{
       type: "Event" as const,
-      context: "Event section · Rules",
-      status: `${event.specialConsiderations.length} event-specific rule${event.specialConsiderations.length === 1 ? "" : "s"}`,
-      title: `${event.name} · rules of engagement`,
+      context: "Event section · Need to know",
+      status: `${event.specialConsiderations.length} event-specific note${event.specialConsiderations.length === 1 ? "" : "s"}`,
+      title: `${event.name} · need to know`,
       href: `/events/${event.slug}#event-considerations`,
       description: "Event-specific operating rules and guardrails.",
       keywords: [event.name, event.location, "rules rule considerations engagement guardrails what can I say do", ...event.specialConsiderations].join(" "),
@@ -349,6 +352,7 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
     }] : []),
     ...Object.entries(workstreams).flatMap(([key, items]) => {
       const workstreamKey = key as keyof typeof workstreamLabels;
+      if (workstreamKey === "marketing" || workstreamKey === "budget") return [];
       const state = getEventWorkstreamState(event, workstreamKey);
       return state !== "inactive" ? [{
       type: "Event" as const,
@@ -409,7 +413,7 @@ const eventChangeRecords: SearchRecord[] = siteStatus.sourceMonitor.changeLog.fl
     context: "Source change",
     status: change.state,
     title: `${event.name} · ${change.title}`,
-    href: `/events/${event.slug}#event-changes`,
+    href: "/sources#change-log",
     description: `${change.state} · ${change.field} · checked ${change.checkedAt}`,
     keywords: [
       event.name,

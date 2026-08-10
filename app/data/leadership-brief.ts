@@ -26,9 +26,7 @@ export function getLeadershipChangeDigest(catalog: EventRecord[], changes: Sourc
     .map((change) => ({
       ...change,
       eventName: change.eventSlug ? eventNames.get(change.eventSlug) ?? "Unmatched event" : "Program-wide",
-      href: change.eventSlug && eventNames.has(change.eventSlug)
-        ? `/events/${change.eventSlug}#event-changes`
-        : "/sources#change-log",
+      href: "/sources#change-log",
     }));
   return {
     applied: items.filter((change) => change.state === "Applied"),

@@ -34,7 +34,8 @@ export type EventTldrCallout = {
   label: string;
   title: string;
   detail: string;
-  status: string;
+  goal: string;
+  salesAction: string;
   href?: string;
   action?: string;
 };
@@ -483,7 +484,7 @@ export const events: EventRecord[] = [
     attendeeCount: 9,
     team: ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"],
     available: [],
-    notes: "The only external voice-AI partner in the current sponsor plan. There are no guaranteed meetings, so the opportunity depends on Genesys-account targeting, the event app, and direct outreach.",
+    notes: "The only external voice-AI partner in the current sponsor plan. The opportunity depends on Genesys-account targeting, the event app, Cat’s talk, the booth, and direct outreach.",
     rating: "None",
     meetingsBooked: [],
     demosBooked: [],
@@ -493,12 +494,13 @@ export const events: EventRecord[] = [
     venue: "Wynn Las Vegas · Orchestrators Hall",
     credentials: "9 booth passes",
     tldrCallout: {
-      label: "Featured activation",
-      title: "Wish Line taxi campaign",
-      detail: "0.25-mile geofence · Bellagio to Fontainebleau · ~10-minute loop",
-      status: "AP confirmation pending",
-      href: "#workstream-marketing",
-      action: "Open route and viewing plan",
+      label: "Wish Line FYI",
+      title: "1-855-955-WISH",
+      detail: "Live Simple agent · Aug 31–Sep 3",
+      goal: "Turn the Vegas campaign into a live product demo and bring qualified conference callers to the booth.",
+      salesAction: "Ask prospects to call it; if they engage, continue the conversation at the booth and record the next step.",
+      href: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c",
+      action: "Open the campaign brief",
     },
     priorityActions: [
       "Deliver Cat’s final solution-talk deck by Aug 10, then schedule rehearsal and confirm AV.",
@@ -522,23 +524,20 @@ export const events: EventRecord[] = [
       { label: "Xperience landing page", url: "https://usesimple.ai/xperience" },
       { label: "Genesys sales rules (confidential)", url: "https://docs.google.com/document/d/1NIStSPTOChO6ScNy0haYQuctnlUE23a__sKedxiSGUA" },
       { label: "Genesys trademark usage policy", url: "https://www.genesys.com/company/legal-docs/genesys-trademark-use-policy" },
-      { label: "Pre-event email plan", url: "https://www.notion.so/3b46fee642fe80c5b96bd1b82743a8c0" },
-      { label: "Wish Line campaign brief", url: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c" },
     ],
     specialConsiderations: [
+      "Cat’s 20-minute solution talk is Thursday, Sep 3 at 1:10 PM. Know where it is, invite priority prospects, and use it to continue conversations at the booth.",
       "Position Simple AI as an enhancement to the Genesys environment—not a replacement for Genesys Cloud CX. Never imply that we can bind Genesys or that we are an exclusive Genesys partner.",
       "Simple AI is the only external voice-AI partner in the current sponsor plan besides Genesys’ own product. Use that as an event differentiator, then recheck the final sponsor roster before making the claim publicly.",
       "Target Genesys accounts. Ask which Genesys product they run, which call types matter, monthly volume, current failure points, and who owns the contact-center roadmap.",
-      "There are no guaranteed meetings. Every attendee should download the Cvent Events app now, source named contacts, introduce themselves, and pre-book directly.",
       "The referral agreement applies only if we are referring a prospect to Genesys—a situation we do not expect to be common at this event. Read the restricted partner guidelines before sharing contact details or submitting a referral. If you are unsure how to handle a prospect, ask Cat or Holden.",
-      "Do not pursue or register federal, state, local, or foreign government entities through this referral program. Do not promise Genesys pricing, terms, product commitments, or approval on Genesys’ behalf.",
-      "Use only approved Genesys marks and partner language. The full commercial and compliance rules stay in the restricted brief linked below; do not copy the agreement into outreach or public materials.",
-      "Wish Line airport inventory is a possible bonus, not part of the purchased campaign. Do not present airport placement as confirmed unless Michael confirms inventory.",
+      "Do not promise Genesys pricing, terms, product commitments, or approval on Genesys’ behalf. Use only approved Genesys marks and partner language.",
+      "We have 4–5 rolling duffels for bringing swag and materials to Las Vegas. Coordinate who carries each bag before departure.",
     ],
     workstreams: {
       speaking: ["20-minute solution talk on Sep 3 at 1:10 PM", "Title, abstract, and speaker are locked", "Final deck is due Aug 10; rehearse and confirm AV after the handoff"],
-      sponsorship: ["Booth confirmed in Orchestrators Hall", "Contracted pre-event email copy is due Aug 13; Cat reviews, then Holden submits through the sponsor portal", "Use the live Xperience page for the 15-minute demo CTA and HubSpot capture", "Wish Line taxi campaign and phone number are approved; production is owned on the marketing page"],
-      meetings: ["No guaranteed meetings", "Download the Cvent Events app now and use attendee names to target Genesys accounts", "Introduce yourself in the app, move promising contacts into direct outreach, and add every booked meeting to HubSpot with the required context", "If a conversation genuinely requires a Genesys referral, stop and ask Cat or Holden before sharing contact details"],
+      sponsorship: ["Booth confirmed in Orchestrators Hall", "Use the live Xperience page for the 15-minute demo CTA and HubSpot capture"],
+      meetings: ["Build conversations through the Cvent Events app, Cat’s talk, the booth, and direct outreach", "Use attendee names to target Genesys accounts", "Introduce yourself in the app, move promising contacts into direct outreach, and add every booked meeting to HubSpot with the required context", "If a conversation genuinely requires a Genesys referral, stop and ask Cat or Holden before sharing contact details"],
       swag: ["Stanleys", "Steak cards", "Printed handouts", "Karaoke machines", "Ship materials to the designated recipients, then have the team bring them to Las Vegas in large bags"],
       secondary: ["None"],
       travel: ["Event venue: Wynn Las Vegas", "Travel and hotels should already be booked for all nine attendees", "Do not over-engineer booth shifts: avoid crowding the space, keep enough coverage, and send teammates into the event to bring priority contacts back to the booth"],

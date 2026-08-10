@@ -598,7 +598,7 @@ export const writebackQueue: WritebackItem[] = [
     current: "Wish Line is labeled as under evaluation; route, bonus inventory and payment state are not recorded",
     proposed: "Record the approved $15K campaign, quarter-mile taxi geofence, condensed Bellagio-to-Fontainebleau loop, estimated 10-minute timing, spot-based bonus, airport-inventory caveat, Michael as the single contact and AP confirmation pending",
     evidence: "Holden direct OOH meeting update · Aug 7",
-    evidenceUrl: "/events/genesys-xperience#workstream-marketing",
+    evidenceUrl: "/marketing?event=genesys-xperience#event-tasks",
     state: "Ready for approval",
     url: "https://www.notion.so/3aa6fee642fe81c88a89de617863507c",
   },

@@ -18,7 +18,7 @@ import { marketingEventCoverage } from "../data/marketing-events";
 import { actionBriefingPolicy, getActionBriefing, isExternalAction } from "../data/action-briefing";
 
 export const metadata: Metadata = {
-  title: "About this site’s sources · Event Basecamp",
+  title: "Microsite admin · Event Basecamp",
   description: "What controls the TeamSimple event data, what the recurring scan checks, and which conflicts need a decision.",
 };
 
@@ -39,9 +39,9 @@ export default function SourcesPage() {
     <main id="page-top">
       <SiteHeader />
       <section className="role-hero sources-hero">
-        <p className="eyebrow">About this site’s sources</p>
-        <h1>Where the event data comes from.</h1>
-        <p className="lede">See what controls the site, what the recurring scan checks, and which disagreements still need a decision.</p>
+        <p className="eyebrow">Microsite admin</p>
+        <h1>Source health and change control.</h1>
+        <p className="lede">One admin page for source connections, scan receipts, protected decisions, write-backs, approvals, and site changes.</p>
       </section>
       <PageContentsLayout groups={[
         { label: "Start here", items: [
@@ -528,21 +528,23 @@ export default function SourcesPage() {
         <div className="change-log-summary" aria-label="Change log status counts">
           {changeStates.map(({ state, count }) => <article key={state}><span>{state}</span><strong>{count}</strong></article>)}
         </div>
-        <div className="change-log-list">
+        <div className="change-log-list" aria-label="Microsite release changelog">
           {monitor.changeLog.map((change) => {
             const firstLabel = change.state === "Applied" ? "Before" : change.state === "Needs review" ? "Controlling source" : "Checked";
             const secondLabel = change.state === "Applied" ? "Published" : change.state === "Needs review" ? "Conflicting source" : "Result";
             return <article key={change.id} className={`change-record change-record-${change.state.toLowerCase().replace(" ", "-")}`}>
-              <header><span>{change.state}</span><time>{change.checkedAt}</time></header>
-              <div className="change-record-title"><p>{change.field}</p><h3>{change.title}</h3></div>
-              <dl>
-                <div><dt>{firstLabel}</dt><dd>{change.before}</dd></div>
-                <div><dt>{secondLabel}</dt><dd>{change.after}</dd></div>
-              </dl>
-              <footer>
-                {change.sourceUrl ? <a href={change.sourceUrl} target="_blank" rel="noreferrer">{change.source} ↗</a> : <span>{change.source}</span>}
-                {change.eventSlug ? <Link href={`/events/${change.eventSlug}`}>Open event →</Link> : null}
-              </footer>
+              <header><time>{change.checkedAt}</time><span>{change.state}</span></header>
+              <div className="change-record-body">
+                <div className="change-record-title"><p>{change.field}</p><h3>{change.title}</h3></div>
+                <dl>
+                  <div><dt>{firstLabel}</dt><dd>{change.before}</dd></div>
+                  <div><dt>{secondLabel}</dt><dd>{change.after}</dd></div>
+                </dl>
+                <footer>
+                  {change.sourceUrl ? <a href={change.sourceUrl} target="_blank" rel="noreferrer">{change.source} ↗</a> : <span>{change.source}</span>}
+                  {change.eventSlug ? <Link href={`/events/${change.eventSlug}`}>Open event →</Link> : null}
+                </footer>
+              </div>
             </article>;
           })}
         </div>
