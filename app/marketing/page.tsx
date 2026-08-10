@@ -92,7 +92,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         <div className="role-hero-copy">
           <p className="eyebrow">Marketing operations</p>
           <h1>Make every event easier to execute and measure.</h1>
-          <p className="lede">This page tracks the support promised for each active event and the operating rules that keep contracts, creative, lead capture, follow-up, and reporting connected.</p>
+          <p className="lede">See what Marketing owns, what is due next, and how each event will be measured.</p>
           <Link className="button" href="/#events">Open the event directory <span>↗</span></Link>
         </div>
         <PageMascot variant="marketing" />
@@ -116,7 +116,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         <div className="shell">
           <div className="marketing-pulse-head">
             <div><p className="eyebrow">Marketing workload</p><h2>What needs attention now.</h2></div>
-            <p>These counts use task-by-task event checklists. A checklist can be searchable before every owner and deadline is filled in; those gaps are counted separately below.</p>
+            <p>Open work, deadlines, and missing owners across active events.</p>
           </div>
           <div className="marketing-pulse-metrics">
             <article><span>Checklist coverage</span><strong>{workload.structuredEvents} / {workload.activeEvents}</strong><p>active events have a searchable task list</p></article>
@@ -134,20 +134,20 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
       </section>
 
       <section className="shell marketing-lessons" id="lessons">
-        <div className="section-intro"><p className="eyebrow">Lessons from this schedule</p><h2>Fix the handoffs that keep repeating.</h2><p>These are the patterns already visible across the 2026–2027 tracker and event plans.</p></div>
+        <div className="section-intro"><p className="eyebrow">Operating lessons</p><h2>Fix the handoffs that keep repeating.</h2></div>
         <div className="lesson-grid">{operatingLessons.map(([title, copy], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{copy}</p></article>)}</div>
         <BackToTop />
       </section>
 
       <section className="shell event-task-section" id="event-tasks">
-        <div className="section-intro"><p className="eyebrow">Event workspaces</p><h2>Keep each event’s execution list in its own tab.</h2><p>These are marketing and program-management tasks. The field brief stays focused on what sales, SDRs, and leadership need before and during the event.</p></div>
+        <div className="section-intro"><p className="eyebrow">Event tasks</p><h2>Choose an event. See the work.</h2></div>
         <EventMarketingWorkspace events={activeEvents} initialSlug={selectedEvent} programDate={programDate} />
         <BackToTop />
       </section>
 
       <section className="marketing-matrix-section" id="support-matrix">
         <div className="shell">
-          <div className="section-intro"><p className="eyebrow">Active event support</p><h2>See the work and the gaps in one place.</h2><p>The board uses the same event records as the directory. It does not treat the event team as the marketing owner, and it does not invent a deadline when none is recorded.</p></div>
+          <div className="section-intro"><p className="eyebrow">Active event support</p><h2>See the work and the gaps in one place.</h2></div>
           <MarketingSupportBoard events={activeEvents} programDate={programDate} />
           <BackToTop />
         </div>
@@ -166,7 +166,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
             <div className="section-intro">
               <p className="eyebrow">HubSpot event outcomes</p>
               <h2>What events have created in the pipeline.</h2>
-              <p>The operating view starts with the three controlled event Deal Source values. The exact-attribution view also requires the matching Event detail. Closed Lost and Disqualified records stay out of opportunity totals.</p>
+              <p>Closed Lost and Disqualified records are excluded. Exact attribution requires both the event Deal Source and matching Event detail.</p>
             </div>
             <a href={eventPipelineSnapshot.hubspotUrl} target="_blank" rel="noreferrer">Open the deals in HubSpot ↗</a>
           </div>
@@ -195,7 +195,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
 
       <section className="crm-activation" id="crm-setup">
         <div className="shell">
-          <div className="section-intro"><p className="eyebrow">HubSpot activation</p><h2>Use the event record as the CRM spine.</h2><p>The identity layer exists. Measurement becomes trustworthy when the campaign, participants, meetings, and deals are associated to it without guessing.</p></div>
+          <div className="section-intro"><p className="eyebrow">HubSpot activation</p><h2>Connect the campaign, people, meetings, and deals.</h2></div>
           <div className="crm-activation-status">
             <strong>{measurementReadiness.marketingEventRecords}</strong>
             <span>Keyed Marketing Events</span>
@@ -210,7 +210,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
       </section>
 
       <section className="shell measurement" id="measurement">
-        <div className="measurement-intro"><p className="eyebrow">Measurement</p><h2>Report the chain, not just the crowd.</h2><p>For every event, report spend and fulfillment alongside qualified conversations, meetings held, demos, pipeline, and closed revenue. Keep brand, partner, and customer outcomes as separate evidence—not a substitute for commercial results.</p></div>
+        <div className="measurement-intro"><p className="eyebrow">Measurement</p><h2>Report the chain, not just the crowd.</h2><p>Track spend, qualified conversations, meetings held, demos, pipeline, and closed revenue.</p></div>
         <dl className="measurement-chain">
           <div><dt>Inputs</dt><dd>Spend · people · deliverables · campaign activity</dd></div>
           <div><dt>Engagement</dt><dd>App targets · sessions · booth conversations · scans</dd></div>

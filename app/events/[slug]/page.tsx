@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { Footer } from "../../components/footer";
 import { BackToTop, PageContentsLayout } from "../../components/page-contents";
+import { EventAdmin } from "../../components/event-admin";
 import { SiteHeader } from "../../components/site-header";
 import { eventBySlug, events, getProgramDate, getWorkstreams, isEmptyWorkstream, workstreamLabels, type WorkstreamKey } from "../../data/events";
 import { getCompletedEventOutcomeCoverage, getStaffingSignal, hasGuaranteedMeetingPackage } from "../../data/event-signals";
@@ -124,6 +125,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   ] : [
     { id: "event-tldr", label: "TL;DR" },
     { id: "event-agenda", label: "Agenda" },
+    ...(briefReadiness.issues.length ? [{ id: "event-readiness", label: "Open decisions" }] : []),
     ...(roleRoutes.length ? [{ id: "event-role-routes", label: "Your role" }] : []),
     { id: "event-prospecting", label: "Prospecting" },
     ...(showPriorities ? [{ id: "event-priorities", label: "Open items" }] : []),
@@ -132,14 +134,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   ];
   const eventRecordContents = [
     ...(showResults ? [{ id: "event-results", label: "Results" }] : []),
-    ...(recentChanges.length ? [{ id: "event-changes", label: "Recent changes" }] : []),
-    ...(eventWritebacks.length ? [{ id: "event-writebacks", label: "Source write-backs" }] : []),
-    { id: "event-update-route", label: "Update this event" },
+    { id: "event-admin", label: "Update records" },
   ];
   const eventContentsGroups = [
     { label: "Event brief", items: eventBriefContents },
     ...(!isNotAttending && workstreamContents.length ? [{ label: pageModel.secondaryLabel, items: workstreamContents }] : []),
-    { label: isNotAttending ? "Source record" : eventPhase === "past" ? "Closeout + sources" : "Results + sources", items: eventRecordContents },
+    { label: isNotAttending ? "Event record" : eventPhase === "past" ? "Closeout" : "Results + admin", items: eventRecordContents },
   ];
   const footprint = getEventFootprint(event);
   const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see event materials";
@@ -161,8 +161,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ...(event.followupMeetingsBooked ? [["Follow-up meetings", `${event.followupMeetingsBooked} booked · HubSpot details pending`]] : []),
     ...(eventPhase === "past" && event.rating !== "None" ? [["Event rating", event.rating]] : []),
     ...(eventPhase === "past" ? [["Closeout", hasRecordedResults ? "Results recorded · see below" : "No outcomes recorded yet"]] : []),
-    ...(event.credentials ? [["Passes / credentials", event.credentials]] : []),
-    ["Team", staffing.summary],
+    [staffing.passCount ? "Team & passes" : "Team", staffing.summary],
   ];
   const updateRoutes = getEventUpdateRoutes(event);
   const crmUpdateRoute = updateRoutes.find((route) => route.id === "hubspot");
@@ -197,14 +196,6 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           </dl>
           <Link href={eventPhase === "now" && !nextMove.structured ? "#event-priorities" : nextMove.href}>{nextMove.structured ? "Open task plan" : eventPhase === "now" ? "Open onsite priorities" : "Turn priorities into a plan"} →</Link>
         </div> : null}
-        {!isNotAttending && eventPhase !== "past" ? <div className={`event-brief-readiness event-brief-readiness-${briefReadiness.state}${briefReadiness.stage === "onsite" ? " event-brief-readiness-onsite" : ""}`}>
-          <header><div><span>{briefReadiness.stage === "onsite" ? "Onsite check" : "Brief readiness"}</span><strong>{briefReadiness.label}</strong></div><b>{briefReadiness.timing}</b></header>
-          {briefReadiness.issues.length ? <ul>{briefReadiness.issues.map((issue) => {
-            const action = getBriefIssueAction(issue, event);
-            return <li key={issue.key}><div><p>{issue.label}</p><span>{issue.destination}</span></div>{action.external ? <a href={action.href} target="_blank" rel="noreferrer">{action.label} ↗</a> : <Link href={action.href}>{action.label} →</Link>}</li>;
-          })}</ul> : <p>{briefReadiness.stage === "onsite" ? "No decision-critical onsite details are missing. Review the event plan and log each meaningful conversation before the day ends." : "No decision-critical inputs are missing for this planning stage. Check the open work below before treating the plan as complete."}</p>}
-          <footer><span>{briefReadiness.issues.length ? `${briefReadiness.issues.length} ${briefReadiness.stage === "onsite" ? `onsite fact${briefReadiness.issues.length === 1 ? "" : "s"} unresolved` : `open input${briefReadiness.issues.length === 1 ? "" : "s"}`}` : briefReadiness.stage === "onsite" ? "Onsite facts present" : "Required inputs present"}</span><a href="#event-update-route">Open all update routes →</a></footer>
-        </div> : null}
         {note ? <p className={`tldr-note${isSourceConflict ? " source-conflict" : ""}`}>
           {isSourceConflict ? <strong>Source check needed</strong> : null}
           {isSourceConflict ? note.replace(/^Source conflict:\s*/i, "") : note}
@@ -212,15 +203,34 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section>
 
       <section className="event-agenda shell" id="event-agenda">
-        <div className="section-intro"><p className="eyebrow">Agenda</p><h2>{eventPhase === "past" ? "What was on the schedule." : "What is on the schedule."}</h2><p>Only recorded event facts and TeamSimple commitments appear here. Use the live agenda for organizer sessions and last-minute changes.</p></div>
-        <ol className="event-agenda-list">{agenda.items.map((item, index) => <li key={`${item.label}-${item.title}`}>
+        <div className="section-intro"><p className="eyebrow">Agenda</p><h2>{eventPhase === "past" ? "Recorded schedule." : "What is on the schedule."}</h2><p>{agenda.days.length ? "Official event schedule. Check the live agenda for session details and last-minute changes." : "TeamSimple commitments are listed here. Use the live agenda for organizer sessions and last-minute changes."}</p></div>
+        {agenda.days.length ? <div className="event-agenda-days">{agenda.days.map((day) => <section key={day.date}>
+          <h3>{day.date}</h3>
+          <ol>{day.items.map((item) => <li key={`${day.date}-${item.time}-${item.title}`}><time>{item.time}</time><span>{item.title}</span></li>)}</ol>
+        </section>)}</div> : <ol className="event-agenda-list">{agenda.items.map((item, index) => <li key={`${item.label}-${item.title}`}>
           <span>{String(index + 1).padStart(2, "0")}</span>
           <div><small>{item.label}</small><h3>{item.title}</h3><p>{item.detail}</p></div>
           <b className={`agenda-state agenda-state-${item.state}`}>{item.state === "confirmed" ? "Confirmed" : "Confirm"}</b>
-        </li>)}</ol>
+        </li>)}</ol>}
+        {agenda.days.length && agenda.items.some((item) => item.label !== "Event window") ? <aside className="event-agenda-commitments">
+          <span>TeamSimple commitment</span>
+          {agenda.items.filter((item) => item.label !== "Event window").map((item) => <p key={`${item.label}-${item.title}`}><strong>{item.title}</strong><small>{item.label}</small></p>)}
+        </aside> : null}
         <a className="event-agenda-link" href={agenda.url} target="_blank" rel="noreferrer">{agenda.linkLabel} ↗</a>
         <BackToTop />
       </section>
+
+      {!isNotAttending && eventPhase !== "past" && briefReadiness.issues.length ? <section className="event-readiness shell" id="event-readiness">
+        <div className="section-intro"><p className="eyebrow">Open decisions</p><h2>{briefReadiness.label}</h2><p>{briefReadiness.timing}</p></div>
+        <div className={`event-brief-readiness event-brief-readiness-${briefReadiness.state}${briefReadiness.stage === "onsite" ? " event-brief-readiness-onsite" : ""}`}>
+          <ul>{briefReadiness.issues.map((issue) => {
+            const action = getBriefIssueAction(issue, event);
+            return <li key={issue.key}><div><p>{issue.label}</p><span>{issue.destination}</span></div>{action.external ? <a href={action.href} target="_blank" rel="noreferrer">{action.label} ↗</a> : <Link href={action.href}>{action.label} →</Link>}</li>;
+          })}</ul>
+          <footer><span>{briefReadiness.issues.length} {briefReadiness.stage === "onsite" ? `onsite fact${briefReadiness.issues.length === 1 ? "" : "s"} unresolved` : `open input${briefReadiness.issues.length === 1 ? "" : "s"}`}</span><a href="#event-admin">Open all update routes →</a></footer>
+        </div>
+        <BackToTop />
+      </section> : null}
 
       {roleRoutes.length ? <section className="event-role-routes shell" id="event-role-routes">
         <div className="section-intro"><p className="eyebrow">Use the route for your role</p><h2>Start with what this event changes for you.</h2><p>These are event-specific starting points, not staffing assignments. Open the full role guide for the rules that apply everywhere.</p></div>
@@ -379,7 +389,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section> : null}
       </>}
 
-      {recentChanges.length ? <section className="event-recent-changes shell" id="event-changes">
+      <EventAdmin changes={recentChanges.length} writebacks={eventWritebacks.length}>
+      {recentChanges.length ? <section className="event-recent-changes" id="event-changes">
         <div className="section-intro"><p className="eyebrow">Recent source activity</p><h2>What changed for this event.</h2><p>Applied changes are already reflected on this page. Unresolved differences still need a decision.</p></div>
         <div className="event-change-grid">{recentChanges.map((change) => {
           const firstLabel = change.state === "Applied" ? "Before" : change.state === "Needs review" ? "Controlling source" : "Checked";
@@ -394,7 +405,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <BackToTop />
       </section> : null}
 
-      {eventWritebacks.length ? <section className="event-writebacks shell" id="event-writebacks">
+      {eventWritebacks.length ? <section className="event-writebacks" id="event-writebacks">
         <div className="section-intro"><p className="eyebrow">Source write-backs</p><h2>Source records still need to catch up.</h2><p>This event page and an owning system do not match yet. Each card shows the exact upstream correction and its approval state; update the destination, then remove the item after a fresh source check.</p></div>
         <div className="writeback-grid event-writeback-grid">
           {eventWritebacks.map((item) => <article key={`${item.system}-${item.scope}`}>
@@ -408,7 +419,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <BackToTop />
       </section> : null}
 
-      <section className="event-update-route shell" id="event-update-route">
+      <section className="event-update-route" id="event-update-route">
         <details>
           <summary><span><small>Something changed?</small><strong>Update the source that owns it.</strong></span><b>Open routes <i aria-hidden="true">+</i></b></summary>
           <div className="event-update-route-body">
@@ -436,6 +447,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           </div> : null}
         </details>
       </section>
+      </EventAdmin>
       </PageContentsLayout>
 
       <Footer />

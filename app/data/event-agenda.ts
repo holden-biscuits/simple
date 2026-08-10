@@ -8,6 +8,45 @@ export type EventAgendaItem = {
   state: "confirmed" | "open";
 };
 
+export type EventAgendaDay = {
+  date: string;
+  items: {
+    time: string;
+    title: string;
+  }[];
+};
+
+const officialAgendaBySlug: Record<string, EventAgendaDay[]> = {
+  "genesys-xperience": [
+    {
+      date: "Tuesday, September 1",
+      items: [
+        { time: "10:00 AM", title: "Arrival and registration" },
+        { time: "1:00 PM", title: "Optional daytime pre-event educational programming" },
+        { time: "4:00 PM", title: "Orchestrators Innovation Awards" },
+        { time: "5:00 PM", title: "Evening welcome reception" },
+      ],
+    },
+    {
+      date: "Wednesday, September 2",
+      items: [
+        { time: "9:00 AM", title: "Opening keynote" },
+        { time: "11:00 AM", title: "Expo, sessions and labs" },
+        { time: "4:30 PM", title: "Evening reception" },
+      ],
+    },
+    {
+      date: "Thursday, September 3",
+      items: [
+        { time: "9:00 AM", title: "Morning keynote" },
+        { time: "11:00 AM", title: "Expo, sessions and labs" },
+        { time: "4:00 PM", title: "Closing keynote" },
+        { time: "7:00 PM", title: "Closing celebration" },
+      ],
+    },
+  ],
+};
+
 function getAgendaUrl(event: EventRecord) {
   return event.relatedLinks?.find((link) => /agenda|schedule|program/i.test(link.label))?.url
     ?? event.organizerUrl;
@@ -48,6 +87,7 @@ export function getEventAgenda(event: EventRecord, programDate: string) {
   return {
     phase: getEventPhase(event, programDate),
     items,
+    days: officialAgendaBySlug[event.slug] ?? [],
     url: getAgendaUrl(event),
     linkLabel: exactAgendaLink || /agenda|schedule|program/i.test(event.organizerUrl)
       ? "Open the live agenda"

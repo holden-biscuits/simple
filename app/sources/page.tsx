@@ -296,7 +296,7 @@ export default function SourcesPage() {
           <p>No source pushes directly into production today. Event Basecamp is a versioned read-only view: a scheduled job reads available sources, reconciles them, saves a review build and waits for deployment approval.</p>
         </div>
         <div className="connector-capabilities" aria-label="Verified connector access and operating boundaries">
-          <header><span>Verified access · Aug 7</span><p>Technical access and operating permission are separate. A connector may support a write that this workflow still requires a person to approve.</p></header>
+          <header><span>Verified access · {monitor.connectionCheckedLabel}</span><p>Technical access and operating permission are separate. A connector may support a write that this workflow still requires a person to approve.</p></header>
           <div>{connectorCapabilities.map((item) => <article key={item.system}>
             <span>{item.access}</span>
             <h3>{item.system}</h3>

@@ -1817,6 +1817,18 @@ body { background-image: none; }
 .event-agenda-list small { color: var(--muted); font: 800 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .event-agenda-list h3 { margin: 4px 0; font: 400 23px/1.15 Georgia, serif; }
 .event-agenda-list p { margin: 0; color: var(--muted); font-size: 14px; }
+.event-agenda-days { margin-top: 28px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-left: 1px solid var(--line); }
+.event-agenda-days > section { min-width: 0; border-right: 1px solid var(--line); }
+.event-agenda-days > section > h3 { margin: 0; padding: 15px 16px; border-bottom: 1px solid var(--ink); font: 800 11px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.event-agenda-days ol { margin: 0; padding: 0; list-style: none; }
+.event-agenda-days li { min-height: 76px; display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 14px; align-items: start; padding: 15px 16px; border-bottom: 1px solid var(--line); }
+.event-agenda-days time { color: var(--muted); font: 800 10px/1.4 var(--font-geist-mono), monospace; white-space: nowrap; }
+.event-agenda-days li span { font: 400 17px/1.3 Georgia, serif; }
+.event-agenda-commitments { margin-top: 24px; padding-block: 16px; display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 12px 20px; border-block: 1px solid var(--ink); }
+.event-agenda-commitments > span { color: var(--muted); font: 800 10px/1.4 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.event-agenda-commitments p { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; }
+.event-agenda-commitments strong { font: 400 18px/1.3 Georgia, serif; }
+.event-agenda-commitments small { color: var(--muted); font: 800 9px/1.4 var(--font-geist-mono), monospace; text-transform: uppercase; }
 .agenda-state { padding: 5px 8px; border: 1px solid currentColor; font: 800 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .agenda-state-confirmed { color: var(--good); }
 .agenda-state-open { color: var(--okay); }
@@ -2024,6 +2036,8 @@ body { background-image: none; }
   .tiering { grid-template-columns: 1fr; gap: 20px; }
   .leadership-hero-quiet { grid-template-columns: minmax(0, 1fr) 130px; gap: 20px; }
   .leadership-hero-quiet .page-mascot { width: 120px; max-width: 120px; }
+  .event-agenda-days { grid-template-columns: 1fr; }
+  .event-agenda-days > section { border-bottom: 1px solid var(--ink); }
 }
 
 @media (max-width: 620px) {
@@ -2034,6 +2048,54 @@ body { background-image: none; }
   .timeline article { grid-template-columns: 1fr; }
   .timeline article p { grid-column: auto; }
   .event-agenda-list h3 { font-size: 20px; }
+  .event-agenda-days li { min-height: 0; grid-template-columns: 66px minmax(0, 1fr); padding-inline: 12px; }
+  .event-agenda-commitments { grid-template-columns: 1fr; }
   .leadership-hero-quiet { grid-template-columns: 1fr; }
   .leadership-hero-quiet .page-mascot { display: none; }
+}
+
+/* Event brief first; record maintenance stays available without competing for attention. */
+.event-readiness[id], .event-admin[id] { scroll-margin-top: var(--anchor-offset); }
+.event-readiness { padding-block: 44px; border-top: 1px solid var(--line); }
+.event-readiness .section-intro > p:last-child { margin-top: 12px; color: var(--muted); }
+.event-readiness .event-brief-readiness { margin-top: 26px; }
+.event-readiness .event-brief-readiness > ul { border-top: 0; }
+
+.event-admin { padding-block: 36px 64px; }
+.event-admin > details { border-block: 1px solid var(--ink); }
+.event-admin > details > summary { min-height: 92px; padding: 18px 0; display: flex; align-items: center; justify-content: space-between; gap: 28px; cursor: pointer; list-style: none; }
+.event-admin > details > summary::-webkit-details-marker { display: none; }
+.event-admin > details > summary > span { display: grid; gap: 5px; }
+.event-admin > details > summary > span:last-child { justify-items: end; grid-template-columns: auto 30px; align-items: center; gap: 16px; }
+.event-admin > details > summary small, .event-admin > details > summary b { color: var(--muted); font: 800 10px/1.35 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.event-admin > details > summary strong { font: 400 27px/1.08 Georgia, serif; }
+.event-admin > details > summary i { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--ink); border-radius: 50%; font: normal 18px/1 var(--font-geist-sans), sans-serif; transition: transform .16s ease; }
+.event-admin > details[open] > summary { border-bottom: 1px solid var(--ink); }
+.event-admin > details[open] > summary i { transform: rotate(45deg); }
+.event-admin-body > section { width: 100%; padding-block: 44px; border-bottom: 1px solid var(--line); }
+.event-admin-body > section:last-child { border-bottom: 0; }
+.event-admin-body .event-recent-changes, .event-admin-body .event-writebacks { padding-inline: 0; }
+.event-admin-body .event-update-route { margin-bottom: 0; padding-inline: 0; }
+
+.event-hero { padding-block: 28px 46px; }
+.event-back { margin-bottom: 34px; }
+.event-hero h1 { max-width: 920px; font-size: clamp(48px, 6vw, 82px); }
+.event-title-row { grid-template-columns: minmax(0, 1fr) 118px; gap: 36px; }
+.event-title-row .round-link { width: 118px; height: 118px; }
+
+.marketing-lessons .lesson-grid { grid-template-columns: 1fr; border-left: 0; }
+.marketing-lessons .lesson-grid article { display: grid; grid-template-columns: 42px minmax(180px, .42fr) minmax(0, 1fr); align-items: baseline; gap: 20px; }
+.marketing-lessons .lesson-grid h3 { margin: 0; font-size: 24px; }
+.marketing-lessons .lesson-grid p { font-size: 15px; }
+
+@media (max-width: 620px) {
+  .event-admin > details > summary, .event-admin > details > summary > span:last-child { align-items: start; grid-template-columns: 1fr auto; }
+  .event-admin > details > summary { flex-direction: column; }
+  .event-admin > details > summary > span:last-child { width: 100%; justify-items: start; }
+  .event-hero { padding-block: 24px 36px; }
+  .event-back { margin-bottom: 26px; }
+  .event-title-row { grid-template-columns: 1fr; }
+  .event-title-row .round-link { width: auto; height: auto; min-height: 48px; border-radius: 0; }
+  .marketing-lessons .lesson-grid article { grid-template-columns: 30px minmax(0, 1fr); }
+  .marketing-lessons .lesson-grid p { grid-column: 2; }
 }

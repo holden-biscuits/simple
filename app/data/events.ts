@@ -518,6 +518,7 @@ export const events: EventRecord[] = [
       { title: "Reconcile contracted deliverables and spend", status: "In progress", due: "Before Sep 1", dueSort: "2026-08-31", owner: "Marketing", note: "Track the booth, email add-on, Wish Line, production, shipping, and materials on the marketing page—not the field brief." },
     ],
     relatedLinks: [
+      { label: "Official agenda", url: "https://www.genesys.com/xperience" },
       { label: "Xperience landing page", url: "https://usesimple.ai/xperience" },
       { label: "Genesys sales rules (confidential)", url: "https://docs.google.com/document/d/1NIStSPTOChO6ScNy0haYQuctnlUE23a__sKedxiSGUA" },
       { label: "Genesys trademark usage policy", url: "https://www.genesys.com/company/legal-docs/genesys-trademark-use-policy" },

@@ -32,18 +32,18 @@ export type SourceCheck = {
 };
 
 export const siteStatus = {
-  contentUpdatedAt: "2026-08-07",
-  contentUpdatedLabel: "Aug 07 · 2026",
+  contentUpdatedAt: "2026-08-08",
+  contentUpdatedLabel: "Aug 08 · 2026",
   sourceMonitor: {
     automationState: "Active",
     cadence: "Daily · 9:00 AM PT",
     delivery: "Slack action briefing + Codex receipt",
     automationId: "event-fieldbook-source-scan",
     automationKind: "Codex heartbeat",
-    automationVerifiedAt: "Aug 07 · 2026",
-    connectionCheckedAt: "2026-08-07",
-    connectionCheckedLabel: "Aug 07 · 2026",
-    lastSuccessfulScan: "Aug 07, 2026 · 9:00 AM PT · scheduled source scan",
+    automationVerifiedAt: "Aug 08 · 2026",
+    connectionCheckedAt: "2026-08-08",
+    connectionCheckedLabel: "Aug 08 · 2026",
+    lastSuccessfulScan: "Aug 08, 2026 · 9:12 AM PT · scheduled source scan",
     lastSuccessfulScanMode: "Scheduled heartbeat",
     protectedOverrides: [
       { id: "contact-io-participation", eventSlug: "contact-io", eventName: "Contact.io", fieldKey: "status", field: "Participation", value: "Not attending", confirmedAt: "Aug 06 · 2026" },
@@ -366,6 +366,13 @@ export const siteStatus = {
     ] as SourceChange[],
     latestChecks: [
       {
+        system: "Scheduled heartbeat · direct decisions · Slack",
+        checkedAt: "Aug 08 · 2026 · 9:12 AM PT",
+        scope: "Freshness gate and private self-DM review",
+        result: "No event was due or overdue, so Sheets, Notion, Drive, Gmail, HubSpot and organizer sites remained inside their valid freshness windows and were not redundantly reread. Seventeen protected direct decisions remain in force. The private self-DM contained one new non-event link and no direct-confirmation candidate. Granola and Monaco remain indirect. The complete scheduled batch contained zero proposals, zero rejected records and no publishable site change.",
+        state: "Current" as SourceCheckState,
+      },
+      {
         system: "Google Sheets + Notion + organizer site",
         checkedAt: "Aug 07 · 2026 · task review",
         scope: "Customer Connect dates + exact tracker rows already waiting for write-back",
@@ -539,12 +546,12 @@ export const siteStatus = {
       },
     ] as SourceCheck[],
     sources: [
-      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "Not due · no due or overdue events · Aug 7" },
-      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "Travel/Hospitality + Retail + Consero task reviews · 40 tasks · Customer Connect booth/AP refresh · owner/date gaps preserved · Aug 7" },
-      { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "Not due · Aug 7" },
-      { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "2 near-term searches · no match · Aug 7" },
-      { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "Customer Connect change detected · Aug 7" },
-      { name: "Marketing Events + event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "CRM event identity, participant state, associations, meetings, demos, deals and pipeline when attribution is clear", receipt: "29 keyed Marketing Events · 30 source · 30 detail · 29 exact deals · 2 mismatches · Aug 7" },
+      { name: "Conference tracker", system: "Google Sheets", state: "Connected" as SourceConnectionState, use: "Roster, dates, participation status and topline staffing", receipt: "Not due · no due or overdue events · Aug 8" },
+      { name: "Active event projects", system: "Notion", state: "Connected" as SourceConnectionState, use: "Execution details, owners, deadlines and event-specific decisions", receipt: "Not due · no due or overdue events · Aug 8" },
+      { name: "Events Drive", system: "Google Drive", state: "Connected" as SourceConnectionState, use: "Contracts, creative, attendee files and post-event artifacts", receipt: "Not due · no due or overdue events · Aug 8" },
+      { name: "Event conversations", system: "Slack", state: "Connected" as SourceConnectionState, use: "New decisions and changes that still need to be checked against an authoritative source", receipt: "Private self-DM checked · no event decision · Aug 8" },
+      { name: "Organizer correspondence", system: "Gmail", state: "Connected" as SourceConnectionState, use: "Sponsor deliverables, deadlines, venue details and organizer changes", receipt: "Not due · no due or overdue events · Aug 8" },
+      { name: "Marketing Events + event-sourced outcomes", system: "HubSpot", state: "Connected" as SourceConnectionState, use: "CRM event identity, participant state, associations, meetings, demos, deals and pipeline when attribution is clear", receipt: "Not due · Aug 7 controlled-pair and Marketing Event audits remain current" },
       { name: "Conversation notes", system: "Granola", state: "Indirect" as SourceConnectionState, use: "Available only when a note is shared into a connected source", receipt: "No direct scan available" },
       { name: "Legacy event reporting", system: "Monaco", state: "Indirect" as SourceConnectionState, use: "Available only through exports or references shared into a connected source", receipt: "No direct scan available" },
     ],
