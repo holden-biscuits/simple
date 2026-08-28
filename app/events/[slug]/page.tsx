@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const event = eventBySlug(slug);
   if (!event) return { title: "Event not found" };
   const incoming = await headers();
-  const host = incoming.get("x-forwarded-host") ?? incoming.get("host") ?? "teamsimple-events-fieldbook.holden165736.chatgpt.site";
+  const host = incoming.get("x-forwarded-host") ?? incoming.get("host") ?? "event-basecamp-demo.example.com";
   const protocol = incoming.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
   const origin = new URL(`${protocol}://${host}`);
   const canonical = `/events/${event.slug}`;
@@ -115,7 +115,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   ];
   const footprint = getEventFootprint(event);
   const swagSummary = isNotAttending || isEmptyWorkstream(workstreams.swag) ? "None" : "In plan · see event materials";
-  const partnerGuidelines = event.relatedLinks?.find((link) => link.label.includes("Genesys sales rules"));
+  const partnerGuidelines = event.relatedLinks?.find((link) => link.label.includes("Partner Platform sales rules"));
   const meetingPackage = isNotAttending ? "None" : guaranteedPackageSummary;
   const tldr = isNotAttending ? [
     ["When", event.dates],
@@ -171,7 +171,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <div className="section-intro"><p className="eyebrow">Agenda</p><h2>{eventPhase === "past" ? "Recorded schedule." : "What is on the schedule."}</h2><p>{agenda.days.length ? "Official event schedule. Check the live agenda for session details and last-minute changes." : "TeamSimple commitments are listed here. Use the live agenda for organizer sessions and last-minute changes."}</p></div>
         {agenda.days.length ? <div className="event-agenda-days">{agenda.days.map((day) => <section key={day.date}>
           <h3>{day.date}</h3>
-          <ol>{day.items.map((item) => <li className={item.teamSimple ? "event-agenda-team" : undefined} key={`${day.date}-${item.time}-${item.title}`}><time>{item.time}</time><div><span>{item.title}</span>{item.teamSimple ? <small>TeamSimple · Cat speaking</small> : null}</div></li>)}</ol>
+          <ol>{day.items.map((item) => <li className={item.teamSimple ? "event-agenda-team" : undefined} key={`${day.date}-${item.time}-${item.title}`}><time>{item.time}</time><div><span>{item.title}</span>{item.teamSimple ? <small>TeamSimple · Avery speaking</small> : null}</div></li>)}</ol>
         </section>)}</div> : <ol className="event-agenda-list">{agenda.items.map((item, index) => <li key={`${item.label}-${item.title}`}>
           <span>{String(index + 1).padStart(2, "0")}</span>
           <div><small>{item.label}</small><h3>{item.title}</h3><p>{item.detail}</p></div>

@@ -17,7 +17,8 @@ function isValidIsoDate(value: string) {
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 
-function isHttpsUrl(value: string) {
+function isSafeSourceUrl(value: string) {
+  if (value.startsWith("/sources") && value.includes("#public-demo")) return true;
   try {
     return new URL(value).protocol === "https:";
   } catch {
@@ -51,11 +52,11 @@ export function validateEventCatalog(catalog: EventRecord[]) {
     if (isValidIsoDate(event.dateSort) && isValidIsoDate(event.dateEndSort) && event.dateEndSort < event.dateSort) {
       add("dateEndSort", "error", "End date cannot be earlier than start date.");
     }
-    if (!isHttpsUrl(event.organizerUrl)) add("organizerUrl", "error", "Organizer URL must be a valid HTTPS URL.");
-    if (event.notionUrl && !isHttpsUrl(event.notionUrl)) add("notionUrl", "error", "Notion URL must be a valid HTTPS URL.");
+    if (!isSafeSourceUrl(event.organizerUrl)) add("organizerUrl", "error", "Organizer URL must be HTTPS or the public demo source route.");
+    if (event.notionUrl && !isSafeSourceUrl(event.notionUrl)) add("notionUrl", "error", "Project URL must be HTTPS or the public demo source route.");
     event.relatedLinks?.forEach((link, index) => {
       if (!link.label.trim()) add(`relatedLinks.${index}.label`, "error", "Related links need a label.");
-      if (!isHttpsUrl(link.url)) add(`relatedLinks.${index}.url`, "error", "Related links must use valid HTTPS URLs.");
+      if (!isSafeSourceUrl(link.url)) add(`relatedLinks.${index}.url`, "error", "Related links must use HTTPS or the public demo source route.");
     });
 
     if (event.attendeeCount !== null && (!Number.isInteger(event.attendeeCount) || event.attendeeCount < 0)) {

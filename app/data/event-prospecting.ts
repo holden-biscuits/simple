@@ -1,3 +1,4 @@
+import { demoSourceUrl } from "./demo-mode.ts";
 import type { EventRecord } from "./events.ts";
 
 export type ProspectingFilter = {
@@ -10,7 +11,7 @@ export type ProspectingProfileKey =
   | "executive-exchange"
   | "retail"
   | "retail-exchange"
-  | "genesys"
+  | "partnerPlatform"
   | "nice"
   | "travel-hospitality"
   | "named-attendees-only"
@@ -38,56 +39,55 @@ export type EventProspectingBrief = {
   hubspotAccountLinks: { name: string; url: string }[];
 };
 
-const hubspotAccountId = "245561359";
-const zoomInfoCompanyUrl = "https://app.zoominfo.com/#/apps/searchV2/v2/results/company";
-const zoomInfoContactUrl = "https://app.zoominfo.com/#/apps/searchV2/v2/results/person";
+const zoomInfoCompanyUrl = demoSourceUrl("prospecting-company");
+const zoomInfoContactUrl = demoSourceUrl("prospecting-contact");
 
 const profileBySlug: Record<string, ProspectingProfileKey> = {
-  "ccw-orlando": "contact-center",
-  "ccw-exchange-san-diego": "executive-exchange",
-  "hbs-women-in-business": "named-attendees-only",
-  "ccw-exchange-austin": "executive-exchange",
-  "shoptalk-spring": "retail",
-  "ccw-cxo-exchange-charlotte": "executive-exchange",
-  "the-lead-summit": "retail",
-  "nice-world": "nice",
-  "ccw-vegas": "contact-center",
-  "iqpc-cx-retail-uk": "retail-exchange",
-  "ccw-exchange-denver": "executive-exchange",
-  "consero-summit": "named-attendees-only",
-  "ccw-exchange-chicago": "executive-exchange",
-  "contact-io": "not-attending",
-  "genesys-xperience": "genesys",
-  "iqpc-cx-travel-hospitality": "travel-hospitality",
-  "customer-connect-expo": "contact-center",
-  "iqpc-cx-retail-atlanta": "retail-exchange",
-  "shoptalk-fall": "not-attending",
-  "consero-cx-forum": "executive-exchange",
-  "ccw-amsterdam": "not-attending",
-  "ccw-nashville": "contact-center",
-  "icmi-contact-center-expo": "contact-center",
-  "ccw-uk-executive-exchange": "executive-exchange",
-  "ccw-executive-exchange-miami": "executive-exchange",
-  "reuters-customer-service-east": "contact-center",
-  "ccw-orlando-2027": "contact-center",
-  "ccw-uk-executive-exchange-2027": "executive-exchange",
-  "ccw-vegas-2027": "contact-center",
+  "demo-event-26": "contact-center",
+  "demo-event-08": "executive-exchange",
+  "demo-event-10": "named-attendees-only",
+  "demo-event-13": "executive-exchange",
+  "demo-event-19": "retail",
+  "demo-event-04": "executive-exchange",
+  "demo-event-20": "retail",
+  "demo-event-27": "nice",
+  "demo-event-29": "contact-center",
+  "demo-event-15": "retail-exchange",
+  "demo-event-14": "executive-exchange",
+  "demo-event-21": "named-attendees-only",
+  "demo-event-12": "executive-exchange",
+  "demo-event-28": "not-attending",
+  "demo-event-16": "partnerPlatform",
+  "demo-event-05": "travel-hospitality",
+  "demo-event-11": "contact-center",
+  "demo-event-09": "retail-exchange",
+  "demo-event-23": "not-attending",
+  "demo-event-17": "executive-exchange",
+  "demo-event-24": "not-attending",
+  "demo-event-25": "contact-center",
+  "demo-event-07": "contact-center",
+  "demo-event-06": "executive-exchange",
+  "demo-event-03": "executive-exchange",
+  "demo-event-02": "contact-center",
+  "demo-event-18": "contact-center",
+  "demo-event-01": "executive-exchange",
+  "demo-event-22": "contact-center",
 };
 
 const liveSegments: Partial<Record<string, HubSpotProspectingSegment>> = {
-  "ccw-vegas": {
-    name: "Enriched ZI List — matched CCW attendees (pre-show)",
+  "demo-event-29": {
+    name: "Enriched ZI List — matched Demo CX attendees (pre-show)",
     size: 608,
     kind: "Static snapshot",
     checkedAt: "Aug 7, 2026",
-    url: "https://app.hubspot.com/contacts/245561359/objectLists/62?utm_source=event_fieldbook&utm_medium=event_prospecting&utm_campaign=ccw_vegas_2026",
+    url: demoSourceUrl("crm-segment", "demo-event-29"),
   },
-  "nice-world": {
-    name: "NiCE World 2026 — Tommy Prospects",
+  "demo-event-27": {
+    name: "Service Platform World 2026 — Jamie Prospects",
     size: 254,
     kind: "Static snapshot",
     checkedAt: "Aug 7, 2026",
-    url: "https://app.hubspot.com/contacts/245561359/objectLists/46?utm_source=event_fieldbook&utm_medium=event_prospecting&utm_campaign=nice_world_2026",
+    url: demoSourceUrl("crm-segment", "demo-event-27"),
   },
 };
 
@@ -103,23 +103,23 @@ function geography(event: EventRecord) {
 
 function profileFor(event: EventRecord, profile: ProspectingProfileKey): Omit<EventProspectingBrief, "profile" | "zoomInfoCompanyUrl" | "zoomInfoContactUrl" | "hubspotSegment" | "hubspotAccountLinks" | "hubspotStrategy"> {
   const region = geography(event);
-  if (profile === "genesys") return {
-    summary: "Prioritize large Genesys customers with meaningful inbound call volume and a customer-service leader who can own a voice-AI evaluation. TeamSimple is the only external voice-AI partner in the current sponsor plan, so relevance starts with Genesys usage—not a generic CX title list.",
+  if (profile === "partnerPlatform") return {
+    summary: "Prioritize large Partner Platform customers with meaningful inbound call volume and a customer-service leader who can own a voice-AI evaluation. TeamSimple is the only external voice-AI partner in the current sponsor plan, so relevance starts with Partner Platform usage—not a generic CX title list.",
     companyFilters: [
-      { label: "Technology products", value: "Genesys" },
+      { label: "Technology products", value: "Partner Platform" },
       { label: "Company attribute", value: "Has a call center" },
       { label: "Employees", value: "500+" },
       { label: "Revenue", value: "$100M+" },
       { label: "Location", value: region },
     ],
     contactFilters: commonContacts,
-    workflow: "Start with the technology filter, then cross-check names in the Xperience app. Enrich the named people and route only qualified accounts to an AE.",
+    workflow: "Start with the technology filter, then cross-check names in the Partner Summit app. Enrich the named people and route only qualified accounts to an AE.",
     confidence: "Event-shaped audience",
   };
   if (profile === "nice") return {
-    summary: "Prioritize enterprise NiCE customers with complex inbound service operations and leaders responsible for contact-center performance, automation, or customer experience.",
+    summary: "Prioritize enterprise Service Platform customers with complex inbound service operations and leaders responsible for contact-center performance, automation, or customer experience.",
     companyFilters: [
-      { label: "Technology products", value: "NiCE or CXone" },
+      { label: "Technology products", value: "Service Platform or CXone" },
       { label: "Company attribute", value: "Has a call center" },
       { label: "Employees", value: "500+" },
       { label: "Revenue", value: "$100M+" },
@@ -186,7 +186,7 @@ function profileFor(event: EventRecord, profile: ProspectingProfileKey): Omit<Ev
       { label: "Employees", value: "500+" },
       { label: "Revenue", value: "$100M+" },
       { label: "Location", value: region },
-      { label: "Technology products", value: "Genesys, NiCE/CXone, Five9, Talkdesk or another enterprise CCaaS platform" },
+      { label: "Technology products", value: "Partner Platform, Example CCaaS, Five9, Talkdesk or another enterprise CCaaS platform" },
     ],
     contactFilters: commonContacts,
     workflow: "Start with names and companies from the event app, sponsor file, meetings, booth scans, or sessions. Use the filters to prioritize and enrich—not to claim attendance.",
@@ -209,7 +209,7 @@ function profileFor(event: EventRecord, profile: ProspectingProfileKey): Omit<Ev
 }
 
 function accountSearchUrl(name: string) {
-  return `https://app.hubspot.com/contacts/${hubspotAccountId}/objects/0-1/views/all/list?query=${encodeURIComponent(name)}&utm_source=event_fieldbook&utm_medium=event_prospecting`;
+  return demoSourceUrl(`crm-account:${name}`);
 }
 
 export function getEventProspectingBrief(event: EventRecord): EventProspectingBrief {

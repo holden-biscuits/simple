@@ -3,7 +3,7 @@ import test from "node:test";
 import { eventBySlug, getEventPhase } from "../app/data/events.ts";
 
 test("an explicit closeout moves an event to past on its final day", () => {
-  const chicago = eventBySlug("ccw-exchange-chicago");
+  const chicago = eventBySlug("demo-event-12");
   assert.ok(chicago);
   assert.equal(getEventPhase(chicago, "2026-08-04"), "upcoming");
   assert.equal(getEventPhase(chicago, "2026-08-05"), "now");
@@ -12,7 +12,7 @@ test("an explicit closeout moves an event to past on its final day", () => {
 });
 
 test("one-day events are current only on their event date", () => {
-  const consero = eventBySlug("consero-summit");
+  const consero = eventBySlug("demo-event-21");
   assert.ok(consero);
   assert.equal(getEventPhase(consero, "2026-07-21"), "upcoming");
   assert.equal(getEventPhase(consero, "2026-07-22"), "now");

@@ -15,28 +15,28 @@ test("protected direct decisions still match the published event data", () => {
   assert.equal(new Set(overrides.map((override) => override.id)).size, overrides.length);
   for (const override of overrides) event(override.eventSlug);
 
-  assert.equal(event("contact-io").status, "No");
-  assert.equal(event("customer-connect-expo").status, "Confirmed");
-  assert.ok(event("customer-connect-expo").priorityActions.some((item) => item.includes("Aug 11 at 9:30 AM PT")));
-  assert.ok(event("customer-connect-expo").workstreams.sponsorship.some((item) => item === "Insurance is not needed for our pipe-and-drape booth"));
-  assert.equal(event("icmi-contact-center-expo").status, "Confirmed");
-  assert.deepEqual(event("genesys-xperience").team, ["Cat", "Holden", "Matt", "Taylor", "Josh", "Carter", "Deepti", "Richard", "Lars"]);
-  assert.equal(event("genesys-xperience").guaranteedMeetings, "No");
-  assert.ok(event("genesys-xperience").workstreams.marketing.some((item) => item.includes("quarter-mile taxi geofence")));
-  assert.ok(event("genesys-xperience").workstreams.marketing.some((item) => item.includes("airport placement")));
+  assert.equal(event("demo-event-28").status, "No");
+  assert.equal(event("demo-event-11").status, "Confirmed");
+  assert.ok(event("demo-event-11").priorityActions.some((item) => item.includes("Aug 11 at 9:30 AM PT")));
+  assert.ok(event("demo-event-11").workstreams.sponsorship.some((item) => item === "Insurance is not needed for our pipe-and-drape booth"));
+  assert.equal(event("demo-event-07").status, "Confirmed");
+  assert.deepEqual(event("demo-event-16").team, ["Avery", "Jordan", "Morgan", "Riley", "Casey", "Quinn", "Sam", "Drew", "Alex"]);
+  assert.equal(event("demo-event-16").guaranteedMeetings, "No");
+  assert.ok(event("demo-event-16").workstreams.marketing.some((item) => item.includes("quarter-mile taxi geofence")));
+  assert.ok(event("demo-event-16").workstreams.marketing.some((item) => item.includes("airport placement")));
 
-  assert.equal(event("ccw-exchange-chicago").completedAt, "2026-08-07");
-  assert.deepEqual(event("ccw-exchange-chicago").team, ["Taylor"]);
-  assert.equal(event("ccw-exchange-chicago").attendeeCount, 1);
-  assert.deepEqual(event("ccw-exchange-chicago").available, []);
-  assert.equal(event("ccw-exchange-chicago").rating, "Negative · Taylor’s post-event feedback");
-  assert.equal(event("ccw-exchange-chicago").followupMeetingsBooked, 2);
-  assert.ok(event("ccw-exchange-chicago").workstreams.followup.some((item) => item.includes("Kemper")));
-  assert.ok(event("ccw-exchange-chicago").outcomeNotes.some((item) => item.includes("No opportunities are confirmed")));
+  assert.equal(event("demo-event-12").completedAt, "2026-08-07");
+  assert.deepEqual(event("demo-event-12").team, ["Riley"]);
+  assert.equal(event("demo-event-12").attendeeCount, 1);
+  assert.deepEqual(event("demo-event-12").available, []);
+  assert.equal(event("demo-event-12").rating, "Negative · Riley’s post-event feedback");
+  assert.equal(event("demo-event-12").followupMeetingsBooked, 2);
+  assert.ok(event("demo-event-12").workstreams.followup.some((item) => item.includes("Kemper")));
+  assert.ok(event("demo-event-12").outcomeNotes.some((item) => item.includes("No opportunities are confirmed")));
 
-  assert.equal(event("ccw-vegas").meetingCountLabel, "54");
-  assert.equal(event("ccw-vegas").demoCountLabel, "20");
-  assert.match(event("ccw-vegas").meetingRecordSummary, /12 Booth · 20 Demo · 22 Intro/);
+  assert.equal(event("demo-event-29").meetingCountLabel, "54");
+  assert.equal(event("demo-event-29").demoCountLabel, "20");
+  assert.match(event("demo-event-29").meetingRecordSummary, /12 Booth · 20 Demo · 22 Intro/);
 
-  assert.equal(getSpeakingOpportunitySignal(event("ccw-vegas-2027")), "1 Speaking Opp");
+  assert.equal(getSpeakingOpportunitySignal(event("demo-event-22")), "1 Speaking Opp");
 });

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Fragment } from "react";
+import { publicDemo } from "../data/demo-mode";
 import { siteStatus } from "../data/site-status";
 import { SiteNav } from "./site-nav";
 
@@ -19,6 +20,13 @@ export function SiteHeader() {
         </time>
         <SiteNav />
       </header>
+      {publicDemo.enabled ? (
+        <aside className="demo-banner" aria-label="Public demo data notice">
+          <strong>{publicDemo.label}</strong>
+          <span>{publicDemo.notice}</span>
+          <Link href={publicDemo.sourceHref}>How demo data works →</Link>
+        </aside>
+      ) : null}
       <span id="main-content" className="content-start" tabIndex={-1} />
     </Fragment>
   );

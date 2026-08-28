@@ -6,29 +6,29 @@ import { getBriefIssueAction, getEventBriefReadiness, getEventPageBriefReadiness
 const programDate = "2026-08-06";
 
 test("brief readiness changes its requirements as an event approaches", () => {
-  const genesys = getEventBriefReadiness(eventBySlug("genesys-xperience"), programDate);
-  assert.equal(genesys.stage, "planning");
-  assert.equal(genesys.timing, "26 days out");
-  assert.deepEqual(genesys.issues.map((issue) => issue.key), ["execution-gaps"]);
+  const partnerPlatform = getEventBriefReadiness(eventBySlug("demo-event-16"), programDate);
+  assert.equal(partnerPlatform.stage, "planning");
+  assert.equal(partnerPlatform.timing, "26 days out");
+  assert.deepEqual(partnerPlatform.issues.map((issue) => issue.key), ["execution-gaps"]);
 
-  const customerConnect = getEventBriefReadiness(eventBySlug("customer-connect-expo"), programDate);
+  const customerConnect = getEventBriefReadiness(eventBySlug("demo-event-11"), programDate);
   assert.equal(customerConnect.stage, "planning");
   assert.ok(customerConnect.issues.some((issue) => issue.key === "roster"));
   assert.ok(customerConnect.issues.some((issue) => issue.key === "credentials"));
   assert.ok(customerConnect.issues.some((issue) => issue.key === "execution-gaps"));
 
-  const travelExchange = getEventBriefReadiness(eventBySlug("iqpc-cx-travel-hospitality"), programDate);
+  const travelExchange = getEventBriefReadiness(eventBySlug("demo-event-05"), programDate);
   assert.ok(travelExchange.issues.some((issue) => issue.label === "Assign 2 remaining passes"));
 });
 
 test("brief readiness uses pass allocation instead of a larger planning estimate", () => {
-  const vegas2027 = getEventBriefReadiness(eventBySlug("ccw-vegas-2027"), "2027-05-01");
+  const vegas2027 = getEventBriefReadiness(eventBySlug("demo-event-22"), "2027-05-01");
   assert.ok(vegas2027.issues.some((issue) => issue.label === "Assign 9 remaining passes"));
   assert.ok(!vegas2027.issues.some((issue) => issue.label.includes("15")));
 });
 
 test("early-stage briefs require foundation facts without pretending final logistics are due", () => {
-  const uk2027 = getEventBriefReadiness(eventBySlug("ccw-uk-executive-exchange-2027"), programDate);
+  const uk2027 = getEventBriefReadiness(eventBySlug("demo-event-01"), programDate);
   assert.equal(uk2027.stage, "foundation");
   assert.deepEqual(uk2027.issues.map((issue) => issue.key), ["dates", "workspace"]);
   assert.ok(!uk2027.issues.some((issue) => issue.key === "roster"));
@@ -36,7 +36,7 @@ test("early-stage briefs require foundation facts without pretending final logis
 });
 
 test("a confirmed foundation-stage event is not on track without an operating workspace", () => {
-  const reuters = getEventBriefReadiness(eventBySlug("reuters-customer-service-east"), programDate);
+  const reuters = getEventBriefReadiness(eventBySlug("demo-event-02"), programDate);
   assert.equal(reuters.stage, "foundation");
   assert.equal(reuters.state, "attention");
   assert.equal(reuters.label, "Foundation gaps open");
@@ -45,7 +45,7 @@ test("a confirmed foundation-stage event is not on track without an operating wo
 });
 
 test("current-event readiness drops roster warnings after a direct closeout correction", () => {
-  const chicago = getEventBriefReadiness(eventBySlug("ccw-exchange-chicago"), programDate);
+  const chicago = getEventBriefReadiness(eventBySlug("demo-event-12"), programDate);
   assert.equal(chicago.stage, "onsite");
   assert.ok(!chicago.issues.some((issue) => issue.key === "source-conflict"));
   assert.ok(!chicago.issues.some((issue) => issue.key === "roster"));
@@ -54,7 +54,7 @@ test("current-event readiness drops roster warnings after a direct closeout corr
 });
 
 test("current event pages replace planning administration with onsite facts", () => {
-  const chicago = getEventPageBriefReadiness(eventBySlug("ccw-exchange-chicago"), programDate);
+  const chicago = getEventPageBriefReadiness(eventBySlug("demo-event-12"), programDate);
   assert.equal(chicago.stage, "onsite");
   assert.ok(!chicago.issues.some((issue) => issue.label === "A source conflict still affects this brief"));
   assert.ok(!chicago.issues.some((issue) => issue.label.includes("attendee name")));
@@ -73,7 +73,7 @@ test("program readiness excludes past and non-attending events", () => {
 });
 
 test("every readiness destination resolves to the system that can fix it", () => {
-  const customerConnect = eventBySlug("customer-connect-expo");
+  const customerConnect = eventBySlug("demo-event-11");
   assert.ok(customerConnect);
   assert.deepEqual(getBriefIssueAction({ key: "roster", label: "Name the roster", destination: "Conference tracker" }, customerConnect), {
     href: getEventTrackerRowUrl(customerConnect.slug),
@@ -88,7 +88,7 @@ test("every readiness destination resolves to the system that can fix it", () =>
     external: false,
   });
 
-  const uk2027 = eventBySlug("ccw-uk-executive-exchange-2027");
+  const uk2027 = eventBySlug("demo-event-01");
   assert.ok(uk2027);
   assert.equal(getBriefIssueAction({ key: "workspace", label: "Create the project", destination: "Event project" }, uk2027).label, "Open Notion setup");
 });

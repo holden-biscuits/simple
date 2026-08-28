@@ -11,8 +11,8 @@ import { getProgramPulse } from "./data/program-pulse";
 import { parseEventDirectoryState } from "./data/directory-state";
 
 export const metadata: Metadata = {
-  title: "Event Basecamp · 2026–2027",
-  description: "Dates, owners, plans, and follow-up for the 2026–2027 event program.",
+  title: "Event Basecamp · Public Demo",
+  description: "A public demonstration of the event-operations workflow using synthetic data.",
 };
 
 export const dynamic = "force-dynamic";
@@ -37,7 +37,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
       <SiteHeader />
       <section className="home-hero">
         <div className="hero-copy">
-          <p className="eyebrow">TeamSimple · 2026–2027 event plan</p>
+          <p className="eyebrow">TeamSimple · Public product demo</p>
           <h1>Find your event. Know what matters.</h1>
           <p className="hero-note">The agenda, team, activation, open work, and follow-up for every event in one place.</p>
           <div className="home-hero-actions"><Link href="#events">Find my event ↓</Link><Link href="/guides">Read the event guide →</Link></div>

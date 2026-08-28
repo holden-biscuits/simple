@@ -7,9 +7,9 @@ const events = [
     slug: "alpha",
     name: "Alpha",
     marketingTasks: [
-      { title: "Overdue", status: "Open", dueSort: "2026-08-05", owner: "Holden" },
+      { title: "Overdue", status: "Open", dueSort: "2026-08-05", owner: "Jordan" },
       { title: "Shared deadline one", status: "In progress", dueSort: "2026-08-10" },
-      { title: "No date", status: "Open", owner: "Cat" },
+      { title: "No date", status: "Open", owner: "Avery" },
       { title: "Finished", status: "Done", dueSort: "2026-08-01" },
     ],
   },

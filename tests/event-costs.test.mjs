@@ -9,12 +9,12 @@ test("every participating event has a cost ledger without invented totals", () =
   assert.equal(ledgers.length, events.filter((event) => event.status !== "No").length);
   assert.equal(new Set(ledgers.map((ledger) => ledger.eventSlug)).size, ledgers.length);
   assert.ok(ledgers.every((ledger) => ledger.lines.length > 0));
-  assert.ok(ledgers.every((ledger) => /^https:\/\//.test(ledger.sourceUrl)));
+  assert.ok(ledgers.every((ledger) => ledger.sourceUrl.startsWith("/sources") && ledger.sourceUrl.includes("#public-demo")));
   assert.equal(ledgers.reduce((total, ledger) => total + ledger.knownForecast, 0), 15000);
 });
 
-test("Genesys records the known Wish Line commitment and leaves missing costs explicit", () => {
-  const ledger = getEventCostLedgers().find((item) => item.eventSlug === "genesys-xperience");
+test("Partner Platform records the known Wish Line commitment and leaves missing costs explicit", () => {
+  const ledger = getEventCostLedgers().find((item) => item.eventSlug === "demo-event-16");
   assert.ok(ledger);
   assert.equal(ledger.knownForecast, 15000);
   assert.equal(ledger.knownFinal, 0);
@@ -29,7 +29,7 @@ test("Genesys records the known Wish Line commitment and leaves missing costs ex
 });
 
 test("commercial totals preserve blank HubSpot amounts instead of manufacturing pipeline", () => {
-  const vegas = getEventCostLedgers().find((item) => item.eventSlug === "ccw-vegas");
+  const vegas = getEventCostLedgers().find((item) => item.eventSlug === "demo-event-29");
   assert.ok(vegas);
   assert.equal(vegas.opportunities, 21);
   assert.equal(vegas.pipeline, null);

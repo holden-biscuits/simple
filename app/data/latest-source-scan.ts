@@ -51,7 +51,7 @@ const receipts: LatestScanReceipt[] = [
     id: "2026-08-08-slack-self-dm",
     source: "Slack",
     state: "Checked",
-    scope: "Holden’s private self-DM since the Aug 7 scheduled scan",
+    scope: "The demo operator's self-DM since the Aug 7 scheduled scan",
     result: "One new message was unrelated to events; no direct-confirmation candidate or follow-up was found.",
   },
   {

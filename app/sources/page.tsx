@@ -16,6 +16,7 @@ import { latestSourceScan } from "../data/latest-source-scan";
 import { eventPipelineSnapshot } from "../data/event-pipeline";
 import { marketingEventCoverage } from "../data/marketing-events";
 import { actionBriefingPolicy, getActionBriefing, isExternalAction } from "../data/action-briefing";
+import { publicDemo } from "../data/demo-mode";
 
 export const metadata: Metadata = {
   title: "Microsite admin · Event Basecamp",
@@ -45,6 +46,7 @@ export default function SourcesPage() {
       </section>
       <PageContentsLayout groups={[
         { label: "Start here", items: [
+          { id: "public-demo", label: "Public demo policy" },
           { id: "quick-update-routes", label: "Make an update" },
           { id: "action-briefing", label: "Daily action briefing" },
           { id: "source-monitor", label: "Source monitor" },
@@ -75,6 +77,23 @@ export default function SourcesPage() {
           { id: "source-files", label: "Open source files" },
         ] },
       ]}>
+
+      <section className="public-demo-policy" id="public-demo">
+        <div className="shell">
+          <div>
+            <p className="eyebrow">{publicDemo.label}</p>
+            <h2>Product behavior, without private operating data.</h2>
+          </div>
+          <div>
+            <p>{publicDemo.notice} Event names, record identifiers, source links, people, companies, commitments, and outcomes have been replaced with safe demonstration values.</p>
+            <ul>
+              <li><strong>Fixed public mode</strong><span>The public branch cannot switch itself back to operational data through a query string or browser setting.</span></li>
+              <li><strong>Private sources stay upstream</strong><span>Production records belong in access-controlled systems and are never committed to this repository.</span></li>
+              <li><strong>Automated leak gate</strong><span>Every pull request scans tracked source and documentation for private-system URLs, account identifiers, and prohibited personal data.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
       <section className="shell quick-update-routes" id="quick-update-routes">
         <div className="section-intro">
@@ -170,7 +189,7 @@ export default function SourcesPage() {
           <div className="section-intro">
             <p className="eyebrow">Latest scheduled run</p>
             <h2>What the 9:00 AM scan actually did.</h2>
-            <p>The audit passed. It held three Customer Connect fields for review; Holden later accepted Gabby Pring’s answers as fact, so Event Basecamp now reflects them and the Notion write-backs remain queued.</p>
+            <p>The audit passed. It held three Customer Connect fields for review; Jordan later accepted Jamie Rivera’s answers as fact, so Event Basecamp now reflects them and the Notion write-backs remain queued.</p>
           </div>
           <div className="latest-scan-meta">
             <span>{latestSourceScan.runMode}</span>
@@ -219,7 +238,7 @@ export default function SourcesPage() {
             <h2>One durable join across every system.</h2>
             <p>The event URL already supplies the key. Carrying that exact value upstream replaces fragile name-and-date matching and makes approved write-back, attribution and leadership rollups dependable.</p>
           </div>
-          <div className="event-key-example"><span>Example</span><code>genesys-xperience</code><p>Stable even if the display name, dates or venue change.</p></div>
+          <div className="event-key-example"><span>Example</span><code>demo-event-16</code><p>Stable even if the display name, dates or venue change.</p></div>
           <div className="linkage-coverage" aria-label="Cross-system event coverage">
             <article><span>Published event keys</span><strong>{linkage.stableFieldbookKeys} / {linkage.totalEvents}</strong><p>Every published event has a stable key.</p></article>
             <article><span>Active Notion projects</span><strong>{linkage.activeNotionProjects} / {linkage.activeEvents}</strong><p>{linkage.activeNotionMissing.length} active event workspaces still need a link.</p></article>
@@ -420,8 +439,8 @@ export default function SourcesPage() {
             <article><span>Keyed Marketing Events</span><strong>{crmAttributionAudit.keyedMarketingEvents}</strong><p>All {crmAttributionAudit.marketingEvents} records carry the canonical Event key; associations remain separately governed.</p></article>
           </div>
           <aside className="crm-portfolio-rollup">
-            <div><span>Portfolio opportunity views</span><strong>{eventPipelineSnapshot.opportunities} source-based · {eventPipelineSnapshot.exactQualifyingOpportunities} exact CCW</strong></div>
-            <p>The Deal Source search returns {eventPipelineSnapshot.sourceEligibleRecords} records and {eventPipelineSnapshot.opportunities} qualifying opportunities after stage exclusions. The exact source + CCW detail intersection contains {crmAttributionAudit.exactDeals} records and {eventPipelineSnapshot.exactQualifyingOpportunities} qualifying opportunities. All {eventPipelineSnapshot.dealsWithoutAmount} source-based opportunities lack a reportable amount, so open pipeline and closed-won revenue both remain $0.</p>
+            <div><span>Portfolio opportunity views</span><strong>{eventPipelineSnapshot.opportunities} source-based · {eventPipelineSnapshot.exactQualifyingOpportunities} exact Demo CX</strong></div>
+            <p>The Deal Source search returns {eventPipelineSnapshot.sourceEligibleRecords} records and {eventPipelineSnapshot.opportunities} qualifying opportunities after stage exclusions. The exact source + Demo CX detail intersection contains {crmAttributionAudit.exactDeals} records and {eventPipelineSnapshot.exactQualifyingOpportunities} qualifying opportunities. All {eventPipelineSnapshot.dealsWithoutAmount} source-based opportunities lack a reportable amount, so open pipeline and closed-won revenue both remain $0.</p>
             <Link href="/marketing#event-pipeline">Open pipeline chart →</Link>
           </aside>
           <aside className="crm-audit-alert">
@@ -462,7 +481,7 @@ export default function SourcesPage() {
           <aside className="audience-segment-boundary">
             <div><span>Current CRM boundary</span><h3>The specifications are ready. The active segments are not.</h3></div>
             <p>HubSpot segment access is read-only in the connected workflow. Two historical static snapshots are verified; neither is presented as a live audience. Creating the active segments requires one list-write route and the canonical Event key on contacts.</p>
-            <a href="https://app.hubspot.com/contacts/245561359/objectLists" target="_blank" rel="noreferrer">Open HubSpot segments ↗</a>
+            <a href="/sources#public-demo" target="_blank" rel="noreferrer">Open HubSpot segments ↗</a>
           </aside>
           <div className="audience-segment-contract">
             {audienceSegmentContract.map((item) => <article key={item.step}><span>{item.step}</span><h3>{item.title}</h3><p>{item.detail}</p></article>)}
@@ -572,7 +591,7 @@ export default function SourcesPage() {
           <p className="eyebrow">Source hierarchy</p>
           <h2>Use the right source.</h2>
           <ol>
-            <li><strong>Direct confirmation</strong><span>Controls explicit participation decisions, roster corrections and factual clarifications made by Holden in this task until a newer decision supersedes them.</span></li>
+            <li><strong>Direct confirmation</strong><span>Controls explicit participation decisions, roster corrections and factual clarifications made by Jordan in this task until a newer decision supersedes them.</span></li>
             <li><strong>Conference tracker</strong><span>Controls the event roster, dates, status and topline staffing.</span></li>
             <li><strong>Events in Notion</strong><span>Controls execution detail for active event projects.</span></li>
             <li><strong>Events Drive</strong><span>Stores contracts, creative, attendee files and post-event artifacts.</span></li>
@@ -586,7 +605,7 @@ export default function SourcesPage() {
             <div><span>Applied automatically</span><p>Direct, high-confidence changes supported by the controlling source: dates, venue details, confirmed deliverables, named owners and clearly attributed outcomes.</p></div>
             <div><span>Held for review</span><p>Conflicting participation status, ambiguous staffing, unattributed CRM activity, uncertain meeting counts, or a decision found only in conversation.</p></div>
             <div><span>Run receipt</span><p>Each scan reports the sources checked, the old and new values for applied changes, links to supporting evidence, and the items still waiting for a decision.</p></div>
-            <div><span>Publication gate</span><p>A successful scan may save a review version, but it does not change the live site until Holden explicitly approves deployment.</p></div>
+            <div><span>Publication gate</span><p>A successful scan may save a review version, but it does not change the live site until Jordan explicitly approves deployment.</p></div>
           </div>
           <div className="source-links vertical" id="source-files">
             <a href={sourceLinks.sheet} target="_blank" rel="noreferrer">Open tracker ↗</a>

@@ -14,9 +14,9 @@ function scan(proposals, receipts = sourceReceipts) {
 
 test("a source scan partitions every proposal into one auditable outcome", () => {
   const result = scan([
-    { id: "new-demo", eventKey: "genesys-xperience", field: "demosBooked", proposedValue: ["Example account"], source: "hubspot", confidence: "high", evidence: "Exact Event key association" },
-    { id: "email-date", eventKey: "genesys-xperience", field: "dates", proposedValue: "Sep 2–4, 2026", source: "gmail", confidence: "high", evidence: "Organizer email" },
-    { id: "meeting-match", eventKey: "genesys-xperience", field: "guaranteedMeetings", proposedValue: "No", source: "sheet", confidence: "high", evidence: "Conference tracker" },
+    { id: "new-demo", eventKey: "demo-event-16", field: "demosBooked", proposedValue: ["Example account"], source: "hubspot", confidence: "high", evidence: "Exact Event key association" },
+    { id: "email-date", eventKey: "demo-event-16", field: "dates", proposedValue: "Sep 2–4, 2026", source: "gmail", confidence: "high", evidence: "Organizer email" },
+    { id: "meeting-match", eventKey: "demo-event-16", field: "guaranteedMeetings", proposedValue: "No", source: "sheet", confidence: "high", evidence: "Conference tracker" },
     { id: "unknown-event", eventKey: "not-a-real-event", field: "status", proposedValue: "Confirmed", source: "sheet", confidence: "high", evidence: "Conference tracker" },
   ]);
 
@@ -33,7 +33,7 @@ test("a source scan partitions every proposal into one auditable outcome", () =>
 
 test("a publishable change cannot clear the review gate without source receipts", () => {
   const result = scan([
-    { id: "new-demo", eventKey: "genesys-xperience", field: "demosBooked", proposedValue: ["Example account"], source: "hubspot", confidence: "high", evidence: "Exact Event key association" },
+    { id: "new-demo", eventKey: "demo-event-16", field: "demosBooked", proposedValue: ["Example account"], source: "hubspot", confidence: "high", evidence: "Exact Event key association" },
   ], []);
 
   assert.equal(result.summary.applyToReview, 1);
@@ -57,7 +57,7 @@ test("malformed or duplicated source receipts keep the audit incomplete", () => 
 });
 
 test("duplicate proposal IDs are rejected without losing the first finding", () => {
-  const proposal = { id: "same-id", eventKey: "genesys-xperience", field: "demosBooked", proposedValue: ["Example account"], source: "hubspot", confidence: "high", evidence: "Exact association" };
+  const proposal = { id: "same-id", eventKey: "demo-event-16", field: "demosBooked", proposedValue: ["Example account"], source: "hubspot", confidence: "high", evidence: "Exact association" };
   const result = scan([proposal, { ...proposal, id: " same-id ", proposedValue: ["Another account"] }]);
 
   assert.equal(result.summary.applyToReview, 1);
@@ -67,18 +67,18 @@ test("duplicate proposal IDs are rejected without losing the first finding", () 
 
 test("protected direct decisions remain review items in a batch", () => {
   const result = scan([
-    { id: "stale-contact-status", eventKey: "contact-io", field: "status", proposedValue: "TBD", source: "sheet", confidence: "high", evidence: "Conference tracker" },
+    { id: "stale-contact-status", eventKey: "demo-event-28", field: "status", proposedValue: "TBD", source: "sheet", confidence: "high", evidence: "Conference tracker" },
   ]);
 
   assert.equal(result.summary.needsReview, 1);
   assert.equal(result.summary.applyToReview, 0);
-  assert.equal(result.reviewQueue[0].result.protectedOverride?.id, "contact-io-participation");
+  assert.equal(result.reviewQueue[0].result.protectedOverride?.id, "demo-event-28-participation");
   assert.equal(result.gates.reviewBuild, "no-publishable-change");
 });
 
 test("findings without evidence never enter reconciliation", () => {
   const result = scan([
-    { id: "unsupported", eventKey: "genesys-xperience", field: "demosBooked", proposedValue: ["Example account"], source: "hubspot", confidence: "high", evidence: "" },
+    { id: "unsupported", eventKey: "demo-event-16", field: "demosBooked", proposedValue: ["Example account"], source: "hubspot", confidence: "high", evidence: "" },
   ]);
 
   assert.equal(result.summary.rejected, 1);
@@ -98,7 +98,7 @@ test("a stale secondary system becomes an upstream-only correction when the site
     ],
     proposals: [{
       id: "customer-connect-notion-date",
-      eventKey: "customer-connect-expo",
+      eventKey: "demo-event-11",
       field: "dates",
       proposedValue: "Sep 9–10, 2026",
       observedValue: "Sep 8–10, 2026",
@@ -119,7 +119,7 @@ test("a stale secondary system becomes an upstream-only correction when the site
 test("an incomplete upstream-only correction is rejected instead of silently becoming no change", () => {
   const result = scan([{
     id: "incomplete-upstream-correction",
-    eventKey: "customer-connect-expo",
+    eventKey: "demo-event-11",
     field: "dates",
     proposedValue: "Sep 9–10, 2026",
     correctionTarget: "notion",

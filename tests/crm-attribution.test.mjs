@@ -3,13 +3,13 @@ import test from "node:test";
 import { classifyCrmAttribution, crmAttributionAudit } from "../app/data/crm-attribution.ts";
 
 test("canonical event keys are explicit attribution", () => {
-  const result = classifyCrmAttribution({ eventKey: "genesys-xperience", recordedEventKey: "genesys-xperience" });
+  const result = classifyCrmAttribution({ eventKey: "demo-event-16", recordedEventKey: "demo-event-16" });
   assert.equal(result.confidence, "explicit");
 });
 
-test("the controlled CCW deal detail resolves to the published event key", () => {
+test("the controlled Demo CX deal detail resolves to the published event key", () => {
   const result = classifyCrmAttribution({
-    eventKey: "ccw-vegas",
+    eventKey: "demo-event-29",
     dealSource: "Event / Conference",
     dealSourceDetail: "ccw_vegas_follow_up",
   });
@@ -18,9 +18,9 @@ test("the controlled CCW deal detail resolves to the published event key", () =>
 
 test("meeting text plus the event window still requires review", () => {
   const result = classifyCrmAttribution({
-    eventKey: "ccw-vegas",
-    activityText: "Meet at CCW Vegas booth 1340",
-    eventAliases: ["CCW Vegas", "booth 1340"],
+    eventKey: "demo-event-29",
+    activityText: "Meet at Customer Operations Week booth 1340",
+    eventAliases: ["Customer Operations Week", "booth 1340"],
     withinEventWindow: true,
   });
   assert.equal(result.confidence, "needs-review");
@@ -28,9 +28,9 @@ test("meeting text plus the event window still requires review", () => {
 
 test("date proximity and vendor mentions do not become outcomes", () => {
   const result = classifyCrmAttribution({
-    eventKey: "genesys-xperience",
-    activityText: "Genesys partner planning call",
-    eventAliases: ["Genesys Xperience"],
+    eventKey: "demo-event-16",
+    activityText: "Partner Platform partner planning call",
+    eventAliases: ["Partner Experience Summit"],
     withinEventWindow: true,
   });
   assert.equal(result.confidence, "excluded");

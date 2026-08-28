@@ -18,16 +18,17 @@ test("the audience registry covers every active event without inventing live seg
 
 test("existing HubSpot event lists stay labeled as static snapshots", () => {
   assert.equal(registry.verifiedSnapshots, 2);
-  for (const eventKey of ["ccw-vegas", "nice-world"]) {
+  for (const eventKey of ["demo-event-29", "demo-event-27"]) {
     const item = registry.items.find((candidate) => candidate.eventKey === eventKey);
     assert.equal(item?.state, "Verified static snapshot");
     assert.match(item?.membershipRule ?? "", /frozen/i);
-    assert.match(item?.hubspotUrl ?? "", /objectLists\/(62|46)/);
+    assert.match(item?.hubspotUrl ?? "", /source=crm-segment/);
+    assert.match(item?.hubspotUrl ?? "", new RegExp(`event=${eventKey}`));
   }
 });
 
 test("completed matched-account events leave the active segment registry", () => {
-  const chicago = registry.items.find((item) => item.eventKey === "ccw-exchange-chicago");
+  const chicago = registry.items.find((item) => item.eventKey === "demo-event-12");
   assert.equal(chicago, undefined);
 });
 

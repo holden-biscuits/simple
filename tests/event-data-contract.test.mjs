@@ -43,16 +43,16 @@ test("source conflicts and unnamed rosters remain visible as review warnings", (
 });
 
 test("event TLDR callouts are optional, concise, and route to supporting detail", () => {
-  const genesys = events.find((event) => event.slug === "genesys-xperience");
-  const contact = events.find((event) => event.slug === "contact-io");
+  const partnerPlatform = events.find((event) => event.slug === "demo-event-16");
+  const contact = events.find((event) => event.slug === "demo-event-28");
 
-  assert.deepEqual(genesys?.tldrCallout, {
+  assert.deepEqual(partnerPlatform?.tldrCallout, {
     label: "Wish Line FYI",
     title: "1-855-955-WISH",
     detail: "Live Simple agent · Aug 31–Sep 3",
     goal: "Turn the Vegas campaign into a live product demo and bring qualified conference callers to the booth.",
     salesAction: "Ask prospects to call it; if they engage, continue the conversation at the booth and record the next step.",
-    href: "https://www.notion.so/3a66fee642fe812d8882cb912a924a7c",
+    href: "/sources#public-demo",
     action: "Open the campaign brief",
   });
   assert.equal(contact?.tldrCallout, undefined);

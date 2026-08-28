@@ -17,7 +17,7 @@ export type CrmAttributionResult = {
 };
 
 const eventDealDetails: Record<string, string> = {
-  ccw_vegas_follow_up: "ccw-vegas",
+  ccw_vegas_follow_up: "demo-event-29",
 };
 
 const eventDealSources = new Set(["Event - Trade Show", "Event - Field/Dinner", "Event / Conference"]);
@@ -64,11 +64,11 @@ export function classifyCrmAttribution(input: CrmAttributionInput): CrmAttributi
 
 export const crmAttributionAudit = {
   checkedAt: "Aug 7, 2026",
-  accountId: "245561359",
-  hubspotUrl: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+  accountId: "demo-crm-account",
+  hubspotUrl: "/sources#public-demo",
   exactDeals: 29,
   representedEvents: 1,
-  representedEventLabel: "CCW Vegas",
+  representedEventLabel: "Customer Operations Week",
   marketingEvents: marketingEventCoverage.totalRecords,
   keyedMarketingEvents: marketingEventCoverage.keyedRecords,
   marketingEventUrl: marketingEventCoverage.indexUrl,
@@ -77,22 +77,22 @@ export const crmAttributionAudit = {
     note: "The source and detail searches each return 30 deals, but only 29 records intersect. One source-only record and one detail-only record stay out of exact attribution until RevOps reconciles both controlled fields.",
     sourceOnly: {
       count: 1,
-      dealName: "Home Warranty, Inc. — New Deal",
+      dealName: "Example Account Alpha — Demo Deal",
       currentSource: "Event — Trade Show",
       currentDetail: "Field / dinner",
-      url: "https://app.hubspot.com/contacts/245561359/record/0-3/340489431764?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+      url: "/sources#public-demo",
     },
     detailOnly: {
       count: 1,
-      dealName: "Memorial Hermann Health System",
+      dealName: "Example Account Beta",
       currentSource: "Outbound — SDR",
-      currentDetail: "CCW Vegas follow-up",
-      url: "https://app.hubspot.com/contacts/245561359/record/0-3/338921491147?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_fieldbook",
+      currentDetail: "Customer Operations Week follow-up",
+      url: "/sources#public-demo",
     },
   },
   meetingWindow: {
-    eventKey: "ccw-vegas",
-    eventLabel: "CCW Vegas",
+    eventKey: "demo-event-29",
+    eventLabel: "Customer Operations Week",
     recordsReviewed: 8,
     possibleEventMeetings: 4,
     completedOutcomes: 0,

@@ -23,16 +23,16 @@ test("update routes keep signals out of the system-of-record list", () => {
 });
 
 test("event pages route updates to the exact event records", () => {
-  const genesys = events.find((event) => event.slug === "genesys-xperience");
-  assert.ok(genesys);
-  const routes = getEventUpdateRoutes(genesys);
-  assert.equal(routes.find((route) => route.id === "tracker")?.url, getEventTrackerRowUrl(genesys.slug));
-  assert.equal(routes.find((route) => route.id === "notion")?.url, genesys.notionUrl);
-  assert.equal(routes.find((route) => route.id === "hubspot")?.url, getMarketingEventRecord(genesys.slug)?.url);
+  const partnerPlatform = events.find((event) => event.slug === "demo-event-16");
+  assert.ok(partnerPlatform);
+  const routes = getEventUpdateRoutes(partnerPlatform);
+  assert.equal(routes.find((route) => route.id === "tracker")?.url, getEventTrackerRowUrl(partnerPlatform.slug));
+  assert.equal(routes.find((route) => route.id === "notion")?.url, partnerPlatform.notionUrl);
+  assert.equal(routes.find((route) => route.id === "hubspot")?.url, getMarketingEventRecord(partnerPlatform.slug)?.url);
   assert.equal(routes.find((route) => route.id === "hubspot")?.system, "HubSpot Marketing Event");
   assert.equal(routes.find((route) => route.id === "hubspot")?.action, "Open Marketing Event");
 
-  const contact = events.find((event) => event.slug === "contact-io");
+  const contact = events.find((event) => event.slug === "demo-event-28");
   assert.ok(contact);
   assert.deepEqual(getEventUpdateRoutes(contact).map((route) => route.id), ["tracker"]);
 });
@@ -40,10 +40,10 @@ test("event pages route updates to the exact event records", () => {
 test("every event routes to its exact conference tracker row", () => {
   const urls = events.map((event) => getEventTrackerRowUrl(event.slug));
   assert.equal(new Set(urls).size, events.length);
-  assert.ok(urls.every((url) => /&range=A\d+:[A-Z]+\d+$/.test(url)));
-  assert.match(getEventTrackerRowUrl("ccw-exchange-chicago"), /gid=0&range=A14:W14$/);
-  assert.match(getEventTrackerRowUrl("genesys-xperience"), /gid=0&range=A16:W16$/);
-  assert.match(getEventTrackerRowUrl("ccw-vegas-2027"), /gid=113603184&range=A4:R4$/);
+  assert.ok(urls.every((url) => /source=tracker&event=demo-event-\d+#public-demo$/.test(url)));
+  assert.match(getEventTrackerRowUrl("demo-event-12"), /source=tracker&event=demo-event-12/);
+  assert.match(getEventTrackerRowUrl("demo-event-16"), /source=tracker&event=demo-event-16/);
+  assert.match(getEventTrackerRowUrl("demo-event-22"), /source=tracker&event=demo-event-22/);
   assert.equal(getEventTrackerRowUrl("missing-event"), sourceLinks.sheet);
 });
 
@@ -52,26 +52,26 @@ test("event-specific write-backs resolve to published event pages", () => {
   const tagged = writebackQueue.filter((item) => item.eventSlug);
   assert.ok(tagged.length >= 9);
   assert.ok(tagged.every((item) => publishedSlugs.has(item.eventSlug)));
-  const genesys = getEventWritebackQueue("genesys-xperience");
-  assert.deepEqual(genesys.map((item) => item.system), ["Conference tracker", "Notion", "Notion", "Notion", "Notion"]);
-  assert.deepEqual(genesys.slice(1).map((item) => item.scope), [
-    "Genesys roster reference",
-    "Genesys Wish Line activation",
-    "Genesys speaking plan",
-    "Genesys CRM logging route",
+  const partnerPlatform = getEventWritebackQueue("demo-event-16");
+  assert.deepEqual(partnerPlatform.map((item) => item.system), ["Conference tracker", "Notion", "Notion", "Notion", "Notion"]);
+  assert.deepEqual(partnerPlatform.slice(1).map((item) => item.scope), [
+    "Partner Platform roster reference",
+    "Partner Platform Wish Line activation",
+    "Partner Platform speaking plan",
+    "Partner Platform CRM logging route",
   ]);
-  const customerConnect = getEventWritebackQueue("customer-connect-expo");
+  const customerConnect = getEventWritebackQueue("demo-event-11");
   assert.deepEqual(customerConnect.map((item) => item.system), ["Conference tracker", "Notion"]);
-  assert.deepEqual(customerConnect.map((item) => item.scope), ["Customer Connect Expo participation", "Customer Connect Expo date property"]);
-  const chicago = getEventWritebackQueue("ccw-exchange-chicago");
+  assert.deepEqual(customerConnect.map((item) => item.scope), ["Customer Connect Showcase participation", "Customer Connect Showcase date property"]);
+  const chicago = getEventWritebackQueue("demo-event-12");
   assert.deepEqual(chicago.map((item) => item.scope), [
-    "CCW Exchange Chicago final roster",
-    "CCW Exchange Chicago attendance closeout",
-    "CCW Exchange Chicago completion",
-    "CCW Exchange Chicago rating",
-    "CCW Exchange Chicago contractual meeting count",
-    "CCW Exchange Chicago follow-up meetings",
-    "CCW Exchange Chicago cookie follow-up",
+    "Midwest CX Exchange final roster",
+    "Midwest CX Exchange attendance closeout",
+    "Midwest CX Exchange completion",
+    "Midwest CX Exchange rating",
+    "Midwest CX Exchange contractual meeting count",
+    "Midwest CX Exchange follow-up meetings",
+    "Midwest CX Exchange cookie follow-up",
   ]);
   assert.equal(chicago.find((item) => item.scope.includes("contractual meeting count"))?.state, "Decision needed");
 });
