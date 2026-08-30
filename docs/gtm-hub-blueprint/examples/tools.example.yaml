@@ -1,0 +1,22 @@
+stages:
+  - id: market
+    code: TAM
+    label: Total market
+  - id: booked
+    code: S1
+    label: Meeting booked
+
+groups:
+  - id: build-pipeline
+    number: "01"
+    title: Build pipeline
+    description: Find the right accounts and create demand.
+    tools:
+      - id: market-intelligence
+        name: Market Intelligence
+        href: /tools/market-intelligence
+        stages: [market]
+        owner: revenue-operations@example.com
+        reviewed: YYYY-MM-DD
+        source_drive_ids: [replace-with-drive-item-id]
+

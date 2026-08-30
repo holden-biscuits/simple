@@ -1,0 +1,15 @@
+source_drive_path,source_item_id,content_type,canonical_role,publish_status,destination_slug,owner,reviewer,last_source_modified,last_source_sync,last_reviewed,review_due,sensitivity,notes
+"Sales (Team)/_Compliance and Security",,folder,canonical,hold,knowledge/sales/reference/security,,,,,,,restricted,"Review customer-safe answers only"
+"Sales (Team)/_Simple Forms",,folder,operational,hold,operations/forms,,,,,,,restricted,"Link to forms; never ingest submissions"
+"Sales (Team)/_Templates",,folder,canonical,hold,knowledge/sales/templates,,,,,,,internal,"Approve one canonical version per template"
+"Sales (Team)/AE feedback",,folder,provisional,hold,editorial-backlog,,,,,,,restricted,"Feedback is input, not authoritative fact"
+"Sales (Team)/Customers",,folder,evidence,hold,knowledge/sales/proof,,,,,,,restricted,"Customer disclosure approval required"
+"Sales (Team)/Sales Materials",,folder,supporting,hold,knowledge/sales,,,,,,,internal,"Map each source to one canonical section"
+"Sales (Team)/Sales Videos",,folder,evidence,hold,knowledge/sales/calls,,,,,,,restricted,"Publish approved metadata and links only"
+"Sales (Team)/SDR Weekly Prospecting + Email Reviews",,folder,provisional,hold,knowledge/sdr/coaching,,,,,,,restricted,"Keep private coaching separate from approved language"
+"Sales (Team)/[INTERNAL] Simple AI Commission Based Pricing",,sheet,canonical,hold,knowledge/sales/pricing,,,,,,,restricted,"Finance owner and short review interval required"
+"Sales (Team)/CCW Orlando 2026",,document,provisional,hold,reference/events/ccw-orlando-2026,,,,,,,internal,"Verify before turning notes into canonical claims"
+"Sales (Team)/Competitor Battle card",,sheet,canonical,hold,knowledge/sales/competitive,,,,,,,restricted,"Date-stamp every claim"
+"Sales (Team)/Competitor Pricing",,document,supporting,hold,knowledge/sales/competitive/pricing,,,,,,,restricted,"High-volatility source"
+"Sales (Team)/Landing page signups",,sheet,blocked,blocked,,,,,,,,blocked,"Contains lead data; never publish or ingest"
+
