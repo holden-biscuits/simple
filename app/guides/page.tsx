@@ -64,10 +64,10 @@ export default function GuidesPage() {
             <h2>Use ZoomInfo before and during the event.</h2>
             <ul>
               <li>AEs and SDRs should download the event mobile app as soon as attendee access opens. Use it to find attendees, companies, sessions, and meeting opportunities.</li>
-              <li>Use names and companies from the mobile app to find and verify work emails, direct numbers, titles, and account ownership in <a className="inline-link" href="https://app.zoominfo.com/" target="_blank" rel="noreferrer">ZoomInfo ↗</a>.</li>
-              <li>For vendor-specific events, use <a className="inline-link" href="https://app.zoominfo.com/" target="_blank" rel="noreferrer">ZoomInfo technographics ↗</a> to find companies using that vendor’s technology, then layer in our ICP criteria and relevant account signals.</li>
+              <li>Use names and companies from the mobile app to find and verify work emails, direct numbers, titles, and account ownership in <a className="inline-link" href="/sources#public-demo" target="_blank" rel="noreferrer">ZoomInfo ↗</a>.</li>
+              <li>For vendor-specific events, use <a className="inline-link" href="/sources#public-demo" target="_blank" rel="noreferrer">ZoomInfo technographics ↗</a> to find companies using that vendor’s technology, then layer in our ICP criteria and relevant account signals.</li>
               <li>Research two to four likely stakeholders per priority company instead of relying on one contact.</li>
-              <li>Check <a className="inline-link" href="https://app.hubspot.com/" target="_blank" rel="noreferrer">HubSpot ↗</a> ownership and remove duplicates before enrolling anyone in outreach. The event app supplies the lead; ZoomInfo enriches it; HubSpot holds the record.</li>
+              <li>Check <a className="inline-link" href="/sources#public-demo" target="_blank" rel="noreferrer">HubSpot ↗</a> ownership and remove duplicates before enrolling anyone in outreach. The event app supplies the lead; ZoomInfo enriches it; HubSpot holds the record.</li>
             </ul>
             <BackToTop />
           </div>

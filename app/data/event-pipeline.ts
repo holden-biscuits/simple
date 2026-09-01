@@ -87,7 +87,7 @@ export const eventPipelineRefreshContract = {
 export const eventPipelineSnapshot = {
   checkedAt: "Aug 7, 2026",
   refreshRule: "Refresh from HubSpot during the daily source scan.",
-  hubspotUrl: "https://app.hubspot.com/contacts/245561359/objects/0-3/views/all/list?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=event_basecamp_pipeline",
+  hubspotUrl: "/sources#public-demo",
   sourceValues: eventPipelineFilter.sourceLabels,
   excludedStages: eventPipelineFilter.excludedStageLabels,
   sourceEligibleRecords: 30,

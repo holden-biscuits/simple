@@ -171,7 +171,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
       <section className="shell event-costs" id="event-costs">
         <div className="section-intro"><p className="eyebrow">Event cost ledger</p><h2>One cost table per event.</h2><p>Known commitments are recorded. Every missing forecast or final amount stays visible as “Needs cost” until the owning event record is updated.</p></div>
         <div className="event-cost-ledgers">
-          {costLedgers.map((ledger) => <details key={ledger.eventSlug} open={ledger.eventSlug === selectedEvent || ledger.eventSlug === "genesys-xperience"}>
+          {costLedgers.map((ledger) => <details key={ledger.eventSlug} open={ledger.eventSlug === selectedEvent || ledger.eventSlug === "demo-event-16"}>
             <summary>
               <span><strong>{ledger.eventName}</strong><small>{ledger.dates}</small></span>
               <span><b>{ledger.knownForecast ? `${money(ledger.knownForecast)} known` : "Needs cost"}</b><small>{ledger.missingCount} incomplete line{ledger.missingCount === 1 ? "" : "s"}</small></span>
@@ -191,7 +191,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
         <div className="shell">
           <div className="section-intro"><p className="eyebrow">Expense vs return</p><h2>Cost beside pipeline and revenue.</h2><p>This is a coverage table, not an ROI ranking. Blank costs and blank deal amounts remain explicit so partial records cannot look complete.</p></div>
           <div className="event-roi-summary" aria-label="Portfolio expense and return summary">
-            <article><span>Known committed expense</span><strong>{money(eventCostPortfolio.knownCommittedExpense)}</strong><p>Partial · currently the approved Genesys Wish Line buy</p></article>
+            <article><span>Known committed expense</span><strong>{money(eventCostPortfolio.knownCommittedExpense)}</strong><p>Partial · currently the approved Partner Platform Wish Line buy</p></article>
             <article><span>Qualifying opportunities</span><strong>{eventCostPortfolio.qualifyingOpportunities}</strong><p>Source-based HubSpot view; Closed Lost and Disqualified excluded</p></article>
             <article><span>Recorded pipeline</span><strong>{money(eventCostPortfolio.recordedPipeline)}</strong><p>{eventCostPortfolio.dealsWithoutAmount} qualifying deals have no reportable amount</p></article>
             <article><span>Recorded revenue</span><strong>{money(eventCostPortfolio.recordedRevenue)}</strong><p>Closed Won only</p></article>
@@ -200,7 +200,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
             <thead><tr><th>Event</th><th>Known expense</th><th>Cost coverage</th><th>Opportunities</th><th>Pipeline</th><th>Revenue</th></tr></thead>
             <tbody>{costLedgers.map((ledger) => <tr key={ledger.eventSlug}><th scope="row"><Link href={`/events/${ledger.eventSlug}`}>{ledger.eventName}</Link><small>{ledger.dates}</small></th><td>{ledger.knownForecast ? money(ledger.knownForecast) : "Needs cost"}</td><td>{ledger.missingCount ? `${ledger.missingCount} line${ledger.missingCount === 1 ? "" : "s"} incomplete` : "Complete"}</td><td>{ledger.opportunities ?? "Not linked"}</td><td>{ledger.pipeline === null ? "Not reportable" : money(ledger.pipeline)}</td><td>{ledger.revenue === null ? "Not linked" : money(ledger.revenue)}</td></tr>)}</tbody>
           </table></div>
-          <p className="event-roi-note"><strong>Current constraint:</strong> {eventCostPortfolio.costCoverageEvents} of {eventCostPortfolio.participatingEvents} participating events have a complete cost ledger. CCW Vegas has the only exact event-level opportunity rollup; its deal amounts are blank.</p>
+          <p className="event-roi-note"><strong>Current constraint:</strong> {eventCostPortfolio.costCoverageEvents} of {eventCostPortfolio.participatingEvents} participating events have a complete cost ledger. Customer Operations Week has the only exact event-level opportunity rollup; its deal amounts are blank.</p>
           <BackToTop />
         </div>
       </section>
@@ -222,7 +222,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
           </div>
           <div className="event-attribution-bridge" aria-label="HubSpot event deal attribution reconciliation">
             <article><span>Deal Source view</span><strong>{eventPipelineSnapshot.sourceEligibleRecords} records</strong><p>{eventPipelineSnapshot.opportunities} remain after stage exclusions.</p></article>
-            <article><span>Exact CCW join</span><strong>{eventPipelineSnapshot.exactAttributionRecords} records</strong><p>{eventPipelineSnapshot.exactQualifyingOpportunities} remain after the same exclusions.</p></article>
+            <article><span>Exact Demo CX join</span><strong>{eventPipelineSnapshot.exactAttributionRecords} records</strong><p>{eventPipelineSnapshot.exactQualifyingOpportunities} remain after the same exclusions.</p></article>
             <article className="event-attribution-alert"><span>Needs field QA</span><strong>{eventPipelineSnapshot.pairMismatchCount} records</strong><p>{eventPipelineSnapshot.sourceOnlyRecords} source-only · {eventPipelineSnapshot.detailOnlyRecords} detail-only</p></article>
           </div>
           <div className="event-stage-chart" role="img" aria-label={`Current stage distribution for ${eventPipelineSnapshot.opportunities} source-based event opportunities`}>
@@ -233,7 +233,7 @@ export default async function MarketingPage({ searchParams }: { searchParams: Pr
               <strong>{stage.count}</strong>
             </div>)}
           </div>
-          <aside className="event-pipeline-quality"><strong>Pipeline hygiene</strong><p>All {eventPipelineSnapshot.dealsWithoutAmount} source-based opportunities lack a reportable amount, so pipeline and revenue remain $0. The exact CCW view contains {eventPipelineSnapshot.exactQualifyingOpportunities} qualifying opportunities; neither view invents value for blank amounts.</p><span>Checked {eventPipelineSnapshot.checkedAt} · {eventPipelineSnapshot.refreshRule}</span></aside>
+          <aside className="event-pipeline-quality"><strong>Pipeline hygiene</strong><p>All {eventPipelineSnapshot.dealsWithoutAmount} source-based opportunities lack a reportable amount, so pipeline and revenue remain $0. The exact Demo CX view contains {eventPipelineSnapshot.exactQualifyingOpportunities} qualifying opportunities; neither view invents value for blank amounts.</p><span>Checked {eventPipelineSnapshot.checkedAt} · {eventPipelineSnapshot.refreshRule}</span></aside>
           <BackToTop />
         </div>
       </section>

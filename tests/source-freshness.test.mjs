@@ -10,15 +10,15 @@ const find = (slug) => {
 };
 
 test("explicitly completed events are archived on their final day", () => {
-  const freshness = getSourceFreshness(find("ccw-exchange-chicago"), "2026-08-07");
+  const freshness = getSourceFreshness(find("demo-event-12"), "2026-08-07");
   assert.equal(freshness.state, "archived");
   assert.equal(freshness.maxAgeDays, undefined);
   assert.equal(freshness.nextCheckISO, undefined);
 });
 
 test("upcoming events tighten from weekly to every three days", () => {
-  const weekly = getSourceFreshness(find("genesys-xperience"), "2026-08-14");
-  const finalWindow = getSourceFreshness(find("genesys-xperience"), "2026-08-20");
+  const weekly = getSourceFreshness(find("demo-event-16"), "2026-08-14");
+  const finalWindow = getSourceFreshness(find("demo-event-16"), "2026-08-20");
   assert.equal(weekly.state, "due");
   assert.equal(weekly.maxAgeDays, 7);
   assert.equal(finalWindow.state, "overdue");
@@ -26,6 +26,6 @@ test("upcoming events tighten from weekly to every three days", () => {
 });
 
 test("past and non-participating events are archived", () => {
-  assert.equal(getSourceFreshness(find("ccw-vegas"), "2026-08-06").state, "archived");
-  assert.equal(getSourceFreshness(find("contact-io"), "2026-08-06").state, "archived");
+  assert.equal(getSourceFreshness(find("demo-event-29"), "2026-08-06").state, "archived");
+  assert.equal(getSourceFreshness(find("demo-event-28"), "2026-08-06").state, "archived");
 });

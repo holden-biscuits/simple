@@ -14,7 +14,7 @@ test("every event field in the catalog has one declared source route", () => {
 test("direct decisions protect fields from stale source updates", () => {
   const result = reconcileEventUpdate({
     id: "tracker-contact-status",
-    eventKey: "contact-io",
+    eventKey: "demo-event-28",
     field: "status",
     proposedValue: "TBD",
     source: "sheet",
@@ -23,14 +23,14 @@ test("direct decisions protect fields from stale source updates", () => {
   });
 
   assert.equal(result.decision, "needs-review");
-  assert.equal(result.protectedOverride?.id, "contact-io-participation");
+  assert.equal(result.protectedOverride?.id, "demo-event-28-participation");
   assert.equal(result.writebackDestination, "Conference tracker");
 });
 
 test("high-confidence changes from the owning source may update a review build", () => {
   const result = reconcileEventUpdate({
     id: "hubspot-new-demo",
-    eventKey: "genesys-xperience",
+    eventKey: "demo-event-16",
     field: "demosBooked",
     proposedValue: ["Example account"],
     source: "hubspot",
@@ -45,7 +45,7 @@ test("high-confidence changes from the owning source may update a review build",
 test("message sources open review items instead of silently changing owned facts", () => {
   const result = reconcileEventUpdate({
     id: "email-date-change",
-    eventKey: "genesys-xperience",
+    eventKey: "demo-event-16",
     field: "dates",
     proposedValue: "Sep 2–4, 2026",
     source: "gmail",
@@ -60,8 +60,8 @@ test("message sources open review items instead of silently changing owned facts
 
 test("unchanged values leave a no-change receipt", () => {
   const result = reconcileEventUpdate({
-    id: "genesys-meetings-match",
-    eventKey: "genesys-xperience",
+    id: "partnerPlatform-meetings-match",
+    eventKey: "demo-event-16",
     field: "guaranteedMeetings",
     proposedValue: "No",
     source: "sheet",
@@ -84,7 +84,7 @@ test("unknown event keys and unrouted fields are rejected", () => {
   });
   const unroutedField = reconcileEventUpdate({
     id: "unrouted-field",
-    eventKey: "genesys-xperience",
+    eventKey: "demo-event-16",
     field: "totallyUnknown",
     proposedValue: [],
     source: "sheet",

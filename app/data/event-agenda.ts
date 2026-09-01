@@ -18,7 +18,7 @@ export type EventAgendaDay = {
 };
 
 const officialAgendaBySlug: Record<string, EventAgendaDay[]> = {
-  "genesys-xperience": [
+  "demo-event-16": [
     {
       date: "Tuesday, September 1",
       items: [
@@ -41,7 +41,7 @@ const officialAgendaBySlug: Record<string, EventAgendaDay[]> = {
       items: [
         { time: "9:00 AM", title: "Morning keynote" },
         { time: "11:00 AM", title: "Expo, sessions and labs" },
-        { time: "1:10 PM", title: "Cat’s 20-minute solution talk", teamSimple: true },
+        { time: "1:10 PM", title: "Avery’s 20-minute solution talk", teamSimple: true },
         { time: "4:00 PM", title: "Closing keynote" },
         { time: "7:00 PM", title: "Closing celebration" },
       ],

@@ -19,6 +19,12 @@ export const metadata: Metadata = { title: "Search · Event Basecamp" };
 
 const validSearchTypes: SearchType[] = ["All", "Event", "Guide", "Role", "Operations"];
 
+function getDemoSearchAliases(eventKey: string) {
+  if (eventKey === "demo-event-16") return "Partner Platform";
+  if (eventKey === "demo-event-07") return "ICMI";
+  return "";
+}
+
 const referenceRecords: SearchRecord[] = [
   { type: "Guide", title: "Start with the task", href: "/#start-map", description: "Choose the event brief, AE guide, SDR guide, marketing workspace, planning process, or source record that matches the work in front of you.", keywords: "start here where should I go find page event plan role responsibility source truth changed conflict" },
   { type: "Guide", title: "Event process", href: "/#event-lifecycle", description: "Follow the event sequence from approval through planning, audience work, team preparation, onsite execution, follow-up, and measurement.", keywords: "event lifecycle process workflow what do I do next after event choose approve plan audience outreach prepare onsite run follow up learn measure" },
@@ -52,7 +58,7 @@ const referenceRecords: SearchRecord[] = [
   { type: "Operations", title: "CRM attribution health", href: "/sources#crm-attribution", description: "The source/detail reconciliation, exact event deals, field mismatches, meeting QA, Marketing Event coverage, and the rules for what leadership reporting may count.", keywords: "hubspot event key exact attribution deals meetings demos outcomes marketing events leadership reporting ccw vegas qa source only detail only 30 29 22 21 two mismatches" },
   { type: "Operations", title: "HubSpot Marketing Events · current role", href: "/sources#marketing-event-role", description: "The 29 keyed Marketing Event records provide CRM event identity, participant state, and association routes; they do not replace the tracker, Notion, meeting outcomes, deal stages, pipeline, or revenue.", keywords: "hubspot marketing events current truth crm spine 29 keyed records participant state campaign association event key source hierarchy no longer empty" },
   { type: "Operations", title: "HubSpot event audience registry", href: "/sources#audience-segments", description: "The governed names, evidence gates, membership rules and refresh rules for event prospecting segments.", keywords: "hubspot segment list audience prospecting active segment static list attendee target universe organizer matched accounts event key zoominfo maintain sync" },
-  { type: "Operations", title: "Source write-back queue", href: "/sources#writeback-queue", description: "Known upstream corrections and integration setup work that still needs approval or a decision.", keywords: "write back upstream mismatch drift protected decision tracker notion genesys hubspot event attribution event key folder structure roundup" },
+  { type: "Operations", title: "Source write-back queue", href: "/sources#writeback-queue", description: "Known upstream corrections and integration setup work that still needs approval or a decision.", keywords: "write back upstream mismatch drift protected decision tracker notion partnerPlatform hubspot event attribution event key folder structure roundup" },
   { type: "Operations", title: "Event data reconciliation rules", href: "/sources#update-rules", description: "How the source scan handles direct corrections, source ownership, message signals, conflicts, and publication approval.", keywords: "reconciliation scanner rules protected override direct confirmation source owner apply review no change reject approval" },
 ];
 
@@ -293,13 +299,14 @@ const eventUpdateRouteRecords: SearchRecord[] = events.flatMap((event) => getEve
   title: `${event.name} · ${route.scope}`,
   href: route.url,
   description: route.detail,
-  keywords: [event.name, event.location, event.dates, route.scope, route.system, route.detail, route.action, "where update edit correct fix log record source of truth"].join(" "),
+  keywords: [event.name, getDemoSearchAliases(event.slug), event.location, event.dates, route.scope, route.system, route.detail, route.action, "where update edit correct fix log record source of truth"].join(" "),
   details: [`Owning destination · ${route.system}`, `Action · ${route.action}`],
   hiddenUntilQuery: true,
 })));
 
 const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
   if (event.status === "No") return [];
+  const demoSearchAliases = getDemoSearchAliases(event.slug);
   const phase = getEventPhase(event, searchProgramDate);
   const staffing = getStaffingSignal(event);
   const prospecting = getEventProspectingBrief(event);
@@ -324,7 +331,7 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
       title: `${event.name} · crew`,
       href: `/events/${event.slug}#event-crew`,
       description: event.team.length ? `Attending: ${event.team.join(", ")}.` : staffing.detail,
-      keywords: [event.name, event.location, "who is going attending attendee team roster staffing people crew passes credentials unassigned", staffing.card, event.team.join(" "), event.available.join(" "), staffing.detail].join(" "),
+      keywords: [event.name, demoSearchAliases, event.location, "who is going attending attendee team roster staffing people crew passes credentials unassigned", staffing.card, event.team.join(" "), event.available.join(" "), staffing.detail].join(" "),
       details: [staffing.card, staffing.assignmentGap ? `${staffing.assignmentGap} pass${staffing.assignmentGap === 1 ? "" : "es"} unassigned` : "", event.team.length ? `Attending · ${event.team.join(", ")}` : "Attending · None confirmed", event.available.length ? `Available · ${event.available.join(", ")}` : ""].filter(Boolean),
       hiddenUntilQuery: true,
     },
@@ -335,7 +342,7 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
       title: `${event.name} · prospecting`,
       href: `/events/${event.slug}#event-prospecting`,
       description: prospecting.summary,
-      keywords: [event.name, event.location, "target targeting prospect prospecting audience accounts contacts companies ZoomInfo", prospecting.workflow, ...prospecting.companyFilters.map((filter) => filter.value), ...prospecting.contactFilters.map((filter) => filter.value)].join(" "),
+      keywords: [event.name, demoSearchAliases, event.location, "target targeting prospect prospecting audience accounts contacts companies ZoomInfo", prospecting.workflow, ...prospecting.companyFilters.map((filter) => filter.value), ...prospecting.contactFilters.map((filter) => filter.value)].join(" "),
       details: [`Workflow · ${prospecting.workflow}`, ...prospecting.companyFilters.map((filter) => `Company ${filter.label} · ${filter.value}`), ...prospecting.contactFilters.map((filter) => `Contact ${filter.label} · ${filter.value}`)],
       hiddenUntilQuery: true,
     },
@@ -346,7 +353,7 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
       title: `${event.name} · need to know`,
       href: `/events/${event.slug}#event-considerations`,
       description: "Event-specific operating rules and guardrails.",
-      keywords: [event.name, event.location, "rules rule considerations engagement guardrails what can I say do", ...event.specialConsiderations].join(" "),
+      keywords: [event.name, demoSearchAliases, event.location, "rules rule considerations engagement guardrails what can I say do", ...event.specialConsiderations].join(" "),
       details: event.specialConsiderations.map((item) => `Rule · ${item}`),
       hiddenUntilQuery: true,
     }] : []),
@@ -361,7 +368,7 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
       title: `${event.name} · ${workstreamLabels[workstreamKey]}`,
       href: `/events/${event.slug}#workstream-${key}`,
       description: items[0],
-      keywords: [event.name, event.location, workstreamLabels[workstreamKey], key, state, "checklist workstream plan program confirm confirmation unresolved", ...items].join(" "),
+      keywords: [event.name, demoSearchAliases, event.location, workstreamLabels[workstreamKey], key, state, "checklist workstream plan program confirm confirmation unresolved", ...items].join(" "),
       details: [state === "needs-confirmation" ? "State · Needs confirmation" : phase === "past" ? "State · Recorded plan" : "State · In plan", ...items],
       hiddenUntilQuery: true,
     }] : [];
@@ -376,7 +383,7 @@ const eventSectionRecords: SearchRecord[] = events.flatMap((event) => {
       title: `${event.name} · results`,
       href: `/events/${event.slug}#event-results`,
       description: outcomeDetails.length ? `${outcomeDetails.slice(0, 2).join(" · ")} · Missing: ${closeoutCoverage.missing.join(" · ") || "None"}` : "No outcomes have been recorded yet. Missing evidence is not zero.",
-      keywords: [event.name, event.location, "what happened results result outcomes outcome closeout incomplete partial missing not recorded meetings demos deals revenue rating", ...outcomeDetails, ...closeoutCoverage.missing].join(" "),
+      keywords: [event.name, demoSearchAliases, event.location, "what happened results result outcomes outcome closeout incomplete partial missing not recorded meetings demos deals revenue rating", ...outcomeDetails, ...closeoutCoverage.missing].join(" "),
       details: [...(outcomeDetails.length ? outcomeDetails : ["Closeout · No outcomes recorded yet"]), ...closeoutCoverage.missing.map((label) => `Closeout gap · ${label}`)],
       hiddenUntilQuery: true,
     });

@@ -12,19 +12,19 @@ test("program readiness distinguishes structured task plans from unassigned prio
   assert.equal(readiness.dueNow.length, 0);
 });
 
-test("the Consero checklist preserves the open staffing and schedule inputs", () => {
-  const consero = events.find((event) => event.slug === "consero-cx-forum");
+test("the Demo Forum checklist preserves the open staffing and schedule inputs", () => {
+  const consero = events.find((event) => event.slug === "demo-event-17");
   assert.ok(consero);
   const readiness = getEventReadiness(consero, "2026-08-07");
   assert.equal(readiness.planState, "structured");
   assert.equal(readiness.totalTasks, 12);
   assert.equal(readiness.ownerGaps, 12);
   assert.equal(readiness.dateGaps, 11);
-  assert.equal(readiness.nextAction?.title, "Confirm the breakout speaker and finalize the session title and abstract with Consero");
+  assert.equal(readiness.nextAction?.title, "Confirm the breakout speaker and finalize the session title and abstract with Demo Forum");
 });
 
 test("the retail checklist keeps assignment gaps explicit and preserves its only sourced deadline", () => {
-  const retail = events.find((event) => event.slug === "iqpc-cx-retail-atlanta");
+  const retail = events.find((event) => event.slug === "demo-event-09");
   assert.ok(retail);
   const readiness = getEventReadiness(retail, "2026-08-07");
   assert.equal(readiness.planState, "structured");
@@ -35,30 +35,30 @@ test("the retail checklist keeps assignment gaps explicit and preserves its only
 });
 
 test("a source-backed checklist is searchable without pretending its owner and date gaps are closed", () => {
-  const travel = events.find((event) => event.slug === "iqpc-cx-travel-hospitality");
+  const travel = events.find((event) => event.slug === "demo-event-05");
   assert.ok(travel);
   const readiness = getEventReadiness(travel, "2026-08-07");
   assert.equal(readiness.planState, "structured");
   assert.equal(readiness.totalTasks, 15);
   assert.equal(readiness.ownerGaps, 15);
   assert.equal(readiness.dateGaps, 14);
-  assert.equal(readiness.nextAction?.title, "Confirm speaker and finalize title/abstract with IQPC");
+  assert.equal(readiness.nextAction?.title, "Confirm speaker and finalize title/abstract with Demo Organizer");
   assert.equal(readiness.nextAction?.dueSort, undefined);
 });
 
 test("the next action preserves the fresh AP status, timing and owner", () => {
-  const customerConnect = events.find((event) => event.slug === "customer-connect-expo");
+  const customerConnect = events.find((event) => event.slug === "demo-event-11");
   assert.ok(customerConnect);
   const readiness = getEventReadiness(customerConnect, "2026-08-06");
   assert.equal(readiness.planState, "structured");
   assert.equal(readiness.nextAction?.title, "Confirm the AP payment has settled");
-  assert.equal(readiness.nextAction?.owner, "Holden + AP");
+  assert.equal(readiness.nextAction?.owner, "Jordan + AP");
   assert.equal(readiness.nextAction?.due, "Week of Aug 11");
   assert.equal(readiness.nextAction?.urgency, "due-soon");
 });
 
 test("completed events do not retain an invented pre-event task plan", () => {
-  const chicago = events.find((event) => event.slug === "ccw-exchange-chicago");
+  const chicago = events.find((event) => event.slug === "demo-event-12");
   assert.ok(chicago);
   const readiness = getEventReadiness(chicago, "2026-08-06");
   assert.equal(readiness.planState, "missing");

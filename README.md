@@ -1,6 +1,21 @@
 # TeamSimple Event Basecamp
 
-TeamSimple’s internal Event Basecamp for the 2026–2027 program. It combines the event directory, role guides, event-specific briefs, marketing execution, leadership reporting, search, and the source-governance record in one deployed Sites project.
+[![Public demo quality gate](https://github.com/holden-biscuits/simple/actions/workflows/ci.yml/badge.svg)](https://github.com/holden-biscuits/simple/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/holden-biscuits/simple/actions/workflows/codeql.yml/badge.svg)](https://github.com/holden-biscuits/simple/actions/workflows/codeql.yml)
+
+A public, interactive demonstration of an event-operations control center. It combines an event directory, role guides, event briefs, marketing execution, leadership reporting, search, and source governance in one Sites project.
+
+![Event Basecamp social preview](public/og-2026-2027.png)
+
+> **Public demo:** Every person, account, activity, cost, source record, and outcome in this repository is synthetic. The public branch cannot load private operating data.
+
+## Public demo boundary
+
+- `app/data/demo-mode.ts` permanently identifies this branch as a public demo and routes simulated source actions to the in-product data-policy page.
+- Event keys, event names, people, companies, record identifiers, source links, commitments, and outcomes use synthetic fixtures.
+- `npm run check:public-demo` scans every tracked text file for private-system URLs, CRM identifiers, email addresses, and protected personal data.
+- The same safety check runs on every pull request and push to `main` before the build and test suite.
+- Real operational data belongs in access-controlled upstream systems or a separate private repository. It must never be copied into this public repository, an issue, or a pull request.
 
 ## Product map
 
@@ -15,7 +30,7 @@ TeamSimple’s internal Event Basecamp for the 2026–2027 program. It combines 
 
 ## Architecture
 
-The site is a versioned read model, not a live database. Private GTM systems are read outside the visitor’s browser, reconciled into the governed event catalog, tested, saved as a review version, and deployed only after approval.
+The site is a versioned read model, not a live database. In the public repository, synthetic source records are reconciled into the governed event catalog and tested exactly like production-shaped records without exposing an upstream system.
 
 Core data modules live in `app/data/`:
 
@@ -25,7 +40,7 @@ Core data modules live in `app/data/`:
 - `source-scan.ts` and `reconciliation.ts` enforce the proposal, evidence, ownership, and approval contract.
 - readiness, measurement, linkage, signals, filtering, and leadership modules derive views from the governed catalog instead of maintaining parallel totals.
 
-The canonical Event key is the event URL slug, such as `genesys-xperience`. Carry that exact key into Sheets, Notion, Drive folder conventions, and HubSpot. Do not rebuild it from an event name after creation.
+The canonical Event key is the event URL slug, such as `demo-event-01`. The demo preserves that cross-system join contract while using identifiers that cannot resolve to real records.
 
 ## Source ownership
 
@@ -55,17 +70,15 @@ Never infer attribution, turn a scheduled meeting into a held meeting, publish c
 Requires Node.js 22.13 or newer.
 
 ```bash
-npm install
+npm ci
 npm run dev
 npm test
 ```
 
-`npm test` builds the Cloudflare-compatible vinext output and runs the full contract suite. The tests cover event data integrity, dynamic visibility, source reconciliation, CRM attribution, readiness, search, internal links, responsive style contracts, and rendered HTML.
+`npm test` first runs the public-data safety gate, builds the Cloudflare-compatible vinext output, and runs the full contract suite. The tests cover event data integrity, dynamic visibility, source reconciliation, CRM attribution, readiness, search, internal links, responsive style contracts, and rendered HTML.
 
 The Sites project identifier and optional logical storage bindings live in `.openai/hosting.json`. Runtime values belong in Sites, not in that file or the repository.
 
-## Publishing rule
+## Publishing rules
 
-Push the exact validated source state, package the matching build, save one review version, and deploy that saved version after explicit approval. The production URL is:
-
-<https://teamsimple-events-fieldbook.holden165736.chatgpt.site/>
+Push the exact validated source state, package the matching build, save one review version, and deploy that saved version after explicit approval. Production data must remain in an access-controlled deployment sourced from private systems; public deployments must use only the synthetic fixtures in this repository.

@@ -1,0 +1,51 @@
+name: Report a source discrepancy
+description: Flag an event fact that conflicts with its owning source.
+title: "[Source discrepancy]: "
+labels: [source-review]
+body:
+  - type: markdown
+    attributes:
+      value: Do not paste private links, customer names, personal data, or real production values into this public repository. Describe the shape of the problem with synthetic placeholders.
+  - type: input
+    id: event-key
+    attributes:
+      label: Demo event key
+      description: Use a public demo key such as demo-event-01.
+      placeholder: demo-event-01
+    validations:
+      required: true
+  - type: dropdown
+    id: owning-system
+    attributes:
+      label: Owning system
+      options:
+        - Conference tracker
+        - Event project
+        - Asset library
+        - CRM
+        - Public organizer source
+        - Unsure
+    validations:
+      required: true
+  - type: input
+    id: field
+    attributes:
+      label: Affected field
+      placeholder: Dates, roster, sponsorship, task status, outcome, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: discrepancy
+    attributes:
+      label: Synthetic before and after
+      description: Explain the conflict using placeholders only.
+      placeholder: "Demo currently shows X; the owning source shape indicates Y."
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public-data safety
+      options:
+        - label: I confirmed this issue contains no private URLs, customer or prospect names, personal data, or real production values.
+          required: true

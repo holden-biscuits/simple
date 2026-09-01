@@ -13,12 +13,12 @@ test("every event agenda starts with the recorded event window and a live organi
 });
 
 test("event agendas surface recorded TeamSimple commitments without inventing meetings", () => {
-  const genesys = eventBySlug("genesys-xperience");
-  assert.ok(genesys);
-  const genesysAgenda = getEventAgenda(genesys, "2026-08-07");
-  assert.ok(genesysAgenda.items.some((item) => item.title.includes("Sep 3 at 1:10 PM")));
-  assert.equal(genesysAgenda.items.some((item) => item.label === "Meetings"), false);
-  assert.deepEqual(genesysAgenda.days, [
+  const partnerPlatform = eventBySlug("demo-event-16");
+  assert.ok(partnerPlatform);
+  const partnerPlatformAgenda = getEventAgenda(partnerPlatform, "2026-08-07");
+  assert.ok(partnerPlatformAgenda.items.some((item) => item.title.includes("Sep 3 at 1:10 PM")));
+  assert.equal(partnerPlatformAgenda.items.some((item) => item.label === "Meetings"), false);
+  assert.deepEqual(partnerPlatformAgenda.days, [
     {
       date: "Tuesday, September 1",
       items: [
@@ -41,16 +41,16 @@ test("event agendas surface recorded TeamSimple commitments without inventing me
       items: [
         { time: "9:00 AM", title: "Morning keynote" },
         { time: "11:00 AM", title: "Expo, sessions and labs" },
-        { time: "1:10 PM", title: "Cat’s 20-minute solution talk", teamSimple: true },
+        { time: "1:10 PM", title: "Avery’s 20-minute solution talk", teamSimple: true },
         { time: "4:00 PM", title: "Closing keynote" },
         { time: "7:00 PM", title: "Closing celebration" },
       ],
     },
   ]);
 
-  const icmi = eventBySlug("icmi-contact-center-expo");
+  const icmi = eventBySlug("demo-event-07");
   assert.ok(icmi);
   const icmiAgenda = getEventAgenda(icmi, "2026-08-07");
-  assert.equal(icmiAgenda.url, "https://icmievents.com/conference/event-schedule/");
+  assert.equal(icmiAgenda.url, "/sources#public-demo");
   assert.ok(icmiAgenda.items.some((item) => item.label === "TeamSimple session" && item.state === "open"));
 });

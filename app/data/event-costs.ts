@@ -53,7 +53,7 @@ function defaultLines(event: EventRecord): EventCostLine[] {
 }
 
 function linesFor(event: EventRecord): EventCostLine[] {
-  if (event.slug !== "genesys-xperience") return defaultLines(event);
+  if (event.slug !== "demo-event-16") return defaultLines(event);
   return [
     {
       category: "Paid media",
